@@ -1,0 +1,555 @@
+fileFormatVersion: 2
+guid: 688741db0fdc1ea4ba22cadd0c158724
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Weapon_3_0
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 615
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0e0f865041334341b1855592f7a3648
+      internalID: 1163089272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_3
+      rect:
+        serializedVersion: 2
+        x: 666
+        y: 615
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d0aa566131b4094795e21423a8504a9
+      internalID: -532584094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_4
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 615
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c89ba9d37abede94f8fb030506bc274b
+      internalID: -2041913904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_5
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 615
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78459664a401a314d81ffba658348545
+      internalID: -1263524075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_1
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 615
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09dbacd2f1e7ef942b1ca06617fc7cdb
+      internalID: -1289744500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_2
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 616
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f8e257cfcdae65418ea6fe134bcfc78
+      internalID: 1357122691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_8
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 391
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81bf73030ecb2314782a61d4687dd158
+      internalID: -460091531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_9
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 392
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65ec931ecd8b93e41a21fe049dbb7716
+      internalID: -1798951258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_11
+      rect:
+        serializedVersion: 2
+        x: 1081
+        y: 392
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e0786731947c964dba0774b14e30513
+      internalID: 350036476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_6
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 392
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c3068972f0cd6d4aa49c22a61f9860a
+      internalID: -1231392946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_7
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 392
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20d73e714097e704386db4874e56dc22
+      internalID: -2113083099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_10
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 392
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d16d1357547a9749acbe34d0fea6685
+      internalID: 1940365746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_12
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 168
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a336685009d77554d91356921e6b5c00
+      internalID: -284853670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_13
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 167
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b5dbf7e926484d4984e111952d3d6c8
+      internalID: -819981563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_14
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 168
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b708b88a49f39f64db9d265f85e86931
+      internalID: 1659287474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_15
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 166
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7472c2ba143bc48489c5344580675287
+      internalID: 513714826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_16
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 165
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7409c9b19bf85049b5c2ee68b516557
+      internalID: -139347528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weapon_3_17
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 165
+        width: 132
+        height: 194
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0983815a0d680b440bd8b64c1f18c6de
+      internalID: 898744705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 16be72125d3f41541829e86e6acd98b2
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Weapon_3_0: 1163089272
+      Weapon_3_1: -1289744500
+      Weapon_3_10: 1940365746
+      Weapon_3_11: 350036476
+      Weapon_3_12: -284853670
+      Weapon_3_13: -819981563
+      Weapon_3_14: 1659287474
+      Weapon_3_15: 513714826
+      Weapon_3_16: -139347528
+      Weapon_3_17: 898744705
+      Weapon_3_18: 415277412
+      Weapon_3_19: 59425809
+      Weapon_3_2: 1357122691
+      Weapon_3_20: 1089230571
+      Weapon_3_21: 568429034
+      Weapon_3_22: 99729210
+      Weapon_3_23: 1824530365
+      Weapon_3_24: 53216911
+      Weapon_3_25: 985305984
+      Weapon_3_26: 57690412
+      Weapon_3_27: 707741542
+      Weapon_3_3: -532584094
+      Weapon_3_30: 493322098
+      Weapon_3_31: 652528143
+      Weapon_3_32: -2007404304
+      Weapon_3_33: 69665740
+      Weapon_3_34: 339685379
+      Weapon_3_37: -280818881
+      Weapon_3_39: 43640846
+      Weapon_3_4: -2041913904
+      Weapon_3_40: 1414674133
+      Weapon_3_41: 1135834001
+      Weapon_3_43: 545852924
+      Weapon_3_44: 1100476243
+      Weapon_3_45: 248488050
+      Weapon_3_46: -1662353277
+      Weapon_3_47: -1904772278
+      Weapon_3_48: -1037542325
+      Weapon_3_49: 768674717
+      Weapon_3_5: -1263524075
+      Weapon_3_50: -846144969
+      Weapon_3_51: 416528994
+      Weapon_3_52: -1110495010
+      Weapon_3_53: -2094371098
+      Weapon_3_54: -1775320157
+      Weapon_3_55: 835584968
+      Weapon_3_56: -2131954073
+      Weapon_3_57: -1498984391
+      Weapon_3_58: 1349463465
+      Weapon_3_59: -1905325350
+      Weapon_3_6: -1231392946
+      Weapon_3_60: 1451659248
+      Weapon_3_61: -269620230
+      Weapon_3_62: -944539532
+      Weapon_3_63: -1803019809
+      Weapon_3_64: -1326795185
+      Weapon_3_7: -2113083099
+      Weapon_3_70: -2008179113
+      Weapon_3_72: -344076239
+      Weapon_3_73: -236902978
+      Weapon_3_74: 592452465
+      Weapon_3_8: -460091531
+      Weapon_3_9: -1798951258
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
