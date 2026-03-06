@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Personal.GyuSeong
+namespace Base.Data
 {
+    /// <summary> 플레이어용, 보상 획득에 관한 스탯 </summary>
     [Serializable]
     public struct RewardStat
     {
@@ -20,47 +23,35 @@ namespace Personal.GyuSeong
             };
         }
     }
-
-[Serializable]
+    /// <summary> 플레이어 적 공통, 전투관련 스탯 </summary>
+    [Serializable]
     public struct BattleStat
     {
-        [Header("Core")] 
-        public float maxHp; //최대 체력
+        [Header("Core")] public float maxHp; //최대 체력
         public float atk; //공격력
         public float def; //방어력
 
-        [Header("Speed")] 
-        public float atkSpeed; //공격속도, 1이 기본값으로 해당 수치는 배율처럼 작동
+        [Header("Speed")] public float atkSpeed; //공격속도, 1이 기본값으로 해당 수치는 배율처럼 작동
+
         //1.2 = 20% 공격속도 증가
         public float moveSpeed; //이동속도
 
-        [Header("Critical")] 
-        [Range(0, 1)] public float critChance; //크확(0 = 0%, 1 = 100%)
+        [Header("Critical")] [Range(0, 1)] public float critChance; //크확(0 = 0%, 1 = 100%)
         public float critDamage; //치피
 
         public static BattleStat operator +(BattleStat a, BattleStat b)
         {
             return new BattleStat
             {
-                maxHp =  a.maxHp + b.maxHp,
+                maxHp = a.maxHp + b.maxHp,
                 atk = a.atk + b.atk,
                 def = a.def + b.def,
-                atkSpeed = a.atkSpeed+b.atkSpeed,
+                atkSpeed = a.atkSpeed + b.atkSpeed,
                 moveSpeed = a.moveSpeed + b.moveSpeed,
-                critChance = a.critChance+b.critChance,
+                critChance = a.critChance + b.critChance,
                 critDamage = a.critDamage + b.critDamage
             };
         }
     }
-    [CreateAssetMenu(menuName = "Test/Base/Player")]
-    public class PlayerTester : ScriptableObject
-    {
-        [Header("Base Stat")] 
-        public BattleStat baseBattle;
-        public RewardStat baseReward;
 
-        [Header("Basic Attack Param")] 
-        public float baseAttackRange = 1.5f; //일반공격 범위
-        public float baseAttackCooldown = 1.0f; //일반공격 주기
-    }
 }

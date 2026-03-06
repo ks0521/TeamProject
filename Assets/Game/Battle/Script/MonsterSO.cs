@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using Base.Data;
 using UnityEngine;
 
-namespace Personal.GyuSeong
-{
-    [CreateAssetMenu]
-    public class MonsterTester : ScriptableObject
+[CreateAssetMenu(menuName = "Game/Battle/Monster")]
+    public class MonsterSO : ScriptableObject
     {
         public BattleStat battleStat; //전투스탯
 
@@ -15,4 +12,3 @@ namespace Personal.GyuSeong
 
         public DropTableSO dropTable; //아이템 드랍 테이블(장비 + 이벤트 아이템 등...)
     }
-}
