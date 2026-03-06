@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0c2a8bcac45b3094e84ac37ec5b6b7e1
+guid: b7f6e9bbe7622d2498eb7e6209a7eebd
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Epic_Armor_3
+      name: Epic_Armor_2
       rect:
         serializedVersion: 2
-        x: 713
-        y: 151
-        width: 305
-        height: 290
+        x: 648
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 42a048e77f8c47449a30cf82e1982d68
-      internalID: -592467960
+      spriteID: 1b6daac3fe54bd8458512dbc952b8b70
+      internalID: -1758334214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Epic_Armor_0
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 16
+        width: 252
+        height: 252
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73a5c02a5ee6fb8469f8b511cf754663
+      internalID: -510207044
       vertices: []
       indices: 
       edges: []
@@ -121,10 +142,10 @@ TextureImporter:
       name: Epic_Armor_1
       rect:
         serializedVersion: 2
-        x: 87
-        y: 159
-        width: 275
-        height: 263
+        x: 363
+        y: 15
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,29 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9219b08c9ea2ff2489a5e3d9bad0bba9
-      internalID: -806022801
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Epic_Armor_2
-      rect:
-        serializedVersion: 2
-        x: 382
-        y: 157
-        width: 290
-        height: 267
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 17563bdd9cb0ffb4c92278eda8fa1f99
-      internalID: -909848558
+      spriteID: 8db9edfab8083ef4a8a083623af28cd8
+      internalID: 301120538
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: da9ca58c9f9b5a449b991b584ae64c28
+    spriteID: c04a3c3c7281b1949b4b553956e54453
     internalID: 0
     vertices: []
     indices: 
@@ -170,13 +170,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Epic_Armor_1: -806022801
-      Epic_Armor_2: -909848558
-      Epic_Armor_3: -592467960
-      epic_armor_1: 226899278
-      epic_armor_5: -477869804
-      epic_armor_6: -128638682
-      epic_armor_7: -973243548
+      Epic_Armor_0: -510207044
+      Epic_Armor_1: 301120538
+      Epic_Armor_2: -1758334214
+      epic_test_1: -2055074468
+      epic_test_2: -1911824019
+      epic_test_5: 504872028
+      epic_test_6: 1079337740
+      epic_test_7: -1211251898
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

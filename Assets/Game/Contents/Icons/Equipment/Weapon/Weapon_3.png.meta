@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 688741db0fdc1ea4ba22cadd0c158724
+guid: 877a19066abf4a04692cb880d35e6985
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -100,10 +100,10 @@ TextureImporter:
       name: Weapon_3_0
       rect:
         serializedVersion: 2
-        x: 70
-        y: 615
-        width: 132
-        height: 194
+        x: 175
+        y: 710
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b0e0f865041334341b1855592f7a3648
-      internalID: 1163089272
+      spriteID: 78e515c4ee83e164ea26c65e79357b0d
+      internalID: -1843091836
       vertices: []
       indices: 
       edges: []
@@ -121,10 +121,10 @@ TextureImporter:
       name: Weapon_3_3
       rect:
         serializedVersion: 2
-        x: 666
-        y: 615
-        width: 132
-        height: 194
+        x: 880
+        y: 710
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,8 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d0aa566131b4094795e21423a8504a9
-      internalID: -532584094
+      spriteID: 3d4329d5a88fe094dbcf701cddb1d039
+      internalID: -827275895
       vertices: []
       indices: 
       edges: []
@@ -142,10 +142,10 @@ TextureImporter:
       name: Weapon_3_4
       rect:
         serializedVersion: 2
-        x: 870
-        y: 615
-        width: 132
-        height: 194
+        x: 1120
+        y: 711
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c89ba9d37abede94f8fb030506bc274b
-      internalID: -2041913904
+      spriteID: 8461e1464376ccb43ad686128b122bca
+      internalID: -1201667781
       vertices: []
       indices: 
       edges: []
@@ -163,10 +163,10 @@ TextureImporter:
       name: Weapon_3_5
       rect:
         serializedVersion: 2
-        x: 1077
-        y: 615
-        width: 132
-        height: 194
+        x: 1370
+        y: 710
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,8 +174,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 78459664a401a314d81ffba658348545
-      internalID: -1263524075
+      spriteID: 5a096df971b30b34bbe8cad8d2f29cfe
+      internalID: 382204844
       vertices: []
       indices: 
       edges: []
@@ -184,10 +184,10 @@ TextureImporter:
       name: Weapon_3_1
       rect:
         serializedVersion: 2
-        x: 257
-        y: 615
-        width: 132
-        height: 194
+        x: 410
+        y: 710
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +195,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 09dbacd2f1e7ef942b1ca06617fc7cdb
-      internalID: -1289744500
+      spriteID: fc2181e0d35456a42827657b8dff5d22
+      internalID: 729566604
       vertices: []
       indices: 
       edges: []
@@ -205,10 +205,10 @@ TextureImporter:
       name: Weapon_3_2
       rect:
         serializedVersion: 2
-        x: 464
-        y: 616
-        width: 132
-        height: 194
+        x: 640
+        y: 710
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,8 +216,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2f8e257cfcdae65418ea6fe134bcfc78
-      internalID: 1357122691
+      spriteID: 56938d49946f736479fdbaba5308b3cb
+      internalID: 1542872166
       vertices: []
       indices: 
       edges: []
@@ -226,10 +226,10 @@ TextureImporter:
       name: Weapon_3_8
       rect:
         serializedVersion: 2
-        x: 456
-        y: 391
-        width: 132
-        height: 194
+        x: 640
+        y: 450
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -237,8 +237,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 81bf73030ecb2314782a61d4687dd158
-      internalID: -460091531
+      spriteID: cb9945cdf948b8f44bd8dc7bf47c024a
+      internalID: -456362712
       vertices: []
       indices: 
       edges: []
@@ -247,10 +247,10 @@ TextureImporter:
       name: Weapon_3_9
       rect:
         serializedVersion: 2
-        x: 671
-        y: 392
-        width: 132
-        height: 194
+        x: 880
+        y: 450
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,8 +258,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 65ec931ecd8b93e41a21fe049dbb7716
-      internalID: -1798951258
+      spriteID: a83340d0a7068d64b8ff8df52a7c4802
+      internalID: -299366315
       vertices: []
       indices: 
       edges: []
@@ -268,10 +268,10 @@ TextureImporter:
       name: Weapon_3_11
       rect:
         serializedVersion: 2
-        x: 1081
-        y: 392
-        width: 132
-        height: 194
+        x: 1370
+        y: 450
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -279,8 +279,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e0786731947c964dba0774b14e30513
-      internalID: 350036476
+      spriteID: 6b00232a17d325d4a8889abb41eb038a
+      internalID: -1623631647
       vertices: []
       indices: 
       edges: []
@@ -289,10 +289,10 @@ TextureImporter:
       name: Weapon_3_6
       rect:
         serializedVersion: 2
-        x: 55
-        y: 392
-        width: 132
-        height: 194
+        x: 175
+        y: 450
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -300,8 +300,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8c3068972f0cd6d4aa49c22a61f9860a
-      internalID: -1231392946
+      spriteID: 87a0b65af52dfe441ab19de78e0f1c1e
+      internalID: 258884506
       vertices: []
       indices: 
       edges: []
@@ -310,10 +310,10 @@ TextureImporter:
       name: Weapon_3_7
       rect:
         serializedVersion: 2
-        x: 258
-        y: 392
-        width: 132
-        height: 194
+        x: 410
+        y: 450
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -321,8 +321,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 20d73e714097e704386db4874e56dc22
-      internalID: -2113083099
+      spriteID: c36ac97f26603f24ab7f124c6a6ac4b3
+      internalID: -353304934
       vertices: []
       indices: 
       edges: []
@@ -331,10 +331,10 @@ TextureImporter:
       name: Weapon_3_10
       rect:
         serializedVersion: 2
-        x: 871
-        y: 392
-        width: 132
-        height: 194
+        x: 1120
+        y: 450
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -342,8 +342,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8d16d1357547a9749acbe34d0fea6685
-      internalID: 1940365746
+      spriteID: f545906d62cad4248a0e10bd89c9062c
+      internalID: 1119242269
       vertices: []
       indices: 
       edges: []
@@ -352,10 +352,10 @@ TextureImporter:
       name: Weapon_3_12
       rect:
         serializedVersion: 2
-        x: 55
-        y: 168
-        width: 132
-        height: 194
+        x: 175
+        y: 180
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -363,8 +363,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a336685009d77554d91356921e6b5c00
-      internalID: -284853670
+      spriteID: 71fbf2487449ee0458db05338c1f6590
+      internalID: -1614701459
       vertices: []
       indices: 
       edges: []
@@ -373,10 +373,10 @@ TextureImporter:
       name: Weapon_3_13
       rect:
         serializedVersion: 2
-        x: 257
-        y: 167
-        width: 132
-        height: 194
+        x: 410
+        y: 180
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -384,8 +384,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b5dbf7e926484d4984e111952d3d6c8
-      internalID: -819981563
+      spriteID: 75c45b7775a4f5a448c2da34c161ae74
+      internalID: 1029108084
       vertices: []
       indices: 
       edges: []
@@ -394,10 +394,10 @@ TextureImporter:
       name: Weapon_3_14
       rect:
         serializedVersion: 2
-        x: 460
-        y: 168
-        width: 132
-        height: 194
+        x: 640
+        y: 180
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -405,8 +405,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b708b88a49f39f64db9d265f85e86931
-      internalID: 1659287474
+      spriteID: aa6ab93e8b50a854581209969b96a053
+      internalID: 1217731538
       vertices: []
       indices: 
       edges: []
@@ -415,10 +415,10 @@ TextureImporter:
       name: Weapon_3_15
       rect:
         serializedVersion: 2
-        x: 661
-        y: 166
-        width: 132
-        height: 194
+        x: 880
+        y: 180
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -426,8 +426,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7472c2ba143bc48489c5344580675287
-      internalID: 513714826
+      spriteID: 13a349b4e346a19448d04be79bb26040
+      internalID: -1036603970
       vertices: []
       indices: 
       edges: []
@@ -436,10 +436,10 @@ TextureImporter:
       name: Weapon_3_16
       rect:
         serializedVersion: 2
-        x: 874
-        y: 165
-        width: 132
-        height: 194
+        x: 1120
+        y: 180
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -447,8 +447,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c7409c9b19bf85049b5c2ee68b516557
-      internalID: -139347528
+      spriteID: 0dd43579b1e162047b7db876bbc4e440
+      internalID: 1318774115
       vertices: []
       indices: 
       edges: []
@@ -457,10 +457,10 @@ TextureImporter:
       name: Weapon_3_17
       rect:
         serializedVersion: 2
-        x: 1079
-        y: 165
-        width: 132
-        height: 194
+        x: 1370
+        y: 179
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -468,8 +468,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0983815a0d680b440bd8b64c1f18c6de
-      internalID: 898744705
+      spriteID: 8ecca79bc1a19ac45adfbe5427cba881
+      internalID: -1712997857
       vertices: []
       indices: 
       edges: []
@@ -477,7 +477,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 16be72125d3f41541829e86e6acd98b2
+    spriteID: 4fa5c5d8c5029aa40944d69f32a1204b
     internalID: 0
     vertices: []
     indices: 
@@ -485,69 +485,84 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Weapon_3_0: 1163089272
-      Weapon_3_1: -1289744500
-      Weapon_3_10: 1940365746
-      Weapon_3_11: 350036476
-      Weapon_3_12: -284853670
-      Weapon_3_13: -819981563
-      Weapon_3_14: 1659287474
-      Weapon_3_15: 513714826
-      Weapon_3_16: -139347528
-      Weapon_3_17: 898744705
-      Weapon_3_18: 415277412
-      Weapon_3_19: 59425809
-      Weapon_3_2: 1357122691
-      Weapon_3_20: 1089230571
-      Weapon_3_21: 568429034
-      Weapon_3_22: 99729210
-      Weapon_3_23: 1824530365
-      Weapon_3_24: 53216911
-      Weapon_3_25: 985305984
-      Weapon_3_26: 57690412
-      Weapon_3_27: 707741542
-      Weapon_3_3: -532584094
-      Weapon_3_30: 493322098
-      Weapon_3_31: 652528143
-      Weapon_3_32: -2007404304
-      Weapon_3_33: 69665740
-      Weapon_3_34: 339685379
-      Weapon_3_37: -280818881
-      Weapon_3_39: 43640846
-      Weapon_3_4: -2041913904
-      Weapon_3_40: 1414674133
-      Weapon_3_41: 1135834001
-      Weapon_3_43: 545852924
-      Weapon_3_44: 1100476243
-      Weapon_3_45: 248488050
-      Weapon_3_46: -1662353277
-      Weapon_3_47: -1904772278
-      Weapon_3_48: -1037542325
-      Weapon_3_49: 768674717
-      Weapon_3_5: -1263524075
-      Weapon_3_50: -846144969
-      Weapon_3_51: 416528994
-      Weapon_3_52: -1110495010
-      Weapon_3_53: -2094371098
-      Weapon_3_54: -1775320157
-      Weapon_3_55: 835584968
-      Weapon_3_56: -2131954073
-      Weapon_3_57: -1498984391
-      Weapon_3_58: 1349463465
-      Weapon_3_59: -1905325350
-      Weapon_3_6: -1231392946
-      Weapon_3_60: 1451659248
-      Weapon_3_61: -269620230
-      Weapon_3_62: -944539532
-      Weapon_3_63: -1803019809
-      Weapon_3_64: -1326795185
-      Weapon_3_7: -2113083099
-      Weapon_3_70: -2008179113
-      Weapon_3_72: -344076239
-      Weapon_3_73: -236902978
-      Weapon_3_74: 592452465
-      Weapon_3_8: -460091531
-      Weapon_3_9: -1798951258
+      Weapon_3_0: -1843091836
+      Weapon_3_1: 729566604
+      Weapon_3_10: 1119242269
+      Weapon_3_11: -1623631647
+      Weapon_3_12: -1614701459
+      Weapon_3_13: 1029108084
+      Weapon_3_14: 1217731538
+      Weapon_3_15: -1036603970
+      Weapon_3_16: 1318774115
+      Weapon_3_17: -1712997857
+      Weapon_3_2: 1542872166
+      Weapon_3_3: -827275895
+      Weapon_3_4: -1201667781
+      Weapon_3_5: 382204844
+      Weapon_3_6: 258884506
+      Weapon_3_7: -353304934
+      Weapon_3_8: -456362712
+      Weapon_3_9: -299366315
+      Weapon_3_test_1: -1893074565
+      Weapon_3_test_11: 1651605328
+      Weapon_3_test_12: -1044593132
+      Weapon_3_test_13: 1961867605
+      Weapon_3_test_14: -214400245
+      Weapon_3_test_15: -1801346053
+      Weapon_3_test_16: 1342236974
+      Weapon_3_test_17: 1904211116
+      Weapon_3_test_18: 665294000
+      Weapon_3_test_19: -879514000
+      Weapon_3_test_2: -163229411
+      Weapon_3_test_20: -713900044
+      Weapon_3_test_21: 1246138709
+      Weapon_3_test_22: 1053336999
+      Weapon_3_test_23: 572243624
+      Weapon_3_test_24: 2002437956
+      Weapon_3_test_25: 393401974
+      Weapon_3_test_26: 1708731419
+      Weapon_3_test_27: 1943175414
+      Weapon_3_test_28: 1005935192
+      Weapon_3_test_29: -1132123952
+      Weapon_3_test_30: -212546651
+      Weapon_3_test_33: 800512199
+      Weapon_3_test_34: -316309742
+      Weapon_3_test_35: -1067665660
+      Weapon_3_test_36: -1481983734
+      Weapon_3_test_39: 1894328846
+      Weapon_3_test_41: -98031781
+      Weapon_3_test_42: 151386678
+      Weapon_3_test_43: 1717561889
+      Weapon_3_test_45: 311108221
+      Weapon_3_test_46: -1473891379
+      Weapon_3_test_47: 1040219697
+      Weapon_3_test_48: -1444322143
+      Weapon_3_test_49: 1959951789
+      Weapon_3_test_50: -1449374013
+      Weapon_3_test_51: -359462315
+      Weapon_3_test_52: 1511577102
+      Weapon_3_test_53: -1769554075
+      Weapon_3_test_54: 1507578163
+      Weapon_3_test_55: -2128505572
+      Weapon_3_test_56: -247228624
+      Weapon_3_test_57: 336002291
+      Weapon_3_test_58: -498815279
+      Weapon_3_test_59: 1459642157
+      Weapon_3_test_60: -183130625
+      Weapon_3_test_61: -1396412664
+      Weapon_3_test_62: 557219305
+      Weapon_3_test_63: -525431828
+      Weapon_3_test_64: -1969184139
+      Weapon_3_test_65: -1084766587
+      Weapon_3_test_66: 488526702
+      Weapon_3_test_67: 1150426752
+      Weapon_3_test_7: -1925082330
+      Weapon_3_test_73: -553463688
+      Weapon_3_test_75: 877486004
+      Weapon_3_test_76: 1163532812
+      Weapon_3_test_77: -84298757
+      Weapon_3_test_8: -1417633505
+      Weapon_3_test_9: 184793782
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
