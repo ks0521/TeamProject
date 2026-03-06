@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2d7329ea3bfe844bb9d487b4f2938a, type: 3}
+  m_Name: C1_S1
+  m_EditorClassIdentifier: 
+  dropList:
+  - item: {fileID: 11400000, guid: 055ba6e28264e0e4899ad67552e44e4c, type: 2}
+    chance: 0.05
+    minAmount: 50
+    maxAmount: 60
+  - item: {fileID: 11400000, guid: ca9056a093aa39a42add3c292712b7de, type: 2}
+    chance: 0.1
+    minAmount: 1
+    maxAmount: 2
+  - item: {fileID: 0}
+    chance: 0.1
+    minAmount: 1
+    maxAmount: 2
