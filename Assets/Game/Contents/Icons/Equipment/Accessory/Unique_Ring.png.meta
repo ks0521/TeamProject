@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dc942f7d03e5aa94c89636f0164859d5
+guid: 77adc75bb1d49b448aa06ef80088f723
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Unique_Ring_1
+      name: Unique_Ring_0
       rect:
         serializedVersion: 2
-        x: 14
-        y: 203
-        width: 282
-        height: 176
+        x: 30
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a60f14a8741029f4483d85b6b46d8180
-      internalID: -787956118
+      spriteID: 1b9d07954576c6d4595877b268219d10
+      internalID: -1523191674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Unique_Ring_1
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 16
+        width: 252
+        height: 252
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e94ef601fdbcc5345bd6f7b2692a37b2
+      internalID: 894978022
       vertices: []
       indices: 
       edges: []
@@ -121,10 +142,10 @@ TextureImporter:
       name: Unique_Ring_2
       rect:
         serializedVersion: 2
-        x: 441
-        y: 177
-        width: 292
-        height: 208
+        x: 695
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,29 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a853097d90ec270438caee9a35f9595c
-      internalID: 1921164367
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Unique_Ring_3
-      rect:
-        serializedVersion: 2
-        x: 890
-        y: 157
-        width: 303
-        height: 251
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 01bb3d0e62ebc0f4fba99872a1efb082
-      internalID: 497118551
+      spriteID: 4fa222953202994478548f9a324fba6d
+      internalID: -409022257
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 0ccff4b615204dd408e6c7708a936429
+    spriteID: c360f4106ceeb964494c14ebe8b5ac61
     internalID: 0
     vertices: []
     indices: 
@@ -170,9 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Unique_Ring_1: -787956118
-      Unique_Ring_2: 1921164367
-      Unique_Ring_3: 497118551
+      Unique_Ring_0: -1523191674
+      Unique_Ring_1: 894978022
+      Unique_Ring_2: -409022257
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

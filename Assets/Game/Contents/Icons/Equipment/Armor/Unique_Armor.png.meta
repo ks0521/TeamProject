@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8da45d83f77164f43a45cdf74870c00c
+guid: 46657b8fdc023ac4f9ede73aede8b7d5
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Unique_Armor_3
+      name: Unique_Armor_2
       rect:
         serializedVersion: 2
-        x: 722
-        y: 155
-        width: 305
-        height: 280
+        x: 687
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c29a27e1371dab4ba07bf502ee5fc20
-      internalID: 254919386
+      spriteID: b62786399e5298e4d9cd654a112e48a9
+      internalID: 646713382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Unique_Armor_0
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 16
+        width: 252
+        height: 252
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e92f0c16031e0a40a8862d2b592d242
+      internalID: -413016921
       vertices: []
       indices: 
       edges: []
@@ -121,29 +142,8 @@ TextureImporter:
       name: Unique_Armor_1
       rect:
         serializedVersion: 2
-        x: 91
-        y: 166
-        width: 252
-        height: 252
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 681aceef387b3f34cb29fc25c90ebdff
-      internalID: -1027936563
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Unique_Armor_2
-      rect:
-        serializedVersion: 2
         x: 408
-        y: 170
+        y: 16
         width: 252
         height: 252
       alignment: 7
@@ -153,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eeba83cfa52eed84eae0bff11ed61e3d
-      internalID: 1598132267
+      spriteID: c34e5d322d2c840478766aecfcff7878
+      internalID: -639210366
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5ab8ae3e2d2b2354f88a2e31d2d706ee
+    spriteID: 89d147b5c57c953469f2a0dd02e46be8
     internalID: 0
     vertices: []
     indices: 
@@ -170,35 +170,36 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Unique_Armor_1: -1027936563
-      Unique_Armor_2: 1598132267
-      Unique_Armor_3: 254919386
-      unique_armor_1: -1447826313
-      unique_armor_10: -155542136
-      unique_armor_11: -344590034
-      unique_armor_12: 1814172541
-      unique_armor_13: 1280204685
-      unique_armor_14: -1596906291
-      unique_armor_15: 163144166
-      unique_armor_16: 1777290321
-      unique_armor_17: 1443961771
-      unique_armor_18: 802810405
-      unique_armor_19: -887968792
-      unique_armor_20: -2057391190
-      unique_armor_21: 1129936935
-      unique_armor_22: -1242628368
-      unique_armor_23: 675782299
-      unique_armor_24: 1739312278
-      unique_armor_25: 370983630
-      unique_armor_26: 1475773988
-      unique_armor_27: -991528723
-      unique_armor_28: 1132881203
-      unique_armor_29: -1532023443
-      unique_armor_5: -126204185
-      unique_armor_6: -488612485
-      unique_armor_7: -1174391761
-      unique_armor_8: 553706823
-      unique_armor_9: -639861325
+      Unique_Armor_0: -413016921
+      Unique_Armor_1: -639210366
+      Unique_Armor_2: 646713382
+      Unique_test_1: -1427808059
+      Unique_test_10: -1466961002
+      Unique_test_11: -1294652950
+      Unique_test_12: 2035616163
+      Unique_test_13: 707019033
+      Unique_test_14: -1474341095
+      Unique_test_15: -697191160
+      Unique_test_16: 1807496918
+      Unique_test_17: 1116670587
+      Unique_test_18: 2076530711
+      Unique_test_19: -576349563
+      Unique_test_20: -2103693634
+      Unique_test_21: -79709225
+      Unique_test_22: 1943558388
+      Unique_test_23: -1973856684
+      Unique_test_24: 46194002
+      Unique_test_25: 2065763190
+      Unique_test_26: 1210678638
+      Unique_test_27: -1899131843
+      Unique_test_28: -118963494
+      Unique_test_29: 1542655044
+      Unique_test_3: 1703209003
+      Unique_test_5: 1859473699
+      Unique_test_6: -1908189608
+      Unique_test_7: -101906734
+      Unique_test_8: 2019720195
+      Unique_test_9: -671968746
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cd3e9bcf336e60341b55c93253f9819b
+guid: 56cf9735cb0066a43a4a73ba76752f75
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Rare_Ring_1
+      name: Rare_Ring_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 199
-        width: 289
-        height: 187
+        x: 30
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ea6ae18fb8c69404e948d9a5b1655e39
-      internalID: 146826208
+      spriteID: 68da657bd941a1c4385cd69c99c147c6
+      internalID: -1600272067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rare_Ring_1
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 16
+        width: 252
+        height: 252
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d652e84cbaa46a498cdab2973ad493f
+      internalID: 2081458915
       vertices: []
       indices: 
       edges: []
@@ -121,10 +142,10 @@ TextureImporter:
       name: Rare_Ring_2
       rect:
         serializedVersion: 2
-        x: 443
-        y: 175
-        width: 305
-        height: 213
+        x: 690
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,29 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e5a637869af1b9447b3f8335b2d39e60
-      internalID: -597345873
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Rare_Ring_3
-      rect:
-        serializedVersion: 2
-        x: 886
-        y: 166
-        width: 314
-        height: 253
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1a5d822f7a3fbe74799e4fcddf4fecd5
-      internalID: 738848108
+      spriteID: f3f4dd924771ab949afed5c0904c0be7
+      internalID: -103078525
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 831cea5eeb7d9e24b96f7018c49a1947
+    spriteID: 5740e959d2ddbbd4dbe92a8e206bbb1c
     internalID: 0
     vertices: []
     indices: 
@@ -170,11 +170,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Rare_Ring_1: 146826208
-      Rare_Ring_2: -597345873
-      Rare_Ring_3: 738848108
-      Rare_Ring_4: -774912341
-      Rare_Ring_5: 1599511153
+      Rare_Ring_0: -1600272067
+      Rare_Ring_1: 2081458915
+      Rare_Ring_2: -103078525
+      Rare_Ring_test_4: -744475329
+      Rare_Ring_test_5: 953104048
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
