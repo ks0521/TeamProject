@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3b742eaa85a0a8741a5ab60e5b553809
+guid: 97db72d3b0a0d9948a4df0ee82a74535
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,11 +97,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Legendary_Armor_0
+      name: Lengendary_Armor_0
       rect:
         serializedVersion: 2
-        x: 94
-        y: 164
+        x: 118
+        y: 16
         width: 252
         height: 252
       alignment: 7
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97bc91fcaa09c7c4f8fbf15c74a989e7
-      internalID: 866418715
+      spriteID: 55a974faa9c065f45873638896661a67
+      internalID: -153401045
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legendary_Armor_2
+      name: Lengendary_Armor_1
       rect:
         serializedVersion: 2
-        x: 394
-        y: 162
-        width: 280
-        height: 260
+        x: 371
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e7d771dea05e8264897a7788d54e06c7
-      internalID: 416232649
+      spriteID: c801079849248f649adbc29f72f04daa
+      internalID: -1933492246
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legendary_Armor_3
+      name: Lengendary_Armor_2
       rect:
         serializedVersion: 2
-        x: 720
-        y: 161
-        width: 305
-        height: 280
+        x: 640
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a1b9c9db4e4e2e44fa3c95c2b9d32d53
-      internalID: -988813498
+      spriteID: 03b18abf08d91fa41b9de5e11f19031c
+      internalID: 539100412
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: f83ffd6140a683f45b3bf1f8127f5858
+    spriteID: 51aca88b2c1d6e54cb3185027ff80677
     internalID: 0
     vertices: []
     indices: 
@@ -170,21 +170,21 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Legendary_Armor_0: 866418715
-      Legendary_Armor_2: 416232649
-      Legendary_Armor_3: -988813498
-      Legendary_armor_1: 1451502517
-      Legendary_armor_10: -1008476099
-      Legendary_armor_11: -1336205241
-      Legendary_armor_12: -72460898
-      Legendary_armor_13: -253135826
-      Legendary_armor_14: 2062500567
-      Legendary_armor_15: -16136293
-      Legendary_armor_5: -1413230508
-      Legendary_armor_6: 1108675185
-      Legendary_armor_7: -2021189042
-      Legendary_armor_8: -1943960247
-      Legendary_armor_9: -977354221
+      Lengendary_Armor_0: -153401045
+      Lengendary_Armor_1: -1933492246
+      Lengendary_Armor_2: 539100412
+      lengendary_test_1: 129313231
+      lengendary_test_10: -334233943
+      lengendary_test_11: -1520462863
+      lengendary_test_12: 1928865153
+      lengendary_test_13: -1353373937
+      lengendary_test_14: 2117368455
+      lengendary_test_3: -100390919
+      lengendary_test_5: 1674133157
+      lengendary_test_6: -171779414
+      lengendary_test_7: 2055237802
+      lengendary_test_8: -435938156
+      lengendary_test_9: 1002082874
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
