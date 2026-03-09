@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapChangeTest : MonoBehaviour
+public class BGMChanger : MonoBehaviour
 {
     public enum MapType
     {
@@ -16,15 +16,14 @@ public class MapChangeTest : MonoBehaviour
     [SerializeField] private AudioClip bgmForest;
 
     private MapType mapType;
-    [SerializeField] private GameObject imageF1;
-    [SerializeField] private GameObject imageF2;
+    [SerializeField] private GameObject F1Field;
+    [SerializeField] private GameObject F2Forest;
 
     void Awake()
     {
         ChangeMap(MapType.Field);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.F1))
@@ -39,12 +38,12 @@ public class MapChangeTest : MonoBehaviour
         }
     }
 
-    void ChangeMap(MapType mt)
+    void ChangeMap(MapType currentMap)
     {
-        mapType = mt;
+        mapType = currentMap;
 
-        if (imageF1 != null) imageF1.SetActive(mt == MapType.Field);
-        if (imageF2 != null) imageF2.SetActive(mt == MapType.Forest);
+        if (F1Field != null) F1Field.SetActive(currentMap == MapType.Field);
+        if (F2Forest != null) F2Forest.SetActive(currentMap == MapType.Forest);
 
         AudioClip currentClip = (mapType == MapType.Field) ? bgmField : bgmForest;
 
@@ -54,6 +53,6 @@ public class MapChangeTest : MonoBehaviour
         bgmSource.clip = currentClip;
         bgmSource.Play();
 
-        Debug.Log($"ÇöÀç ¸Ê: {mt}");
+        Debug.Log($"ÇöÀç ¸Ê: {currentMap}");
     }
 }
