@@ -1047,7 +1047,7 @@ GameObject:
   - component: {fileID: 991129581}
   - component: {fileID: 991129582}
   m_Layer: 5
-  m_Name: Map Test
+  m_Name: Map Type
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1089,8 +1089,8 @@ MonoBehaviour:
   bgmSource: {fileID: 1191752147}
   bgmField: {fileID: 8300000, guid: c739dc9bdcc53744ea4dcfdea6604a9b, type: 3}
   bgmForest: {fileID: 8300000, guid: 2ea14710b34187a4c9a09fb66230c9e4, type: 3}
-  imageF1: {fileID: 1125056284}
-  imageF2: {fileID: 1066460319}
+  F1Field: {fileID: 1125056284}
+  F2Forest: {fileID: 1066460319}
 --- !u!1 &1009738341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,7 +1217,7 @@ GameObject:
   - component: {fileID: 1066460322}
   - component: {fileID: 1066460321}
   m_Layer: 5
-  m_Name: F2 Image
+  m_Name: 'F2: Forest'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1292,7 +1292,7 @@ GameObject:
   - component: {fileID: 1125056287}
   - component: {fileID: 1125056286}
   m_Layer: 5
-  m_Name: F1 Image
+  m_Name: 'F1: Field'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
