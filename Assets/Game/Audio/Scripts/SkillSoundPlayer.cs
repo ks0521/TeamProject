@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class SkillSoundTest : MonoBehaviour
+public class SkillSoundPlayer : MonoBehaviour
 {
     private AudioSource skillSource;
 
-    private void Awake()
+    void Awake()
     {
         skillSource = gameObject.GetComponent<AudioSource>();
     }
