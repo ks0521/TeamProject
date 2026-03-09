@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0aed7d8c9aa01b947903c802f2ff1d4c
+guid: e5e4d864cc382224cabbbbf7de9dd3b4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Epic_Ring_
+      name: Epic_Ring_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 200
-        width: 290
-        height: 186
+        x: 29
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 279d47d103b8c9b41b31845418e79344
-      internalID: -84703194
+      spriteID: e86d455d1ca64a344ae3dc2734f08e29
+      internalID: 2101740320
       vertices: []
       indices: 
       edges: []
@@ -121,10 +121,10 @@ TextureImporter:
       name: Epic_Ring_1
       rect:
         serializedVersion: 2
-        x: 441
-        y: 175
-        width: 306
-        height: 212
+        x: 360
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5aad81e727923a4a8e8753680fd8557
-      internalID: -1410219998
+      spriteID: 8da9dd09f91b3114a816e1ebf0054958
+      internalID: 822220018
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Epic_Ring_3
+      name: Epic_Ring_2
       rect:
         serializedVersion: 2
-        x: 890
-        y: 164
-        width: 308
-        height: 227
+        x: 690
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 79702f3b156687e40869fef883da808f
-      internalID: -860269774
+      spriteID: 754587a628e335d42a89e2aecd5919a8
+      internalID: -1310053545
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 75227529bc69cb24e8d7fa8854768dfd
+    spriteID: f6bc05d278e670d438cc1b0b8c492c4c
     internalID: 0
     vertices: []
     indices: 
@@ -170,9 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Epic_Ring_: -84703194
-      Epic_Ring_1: -1410219998
-      Epic_Ring_3: -860269774
+      Epic_Ring_0: 2101740320
+      Epic_Ring_1: 822220018
+      Epic_Ring_2: -1310053545
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
