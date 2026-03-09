@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b6938a2a88e0aa44e9edc9f954602b91
+guid: 6b89e28aa84d56844a9ea987260bc842
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Rare_Armor_1
+      name: Rare_Armor_0
       rect:
         serializedVersion: 2
-        x: 83
-        y: 153
-        width: 266
-        height: 269
+        x: 115
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8962e2430d8a3094cb298c2aab0cc33d
-      internalID: -1532455202
+      spriteID: 60ede39e65701c245aa80b7a245bde8e
+      internalID: 599046971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rare_Armor_1
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 16
+        width: 252
+        height: 252
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dac19e156decf8049b9a9fe3d8b58afe
+      internalID: -11279953
       vertices: []
       indices: 
       edges: []
@@ -121,10 +142,10 @@ TextureImporter:
       name: Rare_Armor_2
       rect:
         serializedVersion: 2
-        x: 401
-        y: 152
-        width: 276
-        height: 273
+        x: 621
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,29 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9ea4f56421511f442b9707d578ace139
-      internalID: -1491581550
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Rare_Armor_3
-      rect:
-        serializedVersion: 2
-        x: 730
-        y: 149
-        width: 305
-        height: 280
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1164c3fc9c5e2d34d936fad7fb80dfba
-      internalID: 151775098
+      spriteID: dfca78584c77afc4e8aff1df7f0af41c
+      internalID: -1927540740
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: e68c830fe563efb47ae4f605044a7b03
+    spriteID: b743dbe76e6a7444f84f62d67e2a50b6
     internalID: 0
     vertices: []
     indices: 
@@ -170,15 +170,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      91a91fd8-be2f-470f-b5b2-7db90c83e077 (1)_2: -632605011
-      91a91fd8-be2f-470f-b5b2-7db90c83e077 (1)_4: 973825098
-      91a91fd8-be2f-470f-b5b2-7db90c83e077 (1)_5: 949385298
-      91a91fd8-be2f-470f-b5b2-7db90c83e077 (1)_6: -1480951580
-      91a91fd8-be2f-470f-b5b2-7db90c83e077 (1)_7: -1413136150
-      91a91fd8-be2f-470f-b5b2-7db90c83e077 (1)_8: -1465311309
-      Rare_Armor_1: -1532455202
-      Rare_Armor_2: -1491581550
-      Rare_Armor_3: 151775098
+      Rare_Armor_0: 599046971
+      Rare_Armor_1: -11279953
+      Rare_Armor_2: -1927540740
+      Rare_test_4: 806810562
+      Rare_test_5: 123367926
+      Rare_test_6: 1131227494
+      Rare_test_7: -1752060685
+      Rare_test_8: -750324071
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

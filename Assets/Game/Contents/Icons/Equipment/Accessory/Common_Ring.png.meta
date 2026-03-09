@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c90e5b55cac43d14a9dadb16123994fe
+guid: 7c54cca24c8287d48a1de9a8d9752548
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Legendary_Ring_2
+      name: Common_Ring_0
       rect:
         serializedVersion: 2
-        x: 472
-        y: 155
-        width: 334
-        height: 227
+        x: 27
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f7530c8d85122564f8a718ff4bca4de8
-      internalID: -430936172
+      spriteID: 12208f9dbaf06534f979ad306974f80d
+      internalID: 178676747
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legendary_Ring_3
+      name: Common_Ring_1
       rect:
         serializedVersion: 2
-        x: 880
-        y: 146
-        width: 420
-        height: 268
+        x: 360
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d7ec699d67a21f4bbd31d0cbfb277ac
-      internalID: 813609738
+      spriteID: 240240054efa79d48be850b81b7f6407
+      internalID: -1037883337
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legendary_Ring_1
+      name: Common_Ring_2
       rect:
         serializedVersion: 2
-        x: 70
-        y: 180
-        width: 294
-        height: 167
+        x: 690
+        y: 16
+        width: 252
+        height: 252
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0c82c05bb5d404447bcfb59fad2d9d4b
-      internalID: -1003227886
+      spriteID: 419ba4570285e3642b9b61c6a4f1b121
+      internalID: 1124872036
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 321b5e58b5c71ad40ba026fea4395aac
+    spriteID: 0828bd4a56d69b9488cfd31d574ac100
     internalID: 0
     vertices: []
     indices: 
@@ -170,9 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Legendary_Ring_1: -1003227886
-      Legendary_Ring_2: -430936172
-      Legendary_Ring_3: 813609738
+      Common_Ring_0: 178676747
+      Common_Ring_1: -1037883337
+      Common_Ring_2: 1124872036
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

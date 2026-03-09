@@ -97,11 +97,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Common_Armor_1
+      name: Common_Armor_0
       rect:
         serializedVersion: 2
-        x: 49
-        y: 11
+        x: 35
+        y: 16
         width: 252
         height: 252
       alignment: 7
@@ -118,11 +118,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Common_Armor_2
+      name: Common_Armor_1
       rect:
         serializedVersion: 2
-        x: 365
-        y: 17
+        x: 359
+        y: 16
         width: 252
         height: 252
       alignment: 7
@@ -139,11 +139,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Common_Armor_3
+      name: Common_Armor_2
       rect:
         serializedVersion: 2
-        x: 691
-        y: 9
+        x: 690
+        y: 16
         width: 252
         height: 252
       alignment: 7
@@ -170,9 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Common_Armor_1: 1111313548
-      Common_Armor_2: -818307094
-      Common_Armor_3: 823942502
+      Common_Armor_0: 1111313548
+      Common_Armor_1: -818307094
+      Common_Armor_2: 823942502
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
