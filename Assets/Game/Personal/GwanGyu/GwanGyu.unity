@@ -2385,6 +2385,7 @@ GameObject:
   - component: {fileID: 423176265}
   - component: {fileID: 423176264}
   - component: {fileID: 423176263}
+  - component: {fileID: 423176266}
   m_Layer: 5
   m_Name: Equipment_Popup
   m_TagString: Untagged
@@ -2482,6 +2483,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 423176261}
   m_CullTransparentMesh: 1
+--- !u!114 &423176266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423176261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dab366b3c12c36458368d625451e723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &569367256
 GameObject:
   m_ObjectHideFlags: 0
@@ -6473,14 +6486,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2de545ad731f784b84ae330baad25be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackScreen: {fileID: 1768881539}
-  abilityPopup: {fileID: 2020907275}
-  equipmentPopup: {fileID: 423176261}
-  skillPopup: {fileID: 1743093121}
-  stagePopup: {fileID: 0}
-  dungeonPopup: {fileID: 0}
-  gameEndPopup: {fileID: 1732872884}
-  currentPopup: {fileID: 0}
+  popup:
+  - {fileID: 2020907280}
+  - {fileID: 423176266}
+  - {fileID: 1743093126}
 --- !u!4 &1240219154
 Transform:
   m_ObjectHideFlags: 0
@@ -7860,6 +7869,7 @@ GameObject:
   - component: {fileID: 1743093125}
   - component: {fileID: 1743093124}
   - component: {fileID: 1743093123}
+  - component: {fileID: 1743093126}
   m_Layer: 5
   m_Name: Skill_Popup
   m_TagString: Untagged
@@ -7956,6 +7966,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1743093121}
   m_CullTransparentMesh: 1
+--- !u!114 &1743093126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743093121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f3fdd0c86045be4da47c45325ccad2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1751987216
 GameObject:
   m_ObjectHideFlags: 0
@@ -10001,8 +10023,9 @@ GameObject:
   - component: {fileID: 2020907279}
   - component: {fileID: 2020907278}
   - component: {fileID: 2020907277}
+  - component: {fileID: 2020907280}
   m_Layer: 5
-  m_Name: Abillty_Popup
+  m_Name: Ability_Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10100,6 +10123,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020907275}
   m_CullTransparentMesh: 1
+--- !u!114 &2020907280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020907275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9514267ea39577a4eb3596bd905af3d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2055907568
 GameObject:
   m_ObjectHideFlags: 0

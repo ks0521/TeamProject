@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+
 namespace Game_UI_Scripts
 {
     public class PopupManager : MonoBehaviour
@@ -10,26 +12,18 @@ namespace Game_UI_Scripts
         {
             get
             {
-                if (Instance == null)
+                if (instance == null)
                 {
                     return null;
                 }
-                return Instance;
+                return instance;
             }
         }
 
-        [Header("검은화면")]
-        [SerializeField] private GameObject blackScreen; //팝업 뒤에 검은화면
-
         [Header("팝업")]
-        [SerializeField] private GameObject abilityPopup; //능력치
-        [SerializeField] private GameObject equipmentPopup; //장비
-        [SerializeField] private GameObject skillPopup; //스킬
-        [SerializeField] private GameObject stagePopup; //스테이지
-        [SerializeField] private GameObject dungeonPopup; //던전
-        [SerializeField] private GameObject gameEndPopup; //게임 종료
+        [SerializeField] private List<BasePop> popup; //팝업 넣는 리스트
 
-        [SerializeField]private GameObject currentPopup;
+        private Dictionary <System.Type , BasePop> popupDic = new Dictionary <System.Type , BasePop>();
         private void Awake()
         {
             if (instance == null)
@@ -41,98 +35,43 @@ namespace Game_UI_Scripts
             {
                 Destroy(gameObject);
             }
-        }//싱글톤
-        // Start is called before the first frame update
+
+            foreach (BasePop pop in popup)
+            {
+                popupDic.Add(pop.GetType(),pop);
+            }
+
+        }//싱글톤 , popupDic 에 List에 있는 popup 들 넣기
+        
+        void OpenPopup<T>()
+        {
+            System.Type popupType = typeof(T); //T에 타입 정보(클래스)를 가져온다
+            if (popupDic.TryGetValue(popupType , out BasePop pop)) //Dictionary popupDic 에 있는 popupType(T) 타입 찾아서 pop 에 넣는다.
+            {
+                pop.gameObject.SetActive(true);
+            }
+        }
+        void CloswPopup<T>()
+        {
+            System.Type popupType = typeof(T);
+            if (popupDic.TryGetValue(popupType,out BasePop pop))
+            {
+                pop.gameObject.SetActive(false);
+            }
+        }
         void Start()
         {
-            CloseAllPopup();
+            
         }
-       public void CloseAllPopup()
-        {
-            if (blackScreen != null)
-            {
-                blackScreen.SetActive(false);
-            }
-            if (abilityPopup != null)
-            {
-                abilityPopup.SetActive(false);
-            }
-            if (equipmentPopup != null)
-            {
-                equipmentPopup.SetActive(false);
-            }
-            if (skillPopup != null)
-            {
-                skillPopup.SetActive(false);
-            }
-            if (stagePopup != null)
-            {
-                stagePopup.SetActive(false);
-            }
-            if (dungeonPopup != null)
-            {
-                dungeonPopup.SetActive(false);
-            }
-            if (gameEndPopup != null)
-            {
-                gameEndPopup.SetActive(false);
-            }
-        }//시작할때 모든 팝업 닫는 함수
+       
 
-        public void OpenAbilityPopup()
-        {
-            blackScreen.SetActive(true);
-            abilityPopup.SetActive(true);
-            currentPopup = abilityPopup;
-        }//능력치 팝업 띄우는 함수
-        public void OpenEquipmentPopup()
-        {
-            blackScreen.SetActive(true);
-            equipmentPopup.SetActive(true);
-            currentPopup = equipmentPopup;
-        }//장비 팝업 띄우는 함수
-        public void OpenSkillPopup()
-        {
-            blackScreen.SetActive(true);
-            skillPopup.SetActive(true);
-            currentPopup = skillPopup;
-        }//스킬 팝업 띄우는 함수
-        public void OpenStagePopup()
-        {
-            blackScreen.SetActive(true);
-            stagePopup.SetActive(true);
-            currentPopup = stagePopup;
-        }//스테이지 팝업 띄우는 함수
-        public void OpenDungeonPopup()
-        {
-            blackScreen.SetActive(true);
-            dungeonPopup.SetActive(true);
-            currentPopup = dungeonPopup;
-        }//던전 팝업 띄우는 함수
 
-        void CloseCurrentPopup()
-        {
-            if (currentPopup != null)
-            {
-                currentPopup.SetActive(false);
-                blackScreen.SetActive(false);
-                currentPopup = null;
-            }
-            else
-            {
-                currentPopup = gameEndPopup;
-                gameEndPopup.SetActive(true);
-                blackScreen.SetActive(true);
-            }
-        }//현재 열려있는 팝업 닫기(컴퓨터 ESC , 모바일 뒤로가기)
+        
 
         // Update is called once per frame
         void Update()
-        { 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                CloseCurrentPopup();
-            }//현재 열려있는 팝업 닫기(컴퓨터 ESC , 모바일 뒤로가기)
+        {
+           
         }
     }
 
