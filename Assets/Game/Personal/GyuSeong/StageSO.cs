@@ -1,0 +1,26 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Personal.Gyuseong
+{
+    [Serializable]
+    public struct MonsterPreset
+    {
+        public MonsterSO monster;
+        [Header("몬스터 등장 비중")]public int weights;
+    }
+    [CreateAssetMenu(menuName = "Game/Battle/Stage")]
+    public class StageSO : ScriptableObject
+    {
+        [Header("스테이지 이름")]public string name;
+        [Header("스테이지 타입(일반 / 돌파)")] public bool isChallengeStage;
+
+        [Header("스테이지 돌파 전용")] 
+        [Header("보스전투 여부")] public bool isBossStage;
+        [Header("제한시간")] public int deadLine;
+        [Header("목표 처치 수")] public int targetKillScore;
+        [Header("몬스터 프리셋")] public List<MonsterPreset> preset;
+    }
+}

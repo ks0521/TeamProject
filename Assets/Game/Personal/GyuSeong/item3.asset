@@ -9,23 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9af6e0612b7c4946aa67123d831ab7a, type: 3}
-  m_Name: testEquip
+  m_Script: {fileID: 11500000, guid: 85193a7283c951e4fb4a53efbb753348, type: 3}
+  m_Name: item3
   m_EditorClassIdentifier: 
-  key: 0
+  key: 3
   icon: {fileID: 0}
-  name: 
+  itemName: 
   context: 
-  equipType: 0
-  incAtk: 0
-  multipleAtk: 0
-  incHp: 0
-  multipleHp: 0
-  dmgReduce: 0
-  itemDrop: 0
-  incGold: 0
-  incExp: 0
-  incStat: 0
-  incSpeed: 0
-  atkSpeed: 0
-  castSpeed: 0
