@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Personal.GyuSeong
+namespace Growth.Equipment
 {
     [CreateAssetMenu(menuName = ("Game/Growth/EquipmentDictionary"))]
     public class EquipmentDictionarySO : ScriptableObject
