@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Battle;
 using UnityEngine;
 
-namespace Personal.Gyuseong
+namespace Battle
 {
     [Serializable]
     public struct MonsterPreset
@@ -14,7 +14,7 @@ namespace Personal.Gyuseong
     [CreateAssetMenu(menuName = "Game/Battle/Stage")]
     public class StageSO : ScriptableObject
     {
-        [Header("스테이지 이름")]public string name;
+        [Header("스테이지 이름")]public string stageName;
         [Header("스테이지 타입(일반 / 돌파)")] public bool isChallengeStage;
 
         [Header("스테이지 돌파 전용")] 
