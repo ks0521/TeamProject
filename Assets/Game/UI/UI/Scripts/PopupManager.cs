@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Game_UI_Scripts
+namespace Game_UI_Scripts_PopupManager
 {
     public class PopupManager : MonoBehaviour
     {
@@ -21,58 +19,103 @@ namespace Game_UI_Scripts
         }
 
         [Header("팝업")]
-        [SerializeField] private List<BasePop> popup; //팝업 넣는 리스트
+        [SerializeField] private GameObject abilityPop;
+        [SerializeField] private GameObject equipmentPop;
+        [SerializeField] private GameObject skillPop;
+        [SerializeField] private GameObject stagePop;
+        [SerializeField] private GameObject dungeonPop;
 
-        private Dictionary <System.Type , BasePop> popupDic = new Dictionary <System.Type , BasePop>();
+        private Stack<GameObject>popupStack = new();
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
             }
             else
             {
                 Destroy(gameObject);
             }
-
-            foreach (BasePop pop in popup)
-            {
-                popupDic.Add(pop.GetType(),pop);
-            }
-
-        }//싱글톤 , popupDic 에 List에 있는 popup 들 넣기
-        
-        void OpenPopup<T>()
-        {
-            System.Type popupType = typeof(T); //T에 타입 정보(클래스)를 가져온다
-            if (popupDic.TryGetValue(popupType , out BasePop pop)) //Dictionary popupDic 에 있는 popupType(T) 타입 찾아서 pop 에 넣는다.
-            {
-                pop.gameObject.SetActive(true);
-            }
-        }
-        void CloswPopup<T>()
-        {
-            System.Type popupType = typeof(T);
-            if (popupDic.TryGetValue(popupType,out BasePop pop))
-            {
-                pop.gameObject.SetActive(false);
-            }
-        }
-        void Start()
-        {
-            
-        }
-       
-
-
-        
-
-        // Update is called once per frame
+        }//싱글톤
         void Update()
         {
-           
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                CloseLastPopup();
+            }
         }
+
+        void OpenPopup(GameObject pop)
+        {
+            if (pop == null)
+            {
+                return;
+            }
+            if (pop.activeSelf)
+            {
+                return;
+            }
+            pop.SetActive(true);
+            popupStack.Push(pop);
+        }//팝업 열기
+        void ClosePopup(GameObject pop)
+        {
+            if (pop == null)
+            {
+                return;
+            }
+            if (!pop.activeSelf)
+            {
+                return;
+            }
+            pop.SetActive(false);
+            RemoveFromStack(pop);
+        }//팝업 닫기
+        private void RemoveFromStack(GameObject target)
+        {
+            Stack<GameObject> tempStack = new Stack<GameObject>();
+
+            while (popupStack.Count > 0)
+            {
+                GameObject current = popupStack.Pop();
+
+                if (current == target)
+                {
+                    break;
+                }
+
+                tempStack.Push(current);
+            }
+
+            while (tempStack.Count > 0)
+            {
+                popupStack.Push(tempStack.Pop());
+            }
+        }//중간 팝업 삭제
+        void CloseLastPopup()
+        {
+            if (popupStack.Count == 0)
+            {
+                return;
+            }
+            GameObject lastPop= popupStack.Pop();
+            if (lastPop != null)
+            {
+                lastPop.SetActive(false);
+            }
+        }//제일 마지막 팝업 닫기
+
+        public void OpenAbilityPop() { OpenPopup(abilityPop); }
+        public void OpenEquipmentPop() { OpenPopup(equipmentPop); }
+        public void OpenSkillPop() { OpenPopup(skillPop); }
+        public void OpenStagePop()  { OpenPopup(stagePop); }
+        public void OpenDungeonPop() { OpenPopup(dungeonPop); }
+
+        public void CloseAbilityPop() { ClosePopup(abilityPop); }
+        public void CloseEquipmentPop() { ClosePopup(equipmentPop); }
+        public void CloseSkillPop() { ClosePopup(skillPop); }
+        public void CloseStagePop() { ClosePopup(stagePop); }
+        public void CloseDungeonPop() { ClosePopup(dungeonPop); }
     }
 
 }
