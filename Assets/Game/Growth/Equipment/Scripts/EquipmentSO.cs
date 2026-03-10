@@ -8,7 +8,7 @@ namespace Growth.Equipment
         Weapon
     }
 
-    [CreateAssetMenu(menuName = "Game/Reward/DropTable")]
+    [CreateAssetMenu(menuName = "Game/Reward/Equipment")]
     public class EquipmentSO : ItemSO
     {
         public EquipType equipType;

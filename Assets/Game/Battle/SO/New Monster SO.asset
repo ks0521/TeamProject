@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: New Monster SO
   m_EditorClassIdentifier: 
   battleStat:
-    maxHp: 0
-    atk: 0
+    maxHp: 10
+    atk: 5
     def: 0
-    atkSpeed: 0
-    moveSpeed: 0
+    atkSpeed: 1
+    moveSpeed: 1
     critChance: 0
     critDamage: 0
-  rewardGold: 0
-  rewardStatStone: 0
-  rewardExp: 0
-  dropTable: {fileID: 0}
+  rewardGold: 10
+  rewardStatStone: 10
+  rewardExp: 10
+  dropTable: {fileID: 11400000, guid: 138a8feaaae2dc446a70103ef951fdb3, type: 2}

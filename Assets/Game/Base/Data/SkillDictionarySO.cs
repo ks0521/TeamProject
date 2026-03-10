@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Base.Data
 {
+    [CreateAssetMenu(menuName = "Game/Growth/SkillDictionary")]
     public class SkillDictionarySO : ScriptableObject
     {
         [Header("스킬 전체")] public List<SkillSO> allSkills = new();
