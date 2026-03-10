@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Presonal.GyuSeong
+namespace Growth.StatUpgrade
 {
     public enum StatusType
     {
