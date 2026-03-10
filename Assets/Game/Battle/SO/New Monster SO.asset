@@ -9,20 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a64f9af3e4e7aa644ba081cf09802f61, type: 3}
-  m_Name: Player
+  m_Script: {fileID: 11500000, guid: f0a3f5588857c8140b54f7bee1d2b911, type: 3}
+  m_Name: New Monster SO
   m_EditorClassIdentifier: 
-  baseBattle:
-    maxHp: 100
-    atk: 10
+  battleStat:
+    maxHp: 0
+    atk: 0
     def: 0
+    atkSpeed: 0
+    moveSpeed: 0
+    critChance: 0
     critDamage: 0
-    atkSpeed: 1
-    moveSpeed: 1
-    critChance: 0.25
-  baseReward:
-    goldRate: 0
-    expRate: 0
-    itemRate: 0
-  baseAttackRange: 1.5
-  baseAttackCooldown: 1
+  rewardGold: 0
+  rewardStatStone: 0
+  rewardExp: 0
+  dropTable: {fileID: 0}
