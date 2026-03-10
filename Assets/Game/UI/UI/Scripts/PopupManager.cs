@@ -105,7 +105,7 @@ namespace Game_UI_Scripts_PopupManager
             }
         }//제일 마지막 팝업 닫기
 
-        public void OpenAbilityPop() { OpenPopup(abilityPop); }
+        public void OpenAbilityPop() { OpenPopup(abilityPop); } //버튼 OnClick 연결용 함수
         public void OpenEquipmentPop() { OpenPopup(equipmentPop); }
         public void OpenSkillPop() { OpenPopup(skillPop); }
         public void OpenStagePop()  { OpenPopup(stagePop); }
