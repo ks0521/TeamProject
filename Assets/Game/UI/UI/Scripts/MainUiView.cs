@@ -82,7 +82,10 @@ namespace Game_UI_Scripts_MainUiView
             onButton.SetActive(isAuto);
             offButton.SetActive(!isAuto);
         }
-       
+        public void SetSkill(int slot , float cooltime)
+        {
+            skillIcons[slot].fillAmount = cooltime; 
+        }
     }
 
 }
