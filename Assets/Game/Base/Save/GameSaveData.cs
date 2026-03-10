@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.UI;
-
 
 namespace Base.Save
 {
@@ -16,8 +10,8 @@ namespace Base.Save
         public StageProgressData stageProgress = new();
         public PlayerCurrencyData currencyData = new();
         public PlayerItemInventoryData itemInventory = new();
-        public PlayerEquipmentInventoryData equipmentInventory = new();
-        public PlayerEquipmentData equipment = new();
+        //public PlayerEquipmentInventoryData equipmentInventory = new(); mvp에선 미구현
+        //public PlayerEquipmentData equipment = new(); mvp에선 미구현
         public PlayerStatUpgradeData statUpgrade = new();
         public PlayerSkillData skill = new();
         public PlayerAccessTimeData lastAccess = new();
@@ -38,18 +32,11 @@ namespace Base.Save
     }
     [Serializable]public class PlayerItemInventoryData
     {
-        //key : 아이템 key, value : 아이템 개수
-        public Dictionary<int, int> itemInventory;
+        public List<ItemEntry> itemInventory;
     }
     [Serializable]public class PlayerEquipmentInventoryData
     {
-        public Dictionary<int, EquipmentData> equipmentInventory;
-    }
-    [Serializable]public class EquipmentData
-    {
-        public int enforce;
-        public int count;
-        public bool isDiscovered;
+        public List<EquipmentEntry> equipmentInventory;
     }
     [Serializable]public class PlayerEquipmentData
     {
@@ -59,15 +46,41 @@ namespace Base.Save
     }
     [Serializable]public class PlayerStatUpgradeData
     {
-        public Dictionary<StatusType, int> statUpgrade; //statusType은 StatusSo.cs에 존재
+        public List<StatusEntry> statUpgrade; //statusType은 StatusSo.cs에 존재
     }
     [Serializable]public class PlayerSkillData
     {
         public int skillSlots; //나중에 스킬슬롯 객체 만들면 수정
-        public Dictionary<int, int> skills; //key : 스킬 키, value : 해당 스킬 레벨
+        public List<SkillEntry> skills; //key : 스킬 키, value : 해당 스킬 레벨
     }
-    [Serializable]public class PlayerAccessTimeData
+    [Serializable]public class EquipmentEntry
     {
-        public Time lastConnectTime;
+        public int key; //아이템 키
+        public int enforce; //강화 수치
+        public int count; //개수
+        public bool isDiscovered; //해금 여부
+    }
+    [Serializable]
+    public struct ItemEntry
+    {
+        public int key; //아이템 키
+        public int count; //아이템 개수
+    }
+    [Serializable]
+    public struct StatusEntry
+    {
+        public StatusType type; //스탯 종류
+        public int count; //강화 수치
+    }
+    [Serializable]
+    public struct SkillEntry
+    {
+        public int key; //스킬 키
+        public int count; //강화 수치
+    }
+    [Serializable]
+    public class PlayerAccessTimeData
+    {
+        public long lastConnectTime;
     }
 }
