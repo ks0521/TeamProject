@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Game_UI_Scripts
+
+namespace Game_UI_Scripts_PopupManager
 {
     public class PopupManager : MonoBehaviour
     {
@@ -10,130 +10,112 @@ namespace Game_UI_Scripts
         {
             get
             {
-                if (Instance == null)
+                if (instance == null)
                 {
                     return null;
                 }
-                return Instance;
+                return instance;
             }
         }
 
-        [Header("검은화면")]
-        [SerializeField] private GameObject blackScreen; //팝업 뒤에 검은화면
-
         [Header("팝업")]
-        [SerializeField] private GameObject abilityPopup; //능력치
-        [SerializeField] private GameObject equipmentPopup; //장비
-        [SerializeField] private GameObject skillPopup; //스킬
-        [SerializeField] private GameObject stagePopup; //스테이지
-        [SerializeField] private GameObject dungeonPopup; //던전
-        [SerializeField] private GameObject gameEndPopup; //게임 종료
+        [SerializeField] private GameObject abilityPop;
+        [SerializeField] private GameObject equipmentPop;
+        [SerializeField] private GameObject skillPop;
+        [SerializeField] private GameObject stagePop;
+        [SerializeField] private GameObject dungeonPop;
 
-        [SerializeField]private GameObject currentPopup;
+        private Stack<GameObject>popupStack = new();
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
             }
             else
             {
                 Destroy(gameObject);
             }
         }//싱글톤
-        // Start is called before the first frame update
-        void Start()
-        {
-            CloseAllPopup();
-        }
-       public void CloseAllPopup()
-        {
-            if (blackScreen != null)
-            {
-                blackScreen.SetActive(false);
-            }
-            if (abilityPopup != null)
-            {
-                abilityPopup.SetActive(false);
-            }
-            if (equipmentPopup != null)
-            {
-                equipmentPopup.SetActive(false);
-            }
-            if (skillPopup != null)
-            {
-                skillPopup.SetActive(false);
-            }
-            if (stagePopup != null)
-            {
-                stagePopup.SetActive(false);
-            }
-            if (dungeonPopup != null)
-            {
-                dungeonPopup.SetActive(false);
-            }
-            if (gameEndPopup != null)
-            {
-                gameEndPopup.SetActive(false);
-            }
-        }//시작할때 모든 팝업 닫는 함수
-
-        public void OpenAbilityPopup()
-        {
-            blackScreen.SetActive(true);
-            abilityPopup.SetActive(true);
-            currentPopup = abilityPopup;
-        }//능력치 팝업 띄우는 함수
-        public void OpenEquipmentPopup()
-        {
-            blackScreen.SetActive(true);
-            equipmentPopup.SetActive(true);
-            currentPopup = equipmentPopup;
-        }//장비 팝업 띄우는 함수
-        public void OpenSkillPopup()
-        {
-            blackScreen.SetActive(true);
-            skillPopup.SetActive(true);
-            currentPopup = skillPopup;
-        }//스킬 팝업 띄우는 함수
-        public void OpenStagePopup()
-        {
-            blackScreen.SetActive(true);
-            stagePopup.SetActive(true);
-            currentPopup = stagePopup;
-        }//스테이지 팝업 띄우는 함수
-        public void OpenDungeonPopup()
-        {
-            blackScreen.SetActive(true);
-            dungeonPopup.SetActive(true);
-            currentPopup = dungeonPopup;
-        }//던전 팝업 띄우는 함수
-
-        void CloseCurrentPopup()
-        {
-            if (currentPopup != null)
-            {
-                currentPopup.SetActive(false);
-                blackScreen.SetActive(false);
-                currentPopup = null;
-            }
-            else
-            {
-                currentPopup = gameEndPopup;
-                gameEndPopup.SetActive(true);
-                blackScreen.SetActive(true);
-            }
-        }//현재 열려있는 팝업 닫기(컴퓨터 ESC , 모바일 뒤로가기)
-
-        // Update is called once per frame
         void Update()
-        { 
+        {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                CloseCurrentPopup();
-            }//현재 열려있는 팝업 닫기(컴퓨터 ESC , 모바일 뒤로가기)
+                CloseLastPopup();
+            }
         }
+
+        void OpenPopup(GameObject pop)
+        {
+            if (pop == null)
+            {
+                return;
+            }
+            if (pop.activeSelf)
+            {
+                return;
+            }
+            pop.SetActive(true);
+            popupStack.Push(pop);
+        }//팝업 열기
+        void ClosePopup(GameObject pop)
+        {
+            if (pop == null)
+            {
+                return;
+            }
+            if (!pop.activeSelf)
+            {
+                return;
+            }
+            pop.SetActive(false);
+            RemoveFromStack(pop);
+        }//팝업 닫기
+        private void RemoveFromStack(GameObject target)
+        {
+            Stack<GameObject> tempStack = new Stack<GameObject>();
+
+            while (popupStack.Count > 0)
+            {
+                GameObject current = popupStack.Pop();
+
+                if (current == target)
+                {
+                    break;
+                }
+
+                tempStack.Push(current);
+            }
+
+            while (tempStack.Count > 0)
+            {
+                popupStack.Push(tempStack.Pop());
+            }
+        }//중간 팝업 삭제
+        void CloseLastPopup()
+        {
+            if (popupStack.Count == 0)
+            {
+                return;
+            }
+            GameObject lastPop= popupStack.Pop();
+            if (lastPop != null)
+            {
+                lastPop.SetActive(false);
+            }
+        }//제일 마지막 팝업 닫기
+
+        public void OpenAbilityPop() { OpenPopup(abilityPop); } //버튼 OnClick 연결용 함수
+        public void OpenEquipmentPop() { OpenPopup(equipmentPop); }
+        public void OpenSkillPop() { OpenPopup(skillPop); }
+        public void OpenStagePop()  { OpenPopup(stagePop); }
+        public void OpenDungeonPop() { OpenPopup(dungeonPop); }
+
+        public void CloseAbilityPop() { ClosePopup(abilityPop); }
+        public void CloseEquipmentPop() { ClosePopup(equipmentPop); }
+        public void CloseSkillPop() { ClosePopup(skillPop); }
+        public void CloseStagePop() { ClosePopup(stagePop); }
+        public void CloseDungeonPop() { ClosePopup(dungeonPop); }
     }
 
 }
