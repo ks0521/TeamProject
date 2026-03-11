@@ -9,7 +9,7 @@ namespace Base.Managers
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
-        public GameSaveData curData;
+        [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
             //첫 시작시 실행
@@ -19,6 +19,11 @@ namespace Base.Managers
                 return;
             }
             Instance = this;
+        }
+
+        private void Start()
+        {
+            GameDataManager.Instance.Init();
         }
 
         // Update is called once per frame
