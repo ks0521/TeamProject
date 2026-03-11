@@ -31,6 +31,7 @@ namespace Game_UI_Scripts_PopupManager
             if (instance == null)
             {
                 instance = this;
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -55,6 +56,7 @@ namespace Game_UI_Scripts_PopupManager
             {
                 return;
             }
+            pop.transform.SetAsLastSibling(); //팝업 제일 앞으로 옮겨주는 코드
             pop.SetActive(true);
             popupStack.Push(pop);
         }//팝업 열기
