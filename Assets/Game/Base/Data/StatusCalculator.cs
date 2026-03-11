@@ -42,7 +42,7 @@ public class StatusCalculator : MonoBehaviour
             runtimeStatus.finalBattleStatus.atkSpeed =
                 runtimeStatus.baseStat.baseBattle.atkSpeed -
                 (runData.stat.upgrade[StatusType.AtkSpeed] * stat.increasePerEnhance);
-            Mathf.Clamp(runtimeStatus.finalBattleStatus.atkSpeed, 0.1f, 3f); //공격속도 증가 디버프 있을수도 있어서
+            runtimeStatus.finalBattleStatus.atkSpeed = Mathf.Clamp(runtimeStatus.finalBattleStatus.atkSpeed, 0.1f, 3f); //공격속도 증가 디버프 있을수도 있어서
         }
         else{ Debug.LogWarning($"공격속도 SO 찾지 못함");}
 

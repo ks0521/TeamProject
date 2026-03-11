@@ -25,13 +25,13 @@ public class Test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("저장 입력");
-            SaveManager.Save(saveData);
+            GameDataManager.Instance.Save();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("불러오기 실행");
-            saveData = SaveManager.Load();
+            GameDataManager.Instance.Load();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -47,7 +47,7 @@ public class Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            calc.Calculate(runData);
+            GameDataManager.Instance.Load();
         }
 
         if (Input.GetKeyDown(KeyCode.F3))

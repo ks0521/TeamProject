@@ -7,6 +7,7 @@ using UnityEngine;
 public class GameDataManager : MonoBehaviour
 {
     public static GameDataManager Instance;
+    [SerializeField] private StatusCalculator calculator;
     public RuntimeData runtimeData;
     public StatusSO statusConfig ;
     private void Awake()
@@ -17,8 +18,12 @@ public class GameDataManager : MonoBehaviour
             return;
         }
         Instance = this;
-        //시작시 자동 로드
+    }
+
+    public void Init()
+    {
         Load();
+        calculator?.Calculate(runtimeData);
     }
     /// <summary> 런타임 데이터 기기에 저장</summary>
     public void Save()
