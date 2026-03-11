@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
+  m_Name: S_Challenge_Plane 3 SO
+  m_EditorClassIdentifier: 
+  stageName: Challenge_Plane 3
+  stageKey: 5004
+  stage: 3
+  chapter: 1
+  dropTable: {fileID: 11400000, guid: 337c6c2a32873824487f28799fdad98f, type: 2}
+  preset:
+  - monster: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
+    weights: 5
+  - monster: {fileID: 11400000, guid: 0783175cda3d29649add1ad78840c90e, type: 2}
+    weights: 3
+  - monster: {fileID: 11400000, guid: f2e7516420955284880cb3f9c04fe14f, type: 2}
+    weights: 2
+  isChallengeStage: 1
+  isBossStage: 0
+  deadLine: 60
+  targetKillScore: 30
