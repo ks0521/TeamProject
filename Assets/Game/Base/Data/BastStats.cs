@@ -9,9 +9,9 @@ namespace Base.Data
     [Serializable]
     public struct RewardStat
     {
-        [Range(-1f, 100f)] public float goldRate; //골드획득률(배율)
-        [Range(-1f, 100f)] public float expRate; //경험치획득률(배율)
-        [Range(-1, 10f)] public float itemDropRateBonus; //아이템 드랍 확률(배율)
+        [Range(-1f, 100f)] public float goldRate; //골드획득률(%)
+        [Range(-1f, 100f)] public float expRate; //경험치획득률(%)
+        [Range(-1, 10f)] public float itemDropRateBonus; //아이템 드랍 확률(%)
 
         public static RewardStat operator +(RewardStat a, RewardStat b)
         {
