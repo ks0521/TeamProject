@@ -19,7 +19,6 @@ namespace Base.Managers
                 return;
             }
             Instance = this;
-            
         }
 
         // Update is called once per frame
