@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BGMChanger : MonoBehaviour
 {
@@ -26,7 +25,7 @@ public class BGMChanger : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             mapType = MapType.Field;
             ChangeMap(mapType);
@@ -38,7 +37,7 @@ public class BGMChanger : MonoBehaviour
         }
     }
 
-    void ChangeMap(MapType currentMap)
+    public void ChangeMap(MapType currentMap)
     {
         mapType = currentMap;
 
