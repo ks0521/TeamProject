@@ -15,6 +15,9 @@ namespace Battle
     public class StageSO : ScriptableObject
     {
         [Header("스테이지 이름")]public string stageName;
+        [Header("스테이지 식별용 키")] public int stageKey;
+        [Header("스테이지")] public int stage;
+        [Header("챕터")] public int chapter;
         [Header("스테이지 타입(일반 / 돌파)")] public bool isChallengeStage;
 
         [Header("스테이지 돌파 전용")] 

@@ -50,7 +50,7 @@ namespace Base.Managers
         /// <summary> 게임 처음 시작했을 때의 기본 데이터 설정</summary>
         public static GameSaveData MakeDefaultSaveData()
         {
-            return new GameSaveData()
+            GameSaveData data =  new GameSaveData()
             {
                 stageProgress = new StageProgressData()
                 {
@@ -70,8 +70,16 @@ namespace Base.Managers
                 //equipment = new PlayerEquipmentData(),
                 itemInventory = new PlayerItemInventoryData(),
                 statUpgrade = new PlayerStatUpgradeData(),
-                skill = new PlayerSkillData()
+                skill = new PlayerSkillData(),
+                lastAccess = new PlayerAccessTimeData()
+                {
+                    lastConnectTime = DateTime.Now.ToBinary() //최종 접속시간 저장
+                }
             };
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(SavePath,json);
+            Debug.Log("새 저장파일 생성 완료");
+            return data;
         }
     }
 }
