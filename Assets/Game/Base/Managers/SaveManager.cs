@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Base.Save;
+using Growth.StatUpgrade;
 using UnityEngine;
 
 namespace Base.Managers
@@ -68,14 +70,31 @@ namespace Base.Managers
                 },
                 //equipmentInventory = new PlayerEquipmentInventoryData(),
                 //equipment = new PlayerEquipmentData(),
-                itemInventory = new PlayerItemInventoryData(),
-                statUpgrade = new PlayerStatUpgradeData(),
-                skill = new PlayerSkillData(),
+                itemInventory = new PlayerItemInventoryData()
+                {
+                    items = new()
+                },
+                stat = new PlayerStatUpgradeData()
+                {
+                    upgrade = new()
+                },
+                skill = new PlayerSkillData()
+                {
+                    skills = new()
+                },
                 lastAccess = new PlayerAccessTimeData()
                 {
                     lastConnectTime = DateTime.Now.ToBinary() //최종 접속시간 저장
                 }
             };
+            foreach (StatusType type in Enum.GetValues(typeof(StatusType)))
+            {
+                data.stat.upgrade.Add(new StatusEntry
+                {
+                    type = type,
+                    count = 0
+                });
+            }
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(SavePath,json);
             Debug.Log("새 저장파일 생성 완료");

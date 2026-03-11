@@ -14,16 +14,18 @@ namespace Battle
     [CreateAssetMenu(menuName = "Game/Battle/Stage")]
     public class StageSO : ScriptableObject
     {
-        [Header("스테이지 이름")]public string stageName;
-        [Header("스테이지 식별용 키")] public int stageKey;
-        [Header("스테이지")] public int stage;
-        [Header("챕터")] public int chapter;
-        [Header("스테이지 타입(일반 / 돌파)")] public bool isChallengeStage;
+        [Header("공용")]
+        [Tooltip("스테이지 이름")]public string stageName;
+        [Tooltip("스테이지 식별용 키")] public int stageKey;
+        [Tooltip("스테이지")] public int stage;
+        [Tooltip("챕터")] public int chapter;
+        [Tooltip("드랍 테이블")] public DropTableSO dropTable;
+        [Tooltip("몬스터 프리셋")] public List<MonsterPreset> preset;
+        [Tooltip("스테이지 타입(일반 / 돌파)")] public bool isChallengeStage;
 
         [Header("스테이지 돌파 전용")] 
-        [Header("보스전투 여부")] public bool isBossStage;
-        [Header("제한시간")] public int deadLine;
-        [Header("목표 처치 수")] public int targetKillScore;
-        [Header("몬스터 프리셋")] public List<MonsterPreset> preset;
+        [Tooltip("보스전투 여부")] public bool isBossStage;
+        [Tooltip("제한시간")] public int deadLine;
+        [Tooltip("목표 처치 수")] public int targetKillScore;
     }
 }

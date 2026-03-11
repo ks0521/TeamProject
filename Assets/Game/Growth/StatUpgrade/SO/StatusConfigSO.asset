@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff825e56c137dc4eb554014ee944d20, type: 3}
+  m_Name: StatusConfigSO
+  m_EditorClassIdentifier: 
+  stats:
+  - type: 0
+    increasePerEnhance: 5
+    unlockLevel: 0
+    maxLevel: 1000000
+  - type: 1
+    increasePerEnhance: 10
+    unlockLevel: 0
+    maxLevel: 1000000
+  - type: 2
+    increasePerEnhance: 1
+    unlockLevel: 50
+    maxLevel: 100000
+  - type: 3
+    increasePerEnhance: 0.01
+    unlockLevel: 150
+    maxLevel: 200
+  - type: 4
+    increasePerEnhance: 1
+    unlockLevel: 500
+    maxLevel: 50
+  - type: 5
+    increasePerEnhance: 0.1
+    unlockLevel: 1000
+    maxLevel: 1000
+  - type: 6
+    increasePerEnhance: 0.01
+    unlockLevel: 1500
+    maxLevel: 100
+  - type: 7
+    increasePerEnhance: 1
+    unlockLevel: 2000
+    maxLevel: 100
+  - type: 8
+    increasePerEnhance: 1
+    unlockLevel: 2500
+    maxLevel: 100
+  - type: 9
+    increasePerEnhance: 1
+    unlockLevel: 3000
+    maxLevel: 50
