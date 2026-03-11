@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BGMChanger : MonoBehaviour
@@ -25,7 +23,7 @@ public class BGMChanger : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
+        if(Input.GetKeyDown(KeyCode.F1))
         {
             mapType = MapType.Field;
             ChangeMap(mapType);
@@ -52,6 +50,6 @@ public class BGMChanger : MonoBehaviour
         bgmSource.clip = currentClip;
         bgmSource.Play();
 
-        Debug.Log($"ÇöÀç ¸Ê: {currentMap}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {currentMap}");
     }
 }
