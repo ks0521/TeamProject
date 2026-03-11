@@ -36,6 +36,7 @@ namespace Growth.Skill
     public class SkillSO : ScriptableObject
     {
         public int key; //고유 키
+        public string skillName; //스킬 이름
         public Type type; //스킬타입
         public Priority priority; //스킬 우선순위
         public ScopeOfEffect SoE; //적용 범위
