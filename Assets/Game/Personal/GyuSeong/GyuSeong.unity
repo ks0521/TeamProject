@@ -198,6 +198,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 77649044}
   m_CullTransparentMesh: 1
+--- !u!1 &186377676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 186377677}
+  - component: {fileID: 186377678}
+  m_Layer: 0
+  m_Name: SaveDataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &186377677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186377676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.465996, y: 3.3361125, z: -5.231451}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &186377678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186377676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a94006e5af37774b91d6f7d080a1594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runtimeData:
+    stageProgress:
+      curNormalStage: 0
+      curNormalChapter: 0
+      maxClearStage: 0
+      maxClearChapter: 0
+    currencyData:
+      level: 0
+      exp: 0
+      gold: 0
+      statStone: 0
+    skill:
+      skillSlots: 0
+    lastAccess:
+      lastConnectTime: 0
+  statusConfig: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
 --- !u!1 &337683770
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,8 +659,8 @@ MonoBehaviour:
       statStone: 0
     itemInventory:
       items: []
-    statUpgrade:
-      statUpgrade: []
+    stat:
+      upgrade: []
     skill:
       skillSlots: 0
       skills: []
@@ -2144,3 +2204,4 @@ SceneRoots:
   - {fileID: 532483009}
   - {fileID: 1946058096}
   - {fileID: 625919539}
+  - {fileID: 186377677}

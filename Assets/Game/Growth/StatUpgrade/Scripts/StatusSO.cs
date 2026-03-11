@@ -17,6 +17,7 @@ namespace Growth.StatUpgrade
         [Tooltip("스탯강화 타입")]public StatusType type;
         [Tooltip("강화당 증가수치")]public float increasePerEnhance;
         [Tooltip("해금 레벨")] public int unlockLevel;
+        [Tooltip("레벨당 강화 비용")] public int enhanceCost;
         [Tooltip("최대 레벨")] public int maxLevel;
     }
     [CreateAssetMenu(menuName = "Game/Growth/Status")]
