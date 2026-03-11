@@ -12,7 +12,6 @@ namespace Base.Managers
     {
         //안드로이드용, 테스트 후 휴대폰 테스트시 해당 설정 사용
         private static string SavePath => Path.Combine(Application.persistentDataPath, "SaveData.json");
-        private static int number => 5;
         /// <summary> 데이터 저장하기 </summary>
         public static void Save(GameSaveData data)
         {
