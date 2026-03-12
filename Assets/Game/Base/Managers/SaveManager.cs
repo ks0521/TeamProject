@@ -55,10 +55,10 @@ namespace Base.Managers
             {
                 stageProgress = new StageProgressData()
                 {
-                    curNormalStage = 1,
-                    curNormalChapter = 1,
-                    maxClearStage = 1,
-                    maxClearChapter = 1
+                    selectedNormalStage = 1,
+                    selectedNormalChapter = 1,
+                    nextChallangeStage = 1,
+                    nextChallangeChapter = 1
                 },
                 currencyData = new PlayerCurrencyData()
                 {
