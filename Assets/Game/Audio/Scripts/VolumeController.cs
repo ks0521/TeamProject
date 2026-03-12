@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -12,12 +10,13 @@ public class VolumeController : MonoBehaviour
     [SerializeField] private Slider sliderSkillVolume;
     [SerializeField] private Slider sliderSFXVolume;
 
-    void Awake()
+    public void InitVolumeSliders()
     {
-        sliderMasterVolume.onValueChanged.AddListener(SetMasterVolume);
-        sliderBGMVolume.onValueChanged.AddListener(SetBGMVolume);
-        sliderSkillVolume.onValueChanged.AddListener(SetSkillVolume);
-        sliderSFXVolume.onValueChanged.AddListener(SetSFXVolume);
+        //[방어 로직] 슬라이더가 할당되어 있을 때만 이벤트 연결
+        if (sliderMasterVolume != null) sliderMasterVolume.onValueChanged.AddListener(SetMasterVolume);
+        if (sliderBGMVolume != null) sliderBGMVolume.onValueChanged.AddListener(SetBGMVolume);
+        if (sliderSkillVolume != null) sliderSkillVolume.onValueChanged.AddListener(SetSkillVolume);
+        if (sliderSFXVolume != null) sliderSFXVolume.onValueChanged.AddListener(SetSFXVolume);
     }
 
     public void SetMasterVolume(float volume)
@@ -35,5 +34,11 @@ public class VolumeController : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 }
