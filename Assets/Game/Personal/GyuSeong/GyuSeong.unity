@@ -245,10 +245,10 @@ MonoBehaviour:
   calculator: {fileID: 625919535}
   runtimeData:
     stageProgress:
-      curNormalStage: 0
-      curNormalChapter: 0
-      maxClearStage: 0
-      maxClearChapter: 0
+      selectedNormalStage: 0
+      selectedNormalChapter: 0
+      nextChallangeStage: 0
+      nextChallangeChapter: 0
     currencyData:
       level: 0
       exp: 0
@@ -649,10 +649,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveData:
     stageProgress:
-      curNormalStage: 0
-      curNormalChapter: 0
-      maxClearStage: 0
-      maxClearChapter: 0
+      selectedNormalStage: 0
+      selectedNormalChapter: 0
+      nextChallangeStage: 0
+      nextChallangeChapter: 0
     currencyData:
       level: 0
       exp: 0
@@ -669,10 +669,10 @@ MonoBehaviour:
       lastConnectTime: 0
   runData:
     stageProgress:
-      curNormalStage: 0
-      curNormalChapter: 0
-      maxClearStage: 0
-      maxClearChapter: 0
+      selectedNormalStage: 0
+      selectedNormalChapter: 0
+      nextChallangeStage: 0
+      nextChallangeChapter: 0
     currencyData:
       level: 0
       exp: 0
@@ -827,6 +827,57 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.596581, y: 1.4291666, z: -3.965858}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &660394807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 660394809}
+  - component: {fileID: 660394808}
+  m_Layer: 0
+  m_Name: StageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &660394808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660394807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed200e9fa2e7cb4883e694787f3297b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStage: 0
+  curChapter: 1
+  stageInfo:
+    selectedStage: 0
+    selectedChapter: 0
+    nextChallengeStage: 0
+    nextChallengeChapter: 0
+--- !u!4 &660394809
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660394807}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 170.61415, y: 23.929468, z: -137.29439}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2206,7 +2257,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 867ae1c3e9597d941b93bd5c6be8acd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageManager: {fileID: 660394808}
   calculator: {fileID: 625919535}
+--- !u!1 &2089618060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2089618062}
+  - component: {fileID: 2089618061}
+  m_Layer: 0
+  m_Name: GameDataProvider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2089618061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089618060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33b5f3281bded6846bb7805b37280f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 11400000, guid: 3759ba4c313c0c143aa6d5a9fd4a6212, type: 2}
+--- !u!4 &2089618062
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089618060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 170.61415, y: 23.929468, z: -137.29439}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2220,3 +2317,5 @@ SceneRoots:
   - {fileID: 1946058096}
   - {fileID: 625919539}
   - {fileID: 186377677}
+  - {fileID: 660394809}
+  - {fileID: 2089618062}

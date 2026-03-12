@@ -47,8 +47,6 @@ namespace Growth.StatUpgrade
                 Debug.LogWarning("키에 해당하는 스탯이 없습니다. ");
                 return false;
             }
-
-            Debug.Log($"{stat.type}");
             return true;
         }
     }
