@@ -33,25 +33,8 @@ namespace Game_UI.UiPresenter
             AutoButton.SetAutoBattle(autoType);
             autoType = !autoType;
         }
-        float currentHp = 100f;
-        float maxHp = 100f;
-
-        private void Update()
-        {
-
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                currentHp -= 10f;
-                hp.SetHp(currentHp, maxHp);
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                currentHp += 10f;
-                hp.SetHp(currentHp, maxHp);
-            }
-            
-        }
+       
+       
     }
 
 }
