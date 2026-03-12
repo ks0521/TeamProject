@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2d7329ea3bfe844bb9d487b4f2938a, type: 3}
   m_Name: Plane_3 Drop Table SO
   m_EditorClassIdentifier: 
+  chapter: 1
+  stage: 3
   dropList:
   - item: {fileID: 11400000, guid: faa2abb3a8275c040a4457d767d3bb51, type: 2}
     chance: 0.3

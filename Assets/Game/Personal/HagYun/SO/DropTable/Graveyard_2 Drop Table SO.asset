@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2d7329ea3bfe844bb9d487b4f2938a, type: 3}
   m_Name: Graveyard_2 Drop Table SO
   m_EditorClassIdentifier: 
+  chapter: 2
+  stage: 2
   dropList:
   - item: {fileID: 11400000, guid: 69744792559932d458c2152d9b31c9d3, type: 2}
     chance: 0.4
