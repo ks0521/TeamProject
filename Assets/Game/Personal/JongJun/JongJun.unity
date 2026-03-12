@@ -379,22 +379,22 @@ MonoBehaviour:
   buttonClick: {fileID: 8300000, guid: 025009b957c617544b904b2030ea5a80, type: 3}
   popupOpen: {fileID: 8300000, guid: 7811c72b00a7ef1478ab9128607d7bbe, type: 3}
   popupClose: {fileID: 8300000, guid: 84a275222028f4b42a6cbaff3c4e71a1, type: 3}
-  getGold: {fileID: 0}
-  getItem: {fileID: 0}
-  levelUp: {fileID: 0}
-  beAttacked: {fileID: 0}
-  bossAttack: {fileID: 0}
-  bossSkill: {fileID: 0}
-  bossDead: {fileID: 0}
-  win: {fileID: 0}
-  lose: {fileID: 0}
+  getGold: {fileID: 8300000, guid: 422823808af5ce44b9706a0e17996a70, type: 3}
+  getItem: {fileID: 8300000, guid: 422823808af5ce44b9706a0e17996a70, type: 3}
+  levelUp: {fileID: 8300000, guid: af9492bb056ef7240ab37d402599bd63, type: 3}
+  beAttacked: {fileID: 8300000, guid: 60b6be4f3deab2a45a2c61042118863c, type: 3}
+  bossAttack: {fileID: 8300000, guid: 288139726e07a274fb87c08129a620da, type: 3}
+  bossSkill: {fileID: 8300000, guid: a2c89fcb3802ce9418629e1f2c78b0a1, type: 3}
+  bossDead: {fileID: 8300000, guid: abf72e6d910629f4b8faaae01bb3f606, type: 3}
+  win: {fileID: 8300000, guid: ede8980e557e8884ca926eeb7755ba95, type: 3}
+  lose: {fileID: 8300000, guid: 2695a731480b5fd4098e94e0ca1cfa73, type: 3}
   equipItem: {fileID: 8300000, guid: 742e853ec16b2d84d99524c7a39c139d, type: 3}
   unequipItem: {fileID: 8300000, guid: 72e3ddd4aa151374fa80a103b7ed1654, type: 3}
-  enchantItem: {fileID: 0}
-  synthesizeItem: {fileID: 0}
+  enchantItem: {fileID: 8300000, guid: c3cf11cf54e04f744aba1c6645211d37, type: 3}
+  synthesizeItem: {fileID: 8300000, guid: a5d6e740174932a4796887e2b64b482d, type: 3}
   addSkill: {fileID: 8300000, guid: 23eb12aac37614642b48ba1470564816, type: 3}
   unaddSkill: {fileID: 8300000, guid: 31eed0a71c5839c419f464af7c49a39b, type: 3}
-  useSP: {fileID: 0}
+  useSP: {fileID: 8300000, guid: 43e285cce8133274d8c4bdb45563a9d2, type: 3}
   initSP: {fileID: 8300000, guid: 5547177319d28fb42a1460221b566b93, type: 3}
 --- !u!1 &115036711
 GameObject:
