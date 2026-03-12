@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Base.Data;
 using Base.Save;
 using Battle;
 using UnityEngine;
@@ -14,7 +15,6 @@ namespace Base.Managers
         [SerializeField] private int curChapter;
         [SerializeField] private StageInfo stageInfo;
         [SerializeField] private Stage stage;
-        [SerializeField] private ScriptableObjectHub hub;
         void Awake()
         {
             
@@ -23,22 +23,23 @@ namespace Base.Managers
         public void Init()
         {
             stageInfo = GameDataManager.Instance.GetStageInfo();
-            ChangeStage();
+            ChangeStage(stageInfo.selectedChapter,stageInfo.selectedStage);
         }
-        public void ChangeStage()
+        public void ChangeStage(int selectedChapter, int selectedStage)
         {
             stage?.Destroy();
-            stage = new Stage(stageInfo.selectedChapter, stageInfo.selectedStage);
+            stage = new Stage(selectedChapter, selectedStage);
         }
     }
 
     public class Stage
     {
         private List<Monster> monstersList = new();
-
-        public Stage(int selectedChapter, int selectedStage)
+        public Stage(int chapter, int stage)
         {
-            Debug.Log($"Chapter.{selectedChapter} Stage {selectedStage} 진입");
+            //바꾸려는 챕터와 스테이지의 정보를 SO에서 얻어옴
+            StageSO stageSO = GameData.StageDB.GetSO(chapter, stage,StageType.Normal);
+            Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 진입");
         }
         
         public void Destroy()

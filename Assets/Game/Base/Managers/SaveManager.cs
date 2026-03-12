@@ -57,7 +57,7 @@ namespace Base.Managers
                 {
                     selectedNormalStage = 1,
                     selectedNormalChapter = 1,
-                    nextChallangeStage = 1,
+                    nextChallangeStage = 2,
                     nextChallangeChapter = 1
                 },
                 currencyData = new PlayerCurrencyData()

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
   m_Name: S_Challenge_Graveyard 3 SO
   m_EditorClassIdentifier: 
-  stageName: Challenge_Graveyard 3
   stageKey: 5012
+  stageName: Challenge_Graveyard 3
   stage: 3
   chapter: 2
   dropTable: {fileID: 11400000, guid: 39a3df51670c4d74dbd6838bd913868f, type: 2}
@@ -24,7 +24,6 @@ MonoBehaviour:
     weights: 3
   - monster: {fileID: 11400000, guid: 8be3dd7eded5e9d4ca364ae2211b1a2c, type: 2}
     weights: 2
-  isChallengeStage: 1
-  isBossStage: 0
+  type: 1
   deadLine: 60
   targetKillScore: 30
