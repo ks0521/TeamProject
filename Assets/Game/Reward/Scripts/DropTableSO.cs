@@ -27,8 +27,9 @@ public struct DropedItem
 [CreateAssetMenu(menuName = "Game/Reward/DropTable")]
 public class DropTableSO : ScriptableObject
 {
+    public int chapter; //챕터
+    public int stage; //스테이지
     public List<DropEntry> dropList = new();
-
     /// <summary> 드롭률 감안해서 드랍테이블의 아이템 뽑기</summary>
     /// <param name="dropRate">최종 드랍률</param>
     /// <returns>드랍된 아이템 갯수</returns>
