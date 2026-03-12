@@ -19,10 +19,10 @@ namespace Base.Save
     }
     [Serializable]public class StageProgressData
     {
-        public int curNormalStage; //직전 일반스테이지
-        public int curNormalChapter;
-        public int maxClearStage;
-        public int maxClearChapter;
+        public int selectedNormalStage; //직전 일반스테이지
+        public int selectedNormalChapter; //현재 일반 스테이지
+        public int nextChallangeStage; //도전 가능한 스테이지
+        public int nextChallangeChapter; //도전 가능한 챕터
     }
     [Serializable]public class PlayerCurrencyData
     {

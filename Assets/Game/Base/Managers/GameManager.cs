@@ -9,6 +9,7 @@ namespace Base.Managers
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
@@ -24,6 +25,7 @@ namespace Base.Managers
         private void Start()
         {
             GameDataManager.Instance.Init();
+            stageManager.Init();
         }
 
         // Update is called once per frame

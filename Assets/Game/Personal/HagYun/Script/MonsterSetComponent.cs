@@ -25,7 +25,7 @@ namespace Personal.HagYun
             {
                 if (monArr[i] == null) break;
                 int cnt = i;
-                monArr[cnt].GetComponent<Monster>().RequestMonDie += () => DeleteElement(cnt);
+                //monArr[cnt].GetComponent<Monster>().RequestMonDie += () => DeleteElement(cnt);
             }
         }
         public bool TryGetMonster(out GameObject obj)
