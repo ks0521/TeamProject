@@ -12,7 +12,7 @@ public class VolumeController : MonoBehaviour
 
     public void InitVolumeSliders()
     {
-        //[방어 로직] 슬라이더가 할당되어 있을 때만 이벤트 연결
+        //슬라이더가 할당되어 있을 때만 이벤트 연결
         if (sliderMasterVolume != null) sliderMasterVolume.onValueChanged.AddListener(SetMasterVolume);
         if (sliderBGMVolume != null) sliderBGMVolume.onValueChanged.AddListener(SetBGMVolume);
         if (sliderSkillVolume != null) sliderSkillVolume.onValueChanged.AddListener(SetSkillVolume);
