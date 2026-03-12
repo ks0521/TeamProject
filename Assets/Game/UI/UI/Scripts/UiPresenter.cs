@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-namespace Game_UI_Scripts_MainUiView
+namespace Game_UI.UiPresenter
 {
     public class UiPresenter : MonoBehaviour
     {
@@ -33,25 +33,8 @@ namespace Game_UI_Scripts_MainUiView
             AutoButton.SetAutoBattle(autoType);
             autoType = !autoType;
         }
-        float currentHp = 100f;
-        float maxHp = 100f;
-
-        private void Update()
-        {
-
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                currentHp -= 10f;
-                hp.SetHp(currentHp, maxHp);
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                currentHp += 10f;
-                hp.SetHp(currentHp, maxHp);
-            }
-            
-        }
+       
+       
     }
 
 }
