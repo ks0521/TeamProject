@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game_UI_Scripts_PopupManager
+namespace Game_UI.Scripts.PopupManager
 {
     public class PopupManager : MonoBehaviour
     {
