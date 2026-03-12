@@ -15,12 +15,12 @@ MonoBehaviour:
   stats:
   - type: 0
     increasePerEnhance: 5
-    unlockLevel: 0
+    unlockLevel: 10
     enhanceCost: 15
     maxLevel: 1000000
   - type: 1
     increasePerEnhance: 10
-    unlockLevel: 0
+    unlockLevel: 50
     enhanceCost: 30
     maxLevel: 1000000
   - type: 2
