@@ -379,8 +379,23 @@ MonoBehaviour:
   buttonClick: {fileID: 8300000, guid: 025009b957c617544b904b2030ea5a80, type: 3}
   popupOpen: {fileID: 8300000, guid: 7811c72b00a7ef1478ab9128607d7bbe, type: 3}
   popupClose: {fileID: 8300000, guid: 84a275222028f4b42a6cbaff3c4e71a1, type: 3}
+  getGold: {fileID: 0}
+  getItem: {fileID: 0}
+  levelUp: {fileID: 0}
+  beAttacked: {fileID: 0}
+  bossAttack: {fileID: 0}
+  bossSkill: {fileID: 0}
+  bossDead: {fileID: 0}
+  win: {fileID: 0}
+  lose: {fileID: 0}
   equipItem: {fileID: 8300000, guid: 742e853ec16b2d84d99524c7a39c139d, type: 3}
   unequipItem: {fileID: 8300000, guid: 72e3ddd4aa151374fa80a103b7ed1654, type: 3}
+  enchantItem: {fileID: 0}
+  synthesizeItem: {fileID: 0}
+  addSkill: {fileID: 8300000, guid: 23eb12aac37614642b48ba1470564816, type: 3}
+  unaddSkill: {fileID: 8300000, guid: 31eed0a71c5839c419f464af7c49a39b, type: 3}
+  useSP: {fileID: 0}
+  initSP: {fileID: 8300000, guid: 5547177319d28fb42a1460221b566b93, type: 3}
 --- !u!1 &147189987
 GameObject:
   m_ObjectHideFlags: 0
