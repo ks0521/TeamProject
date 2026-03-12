@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2d7329ea3bfe844bb9d487b4f2938a, type: 3}
   m_Name: Zombie Boss Graveyard Drop Table SO
   m_EditorClassIdentifier: 
+  chapter: 2
+  stage: 5
   dropList:
   - item: {fileID: 11400000, guid: 284c9a33cb576034fb2bbc96b9acd2d8, type: 2}
     chance: 1

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e3d273945dfb2499b654f76c68794e, type: 3}
+  m_Name: Drop Table Dictionary SO
+  m_EditorClassIdentifier: 
+  dropTableList:
+  - {fileID: 11400000, guid: 297ed2750a6bee044bbc754f79e705c9, type: 2}
+  - {fileID: 11400000, guid: 9864bc199b0af6b4daaaed06cca99fd8, type: 2}
+  - {fileID: 11400000, guid: 39a3df51670c4d74dbd6838bd913868f, type: 2}
+  - {fileID: 11400000, guid: d6299d918886a4544ae83e8a4d443a0c, type: 2}
+  - {fileID: 11400000, guid: a8948b73e75acd54cb45e2b10825d4ef, type: 2}
+  - {fileID: 11400000, guid: 4d6965a50db67184b93a60495d7a713a, type: 2}
+  - {fileID: 11400000, guid: ba42fc30f4437fe4097ed45a855a1692, type: 2}
+  - {fileID: 11400000, guid: 337c6c2a32873824487f28799fdad98f, type: 2}
+  - {fileID: 11400000, guid: 2b8bf1318815d2a4bb29d19d01dd5d60, type: 2}
+  - {fileID: 11400000, guid: a24558cb2f0526542acb12b15b2bea61, type: 2}
