@@ -29,6 +29,9 @@ public class DropTableSO : ScriptableObject
 {
     public int chapter; //챕터
     public int stage; //스테이지
+    //public int rewardGold; //골드
+    public int rewardStatStone; //강화석
+    public int rewardExp; //경험치
     public List<DropEntry> dropList = new();
     /// <summary> 드롭률 감안해서 드랍테이블의 아이템 뽑기</summary>
     /// <param name="dropRate">최종 드랍률</param>

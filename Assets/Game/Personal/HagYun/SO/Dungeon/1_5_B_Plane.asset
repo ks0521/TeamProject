@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: S_Boss_Zombie Boss Graveyard SO
+  m_Name: 1_5_B_Plane
   m_EditorClassIdentifier: 
-  stageKey: 5016
-  stageName: Boss_Zombie Boss Graveyard
+  stageKey: 5008
+  stageName: Boss_Orc Boss Base
   stage: 5
-  chapter: 2
-  dropTable: {fileID: 11400000, guid: a24558cb2f0526542acb12b15b2bea61, type: 2}
+  chapter: 1
+  dropTable: {fileID: 11400000, guid: a8948b73e75acd54cb45e2b10825d4ef, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: 990d7fd5e1e7f8f40a871869f7b9461a, type: 2}
+  - monster: {fileID: 11400000, guid: b6e58e1187e8a3449bd98bdd8714971b, type: 2}
     weights: 10
   type: 2
   deadLine: 120
