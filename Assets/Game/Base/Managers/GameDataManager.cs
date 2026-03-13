@@ -30,13 +30,13 @@ namespace Base.Save
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
         }
 
         public void Init()
         {
             Load();
+            Debug.Log("상태 계산중");
             calculator?.Calculate(runtimeData);
         }
 

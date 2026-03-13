@@ -27,10 +27,5 @@ namespace Base.Managers
             JJ_GameDataManager.Instance.Init();
             stageManager.Init();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        }
     }
 }
