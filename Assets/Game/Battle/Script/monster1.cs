@@ -83,4 +83,8 @@ public class monster1 : character1
             cm.ChaseMove(target, CurrentBattleStat.moveSpeed);
         }
     }
+    //추가사항으로, 보스 몬스터 공격 3가지 
+    //1. 보스 중심으로 일정 범위 경고 후 데미지
+    //2. 스킬 시전 시 플레이어 위치기준 일정 범위 경고 후 데미지
+    //3. 플레이어 위치 기준 일정범위 경고 후 돌진
 }
