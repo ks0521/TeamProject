@@ -9,6 +9,7 @@ public class SFXPlayer : MonoBehaviour
 
     [Header("공통")]
     [SerializeField] private AudioClip buttonClick;
+    [SerializeField] private AudioClip emptyClick;
     [SerializeField] private AudioClip popupOpen;
     [SerializeField] private AudioClip popupClose;
 
@@ -35,6 +36,9 @@ public class SFXPlayer : MonoBehaviour
     [SerializeField] private AudioClip useSP;
     [SerializeField] private AudioClip initSP;
 
+    [Header("기타")]
+    [SerializeField] private AudioClip getIdleReward;
+
     //공통 사운드들
     public void PlayClickSound()
     {
@@ -47,9 +51,12 @@ public class SFXPlayer : MonoBehaviour
         if (sfxSource.clip != null) sfxSource.PlayOneShot(buttonClick);
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
-    public void PlayClickEmptySound()
+    public void PlayClickEmptySound() //팝업창의 패널에 버튼 속성을 달고 붙임
     {
+        sfxSource.clip = emptyClick;
 
+        if (sfxSource.clip != null) sfxSource.PlayOneShot(emptyClick);
+        else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
 
     public void PlayPopupOpenSound()
@@ -201,6 +208,9 @@ public class SFXPlayer : MonoBehaviour
     //미접속 보상 획득 효과음
     public void PlayGetIdleRewardSound()
     {
+        sfxSource.clip = getIdleReward;
 
+        if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
+        else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
 }
