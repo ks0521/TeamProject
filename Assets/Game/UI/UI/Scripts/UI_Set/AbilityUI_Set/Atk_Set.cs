@@ -18,9 +18,17 @@ public class Atk_Set : MonoBehaviour
     [SerializeField] private GameObject lockPanel;
     [SerializeField] private TextMeshProUGUI unlockLevelText;
 
-    public void RefreshUI(int level, float currentValue ,float nextValue , int cost , bool isInteractable , bool isLock , int unlockLevel)
+
+
+    public void RefreshUI(int statslevel, int maxLevel, float currentValue, float nextValue, int cost, bool isInteractable, int playerLevel, int unlockLevel)
     {
-        statsLevelText.text = $"Lv.{level}";
+        if (statslevel < maxLevel)
+        {
+            statsLevelText.text = $"Lv.{statslevel}";
+
+        }
+        else { statsLevelText.text = $"Lv.{maxLevel}"; }
+        
         currentStats.text = currentValue.ToString("0");
         nextStats.text = nextValue.ToString("0");
         levelupcost.text = cost.ToString();
@@ -30,17 +38,24 @@ public class Atk_Set : MonoBehaviour
         {
             levelUpButton.image.color = Color.yellow;
         }
-        else
+        else { levelUpButton.image.color = Color.gray; }
+        
+        if (playerLevel >= unlockLevel)
         {
-            levelUpButton.image.color = Color.gray;
+            lockPanel.SetActive(false);
         }
-        lockPanel.SetActive(isLock);
         unlockLevelText.text = $"Lv : {unlockLevel} 개방";
+    
 
-    }//함수가 너무 많아서 하나로 묶은 버전
-    public void SetLevelText(int level)
+}//함수가 너무 많아서 하나로 묶은 버전
+    public void SetLevelText(int level, int maxLevel)
     {
-        statsLevelText.text = $"Lv.{level}";
+        if (level < maxLevel)
+        {
+            statsLevelText.text = $"Lv.{level}";
+
+        }
+        else { statsLevelText.text = $"Lv. MAX"; }
     }
     public void SetCurrentStatText(float value)
     {
@@ -72,9 +87,12 @@ public class Atk_Set : MonoBehaviour
         levelUpButton.onClick.RemoveAllListeners();
         levelUpButton.onClick.AddListener(() => action?.Invoke());
     }//버튼 잠금용 함수(비용이 부족할때 완전 클릭이 안되게 하는 함수)
-    public void SetLockStat(bool isLock , int unlockLevel)
+    public void SetLockStat(int playerLevel, int unlockLevel)
     {
-        lockPanel.SetActive(isLock);
+        if (playerLevel >= unlockLevel)
+        {
+            lockPanel.SetActive(false);
+        }
         unlockLevelText.text = $"Lv : {unlockLevel} 개방";
     }
 }

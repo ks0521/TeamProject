@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MaxHp_Set : MonoBehaviour
+public class Def_Set : MonoBehaviour
 {
     [Header("UI 참조")]
     [SerializeField] private TextMeshProUGUI statsLevelText;
@@ -16,8 +16,6 @@ public class MaxHp_Set : MonoBehaviour
     [Header("잠금 UI")]
     [SerializeField] private GameObject lockPanel;
     [SerializeField] private TextMeshProUGUI unlockLevelText;
-
-
 
     public void RefreshUI(int statslevel, int maxLevel, float currentValue, float nextValue, int cost, bool isInteractable, int playerLevel, int unlockLevel)
     {
