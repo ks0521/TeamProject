@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Base.Save;
+using Growth.StatUpgrade;
 using UnityEngine;
 
 namespace Base.Managers
@@ -10,7 +12,6 @@ namespace Base.Managers
     {
         //안드로이드용, 테스트 후 휴대폰 테스트시 해당 설정 사용
         private static string SavePath => Path.Combine(Application.persistentDataPath, "SaveData.json");
-        private static int number => 5;
         /// <summary> 데이터 저장하기 </summary>
         public static void Save(GameSaveData data)
         {
@@ -54,10 +55,10 @@ namespace Base.Managers
             {
                 stageProgress = new StageProgressData()
                 {
-                    curNormalStage = 1,
-                    curNormalChapter = 1,
-                    maxClearStage = 1,
-                    maxClearChapter = 1
+                    selectedNormalStage = 1,
+                    selectedNormalChapter = 1,
+                    nextChallangeStage = 2,
+                    nextChallangeChapter = 1
                 },
                 currencyData = new PlayerCurrencyData()
                 {
@@ -68,14 +69,31 @@ namespace Base.Managers
                 },
                 //equipmentInventory = new PlayerEquipmentInventoryData(),
                 //equipment = new PlayerEquipmentData(),
-                itemInventory = new PlayerItemInventoryData(),
-                statUpgrade = new PlayerStatUpgradeData(),
-                skill = new PlayerSkillData(),
+                itemInventory = new PlayerItemInventoryData()
+                {
+                    items = new()
+                },
+                stat = new PlayerStatUpgradeData()
+                {
+                    upgrade = new()
+                },
+                skill = new PlayerSkillData()
+                {
+                    skills = new()
+                },
                 lastAccess = new PlayerAccessTimeData()
                 {
                     lastConnectTime = DateTime.Now.ToBinary() //최종 접속시간 저장
                 }
             };
+            foreach (StatusType type in Enum.GetValues(typeof(StatusType)))
+            {
+                data.stat.upgrade.Add(new StatusEntry
+                {
+                    type = type,
+                    count = 0
+                });
+            }
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(SavePath,json);
             Debug.Log("새 저장파일 생성 완료");
