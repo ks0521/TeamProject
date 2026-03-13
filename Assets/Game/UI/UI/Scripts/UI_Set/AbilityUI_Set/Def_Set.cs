@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MaxHp_Set : MonoBehaviour
+public class Def_Set : MonoBehaviour
 {
     [Header("UI ÂüÁ¶")]
     [SerializeField] private TextMeshProUGUI statsNameText;
@@ -54,7 +54,11 @@ public class MaxHp_Set : MonoBehaviour
             costImage.enabled = false;
 
             statsLevelText.text = $"MAX";
+
         }
+
+
+
     }
 
     public void BindLevelUp(Action action)
