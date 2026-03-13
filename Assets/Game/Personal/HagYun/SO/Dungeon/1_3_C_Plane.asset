@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: S_Plane 2 SO
+  m_Name: 1_3_C_Plane
   m_EditorClassIdentifier: 
-  stageName: Plane 2
-  stageKey: 5003
-  stage: 2
+  stageKey: 5004
+  stageName: Challenge_Plane 3
+  stage: 3
   chapter: 1
-  dropTable: {fileID: 11400000, guid: ba42fc30f4437fe4097ed45a855a1692, type: 2}
+  dropTable: {fileID: 11400000, guid: 337c6c2a32873824487f28799fdad98f, type: 2}
   preset:
   - monster: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
-    weights: 8
+    weights: 5
   - monster: {fileID: 11400000, guid: 0783175cda3d29649add1ad78840c90e, type: 2}
+    weights: 3
+  - monster: {fileID: 11400000, guid: f2e7516420955284880cb3f9c04fe14f, type: 2}
     weights: 2
-  isChallengeStage: 0
-  isBossStage: 0
-  deadLine: 0
-  targetKillScore: 0
+  type: 1
+  deadLine: 60
+  targetKillScore: 30
