@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a94006e5af37774b91d6f7d080a1594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calculator: {fileID: 0}
+  calculator: {fileID: 2613657830494718529}
   runtimeData:
     stageProgress:
       selectedNormalStage: 0
@@ -996,7 +996,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageManager: {fileID: 660394808}
-  calculator: {fileID: 0}
 --- !u!1 &2089618060
 GameObject:
   m_ObjectHideFlags: 0
