@@ -42,11 +42,20 @@ public class monster1 : character1
 
     protected override void UpdateFeat()
     {
-        //TODO : 종준님 구현(이동 / 공격 판정)
     }
 
     protected override void FixedUpdateFeat()
     {
-        
+        //TODO : 종준님 구현(이동 / 공격 판정)
     }
+
+    public void Action()
+    {
+        //공격 거리 이상이면 이동
+        //공격거리 이하면 공격(character1 부분 Attack 이용)
+    }
+    //추가사항으로, 보스 몬스터 공격 3가지 
+    //1. 보스 중심으로 일정 범위 경고 후 데미지
+    //2. 스킬 시전 시 플레이어 위치기준 일정 범위 경고 후 데미지
+    //3. 플레이어 위치 기준 일정범위 경고 후 돌진
 }

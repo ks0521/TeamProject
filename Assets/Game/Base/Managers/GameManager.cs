@@ -10,7 +10,6 @@ namespace Base.Managers
     {
         public static GameManager Instance;
         [SerializeField] private StageManager stageManager;
-        [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
             //첫 시작시 실행
@@ -26,11 +25,6 @@ namespace Base.Managers
         {
             GameDataManager.Instance.Init();
             stageManager.Init();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
         }
     }
 }

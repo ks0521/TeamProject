@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Base.Save;
@@ -8,10 +9,18 @@ public class StatusCalculator : MonoBehaviour
 {
     [SerializeField] private PlayerRuntimeStatus runtimeStatus;
     [SerializeField] private StatusSO statusConfig;
+
+    private void Awake()
+    {
+        if(runtimeStatus == null)
+            runtimeStatus = GetComponent<PlayerRuntimeStatus>();
+    }
+
     /// <summary> 런타임 데이터를 반영해 플레이어 최종스펙 수정</summary>
     /// <param name="runData"></param>
     public void Calculate(RuntimeData runData)
     {
+        Debug.Log("계산 시작");
         StatEntry stat;
         if (statusConfig.TryGetStatEntry(StatusType.Atk, out stat))
         {   //최종 공격력 = 기본 공격력 + 공격력 스탯 업그레이드 수 * 업그레이드 당 증가량

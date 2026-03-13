@@ -123,6 +123,11 @@ namespace Base.Managers
             curType = type;
             //바꾸려는 챕터와 스테이지의 정보를 SO에서 얻어옴
             StageSO stageSO = GameData.StageDB.GetSO(chapter, stage, type);
+            if (stageSO == null)
+            {
+                Debug.LogWarning("StageManager : StageSO를 가져오지 못했습니다");
+                return;
+            }
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 진입");
             
             OnChangeStage?.Invoke(chapter,stage);
