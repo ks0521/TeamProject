@@ -21,13 +21,5 @@ public class PlayerRuntimeStatus : MonoBehaviour
         }
 
         Instance = this;
-        finalBattleStatus = baseStat.baseBattle;
-        finalRewardStatus = baseStat.baseReward;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

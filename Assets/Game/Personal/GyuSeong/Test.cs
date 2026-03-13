@@ -52,7 +52,7 @@ public class Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            GameDataManager.Instance.RequestStatEnhance(StatusType.Atk, 5);
+            //GameDataManager.Instance.RequestStatEnhance(StatusType.Atk, 5);
         }
     }
 }
