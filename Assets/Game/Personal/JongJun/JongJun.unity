@@ -388,13 +388,13 @@ MonoBehaviour:
   bossDead: {fileID: 8300000, guid: abf72e6d910629f4b8faaae01bb3f606, type: 3}
   win: {fileID: 8300000, guid: ede8980e557e8884ca926eeb7755ba95, type: 3}
   lose: {fileID: 8300000, guid: 2695a731480b5fd4098e94e0ca1cfa73, type: 3}
-  equipItem: {fileID: 8300000, guid: 742e853ec16b2d84d99524c7a39c139d, type: 3}
-  unequipItem: {fileID: 8300000, guid: 72e3ddd4aa151374fa80a103b7ed1654, type: 3}
+  equipItem: {fileID: 8300000, guid: 72e3ddd4aa151374fa80a103b7ed1654, type: 3}
+  unequipItem: {fileID: 8300000, guid: 742e853ec16b2d84d99524c7a39c139d, type: 3}
   enchantItem: {fileID: 8300000, guid: c3cf11cf54e04f744aba1c6645211d37, type: 3}
   synthesizeItem: {fileID: 8300000, guid: a5d6e740174932a4796887e2b64b482d, type: 3}
   addSkill: {fileID: 8300000, guid: 23eb12aac37614642b48ba1470564816, type: 3}
   unaddSkill: {fileID: 8300000, guid: 31eed0a71c5839c419f464af7c49a39b, type: 3}
-  useSP: {fileID: 8300000, guid: 43e285cce8133274d8c4bdb45563a9d2, type: 3}
+  useSP: {fileID: 8300000, guid: 7c3cd7ead7f6f054a93f5ded34944aaa, type: 3}
   initSP: {fileID: 8300000, guid: 5547177319d28fb42a1460221b566b93, type: 3}
 --- !u!1 &115036711
 GameObject:
