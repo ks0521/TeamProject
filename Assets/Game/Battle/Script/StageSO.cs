@@ -7,7 +7,7 @@ namespace Battle
 {
     public enum StageType
     {
-        Normal, Challenge, Boss
+        Normal, Challenge, Boss, Locked
     }
     [Serializable]
     public struct MonsterPreset
