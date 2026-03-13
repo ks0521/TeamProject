@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-namespace Game_UI.UiPresenter
+namespace UI.Scripts.UiPresenter
 {
     public class UiPresenter : MonoBehaviour
     {
