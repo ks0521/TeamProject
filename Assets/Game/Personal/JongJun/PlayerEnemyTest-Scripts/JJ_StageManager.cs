@@ -5,7 +5,7 @@ using Base.Save;
 using Battle;
 using UnityEngine;
 
-namespace Base.Managers
+namespace Personal_Jongjun
 {
     [Serializable]
     /// <summary> UI에서 사용하기 위한 정보 모음집</summary>
