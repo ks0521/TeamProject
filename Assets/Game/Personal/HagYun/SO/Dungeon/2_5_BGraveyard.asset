@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: S_Graveyard 1 SO
+  m_Name: 2_5_BGraveyard
   m_EditorClassIdentifier: 
-  stageName: Graveyard 1
-  stageKey: 5009
-  stage: 1
+  stageKey: 5016
+  stageName: Boss_Zombie Boss Graveyard
+  stage: 5
   chapter: 2
-  dropTable: {fileID: 11400000, guid: 297ed2750a6bee044bbc754f79e705c9, type: 2}
+  dropTable: {fileID: 11400000, guid: a24558cb2f0526542acb12b15b2bea61, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: 819043d42a8a58046b150b54021d891f, type: 2}
+  - monster: {fileID: 11400000, guid: 990d7fd5e1e7f8f40a871869f7b9461a, type: 2}
     weights: 10
-  isChallengeStage: 0
-  isBossStage: 0
-  deadLine: 0
-  targetKillScore: 0
+  type: 2
+  deadLine: 120
+  targetKillScore: 1

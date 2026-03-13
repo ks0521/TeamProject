@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: S_Graveyard 4 SO
+  m_Name: 1_2_Plane
   m_EditorClassIdentifier: 
-  stageName: Graveyard 4
-  stageKey: 5015
-  stage: 4
-  chapter: 2
-  dropTable: {fileID: 11400000, guid: d6299d918886a4544ae83e8a4d443a0c, type: 2}
+  stageName: Plane 2
+  stageKey: 5003
+  stage: 2
+  chapter: 1
+  dropTable: {fileID: 11400000, guid: ba42fc30f4437fe4097ed45a855a1692, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: 5f6a0948e4094244bb98697f15ee4f82, type: 2}
-    weights: 6
-  - monster: {fileID: 11400000, guid: 8be3dd7eded5e9d4ca364ae2211b1a2c, type: 2}
-    weights: 4
+  - monster: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
+    weights: 8
+  - monster: {fileID: 11400000, guid: 0783175cda3d29649add1ad78840c90e, type: 2}
+    weights: 2
   isChallengeStage: 0
   isBossStage: 0
   deadLine: 0
