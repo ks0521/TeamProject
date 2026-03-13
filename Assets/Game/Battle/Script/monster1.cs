@@ -1,20 +1,26 @@
 using Base.Data;
 using Battle;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class monster1 : character1
 {
-    
     public MonsterSO monsterSO;
     public const float MonsterAttackRange = 0.6f;
+    
     protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
     protected override float AttackRange => MonsterAttackRange;
+
+    // 공격 대상의 스크립트를 미리 캐싱해둘 변수
+    private character1 targetScript;
+
     protected override void OnDead()
     {
         if (isDead) //여러번 죽지 않게하기
             return;
         isDead = true;
         Debug.Log("몬스터 사망");
+        rb.velocity = Vector2.zero;
         Destroy(gameObject);
         //Killed();
     }
@@ -35,24 +41,47 @@ public class monster1 : character1
     {
         hp = CurrentBattleStat.maxHp;
 
-        var playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-            target = playerObj.transform;
+        if (target != null)
+        {
+            targetScript = target.GetComponent<character1>();
+            if (targetScript == null)
+            {
+                Debug.LogWarning($"Target {target.name}에게 character1 컴포넌트가 없습니다.");
+            }
+        }
+        else
+        {
+            // 주말 이후 타겟을 설정하는 작업 필요
+            Debug.LogWarning($"{gameObject.name}의 Target이 설정되지 않았습니다.");
+        }
+        ///[summary] 이전 코드
+        ///var playerObj = GameObject.FindGameObjectWithTag("Player");
+        ///if (playerObj != null) target = playerObj.transform;
+        ///[/summary]
     }
 
     protected override void UpdateFeat()
     {
+        
     }
 
     protected override void FixedUpdateFeat()
     {
-        //TODO : 종준님 구현(이동 / 공격 판정)
-    }
+        // 타겟이 없거나 이미 죽었다면 아무것도 하지 않음
+        if (target == null || targetScript == null || isDead) return;
 
-    public void Action()
-    {
-        //공격 거리 이상이면 이동
-        //공격거리 이하면 공격(character1 부분 Attack 이용)
+        // 거리 계산
+        float distanceToTarget = Vector2.Distance(transform.position, target.position);
+
+        if (distanceToTarget <= AttackRange)
+        {
+            // 사거리 내: 이동을 멈추고 공격 시도
+            Attack(targetScript);
+        }
+        else
+        {
+            cm.ChaseMove(target, CurrentBattleStat.moveSpeed);
+        }
     }
     //추가사항으로, 보스 몬스터 공격 3가지 
     //1. 보스 중심으로 일정 범위 경고 후 데미지

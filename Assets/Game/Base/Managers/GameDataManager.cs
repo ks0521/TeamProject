@@ -15,9 +15,9 @@ namespace Base.Save
         public int nextChallengeChapter;
     }
     /// <summary> 실제 런타임 데이터를 보유 / 저장 / 로드하는 데이터 매니저  </summary>
-    public class GameDataManager : MonoBehaviour
+    public class JJ_GameDataManager : MonoBehaviour
     {
-        public static GameDataManager Instance;
+        public static JJ_GameDataManager Instance;
         [SerializeField] private StatusCalculator calculator;
         public RuntimeData runtimeData;
         public StageProgressData StageProgressData => runtimeData.stageProgress;
@@ -44,13 +44,13 @@ namespace Base.Save
         public void Save()
         {
             Debug.Log("GameDataManager : 진행 상황을 저장합니다. ");
-            SaveManager.Save(DataConverter.RuntimeToSave(runtimeData));
+            JJ_SaveManager.Save(DataConverter.RuntimeToSave(runtimeData));
         }
 
         /// <summary> 저장된 데이터 런타임 데이터형식으로 불러오기</summary>
         public void Load()
         {
-            runtimeData = DataConverter.SaveToRuntime(SaveManager.Load());
+            runtimeData = DataConverter.SaveToRuntime(JJ_SaveManager.Load());
         }
 
         public RuntimeData GetData() => runtimeData;
