@@ -63,7 +63,7 @@ namespace Battle
 
         protected override void UpdateFeat()
         {
-            throw new NotImplementedException();
+            
         }
 
         private void FixedUpdate()
