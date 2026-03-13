@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapter: 2
   stage: 1
+  rewardStatStone: 5
+  rewardExp: 5
   dropList:
   - item: {fileID: 11400000, guid: faa2abb3a8275c040a4457d767d3bb51, type: 2}
     chance: 0.5
