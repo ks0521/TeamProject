@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MaxHp_Set : MonoBehaviour
+public class ItemDropRate_Set : MonoBehaviour
 {
     [Header("UI 참조")]
     [SerializeField] private TextMeshProUGUI statsNameText;
@@ -54,7 +54,11 @@ public class MaxHp_Set : MonoBehaviour
             costImage.enabled = false;
 
             statsLevelText.text = $"MAX";
+
         }
+
+
+
     }
 
     public void BindLevelUp(Action action)
@@ -63,4 +67,3 @@ public class MaxHp_Set : MonoBehaviour
         levelUpButton.onClick.AddListener(() => action?.Invoke());
     }//버튼 OnClick 에 함수 넣어주는 함수
 }
-
