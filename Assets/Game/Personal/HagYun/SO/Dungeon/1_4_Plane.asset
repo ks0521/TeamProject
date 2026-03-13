@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: S_Plane 4 SO
+  m_Name: 1_4_Plane
   m_EditorClassIdentifier: 
   stageName: Plane 4
   stageKey: 5007
