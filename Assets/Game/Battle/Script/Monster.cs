@@ -5,7 +5,7 @@ using Base.Data;
 using UnityEngine;
 namespace Battle
 {
-    public class Monster : MonoBehaviour
+    public class Monster : Character
     {
         private float hp;
         public float Hp
@@ -61,12 +61,22 @@ namespace Battle
             Debug.Log("오브젝트 풀에 강제 반환");
         }
 
+        protected override void UpdateFeat()
+        {
+            throw new NotImplementedException();
+        }
+
         private void FixedUpdate()
         {
             if (player is null) 
                 return;
             
             ChasePlayer();
+        }
+
+        protected override void FixedUpdateFeat()
+        {
+            throw new NotImplementedException();
         }
 
         public void ChasePlayer()
