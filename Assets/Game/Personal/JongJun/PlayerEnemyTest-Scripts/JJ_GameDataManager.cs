@@ -4,7 +4,7 @@ using Base.Save;
 using Growth.StatUpgrade;
 using UnityEngine;
 
-namespace Base.Save
+namespace Personal_Jongjun
 {
     [Serializable]
     public struct StageInfo
