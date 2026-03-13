@@ -5,7 +5,7 @@ using Base.Save;
 using Growth.StatUpgrade;
 using UnityEngine;
 
-namespace Base.Managers
+namespace Personal_Jongjun
 {
     /// <summary> 게임 시작 시 데이터 불러오기 + GameSaveData 관리</summary>
     public static class JJ_SaveManager

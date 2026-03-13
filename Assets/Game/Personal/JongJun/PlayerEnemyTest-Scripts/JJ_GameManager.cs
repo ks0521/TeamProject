@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Base.Save;
 using UnityEngine;
 
-namespace Base.Managers
+namespace Personal_Jongjun
 {
     public class JJ_GameManager : MonoBehaviour
     {
