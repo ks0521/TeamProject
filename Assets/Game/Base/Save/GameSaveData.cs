@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
+using UnityEngine.Serialization;
 
 namespace Base.Save
 {
@@ -12,16 +13,16 @@ namespace Base.Save
         public PlayerItemInventoryData itemInventory = new();
         //public PlayerEquipmentInventoryData equipmentInventory = new(); mvp에선 미구현
         //public PlayerEquipmentData equipment = new(); mvp에선 미구현
-        public PlayerStatUpgradeData statUpgrade = new();
+        public PlayerStatUpgradeData stat = new();
         public PlayerSkillData skill = new();
         public PlayerAccessTimeData lastAccess = new();
     }
     [Serializable]public class StageProgressData
     {
-        public int curNormalStage; //직전 일반스테이지
-        public int curNormalChapter;
-        public int maxClearStage;
-        public int maxClearChapter;
+        public int selectedNormalStage; //직전 일반스테이지
+        public int selectedNormalChapter; //현재 일반 스테이지
+        public int nextChallangeStage; //도전 가능한 스테이지
+        public int nextChallangeChapter; //도전 가능한 챕터
     }
     [Serializable]public class PlayerCurrencyData
     {
@@ -32,11 +33,11 @@ namespace Base.Save
     }
     [Serializable]public class PlayerItemInventoryData
     {
-        public List<ItemEntry> itemInventory;
+        public List<ItemEntry> items;
     }
     [Serializable]public class PlayerEquipmentInventoryData
     {
-        public List<EquipmentEntry> equipmentInventory;
+        public List<EquipmentEntry> equipments;
     }
     [Serializable]public class PlayerEquipmentData
     {
@@ -46,7 +47,7 @@ namespace Base.Save
     }
     [Serializable]public class PlayerStatUpgradeData
     {
-        public List<StatusEntry> statUpgrade; //statusType은 StatusSo.cs에 존재
+        public List<StatusEntry> upgrade; //statusType은 StatusSo.cs에 존재
     }
     [Serializable]public class PlayerSkillData
     {
