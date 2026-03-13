@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Growth.Skill;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 namespace Personal.HagYun
 {
@@ -23,22 +24,58 @@ namespace Personal.HagYun
     }
     public class EquipSkillController : MonoBehaviour
     {
-        EquipSkill[] equipSkillArr = new EquipSkill[6];
-        EquipSkillControllerEvent eventSet;
+        private EquipSkill[] equipSkillArr = new EquipSkill[6];
+        private EquipSkillControllerEvent eventSet;
         int skillEquipMask;
-        Player owner;
-        [Range(0f, 1f)] float skillFireTimeValue = 0.5f;
+        [Range(0f, 1f)] private float skillFireTimeValue = 0.5f;
         public bool IsCasting { get; private set; }
+        //private Player owner;
         void Start()
         {
-
+            SkillEquipCheck();
         }
-
+        void SkillEquipCheck()
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                skillEquipMask |= 1 << i;
+            }
+        }
+        private void Update()
+        {
+            SkillInput();
+        }
+        public void SkillInput()
+        {
+            if(Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SkillUse(0);
+            }
+            else if(Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SkillUse(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                SkillUse(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                SkillUse(3);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                SkillUse(4);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                SkillUse(5);
+            }
+        }
 
         public void OwnerSet(Player pl)
         {
-            owner = pl;
-            EquipSkill.OwnerSet(pl);
+            Skill.SetPlOwner(pl);
         }
         public void SkillEquip(int index, Skill targetSkill)
         {
@@ -56,26 +93,40 @@ namespace Personal.HagYun
         {
             eventSet.RaiseCastingStart();
             IsCasting = true;
-            float baseCastingTime = equipSkillArr[index].skill.data.castingTime;
+            float baseCastingTime = equipSkillArr[index].skill.Data.castingTime;
             float curCastingTime = baseCastingTime;
             while (0 < curCastingTime)
             {
                 float castingTimeValue = curCastingTime / baseCastingTime;
                 if (castingTimeValue <= skillFireTimeValue)
                 {
-                    // 스킬 시전
+                    //equipSkillArr[index].skill.
                 }
-                //Debug.Log("쿨타임 감소");
                 curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소
-                await UniTask.Yield();
-                if (owner == null) return;
+                await UniTask.Yield(Skill.PlOwner.GetCancellationTokenOnDestroy());
+                if (Skill.PlOwner == null) return;
             }
             eventSet.RaiseOnCastingEnd();
             IsCasting = false;
         }
+        bool CheckSkillUsePossible(int index)
+        {
+            if ((skillEquipMask & (1 << index)) == 0)
+            {
+                Debug.LogWarning($"{index + 1}번 자리에 장착된 스킬 없음");
+                return false;
+            }
+            else if (IsCasting)
+            {
+                Debug.LogWarning("캐스팅중");
+                return false;
+            }
+            else return true;
+
+        }
         public void SkillUse(int index)
         {
-            if (IsCasting) return;
+            if (!CheckSkillUsePossible(index)) return;
             CastingStartTask(index).Forget();
             equipSkillArr[index].CooltimeStart();
         }

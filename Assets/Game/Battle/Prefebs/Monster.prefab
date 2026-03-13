@@ -177,3 +177,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   isAtkCooltime: 0
+  monsterSo: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
+  stat:
+    maxHp: 0
+    atk: 0
+    def: 0
+    atkSpeed: 0
+    moveSpeed: 0
+    critChance: 0
+    critDamage: 0
+  player: {fileID: 0}

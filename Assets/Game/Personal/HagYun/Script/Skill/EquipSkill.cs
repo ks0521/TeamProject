@@ -24,44 +24,72 @@ namespace Personal.HagYun
         public bool IsCooltime { get; private set; }
         public Priority priority;
         EquipSkillEvent eventSet = new EquipSkillEvent();
-        static Player owner;
-        public static void OwnerSet(Player pl) => owner = pl;
-        public void SkillSet(Skill skill) => this.skill = skill;
-        public void SkillUnset() => skill = null;
+        public void SkillSet(Skill skill)
+        {
+            this.skill = skill;
+        }
+        public void SkillUnset()
+        {
+            skill = null;
+            IsCooltime = false;
+        }
         public void SkillChange(Skill skill)
         {
             SkillUnset();
             SkillSet(skill);
             CooltimeStart();
         }
+        public void SkillUse(Vector2 targetPos)
+        {
+            if(skill == null)
+            {
+                Debug.LogWarning("스킬 없음");
+                return;
+            }
+            switch (skill.Data.Targeting)
+            {
+                case TargetingMode.Self:
+                    break;
+                case TargetingMode.Homing:
+                    break;
+                case TargetingMode.GroundTarget:
+                    break;
+                default:
+                    break;
+            }
+            CooltimeStart();
+        }
         async UniTaskVoid CooltimeStartTask()
         {
             IsCooltime = true;
             eventSet.RaiseCooltimeStart();
-            float baseCooltime = skill.data.coolDown;
+            float baseCooltime = skill.Data.coolDown;
             CurCooltime = baseCooltime;
             while (0 < CurCooltime)
             {
                 CurCooltime -= Time.deltaTime; // 쿨타임 감소 속도 증가 시, 해당 값 곱하기
                 eventSet.RaiseCooltimeUpdate(CurCooltime, baseCooltime);
                 await UniTask.Yield();
-                if (owner == null) return;
+                if (Skill.PlOwner == null) return;
             }
             IsCooltime = false;
             eventSet.RaiseCooltimeEnd();
         }
-        public void CooltimeStart(float addTime = 0)
+        public void CooltimeSet(float cooltime)
         {
-            if (addTime == 0)
-            {
-                CurCooltime = skill.data.coolDown;
-            }
-            else
-            {
-                CurCooltime += addTime;
-            }
-            if (!IsCooltime) CooltimeStartTask().Forget();
+            CurCooltime = cooltime;
         }
+        public void ColltimeAdd(float cooltime)
+        {
+            CurCooltime += cooltime;
+            if(!IsCooltime) CooltimeStartTask().Forget();
+        }
+        public void CooltimeStart()
+        {
+            CooltimeSet(skill.Data.coolDown);
+            CooltimeStartTask().Forget();
+        }
+
         // event add/remove
         public void AddEventCooltimeStart(Action func) => eventSet.OnCooltimeStart += func;
         public void AddEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd += func;
