@@ -1,10 +1,10 @@
+using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class monster1 : character1
@@ -19,16 +19,25 @@ public class monster1 : character1
     // 공격 대상의 스크립트를 미리 캐싱해둘 변수
     private character1 targetScript;
 
-    [Header("Skill Settings")]
+    [SerializeField] private Collider2D playerCollider;
+
+    [Header("Skill1(돌진)")]
     [SerializeField] private GameObject atkRange1;
     [SerializeField] private float chargePrepareTime = 1.2f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
-    [SerializeField] private GameObject atkRange2;
-    private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
-    [SerializeField] private float warningDuration = 1.5f;
-    [SerializeField] private GameObject atkRange3;
 
+    [Header("Skill2(화염 장막)")]
+    [SerializeField] private GameObject atkRange2;
+    [SerializeField] private float skill2WarningDuration = 1.5f;
+    [SerializeField] private float skill2Range = 4.0f;
+
+    [Header("Skill3(메테오)")]
+    [SerializeField] private GameObject atkRange3;
+    [SerializeField] private float skill3warningDuration = 1.5f;
+    [SerializeField] private float skill3Range = 3.0f;
+
+    private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
     private bool isUsingSkill = false;
 
     public void Update()
@@ -36,18 +45,9 @@ public class monster1 : character1
         //Q: 예고 후 플레이어를 향한 돌진
         //W: 예고 후 원형 범위 데미지
         //E: 시전 시점의 플레이어 위치에 예고 후 메테오
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            UseMonsterSkill1Async().Forget();
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            UseMonsterSkill2Async().Forget();
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            UseMonsterSkill3Async().Forget();
-        }
+        if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
+        if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
+        if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
     }
 
     async UniTaskVoid UseMonsterSkill1Async()
@@ -76,6 +76,8 @@ public class monster1 : character1
         //실제 스킬 이펙트 구현할 자리
         //sfx.PlayBossAttackSound();
         float elapsed = 0f;
+        bool hasDamaged = false;
+
         while (elapsed < chargeDuration)
         {
             if (target == null || isDead) break;
@@ -84,10 +86,18 @@ public class monster1 : character1
             // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
             cm.ChaseMove(directionToTarget, chargeSpeed);
 
+            if (!hasDamaged && Vector2.Distance(transform.position, target.position) < 0.3f)
+            {
+                Debug.Log("돌진으로 피격되었습니다.");
+                hasDamaged = true;
+                Attack(targetScript);
+            }
+
             elapsed += Time.fixedDeltaTime;
             // 다음 물리 프레임까지 대기 (이게 있어야 부드럽게 이동함)
             await UniTask.WaitForFixedUpdate(cancellationToken: cts);
         }
+        //Attack(targetScript);
 
         isUsingSkill = false;
     }
@@ -99,26 +109,39 @@ public class monster1 : character1
         // 만약 위쪽을 보고 있다면 angle - 90f 등으로 보정이 필요할 수 있습니다.
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
+
     async UniTaskVoid UseMonsterSkill2Async()
     {
-        var cts = this.GetCancellationTokenOnDestroy();
+        if (target == null || targetScript == null) return;
 
+        var cts = this.GetCancellationTokenOnDestroy();
         isUsingSkill = true;
-        Debug.Log("범위공격 준비 중...");
+        Debug.Log("화염 장막 준비 중...");
 
         if (atkRange2 != null) atkRange2.SetActive(true);
         await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: cts);
-        if (atkRange2 != null) atkRange2.SetActive(false);
+        if (atkRange2 != null)
+        {
+            atkRange2.SetActive(false);
+            float distance = Vector2.Distance(transform.position, target.position);
+            if (distance <= skill2Range)
+            {
+                Debug.Log("화염 장막에 피격되었습니다.");
+                Attack(targetScript);
+            }
+
+        }
         //실제 스킬 이펙트 구현할 자리
         //sfx.PlayBossSkillSound();
 
         isUsingSkill = false;
     }
+
     async UniTaskVoid UseMonsterSkill3Async()
     {
         if (target == null) return;
-        var cts = this.GetCancellationTokenOnDestroy();
 
+        var cts = this.GetCancellationTokenOnDestroy();
         skillTargetPosition = target.position;
         isUsingSkill = true;
         Debug.Log("메테오 준비 중...");
@@ -130,8 +153,17 @@ public class monster1 : character1
             atkRange3.SetActive(true);
         }
 
-        await UniTask.Delay(TimeSpan.FromSeconds(warningDuration), cancellationToken: cts);
-        if (atkRange3 != null) atkRange3.SetActive(false);
+        await UniTask.Delay(TimeSpan.FromSeconds(skill2WarningDuration), cancellationToken: cts);
+        if (atkRange3 != null)
+        {
+            atkRange3.SetActive(false);
+            float distance = Vector2.Distance(skillTargetPosition, target.position);
+            if (distance <= skill3Range)
+            {
+                Debug.Log("메테오 적중! 플레이어에게 데미지");
+                Attack(targetScript);
+            }
+        }
         //실제 스킬 이펙트 구현할 자리
         //sfx.PlayBossSkillSound();
 
@@ -161,7 +193,7 @@ public class monster1 : character1
         Destroy(gameObject);
         //Killed();
     }
-    
+
     void Killed()
     {
         //보상 지급과 오브젝트 풀 반환에 대한 구현. 현재는 구현할 필요 없습니다. 
@@ -180,7 +212,7 @@ public class monster1 : character1
         //FindGameObjectWithTag보다 가벼운 연산을 찾을 것
         //몬스터를 풀링하는 시점에 static에 있는 정보를 1번만 주입해 앞으로는 그 정보만 보면 되게
         //몬스터스포너or매니저에 있는 static 정보 사용
-        
+
 
         hp = CurrentBattleStat.maxHp;
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -208,7 +240,7 @@ public class monster1 : character1
 
     protected override void UpdateFeat()
     {
-        
+
     }
 
     protected override void FixedUpdateFeat()
@@ -229,8 +261,4 @@ public class monster1 : character1
             cm.ChaseMove(target, CurrentBattleStat.moveSpeed);
         }
     }
-    //추가사항으로, 보스 몬스터 공격 3가지 
-    //1. 보스 중심으로 일정 범위 경고 후 데미지
-    //2. 스킬 시전 시 플레이어 위치기준 일정 범위 경고 후 데미지
-    //3. 플레이어 위치 기준 일정범위 경고 후 돌진
 }

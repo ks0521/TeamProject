@@ -1728,19 +1728,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 938dac596688e89488500b2c068fc13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 1
+  hp: 111
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
   monsterSO: {fileID: 11400000, guid: f2e7516420955284880cb3f9c04fe14f, type: 2}
+  playerCollider: {fileID: 302155615079852397}
   atkRange1: {fileID: 1663986358}
   chargePrepareTime: 1.2
   chargeDuration: 0.6
   chargeSpeed: 9
   atkRange2: {fileID: 1652250398}
-  warningDuration: 1.5
+  skill2WarningDuration: 1.5
   atkRange3: {fileID: 1998848183}
+  skill3warningDuration: 1.5
 --- !u!4 &8126616492717096160
 Transform:
   m_ObjectHideFlags: 0
