@@ -52,7 +52,7 @@ namespace UI.Scripts.Ability
         // Start is called before the first frame update
         public void OnEnable()
         {
-            RefreshUI();
+            ReFreshUI();
         }
         private void Start()
         {
@@ -67,10 +67,10 @@ namespace UI.Scripts.Ability
             expRate.BindLevelUp(OnClickExpRateLevelUp);
             itemDropRate.BindLevelUp(OnClickItmeDropRateLevelUp);
 
-            RefreshUI();
+            ReFreshUI();
             ChangeState(XState.X1);
         }
-        public void RefreshUI()
+        public void ReFreshUI()
         {
             RefreshAtkUI();
         }//능력치팝업창 UI 갱신용 함수(능력치 팝업창 안에있는 UI 갱신용 함수 추가 예정)
@@ -209,7 +209,7 @@ namespace UI.Scripts.Ability
                     btnX.SelectButton(2);
                     break;
             }
-            RefreshUI();
+            ReFreshUI();
         }//상태 전환 함수
         public void OnClickX1()
         {
@@ -224,13 +224,6 @@ namespace UI.Scripts.Ability
             ChangeState(XState.X100);
         }
 
-        private void UnlockStats()
-        {
-            /*bool isLock = playerLv < unlockLv;   
-              if(isLock){return;}
-
-            */
-        }
         // Update is called once per frame
         private void Update()
         {
