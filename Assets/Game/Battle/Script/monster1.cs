@@ -1,8 +1,11 @@
 using Base.Data;
 using Battle;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
 
 public class monster1 : character1
 {
@@ -16,52 +19,66 @@ public class monster1 : character1
     // 공격 대상의 스크립트를 미리 캐싱해둘 변수
     private character1 targetScript;
 
-    [Header("Skill1 Settings")]
+    [Header("Skill Settings")]
     [SerializeField] private GameObject atkRange1;
     [SerializeField] private float chargePrepareTime = 1.2f;
-    [SerializeField] private float chargeDuration = 0.3f;
-    [SerializeField] private float chargeSpeed = 0.5f;
-
-    [Header("Skill2 Settings")]
+    [SerializeField] private float chargeDuration = 0.6f;
+    [SerializeField] private float chargeSpeed = 9f;
     [SerializeField] private GameObject atkRange2;
+    private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
+    [SerializeField] private float warningDuration = 1.5f;
+    [SerializeField] private GameObject atkRange3;
 
     private bool isUsingSkill = false;
 
     public void Update()
     {
-        //1번: 예고 후 플레이어를 향한 돌진
-        //2번: 예고 후 원형 범위 데미지
+        //Q: 예고 후 플레이어를 향한 돌진
+        //W: 예고 후 원형 범위 데미지
+        //E: 시전 시점의 플레이어 위치에 예고 후 메테오
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            UseMonsterSkill1();
+            UseMonsterSkill1Async().Forget();
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            UseMonsterSkill2();
+            UseMonsterSkill2Async().Forget();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            UseMonsterSkill3();
+            UseMonsterSkill3Async().Forget();
         }
     }
 
-    IEnumerator MonsterSkillCo1()
+    async UniTaskVoid UseMonsterSkill1Async()
     {
+        // 안전장치: 이 오브젝트가 파괴되면 비동기 작업도 취소하기 위한 토큰을 가져옵니다.
+        var cts = this.GetCancellationTokenOnDestroy();
+
         isUsingSkill = true;
         Debug.Log("돌진 준비 중...");
 
-        atkRange1.SetActive(true);
+        if (atkRange1 != null) atkRange1.SetActive(true);
+
+        // 타겟이 도중에 사라졌을 경우를 대비한 방어 코드
+        if (target == null)
+        {
+            isUsingSkill = false;
+            if (atkRange1 != null) atkRange1.SetActive(false);
+            return;
+        }
 
         Vector2 directionToTarget = (target.position - transform.position).normalized;
         RotateTowards(directionToTarget);
-        yield return new WaitForSeconds(chargePrepareTime);
+        await UniTask.Delay(TimeSpan.FromSeconds(chargePrepareTime), cancellationToken: cts);
 
-        atkRange1.SetActive(false);
+        if (atkRange1 != null) atkRange1.SetActive(false);
         //실제 스킬 이펙트 구현할 자리
         //sfx.PlayBossAttackSound();
         float elapsed = 0f;
         while (elapsed < chargeDuration)
         {
+            if (target == null || isDead) break;
             // CharacterMove에 있는 방향 기반 이동 함수를 재활용합니다.
             // 이렇게 하면 CharacterMove를 수정하지 않고도 물리 기반 이동이 가능합니다.
             // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
@@ -69,7 +86,7 @@ public class monster1 : character1
 
             elapsed += Time.fixedDeltaTime;
             // 다음 물리 프레임까지 대기 (이게 있어야 부드럽게 이동함)
-            yield return new WaitForFixedUpdate();
+            await UniTask.WaitForFixedUpdate(cancellationToken: cts);
         }
 
         isUsingSkill = false;
@@ -82,14 +99,39 @@ public class monster1 : character1
         // 만약 위쪽을 보고 있다면 angle - 90f 등으로 보정이 필요할 수 있습니다.
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
-    IEnumerator MonsterSkillCo2()
+    async UniTaskVoid UseMonsterSkill2Async()
     {
+        var cts = this.GetCancellationTokenOnDestroy();
+
         isUsingSkill = true;
         Debug.Log("범위공격 준비 중...");
 
-        atkRange2.SetActive(true);
-        yield return new WaitForSeconds(1.5f);
-        atkRange2.SetActive(false);
+        if (atkRange2 != null) atkRange2.SetActive(true);
+        await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: cts);
+        if (atkRange2 != null) atkRange2.SetActive(false);
+        //실제 스킬 이펙트 구현할 자리
+        //sfx.PlayBossSkillSound();
+
+        isUsingSkill = false;
+    }
+    async UniTaskVoid UseMonsterSkill3Async()
+    {
+        if (target == null) return;
+        var cts = this.GetCancellationTokenOnDestroy();
+
+        skillTargetPosition = target.position;
+        isUsingSkill = true;
+        Debug.Log("메테오 준비 중...");
+
+        if (atkRange3 != null)
+        {
+            // 예고 이펙트의 월드 좌표를 설정
+            atkRange3.transform.position = skillTargetPosition;
+            atkRange3.SetActive(true);
+        }
+
+        await UniTask.Delay(TimeSpan.FromSeconds(warningDuration), cancellationToken: cts);
+        if (atkRange3 != null) atkRange3.SetActive(false);
         //실제 스킬 이펙트 구현할 자리
         //sfx.PlayBossSkillSound();
 
@@ -98,15 +140,15 @@ public class monster1 : character1
 
     public void UseMonsterSkill1()
     {
-        StartCoroutine(MonsterSkillCo1());
+        UseMonsterSkill1Async().Forget();
     }
     public void UseMonsterSkill2()
     {
-        StartCoroutine(MonsterSkillCo2());
+        UseMonsterSkill2Async().Forget();
     }
     public void UseMonsterSkill3()
     {
-        StartCoroutine(MonsterSkillCo3());
+        UseMonsterSkill3Async().Forget();
     }
 
     protected override void OnDead()
