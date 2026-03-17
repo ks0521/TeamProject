@@ -24,8 +24,9 @@ namespace Game_UI.Scripts.PopupManager
         [SerializeField] private GameObject skillPop;
         [SerializeField] private GameObject stagePop;
         [SerializeField] private GameObject dungeonPop;
+        [SerializeField] private GameObject gameEndPop;
 
-        private Stack<GameObject>popupStack = new();
+        private Stack<GameObject> popupStack = new();
         private void Awake()
         {
             if (instance == null)
@@ -42,7 +43,14 @@ namespace Game_UI.Scripts.PopupManager
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                CloseLastPopup();
+                if (popupStack.Count == 0)
+                {
+                    OpenPopup(gameEndPop);
+                }
+                else
+                {
+                    CloseLastPopup();
+                }
             }
         }
 
@@ -100,7 +108,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 return;
             }
-            GameObject lastPop= popupStack.Pop();
+            GameObject lastPop = popupStack.Pop();
             if (lastPop != null)
             {
                 lastPop.SetActive(false);
@@ -110,7 +118,7 @@ namespace Game_UI.Scripts.PopupManager
         public void OpenAbilityPop() { OpenPopup(abilityPop); } //버튼 OnClick 연결용 함수
         public void OpenEquipmentPop() { OpenPopup(equipmentPop); }
         public void OpenSkillPop() { OpenPopup(skillPop); }
-        public void OpenStagePop()  { OpenPopup(stagePop); }
+        public void OpenStagePop() { OpenPopup(stagePop); }
         public void OpenDungeonPop() { OpenPopup(dungeonPop); }
 
         public void CloseAbilityPop() { ClosePopup(abilityPop); }
