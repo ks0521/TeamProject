@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Base.Managers
 {
     /// <summary> 게임 시작 시 데이터 불러오기 + GameSaveData 관리</summary>
-    public static class SaveManager
+    public static class JJ_SaveManager
     {
         //안드로이드용, 테스트 후 휴대폰 테스트시 해당 설정 사용
         private static string SavePath => Path.Combine(Application.persistentDataPath, "SaveData.json");
