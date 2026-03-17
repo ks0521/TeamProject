@@ -29,6 +29,10 @@ namespace UI.Scripts.ChapterMove
             currentChapter = 0;
         }
 
+        public void SetChapterName(string chapterName)
+        {
+            this.chapterName.text = chapterName;
+        }
         public void OnClickBefore()
         {
             if (currentChapter == 0)
