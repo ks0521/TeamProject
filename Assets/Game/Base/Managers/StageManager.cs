@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Base.Data;
 using Base.Save;
 using Battle;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Base.Managers
@@ -17,21 +20,20 @@ namespace Base.Managers
         public StageType type;
     }
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
-    public class JJ_StageManager : MonoBehaviour
+    public class StageManager : MonoBehaviour
     {
         public int testChapter;
         public int testStage;
         public StageEntry testEntry;
-        [SerializeField] private StageInfo stageInfo;
+        [SerializeField] private MonsterPoolManager monsterPool;
         [SerializeField] private Stage stage;
-        void Awake()
-        {
-            
-        }
+        [SerializeField] private StageSO stageSO;
+        [SerializeField] private StageInfo stageInfo;
+        [SerializeField] private StageType type;
 
         public void Init()
         {
-            stageInfo = JJ_GameDataManager.Instance.GetStageInfo();
+            stageInfo = GameDataManager.Instance.GetStageInfo();
             ChangeStage(stageInfo.selectedChapter,stageInfo.selectedStage);
         }
         public void ChangeStage(int selectedChapter, int selectedStage)
@@ -46,22 +48,30 @@ namespace Base.Managers
             stage?.Destroy();
             if (selectedChapter == stageInfo.nextChallengeChapter && selectedStage == stageInfo.nextChallengeStage)
             {
-                stage = new Stage(selectedChapter, selectedStage, StageType.Challenge);
+                stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
             }
             else
             {
-                stage = new Stage(selectedChapter, selectedStage, StageType.Normal);
+                stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
+            Debug.Log($"{selectedChapter} {selectedStage}");
+            monsterPool.ChangeStage(stageSO);
+            stage = new Stage(stageSO);
+        }
+
+        private void Start()
+        {
+            Debug.Log("F1 : 스테이지 진입 테스트 / F2 : 스테이지 엔트리 테스트 ");
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F3))
+            if (Input.GetKeyDown(KeyCode.F1))
             {
                 Debug.Log($"스테이지 진입 테스트 : {testChapter}, {testStage}");
                 ChangeStage(testChapter, testStage);
             }
-            if (Input.GetKeyDown(KeyCode.F4))
+            if (Input.GetKeyDown(KeyCode.F2))
             {
                 testEntry = GetStageEntry(testChapter, testStage);
                 Debug.Log($"스테이지 엔트리 테스트");
@@ -112,29 +122,64 @@ namespace Base.Managers
     public class Stage
     {
         public event Action<int, int> OnChangeStage;
-        [SerializeField]private List<Monster> monstersList = new();
-        private int curChapter;
-        private int curStage;
-        private StageType curType;
-        public Stage(int chapter, int stage, StageType type)
+        [SerializeField]private List<TestMonster> monstersList = new();
+        [SerializeField]private StageSO stageSO;
+        [SerializeField]private bool canSpawning;
+        private CancellationTokenSource spawnerToken;
+
+        public void Register(TestMonster monster)
         {
-            curChapter = chapter;
-            curStage = stage;
-            curType = type;
+            Debug.Log("리스트 내 신규 몬스터 등록");
+            monstersList.Add(monster);
+            monster.OnMonsterKilled += ItemDrop;
+        }
+        public void UnRegister(TestMonster monster)
+        {
+            Debug.Log("리스트 내 사망 몬스터 해제");
+            monstersList.Remove(monster);
+            monster.OnMonsterKilled -= ItemDrop;
+        }
+        
+        public Stage(StageSO stage)
+        {
             //바꾸려는 챕터와 스테이지의 정보를 SO에서 얻어옴
-            StageSO stageSO = GameData.StageDB.GetSO(chapter, stage, type);
+            stageSO = stage;
             if (stageSO == null)
             {
                 Debug.LogWarning("StageManager : StageSO를 가져오지 못했습니다");
                 return;
             }
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 진입");
-            
-            OnChangeStage?.Invoke(chapter,stage);
+            spawnerToken = new CancellationTokenSource();
+            Spawning(0.5f, spawnerToken.Token).Forget();
+            canSpawning = true;
+            OnChangeStage?.Invoke(stageSO.chapter,stageSO.stage);
         }
-        
+
+        async UniTaskVoid Spawning(float delay, CancellationToken token)
+        {
+            try
+            {
+                while (true)
+                {
+                    await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
+                    GameObject mon = MonsterPoolManager.poolDic[stageSO.preset[0].monster.key].UsePool();
+                    mon.SetActive(true);
+                    mon.transform.position = Vector3.zero;
+                    Register(mon.GetComponent<TestMonster>());
+                    await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+                    await UniTask.WaitWhile(() => monstersList.Count >= 20, cancellationToken: token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log("스테이지 전환에 따른 스포너 정상 종료");
+            }
+        } 
         public void Destroy()
         {
+            spawnerToken?.Cancel();
+            spawnerToken?.Dispose();
             foreach (var monster in monstersList)
             {
                 monster.ForcedReturn(); //모든 몬스터 제거, 초기화
@@ -144,6 +189,13 @@ namespace Base.Managers
         }
         //챌린지 모드 전용 함수 추가(제한시간)
         //
+        public void ItemDrop(TestMonster monster)
+        {
+            List<DropedItem> items = stageSO.dropTable.
+                GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatus.itemDropRateBonus);
+            Debug.Log($"{items.Count}종 아이템 드랍");
+            UnRegister(monster);
+        }
     }
 
     

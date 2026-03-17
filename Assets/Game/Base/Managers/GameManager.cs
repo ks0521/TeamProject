@@ -1,15 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Base.Data;
 using Base.Save;
 using UnityEngine;
 
 namespace Base.Managers
 {
-    public class JJ_GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
-        public static JJ_GameManager Instance;
-        [SerializeField] private JJ_StageManager stageManager;
+        public static GameManager Instance;
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
@@ -24,8 +25,10 @@ namespace Base.Managers
 
         private void Start()
         {
-            JJ_GameDataManager.Instance.Init();
+            GameDataManager.Instance.Init();
             stageManager.Init();
         }
     }
+
+    
 }
