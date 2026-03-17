@@ -87,8 +87,8 @@ namespace Base.Data
             
             foreach (var preset in stage.preset)
             {
+                Debug.Log($"{preset.monster.name} {preset.weights * 3}만큼 풀에 생성");
                 poolDic.Add(preset.monster.key, new ObjectPool(preset.monster, preset.weights* 3, gameObject));
-                Debug.Log(preset.monster.key);
             }
         }
     }
