@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,7 +13,7 @@ public class Hp_Set : MonoBehaviour
     {
         if (maxhp <= 0f)
         {
-            Debug.Log("maxHp°¡ 0ÀÌ¶ó °»½Å ºÒ°¡");
+            Debug.Log("maxHpê°€ 0ì´ë¼ ê°±ì‹  ë¶ˆê°€");
             return;
         }
         if (currenthp <= 0f)
@@ -24,7 +24,7 @@ public class Hp_Set : MonoBehaviour
         {
             hpText.text = currenthp.ToString("F0");
         }
-        hp.fillAmount = (currenthp / maxhp); //Hp ¼öÄ¡ Ç¥½ÃÇÏ±â
+        hp.fillAmount = (currenthp / maxhp); //Hp ìˆ˜ì¹˜ í‘œì‹œí•˜ê¸°
 
     }
 }
