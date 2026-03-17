@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
@@ -15,13 +15,13 @@ public class Exp_Set : MonoBehaviour
     {
         if (maxExp <= 0)
         {
-            Debug.Log("maxExp °¡ 0 ÀÌ¶ó °»½Å ºÒ°¡");
+            Debug.Log("maxExp ê°€ 0 ì´ë¼ ê°±ì‹  ë¶ˆê°€");
         }
         else
         {
             expBar.value = exp / maxExp;
         }
-        expPercent.text = (exp / maxExp).ToString("0.00%"); // % ·Î Ç¥½ÃÇÏ±â
+        expPercent.text = (exp / maxExp).ToString("0.00%"); // % ë¡œ í‘œì‹œí•˜ê¸°
     }
    
 }

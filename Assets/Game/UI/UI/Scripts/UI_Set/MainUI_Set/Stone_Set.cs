@@ -1,11 +1,11 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class Stone_Set : MonoBehaviour
 {
-    [Header("º∫¿ÂºÆ Text")]
+    [Header("ÏÑ±Ïû•ÏÑù Text")]
     [SerializeField] TextMeshProUGUI growthStoneText;
     public void SetGrowthStone(int stone)
     {
