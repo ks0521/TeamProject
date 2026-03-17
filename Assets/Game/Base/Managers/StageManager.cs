@@ -20,7 +20,7 @@ namespace Base.Managers
         public StageType type;
     }
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
-    public class JJ_StageManager : MonoBehaviour
+    public class StageManager : MonoBehaviour
     {
         public int testChapter;
         public int testStage;
@@ -33,7 +33,7 @@ namespace Base.Managers
 
         public void Init()
         {
-            stageInfo = JJ_GameDataManager.Instance.GetStageInfo();
+            stageInfo = GameDataManager.Instance.GetStageInfo();
             ChangeStage(stageInfo.selectedChapter,stageInfo.selectedStage);
         }
         public void ChangeStage(int selectedChapter, int selectedStage)
