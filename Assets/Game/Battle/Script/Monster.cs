@@ -69,6 +69,7 @@ namespace Battle
         }
         protected override void UpdateFeat()
         {
+            
         }
 
         private void FixedUpdate()
