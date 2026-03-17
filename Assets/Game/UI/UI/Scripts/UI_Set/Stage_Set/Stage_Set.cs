@@ -19,8 +19,21 @@ namespace UI.Scripts.Stage
         [SerializeField] private Image bossIcon;
         [SerializeField] private Image lockIcon;
 
-   
-        
+        private void OnEnable()
+        {
+            
+        }
+        public void ReFreshStage(int currentStage)
+        {
+            foreach (var stageButton in button)
+            {
+                stageButton.interactable = false;
+            }
+            for (int i = 0; i < currentStage; i++)
+            {
+                button[i].interactable = true;
+            }
+        }
 
         public void SetStage(int stage, string stgName, StageType type)
         {
@@ -28,18 +41,22 @@ namespace UI.Scripts.Stage
             {
                 case StageType.Normal:
                     button[stage].image = normalIcon;
+                    button[stage].interactable = true;
                     break;
 
                 case StageType.Challenge:
                     button[stage].image = challengeIcon;
+                    button[stage].interactable = true;
                     break;
 
                 case StageType.Boss:
                     button[stage].image = bossIcon;
+                    button[stage].interactable = true;
                     break;
 
                 default:
                     button[stage].interactable = false;
+                    button[stage].image = lockIcon;
                     break;
             }
             stageName[stage].text = stgName;
