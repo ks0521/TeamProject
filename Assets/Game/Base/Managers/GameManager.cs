@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Base.Data;
 using Base.Save;
 using UnityEngine;
 
@@ -27,4 +28,6 @@ namespace Base.Managers
             stageManager.Init();
         }
     }
+
+    
 }

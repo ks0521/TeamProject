@@ -17,7 +17,7 @@ public class Test : MonoBehaviour
     [SerializeField] private StatusCalculator calc;
     private void Start()
     {
-        Debug.Log("1. 저장 / 2. 불러오기 / 3. 저장파일 삭제 \nF1 . 저장데이터 런타임 데이터로 변환");
+        Debug.Log("1. 저장 / 2. 불러오기 / 3. 저장파일 삭제 / 4 . 저장데이터 런타임 데이터로 변환");
     }
 
     void Update()
@@ -40,19 +40,10 @@ public class Test : MonoBehaviour
             SaveManager.DeleteSaveFile();
         }
 
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             runData = DataConverter.SaveToRuntime(saveData);
         }
 
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            GameDataManager.Instance.Load();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            //GameDataManager.Instance.RequestStatEnhance(StatusType.Atk, 5);
-        }
     }
 }

@@ -18,9 +18,9 @@ MonoBehaviour:
   chapter: 1
   dropTable: {fileID: 11400000, guid: ba42fc30f4437fe4097ed45a855a1692, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
+  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
     weights: 8
-  - monster: {fileID: 11400000, guid: 0783175cda3d29649add1ad78840c90e, type: 2}
+  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
     weights: 2
   type: 1
   deadLine: 60
