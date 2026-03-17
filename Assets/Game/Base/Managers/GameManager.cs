@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace Base.Managers
 {
-    public class GameManager : MonoBehaviour
+    public class JJ_GameManager : MonoBehaviour
     {
-        public static GameManager Instance;
-        [SerializeField] private StageManager stageManager;
+        public static JJ_GameManager Instance;
+        [SerializeField] private JJ_StageManager stageManager;
         [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
@@ -25,7 +25,7 @@ namespace Base.Managers
 
         private void Start()
         {
-            GameDataManager.Instance.Init();
+            JJ_GameDataManager.Instance.Init();
             stageManager.Init();
         }
     }
