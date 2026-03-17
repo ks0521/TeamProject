@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,15 +8,15 @@ namespace UI.Scripts.ChapterMove
 {
     public class ChapterMove : MonoBehaviour
     {
-        [Header("Ã©ÅÍ ÀÌ¸§")]
+        [Header("ì±•í„° ì´ë¦„")]
         [SerializeField] TextMeshProUGUI chapterName;
 
-        [Header("Ã©ÅÍ ÆË¾÷")]
+        [Header("ì±•í„° íŒì—…")]
         [SerializeField] GameObject[] chapterPop;
 
         private int currentChapter;
 
-        [Header("½ºÅ×ÀÌÁö ÀÌµ¿ ¹öÆ°")]
+        [Header("ìŠ¤í…Œì´ì§€ ì´ë™ ë²„íŠ¼")]
         [SerializeField] Button before;
         [SerializeField] Button after;
 
@@ -55,13 +55,13 @@ namespace UI.Scripts.ChapterMove
         {
             chapterName.text = currentChapter.ToString();
 
-            if (chapterPop == null || chapterPop.Length == 0)//¹è¿­ È®ÀÎ¿ë
+            if (chapterPop == null || chapterPop.Length == 0)//ë°°ì—´ í™•ì¸ìš©
             {
                 return;
             }
             for (int i = 0; i < chapterPop.Length; i++)
             {
-                chapterPop[i].SetActive(i == currentChapter);//currentChapter ¾Æ´Ñ°ÍµéÀº false ÇÏ´Â ¿ëµµ
+                chapterPop[i].SetActive(i == currentChapter);//currentChapter ì•„ë‹Œê²ƒë“¤ì€ false í•˜ëŠ” ìš©ë„
             }
 
             if (after != null)

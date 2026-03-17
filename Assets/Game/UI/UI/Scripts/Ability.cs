@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,11 +12,11 @@ namespace UI.Scripts.Ability
         public enum StatusType
         {
             Atk, MaxHp, Def, AtkSpeed, CritChance, CritDmg, MoveSpeed, GoldRate, ExpRate, ItemDropRate
-        }//³ªÁß¿¡ Âü°í
-        [Header("´É·ÂÄ¡ ±¸¸Å ¹öÆ°")]
+        }//ë‚˜ì¤‘ì— ì°¸ê³ 
+        [Header("ëŠ¥ë ¥ì¹˜ êµ¬ë§¤ ë²„íŠ¼")]
         [SerializeField] Button[] Upbtn;
 
-        [Header("°öÇÏ±â ¹öÆ°")]
+        [Header("ê³±í•˜ê¸° ë²„íŠ¼")]
         [SerializeField] Button_Set btnX;
         private enum XState
         {
@@ -25,7 +25,7 @@ namespace UI.Scripts.Ability
         private XState X_state;
         private float multiValue;
 
-        [Header("UI ÂüÁ¶")]
+        [Header("UI ì°¸ì¡°")]
         [SerializeField] Atk_Set atk;
         [SerializeField] MaxHp_Set maxHp;
         [SerializeField] Def_Set def;
@@ -37,7 +37,7 @@ namespace UI.Scripts.Ability
         [SerializeField] ExpRate_Set expRate;
         [SerializeField] ItemDropRate_Set itemDropRate;
 
-        // Å×½ºÆ®¿ë µ¥ÀÌÅÍ(³ªÁß¿¡ »èÁ¦ ¿¹Á¤)
+        // í…ŒìŠ¤íŠ¸ìš© ë°ì´í„°(ë‚˜ì¤‘ì— ì‚­ì œ ì˜ˆì •)
         private int playerLevel = 1;
         private int playerGold = 1000;
 
@@ -73,36 +73,36 @@ namespace UI.Scripts.Ability
         public void ReFreshUI()
         {
             RefreshAtkUI();
-        }//´É·ÂÄ¡ÆË¾÷Ã¢ UI °»½Å¿ë ÇÔ¼ö(´É·ÂÄ¡ ÆË¾÷Ã¢ ¾È¿¡ÀÖ´Â UI °»½Å¿ë ÇÔ¼ö Ãß°¡ ¿¹Á¤)
+        }//ëŠ¥ë ¥ì¹˜íŒì—…ì°½ UI ê°±ì‹ ìš© í•¨ìˆ˜(ëŠ¥ë ¥ì¹˜ íŒì—…ì°½ ì•ˆì—ìˆëŠ” UI ê°±ì‹ ìš© í•¨ìˆ˜ ì¶”ê°€ ì˜ˆì •)
 
         private void OnClickAtkLevelUp()
         {
-            Debug.Log("°ø°İ·Â ·¹º§¾÷");
+            Debug.Log("ê³µê²©ë ¥ ë ˆë²¨ì—…");
             if (playerLevel < atkUnlockLevel)
             {
-                Debug.Log("ÇÃ·¹ÀÌ¾î ·¹º§ÀÌ ºÎÁ·ÇØ¼­ °ø°İ·Â ÇØ±İÀÌ ¾ÈµÊ");
+                Debug.Log("í”Œë ˆì´ì–´ ë ˆë²¨ì´ ë¶€ì¡±í•´ì„œ ê³µê²©ë ¥ í•´ê¸ˆì´ ì•ˆë¨");
                 return;
             }
 
             if (atkLevel >= atkMaxLevel)
             {
-                Debug.Log("ÀÌ¹Ì ÃÖ´ë ·¹º§");
+                Debug.Log("ì´ë¯¸ ìµœëŒ€ ë ˆë²¨");
                 return;
             }
 
             if (playerGold < cost)
             {
-                Debug.Log("°ñµå ºÎÁ·");
+                Debug.Log("ê³¨ë“œ ë¶€ì¡±");
                 return;
             }
 
             playerGold -= cost;
             atkLevel++;
 
-            Debug.Log($"°ø°İ·Â ·¹º§¾÷ ¼º°ø / ÇöÀç ·¹º§ : {atkLevel} / ³²Àº °ñµå : {playerGold}");
+            Debug.Log($"ê³µê²©ë ¥ ë ˆë²¨ì—… ì„±ê³µ / í˜„ì¬ ë ˆë²¨ : {atkLevel} / ë‚¨ì€ ê³¨ë“œ : {playerGold}");
 
             RefreshAtkUI();
-        }//Å×½ºÆ®¿ë(³ªÁß¿¡ ¼öÁ¤ÇÒ ¿¹Á¤)
+        }//í…ŒìŠ¤íŠ¸ìš©(ë‚˜ì¤‘ì— ìˆ˜ì •í•  ì˜ˆì •)
         private void OnClickMaxHPLevelUp()
         {
 
@@ -150,7 +150,7 @@ namespace UI.Scripts.Ability
             bool canLevelUp = playerLevel >= atkUnlockLevel && playerGold >= cost &&  atkLevel < atkMaxLevel;
 
             atk.RefreshUI( atkLevel, atkMaxLevel, currentValue, nextValue, cost, canLevelUp, playerLevel, atkUnlockLevel);
-        }//Å×½ºÆ®¿ë(³ªÁß¿¡ ¼öÁ¤ÇÒ ¿¹Á¤)
+        }//í…ŒìŠ¤íŠ¸ìš©(ë‚˜ì¤‘ì— ìˆ˜ì •í•  ì˜ˆì •)
         private void RefreshMaxHPUI()
         {
 
@@ -210,11 +210,11 @@ namespace UI.Scripts.Ability
                     break;
             }
             ReFreshUI();
-        }//»óÅÂ ÀüÈ¯ ÇÔ¼ö
+        }//ìƒíƒœ ì „í™˜ í•¨ìˆ˜
         public void OnClickX1()
         {
             ChangeState(XState.X1);
-        }//¹öÆ° ¿¬°á¿ë ÇÔ¼ö
+        }//ë²„íŠ¼ ì—°ê²°ìš© í•¨ìˆ˜
         public void OnClickX10()
         {
             ChangeState(XState.X10);
@@ -230,14 +230,14 @@ namespace UI.Scripts.Ability
             if (Input.GetKey(KeyCode.Q))
             {
                 playerGold += 100;
-                Debug.Log($"°ñµå È¹µæ : ÇöÀç °ñµå {playerGold}");
+                Debug.Log($"ê³¨ë“œ íšë“ : í˜„ì¬ ê³¨ë“œ {playerGold}");
                 RefreshAtkUI();
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
                 playerLevel++;
-                Debug.Log($"ÇÃ·¹ÀÌ¾î ·¹º§¾÷ : ÇöÀç ·¹º§ {playerLevel}");
+                Debug.Log($"í”Œë ˆì´ì–´ ë ˆë²¨ì—… : í˜„ì¬ ë ˆë²¨ {playerLevel}");
                 RefreshAtkUI();
             }
         }
