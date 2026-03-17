@@ -25,19 +25,19 @@ public class Test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("저장 입력");
-            JJ_GameDataManager.Instance.Save();
+            GameDataManager.Instance.Save();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("불러오기 실행");
-            JJ_GameDataManager.Instance.Load();
+            GameDataManager.Instance.Load();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             Debug.Log("저장파일 삭제");
-            JJ_SaveManager.DeleteSaveFile();
+            SaveManager.DeleteSaveFile();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
@@ -47,12 +47,12 @@ public class Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            JJ_GameDataManager.Instance.Load();
+            GameDataManager.Instance.Load();
         }
 
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            JJ_GameDataManager.Instance.RequestStatEnhance(StatusType.Atk, 5);
+            GameDataManager.Instance.RequestStatEnhance(StatusType.Atk, 5);
         }
     }
 }
