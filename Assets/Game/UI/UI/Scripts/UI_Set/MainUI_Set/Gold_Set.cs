@@ -1,11 +1,11 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class Gold_Set : MonoBehaviour
 {
-    [Header("°ñµå Text")]
+    [Header("ê³¨ë“œ Text")]
     [SerializeField] TextMeshProUGUI goldText;
     public void SetGold(int gold)
     {

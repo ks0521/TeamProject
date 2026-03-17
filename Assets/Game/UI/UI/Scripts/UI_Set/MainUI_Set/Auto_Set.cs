@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Auto_Set : MonoBehaviour
 {
-    [Header("ÀÚµ¿ ÀüÅõ ¹öÆ°")]
+    [Header("ìë™ ì „íˆ¬ ë²„íŠ¼")]
     [SerializeField] GameObject onButton;
     [SerializeField] GameObject offButton;
 
