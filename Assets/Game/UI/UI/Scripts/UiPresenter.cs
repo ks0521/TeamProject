@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+ï»¿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,7 +8,7 @@ namespace UI.Scripts.UiPresenter
 {
     public class UiPresenter : MonoBehaviour
     {
-        [Header("UI ÂüÁ¶")]
+        [Header("UI ì°¸ì¡°")]
         [SerializeField] Hp_Set hp;
         [SerializeField] Exp_Set expBar;
         [SerializeField] Power_Set powerText;
