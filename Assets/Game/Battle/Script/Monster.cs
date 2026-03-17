@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Base.Data;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+
 namespace Battle
 {
     public class Monster : Character
     {
-        private float hp;
+        [SerializeField]private float hp;
         public float Hp
         {
             get => hp;
@@ -24,6 +26,8 @@ namespace Battle
         public MonsterSO monsterSo;
         public BattleStat stat;
         public Transform player;
+        public event Action OnMonsterKilled;
+        public bool TestDie = false;
         private void Awake()
         {
             stat = monsterSo.battleStat;
@@ -54,24 +58,26 @@ namespace Battle
         public void Killed()
         {
             Debug.Log("몬스터 처치됨");   
+            OnMonsterKilled?.Invoke();
+            MonsterPoolManager.poolDic[monsterSo.key].ReturnPool(gameObject);
         }
-        /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
+        /// <summary>스테이지 변경등의 이유로 사라질 때 해당 프리팹 삭제</summary>
         public void ForcedReturn()
         {
             Debug.Log("오브젝트 풀에 강제 반환");
+            Destroy(gameObject);
         }
-
         protected override void UpdateFeat()
         {
-            throw new NotImplementedException();
         }
 
         private void FixedUpdate()
         {
+            if (TestDie) Killed();
             if (player is null) 
                 return;
             
-            ChasePlayer();
+            //ChasePlayer();
         }
 
         protected override void FixedUpdateFeat()
@@ -82,7 +88,7 @@ namespace Battle
         public void ChasePlayer()
         {
             if(Vector2.Distance(transform.position,player.transform.position) > ApproachStopRange)
-            transform.position = Vector2.MoveTowards(transform.position,player.transform.position,1 * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position,player.transform.position,1 * Time.deltaTime);
         }
     }
 }
