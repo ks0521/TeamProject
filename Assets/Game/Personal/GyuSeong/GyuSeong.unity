@@ -472,6 +472,7 @@ MonoBehaviour:
     monstersList: []
     stageSO: {fileID: 0}
     canSpawning: 0
+    spawnDelay: 0
   stageSO: {fileID: 0}
   stageProgress:
     selectedChapter: 0
@@ -1245,12 +1246,12 @@ PrefabInstance:
     - target: {fileID: 7630948185886587318, guid: f385f1a93f85dc7469f3cc6032b9fec2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.05
+      value: 2.97
       objectReference: {fileID: 0}
     - target: {fileID: 7630948185886587318, guid: f385f1a93f85dc7469f3cc6032b9fec2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.14
+      value: -2.65
       objectReference: {fileID: 0}
     - target: {fileID: 7630948185886587318, guid: f385f1a93f85dc7469f3cc6032b9fec2,
         type: 3}

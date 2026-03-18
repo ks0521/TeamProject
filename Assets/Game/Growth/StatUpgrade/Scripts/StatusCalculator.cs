@@ -104,5 +104,6 @@ public class StatusCalculator : MonoBehaviour
         }
         else{ Debug.LogWarning($"아이템 드랍률 SO 찾지 못함");}
 
+        runtimeStatus.finalRange = runtimeStatus.baseStat.baseAttackRange; //공격 범위는 고정
     }
 }

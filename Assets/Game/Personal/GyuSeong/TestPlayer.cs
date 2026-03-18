@@ -50,7 +50,6 @@ namespace Personal.GyuSeong
                     target = monster.transform;
                 }
             }
-
             return true;
         }
 
@@ -93,7 +92,7 @@ namespace Personal.GyuSeong
         void FixedUpdateMoveFeat()
         {
             if (cm.IsInputMoving) return; //플레이어 조작중에는 자동이동하지 않음
-            if (target is null)
+            if (target == null)
             {
                 if (!FindTarget())
                 {
@@ -132,7 +131,7 @@ namespace Personal.GyuSeong
 
         void AtkFeat()
         {
-            if (targetMonster is null || targetMonster.IsDead || !targetMonster.isActiveAndEnabled)
+            if (targetMonster == null || targetMonster.IsDead || !targetMonster.isActiveAndEnabled)
             {
                 if (!FindTarget())
                 {
