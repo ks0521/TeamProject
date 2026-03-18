@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿using Base.Data;
+using Base.Save;
+using Growth.StatUpgrade;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,6 +13,8 @@ namespace UI.Scripts.Ability
 {
     public class Ability : MonoBehaviour
     {
+        [Header("매니저")]
+        [SerializeField] GameManager gameManager;
         public enum StatusType
         {
             Atk, MaxHp, Def, AtkSpeed, CritChance, CritDmg, MoveSpeed, GoldRate, ExpRate, ItemDropRate
@@ -37,18 +43,7 @@ namespace UI.Scripts.Ability
         [SerializeField] ExpRate_Set expRate;
         [SerializeField] ItemDropRate_Set itemDropRate;
 
-        // 테스트용 데이터(나중에 삭제 예정)
-        private int playerLevel = 1;
-        private int playerGold = 1000;
-
-        private int atkLevel = 1;
-        private int atkMaxLevel = 10;
-        private int atkUnlockLevel = 10;
-
-        private int cost;
-        private float currentValue;
-        private float nextValue;
-
+      
         // Start is called before the first frame update
         public void OnEnable()
         {
@@ -72,36 +67,11 @@ namespace UI.Scripts.Ability
         }
         public void ReFreshUI()
         {
-            RefreshAtkUI();
+            
         }//능력치팝업창 UI 갱신용 함수(능력치 팝업창 안에있는 UI 갱신용 함수 추가 예정)
 
         private void OnClickAtkLevelUp()
         {
-            Debug.Log("공격력 레벨업");
-            if (playerLevel < atkUnlockLevel)
-            {
-                Debug.Log("플레이어 레벨이 부족해서 공격력 해금이 안됨");
-                return;
-            }
-
-            if (atkLevel >= atkMaxLevel)
-            {
-                Debug.Log("이미 최대 레벨");
-                return;
-            }
-
-            if (playerGold < cost)
-            {
-                Debug.Log("골드 부족");
-                return;
-            }
-
-            playerGold -= cost;
-            atkLevel++;
-
-            Debug.Log($"공격력 레벨업 성공 / 현재 레벨 : {atkLevel} / 남은 골드 : {playerGold}");
-
-            RefreshAtkUI();
         }//테스트용(나중에 수정할 예정)
         private void OnClickMaxHPLevelUp()
         {
@@ -141,15 +111,14 @@ namespace UI.Scripts.Ability
         }
 
 
-        private void RefreshAtkUI()
+        private void RefreshAtkUI(StatusType type)
         {
-            currentValue = atkLevel * 5;
-            cost = atkLevel * 500;
-            nextValue = (atkLevel + 1) * 5;
+            
+           
 
-            bool canLevelUp = playerLevel >= atkUnlockLevel && playerGold >= cost &&  atkLevel < atkMaxLevel;
-
-            atk.RefreshUI( atkLevel, atkMaxLevel, currentValue, nextValue, cost, canLevelUp, playerLevel, atkUnlockLevel);
+            
+                        
+            
         }//테스트용(나중에 수정할 예정)
         private void RefreshMaxHPUI()
         {
@@ -227,19 +196,7 @@ namespace UI.Scripts.Ability
         // Update is called once per frame
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Q))
-            {
-                playerGold += 100;
-                Debug.Log($"골드 획득 : 현재 골드 {playerGold}");
-                RefreshAtkUI();
-            }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                playerLevel++;
-                Debug.Log($"플레이어 레벨업 : 현재 레벨 {playerLevel}");
-                RefreshAtkUI();
-            }
+            
         }
     }
 
