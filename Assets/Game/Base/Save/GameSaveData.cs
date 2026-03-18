@@ -24,6 +24,7 @@ namespace Base.Save
         public int nextChallangeStage; //도전 가능한 스테이지
         public int nextChallangeChapter; //도전 가능한 챕터
     }
+    //currency + iteminventory는 분리저장?
     [Serializable]public class PlayerCurrencyState
     {
         public int level;

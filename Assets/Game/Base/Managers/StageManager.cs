@@ -162,11 +162,11 @@ namespace Base.Managers
     public class Stage
     {
         [SerializeField] private MonsterPoolManager monsterPool;
+        [SerializeField]private StageSO stageSO; //현재 스테이지의 SO
         [SerializeField]public List<TestMonster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
         public IReadOnlyList<TestMonster> MonsterList => monstersList;
-        [SerializeField]private StageSO stageSO; //현재 스테이지의 SO
-        [SerializeField]private bool canSpawning; //스폰 여부 트리거
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
+        [SerializeField]private bool canSpawning; //스폰 여부 트리거
         [SerializeField]private float spawnDelay; // 몬스터 스폰 딜레이
         
         public Stage(StageSO stage, MonsterPoolManager monsterPool)
