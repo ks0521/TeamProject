@@ -57,14 +57,15 @@ public class player1 : character1
     {
         cm.UpdateMoveInput(CurrentBattleStat.moveSpeed);
         TestMoveTargetSet();
-        AtkFeat();
+        //AtkFeat();
     }
     void TestMoveTargetSet()
     {
         if (target == null && MonsterSetComponent.ins.TryGetMonster(out GameObject obj))
             target = obj.transform;
     }
-    void AtkFeat()
+
+    /*void AtkFeat()
     {
         if (!cm.IsInputMoving && CheckAtkRangeCollision(ref monColArr))
         {
@@ -75,4 +76,5 @@ public class player1 : character1
             }
         }
     }
+    */
 }
