@@ -21,7 +21,6 @@ namespace Personal.GyuSeong
             isDead = true;
             Debug.Log("몬스터 처치됨");
             OnMonsterKilled?.Invoke(this);
-            MonsterPoolManager.poolDic[monsterSO.key].ReturnPool(gameObject);
         }
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
         public void ForcedReturn()

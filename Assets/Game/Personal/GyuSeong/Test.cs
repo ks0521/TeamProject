@@ -2,12 +2,13 @@ using Base.Managers;
 using Base.Save;
 using Growth.StatUpgrade;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Test : MonoBehaviour
 {
     // Update is called once per frame
     [SerializeField]private GameSaveData saveData;
-    [SerializeField] private RuntimeData runData;
+    [FormerlySerializedAs("runData")] [SerializeField] private RuntimeProgressState runProgressState;
     [SerializeField] private PlayerRuntimeStatus runStat;
     [SerializeField] private StatusCalculator calc;
     private void Start()
@@ -20,13 +21,13 @@ public class Test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("저장 입력");
-            GameDataManager.Instance.Save();
+            PlayerProgressManager.Instance.SaveProgress();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("불러오기 실행");
-            GameDataManager.Instance.Load();
+            PlayerProgressManager.Instance.LoadProgress();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -37,7 +38,7 @@ public class Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            runData = DataConverter.SaveToRuntime(saveData);
+            runProgressState = DataConverter.SaveToRuntime(saveData);
         }
     }
 }

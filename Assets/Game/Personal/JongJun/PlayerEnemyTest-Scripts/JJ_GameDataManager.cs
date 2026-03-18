@@ -19,8 +19,8 @@ namespace Personal_Jongjun
     {
         public static JJ_GameDataManager Instance;
         [SerializeField] private StatusCalculator calculator;
-        public RuntimeData runtimeData;
-        public StageProgressData StageProgressData => runtimeData.stageProgress;
+        public RuntimeProgressState runtimeProgressState;
+        public StageProgressState StageState => runtimeProgressState.stage;
         public StatusSO statusConfig;
 
         private void Awake()
@@ -37,33 +37,33 @@ namespace Personal_Jongjun
         public void Init()
         {
             Load();
-            calculator?.Calculate(runtimeData);
+            calculator?.Calculate(runtimeProgressState);
         }
 
         /// <summary> 런타임 데이터 기기에 저장</summary>
         public void Save()
         {
             Debug.Log("GameDataManager : 진행 상황을 저장합니다. ");
-            JJ_SaveManager.Save(DataConverter.RuntimeToSave(runtimeData));
+            JJ_SaveManager.Save(DataConverter.RuntimeToSave(runtimeProgressState));
         }
 
         /// <summary> 저장된 데이터 런타임 데이터형식으로 불러오기</summary>
         public void Load()
         {
-            runtimeData = DataConverter.SaveToRuntime(JJ_SaveManager.Load());
+            runtimeProgressState = DataConverter.SaveToRuntime(JJ_SaveManager.Load());
         }
 
-        public RuntimeData GetData() => runtimeData;
-        public bool HasData() => runtimeData != null;
+        public RuntimeProgressState GetData() => runtimeProgressState;
+        public bool HasData() => runtimeProgressState != null;
 
         public StageInfo GetStageInfo()
         {
             return new StageInfo()
             {
-                selectedChapter = runtimeData.stageProgress.selectedNormalChapter,
-                selectedStage = runtimeData.stageProgress.selectedNormalStage,
-                nextChallengeChapter = runtimeData.stageProgress.nextChallangeChapter,
-                nextChallengeStage = runtimeData.stageProgress.nextChallangeStage
+                selectedChapter = runtimeProgressState.stage.selectedNormalChapter,
+                selectedStage = runtimeProgressState.stage.selectedNormalStage,
+                nextChallengeChapter = runtimeProgressState.stage.nextChallangeChapter,
+                nextChallengeStage = runtimeProgressState.stage.nextChallangeStage
             };
         }
 
@@ -73,7 +73,7 @@ namespace Personal_Jongjun
             int totalCost = 0;
             for (int i = 1; i <= count; i++)
             {
-                totalCost = (runtimeData.stat.upgrade[type] + i) * stat.enhanceCost;
+                totalCost = (runtimeProgressState.statUpgrades.upgradeLevelsByType[type] + i) * stat.enhanceCost;
             }
 
             Debug.Log($"Need Cost : {totalCost}");
