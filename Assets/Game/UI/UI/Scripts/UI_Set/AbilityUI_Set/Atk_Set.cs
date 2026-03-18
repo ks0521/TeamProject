@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Base.Save;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -22,45 +23,13 @@ public class Atk_Set : MonoBehaviour
 
 
 
-    public void RefreshUI(int statslevel, int maxLevel, float currentValue, float nextValue, int cost, bool isInteractable, int playerLevel, int unlockLevel)
+    public void RefreshUI(StatusEntry statusEntry)
     {
-        levelUpButton.interactable = isInteractable;
-
-        if (isInteractable)
-        {
-            levelUpButton.image.color = Color.yellow;
-        }
-        else { levelUpButton.image.color = Color.gray; }
-
-        if (playerLevel >= unlockLevel)
-        {
-            lockPanel.SetActive(false);
-        }
-        unlockLevelText.text = $"Lv : {unlockLevel} 개방";
-        
-        if (statslevel < maxLevel)
-        {
-            statsLevelText.text = $"{statslevel}";
-            currentStats.text = currentValue.ToString("0");
-            nextStats.text = nextValue.ToString("0");
-            levelupcost.text = cost.ToString();
-        }
-        else
-        {
-            currentStats.color = Color.yellow;
-            statsLevelText.color = Color.yellow;
-            nextStats.enabled = false;
-            levelupcost.enabled = false;
-            levelUpButton.gameObject.SetActive(false);
-            costImage.enabled = false;
-
-            statsLevelText.text = $"MAX";
-
-        }
+      
 
 
 
-    }//함수가 너무 많아서 하나로 묶은 버전
+    }
    
     public void BindLevelUp(Action action)
     {
