@@ -1,30 +1,60 @@
 ﻿using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
-using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Personal.HagYun
 {
     public static class TransformMoveExtensionsClass
     {
-        public static Vector2 ToV2(this Vector3 v) => new Vector2(v.x, v.y);
-        public static Vector2 DirThisToTarget(this Vector3 thisPos, Vector3 targetPos, float speed)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector2 ToV2(this in Vector3 v) => new Vector2(v.x, v.y);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector2 DirThisToTarget(this in Vector3 thisPos, in Vector3 targetPos, float speed)
         {
             return Vector2.MoveTowards(thisPos.ToV2(), targetPos.ToV2(), speed * Time.deltaTime);
         }
-        public static float Angle(this Vector2 v) => (Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg) - 90f;
-        public static Quaternion LookTarget(this Vector3 thisPos, Vector3 targetPos)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Angle(this in Vector2 v) => (Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg) - 90f;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Quaternion LookTarget(this in Vector3 thisPos, in Vector3 targetPos)
         {
             return Quaternion.LookRotation(Vector3.forward, targetPos.ToV2() - thisPos.ToV2());
         }
-        public static void MoveToTarget(this Transform thisTrans, Vector3 targetPos, float speed)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CheckDirZeroToTarget(this Transform thisTrans, in Vector3 targetPos)
+        {
+            return thisTrans.position.ToV2() != targetPos.ToV2();
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void MoveToTarget(this Transform thisTrans, in Vector3 targetPos, float speed)
         {
             thisTrans.position = DirThisToTarget(thisTrans.position, targetPos, speed);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void LookToTarget(this Transform thisTrans, in Vector3 targetPos)
+        {
             thisTrans.rotation = LookTarget(thisTrans.position, targetPos);
+        }
+    }
+    public struct TargetChecker
+    {
+        // Projectile Skill Target
+        public Character targetCha;
+        // Area Skill Target
+        public Vector2 targetPos;
+        public TargetChecker(Character cha)
+        {
+            targetCha = cha;
+            targetPos = Vector2.zero;
+        }
+        public TargetChecker(Vector2 pos)
+        {
+            targetCha = null;
+            targetPos = pos;
         }
     }
     public abstract class Skill : MonoBehaviour
@@ -32,31 +62,27 @@ namespace Personal.HagYun
         // skill data
         [SerializeField] protected SkillSO data;
         // target 설정
-        [SerializeField] protected Character target;
         [SerializeField] protected LayerMask targetMask = 1 << 8;
         // property
         public SkillSO Data => data;
+        public LayerMask TargetMask => targetMask;
         [field: SerializeField] public static Character PlOwner { get; protected set; }
         protected Vector2 ThisPos
         {
-            get => transform.position.ToV2();
+            get => transform.position;
             set => transform.position = value;
         }
-        protected Quaternion ThisRot
-        {
-            get => transform.rotation;
-            set => transform.rotation = value;
-        }
-        protected Vector2 TargetPos => target.transform.position.ToV2();
+        protected abstract Vector2 TargetPos { get; }
+        public Vector2 OwnerPos => PlOwner.transform.position;
         // effect
         [SerializeField] protected Animator effectAnim;
         // etc
-        protected CancellationTokenSource cts;
+        //protected CancellationTokenSource cts;
 
         // test
-        public Player pl;
+        //public Player pl;
         public static void SetPlOwner(Character pl) => PlOwner = pl;
-        public void TargetSet(Character target) => this.target = target;
+        //public void TargetSet(Character target) => this.target = target;
         private void Awake()
         {
             if (data == null)
@@ -64,9 +90,12 @@ namespace Personal.HagYun
                 Debug.LogWarning($"{gameObject.name}에 skill data 없음");
             }
             if (PlOwner == null)
-                SetPlOwner(pl);
-            if (PlOwner == null) Debug.LogWarning("왜 스킬 플레이어 저장 안됨?");
+            {
+                //SetPlOwner(pl);
+                if (PlOwner == null) Debug.LogWarning("왜 스킬 플레이어 저장 안됨?");
+            }
         }
+        public abstract void SkillUseTargeting(TargetChecker target);
         public abstract void SkillEffect();
         public float PlSkillDmg()
         {
@@ -74,6 +103,7 @@ namespace Personal.HagYun
             resultDmg *= Data.baseDamage;
             if (IsCriticalChance(PlOwner))
                 resultDmg *= PlOwner.criDmgPower;
+            Debug.Log($"{gameObject.name} 스킬 데미지 : {resultDmg}");
             return resultDmg;
         }
         public void PlSkillAtk(Character cha)
@@ -107,32 +137,31 @@ namespace Personal.HagYun
             else
                 return false;
         }
-        protected virtual void EnableEffect(Vector2 targetPos)
+        protected virtual void EnableSkill()
         {
-            ThisPos = targetPos;
-            ThisRot = Quaternion.Euler(0, 0, 0);
-            effectAnim.gameObject.SetActive(true);
-            effectAnim.Rebind();
+            gameObject.SetActive(true);
         }
-        protected virtual void EnableSkill(Character ch)
+        protected virtual void DisableSkill()
         {
-            EnableEffect(ch.transform.position.ToV2());
+            //DisableEffect();
+            gameObject.SetActive(false);
+        }
+        protected virtual void EnableEffect()
+        {
+            ThisPos = TargetPos;
+            gameObject.SetActive(true);
+            effectAnim.Rebind();
         }
         protected virtual void DisableEffect()
         {
             effectAnim.gameObject.SetActive(false);
-        }
-        protected virtual void DisableSkill()
-        {
-            DisableEffect();
-            gameObject.SetActive(false);
         }
         protected async UniTask CurAnimTimerTask(float timerValue)
         {
             float curAnimStateTimeValue = effectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime;
             while (curAnimStateTimeValue < timerValue)
             {
-                await UniTask.Yield(pl.GetCancellationTokenOnDestroy());
+                await UniTask.Yield(this.GetCancellationTokenOnDestroy());
                 curAnimStateTimeValue = effectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime;
                 if (this == null) return;
             }

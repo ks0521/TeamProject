@@ -10,23 +10,25 @@ namespace Personal.HagYun
     {
         public event Action OnCooltimeStart;
         public event Action OnCooltimeEnd;
-        public event Action<float, float> OnCooltimeUpdate;
+        public event Action<float> OnCooltimeUpdate;
 
         public void RaiseCooltimeStart() => OnCooltimeStart?.Invoke();
         public void RaiseCooltimeEnd() => OnCooltimeEnd?.Invoke();
-        public void RaiseCooltimeUpdate(float curCooltime, float maxCooltime) => OnCooltimeUpdate?.Invoke(curCooltime, maxCooltime);
+        public void RaiseCooltimeUpdate(float value) => OnCooltimeUpdate?.Invoke(value);
     }
     [Serializable]
     public class EquipSkill
     {
-        public Skill skill;
+        [SerializeField] Skill skill;
+        public Skill Skill => skill;
         public float CurCooltime { get; private set; }
         public bool IsCooltime { get; private set; }
-        public Priority priority;
         EquipSkillEvent eventSet = new EquipSkillEvent();
-        public void SkillSet(Skill skill)
+        public Vector2 SkillOwnerPos => skill.OwnerPos;
+        public void SkillSet(Skill skill, bool isInit = false)
         {
             this.skill = skill;
+            if (!isInit) CooltimeStart();
         }
         public void SkillUnset()
         {
@@ -37,24 +39,34 @@ namespace Personal.HagYun
         {
             SkillUnset();
             SkillSet(skill);
-            CooltimeStart();
         }
-        public void SkillUse(Vector2 targetPos)
+        public void SkillUse(Character target)
         {
-            if(skill == null)
+            if (skill == null)
             {
                 Debug.LogWarning("스킬 없음");
+                return;
+            }
+            else if (IsCooltime)
+            {
+                //Debug.Log($"{skill.name} 스킬 쿨타임");
+                return;
+            }
+            else if (target == null)
+            {
+                Debug.LogWarning("타겟 없음");
                 return;
             }
             switch (skill.Data.Targeting)
             {
                 case TargetingMode.Self:
+                    skill.SkillUseTargeting(new TargetChecker(skill.OwnerPos));
                     break;
                 case TargetingMode.Homing:
+                    skill.SkillUseTargeting(new TargetChecker(target));
                     break;
                 case TargetingMode.GroundTarget:
-                    break;
-                default:
+                    skill.SkillUseTargeting(new TargetChecker(target.transform.position));
                     break;
             }
             CooltimeStart();
@@ -68,10 +80,11 @@ namespace Personal.HagYun
             while (0 < CurCooltime)
             {
                 CurCooltime -= Time.deltaTime; // 쿨타임 감소 속도 증가 시, 해당 값 곱하기
-                eventSet.RaiseCooltimeUpdate(CurCooltime, baseCooltime);
+                eventSet.RaiseCooltimeUpdate(1 - (CurCooltime / baseCooltime));
                 await UniTask.Yield();
                 if (Skill.PlOwner == null) return;
             }
+            eventSet.RaiseCooltimeUpdate(1);
             IsCooltime = false;
             eventSet.RaiseCooltimeEnd();
         }
@@ -82,7 +95,7 @@ namespace Personal.HagYun
         public void ColltimeAdd(float cooltime)
         {
             CurCooltime += cooltime;
-            if(!IsCooltime) CooltimeStartTask().Forget();
+            if (!IsCooltime) CooltimeStartTask().Forget();
         }
         public void CooltimeStart()
         {
@@ -93,10 +106,10 @@ namespace Personal.HagYun
         // event add/remove
         public void AddEventCooltimeStart(Action func) => eventSet.OnCooltimeStart += func;
         public void AddEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd += func;
-        public void AddEventCooltimeUpdate(Action<float, float> func) => eventSet.OnCooltimeUpdate += func;
+        public void AddEventCooltimeUpdate(Action<float> func) => eventSet.OnCooltimeUpdate += func;
 
         public void RemoveEventCooltimeStart(Action func) => eventSet.OnCooltimeStart -= func;
         public void RemoveEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd -= func;
-        public void RemoveEventCooltimeUpdate(Action<float, float> func) => eventSet.OnCooltimeUpdate -= func;
+        public void RemoveEventCooltimeUpdate(Action<float> func) => eventSet.OnCooltimeUpdate -= func;
     }
 }

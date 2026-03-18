@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4683024484457123103}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.2787577, y: -0.8361879, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -48,16 +48,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 760421bfbb5b8e04ab7d052d90a9d9b7, type: 2}
-  target: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 256
   effectAnim: {fileID: 389088784693582235}
-  pl: {fileID: 0}
+  targetPos: {x: -1.2787577, y: -0.8361879}
   sprites:
   - {fileID: 6333207098008456314}
   - {fileID: 3652204893191534049}
-  overlapArea: {fileID: 0}
+  overlapArea: {fileID: 5245647032827340734}
+  targetTrans: {fileID: 0}
 --- !u!70 &5245647032827340734
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

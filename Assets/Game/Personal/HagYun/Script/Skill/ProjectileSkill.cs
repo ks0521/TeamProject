@@ -7,47 +7,56 @@ namespace Personal.HagYun
 {
     public class ProjectileSkill : Skill
     {
+        [SerializeField] protected Character target;
+        protected override Vector2 TargetPos => target.transform.position;
         [SerializeField] BoxCollider2D col;
         [SerializeField] Animator projectileAnim;
         bool isHoming;
-        private void OnEnable()
-        {
-            EnableProjectile();
-        }
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.GetComponent<Monster>() is Monster mon)
-            {
-                target = mon;
-                SkillEffect();
-            }
-        }
+        //private void OnEnable()
+        //{
+        //    EnableProjectile();
+        //}
         private void Update()
         {
             MoveToTarget();
         }
         void MoveToTarget()
         {
-            if (target == null)
+            if (!isHoming) return;
+            else if (target == null)
             {
-                //gameObject.SetActive(false);
-                return;
-            }
-            else if (!isHoming)
-            {
+                Debug.LogWarning($"target 없어짐, {gameObject.name} skill 비활성화");
+                gameObject.SetActive(false);
                 return;
             }
             transform.MoveToTarget(TargetPos, Data.speed);
+            transform.LookToTarget(TargetPos);
+            if (!transform.CheckDirZeroToTarget(TargetPos))
+            {
+                SkillEffect();
+            }
+        }
+        public override void SkillUseTargeting(TargetChecker target)
+        {
+            if (target.targetCha == null)
+            {
+                Debug.LogWarning($"target이 설정되지 않아, {gameObject.name} skill 활성화 하지 않음");
+                return;
+            }
+            this.target = target.targetCha;
+            //EnableProjectile();
+            EnableSkill();
         }
         public override void SkillEffect()
         {
+            Debug.Log("스킬 효과");
             DisableProjectile();
-            EnableEffect(TargetPos);
+            EnableEffect();
             if (Data.SoE == Growth.Skill.ScopeOfEffect.Single)
             {
                 PlSkillAtk(target);
             }
-            else if(Data.effectArea == 0)
+            else if (Data.effectArea == 0)
             {
                 Debug.LogWarning($"{gameObject.name}의 range 값이 0입니다.");
             }
@@ -58,22 +67,28 @@ namespace Personal.HagYun
         }
         void EnableProjectile()
         {
-            col.enabled = true;
+            ThisPos = OwnerPos;
+            transform.LookToTarget(TargetPos);
             projectileAnim.gameObject.SetActive(true);
             projectileAnim.Rebind();
             isHoming = true;
-            MoveToTarget();
+            //MoveToTarget();
         }
         void DisableProjectile()
         {
-            col.enabled = false;
-            projectileAnim.gameObject.SetActive(false);
             isHoming = false;
+            projectileAnim.gameObject.SetActive(false);
         }
-        protected override void EnableEffect(Vector2 targetPos)
+        protected override void EnableEffect()
         {
-            base.EnableEffect(targetPos);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            base.EnableEffect();
             ObjDisableTimerTask().Forget();
+        }
+        protected override void EnableSkill()
+        {
+            EnableProjectile();
+            base.EnableSkill();
         }
     }
 }
