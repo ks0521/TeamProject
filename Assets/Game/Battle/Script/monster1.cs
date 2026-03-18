@@ -10,7 +10,7 @@ using UnityEngine;
 public class monster1 : character1
 {
     public MonsterSO monsterSO;
-    //public SFXPlayer sfx;
+    public SFXPlayer sfx;
     public const float MonsterAttackRange = 0.6f;
 
     protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
@@ -73,8 +73,8 @@ public class monster1 : character1
         await UniTask.Delay(TimeSpan.FromSeconds(chargePrepareTime), cancellationToken: cts);
 
         if (atkRange1 != null) atkRange1.SetActive(false);
-        //실제 스킬 이펙트 구현할 자리
-        //sfx.PlayBossAttackSound();
+        sfx.PlayBossSkillSound();
+
         float elapsed = 0f;
         bool hasDamaged = false;
 
@@ -97,7 +97,6 @@ public class monster1 : character1
             // 다음 물리 프레임까지 대기 (이게 있어야 부드럽게 이동함)
             await UniTask.WaitForFixedUpdate(cancellationToken: cts);
         }
-        //Attack(targetScript);
 
         isUsingSkill = false;
     }
@@ -129,11 +128,9 @@ public class monster1 : character1
                 Debug.Log("화염 장막에 피격되었습니다.");
                 Attack(targetScript);
             }
-
         }
-        //실제 스킬 이펙트 구현할 자리
-        //sfx.PlayBossSkillSound();
-
+        
+        sfx.PlayBossSkillSound();
         isUsingSkill = false;
     }
 
@@ -164,9 +161,8 @@ public class monster1 : character1
                 Attack(targetScript);
             }
         }
-        //실제 스킬 이펙트 구현할 자리
-        //sfx.PlayBossSkillSound();
 
+        sfx.PlayBossSkillSound();
         isUsingSkill = false;
     }
 
