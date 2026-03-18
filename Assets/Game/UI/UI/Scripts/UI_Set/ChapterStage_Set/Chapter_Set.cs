@@ -9,10 +9,11 @@ using UI.Scripts.Stage;
 using UnityEngine;
 
 
-public class Chapter_1_Set : MonoBehaviour
+public class Chapter_Set : MonoBehaviour
 {
+    [SerializeField] int chapterNum;
     [SerializeField] Stage_Set[] stages;
-    public void SetChapter1(StageManager stageManager , int chapterNum)
+    public void SetChapter(StageManager stageManager)
     {
         for (int i = 0; i < stages.Length; i++)
         {
