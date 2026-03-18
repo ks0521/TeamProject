@@ -15,10 +15,10 @@ namespace Base.Managers
     /// <summary> UI에서 사용하기 위한 정보 모음집</summary>
     public struct StageEntry
     {
-        public int chapter;
-        public int stage;
-        public StageSO stageSO;
-        public StageType type;
+        public int chapter; //챕터
+        public int stage; //스테이지
+        public StageSO stageSO; //해당 챕터 - 스테이지의 SO
+        public StageType type; //스테이지의 도전상태(일반, 도전, 잠금)
     }
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
     public class StageManager : MonoBehaviour
@@ -157,7 +157,7 @@ namespace Base.Managers
         public int CurChapter => stageSO.chapter;
         public int CurStage => stageSO.stage;
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
-        private float spawnDelay; // 몬스터 스폰 딜레이
+        [SerializeField]private float spawnDelay; // 몬스터 스폰 딜레이
         
         public Stage(StageSO stage)
         {
@@ -170,7 +170,7 @@ namespace Base.Managers
             }
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 진입");
             spawnerToken = new CancellationTokenSource();
-            spawnDelay = 5f;
+            spawnDelay = 2.5f;
             Spawning(spawnerToken.Token).Forget();
             canSpawning = true;
         }
