@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace UI.Scripts.Stage
@@ -15,22 +16,22 @@ namespace UI.Scripts.Stage
         [SerializeField] private Button button;
         [SerializeField] private TextMeshProUGUI stageName;
 
-        [SerializeField] private Image normalIcon;
-        [SerializeField] private Image challengeIcon;
-        [SerializeField] private Image bossIcon;
-        [SerializeField] private Image lockIcon;
+        [SerializeField] private GameObject normalIcon;
+        [SerializeField] private GameObject challengeIcon;
+        [SerializeField] private GameObject bossIcon;
+        [SerializeField] private GameObject lockIcon;
 
         public void SetStage(StageEntry entry)
         {
             if (entry.stageSO == null)
             {
-                Debug.LogError("StageSO가 null입니다.");
+                Debug.Log("StageSO가 null입니다.");
                 return;
             }
 
             if (stageName == null)
             {
-                Debug.LogError("stageName UI가 연결되지 않았습니다.");
+                Debug.Log("stageName UI가 연결되지 않았습니다.");
                 return;
             }
 
@@ -39,23 +40,39 @@ namespace UI.Scripts.Stage
             switch (entry.type)
             {
                 case StageType.Normal:
-                    button.image = normalIcon;
+                    normalIcon.SetActive(true);
+                    challengeIcon.SetActive(false); 
+                    bossIcon.SetActive(false); 
+                    lockIcon.SetActive(false);
+
                     button.interactable = true;
                     break;
 
                 case StageType.Challenge:
-                    button.image = challengeIcon;
+                    normalIcon.SetActive(false);
+                    challengeIcon.SetActive(true);
+                    bossIcon.SetActive(false);
+                    lockIcon.SetActive(false);
+
                     button.interactable = true;
                     break;
 
                 case StageType.Boss:
-                    button.image = bossIcon;
+                    normalIcon.SetActive(false);
+                    challengeIcon.SetActive(false);
+                    bossIcon.SetActive(true);
+                    lockIcon.SetActive(false);
+
                     button.interactable = true;
                     break;
 
                 default:
+                    normalIcon.SetActive(false);
+                    challengeIcon.SetActive(false);
+                    bossIcon.SetActive(false);
+                    lockIcon.SetActive(true);
+
                     button.interactable = false;
-                    button.image = lockIcon;
                     break;
             }
         }
