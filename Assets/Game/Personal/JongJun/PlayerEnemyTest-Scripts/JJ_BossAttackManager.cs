@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-public class monster1 : character1
+public class JJ_BossAttackManager : character1
 {
     public MonsterSO monsterSO;
     public SFXPlayer sfx;
@@ -23,19 +23,27 @@ public class monster1 : character1
 
     [Header("Skill1(돌진)")]
     [SerializeField] private GameObject atkRange1;
-    [SerializeField] private float chargePrepareTime = 1.2f;
+    [SerializeField] private float skill1CoolTime = 10f;
+    [SerializeField] private float skill1WarningDuration = 1.2f;
+    [SerializeField] private float skill1Damage = 15f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
+    [SerializeField] private float skill1KnockbackForce = 9.9f;
+    [SerializeField] private float skill1KnockbackDuration = 0.2f;
 
     [Header("Skill2(화염 장막)")]
     [SerializeField] private GameObject atkRange2;
+    [SerializeField] private float skill2CoolTime = 15f;
     [SerializeField] private float skill2WarningDuration = 1.5f;
+    [SerializeField] private float skill2Damage = 10f;
     [SerializeField] private float skill2Range = 4.0f;
 
     [Header("Skill3(메테오)")]
     [SerializeField] private GameObject atkRange3;
+    [SerializeField] private float skill3CoolTime = 12f;
     [SerializeField] private float skill3WarningDuration = 1.5f;
-    [SerializeField] private float skill3Range = 3.0f;
+    [SerializeField] private float skill3Damage = 33f;
+    [SerializeField] private float skill3Range = 4.0f;
 
     private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
     private bool isUsingSkill = false;
@@ -70,7 +78,7 @@ public class monster1 : character1
 
         Vector2 directionToTarget = (target.position - transform.position).normalized;
         RotateTowards(directionToTarget);
-        await UniTask.Delay(TimeSpan.FromSeconds(chargePrepareTime), cancellationToken: cts);
+        await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
 
         if (atkRange1 != null) atkRange1.SetActive(false);
         sfx.PlayBossSkillSound();
@@ -89,8 +97,20 @@ public class monster1 : character1
             if (!hasDamaged && Vector2.Distance(transform.position, target.position) < 0.3f)
             {
                 Debug.Log("돌진으로 피격되었습니다.");
+                targetScript.Hit(skill1Damage);
+
+                // 플레이어 스크립트 가져오기 (character1을 player1로 캐스팅)
+                player1 player = targetScript as player1;
+                if (player != null)
+                {
+                    // 넉백 방향 계산 (몬스터 -> 플레이어 방향)
+                    Vector2 knockbackDir = (target.position - transform.position).normalized;
+                    // 넉백 적용
+                    player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
+                }
+
                 hasDamaged = true;
-                Attack(targetScript);
+                break; //충돌 후 몬스터는 이동 중단
             }
 
             elapsed += Time.fixedDeltaTime;
@@ -126,7 +146,7 @@ public class monster1 : character1
             if (distance <= skill2Range)
             {
                 Debug.Log("화염 장막에 피격되었습니다.");
-                Attack(targetScript);
+                targetScript.Hit(skill2Damage);
             }
         }
         
@@ -158,7 +178,7 @@ public class monster1 : character1
             if (distance <= skill3Range)
             {
                 Debug.Log("메테오 적중! 플레이어에게 데미지");
-                Attack(targetScript);
+                targetScript.Hit(skill3Damage);
             }
         }
 

@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using Base.Data;
 using Personal.HagYun;
 using UnityEngine;
+using Cysharp.Threading.Tasks; // UniTask 사용을 위해 추가
+using System; // TimeSpan 사용을 위해 추가
 
 public class player1 : character1
 {
-    [SerializeField]
-    private PlayerRuntimeStatus runtimeStatus;
+    [SerializeField] private PlayerRuntimeStatus runtimeStatus;
+    [SerializeField] Collider2D[] monColArr = new Collider2D[64];
+
     protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
     protected override float AttackRange => runtimeStatus.finalRange;
-    [SerializeField] Collider2D[] monColArr = new Collider2D[64];
+
+    private bool isKnockback = false;
+
     protected override void OnDead()
     {
-        if (isDead) 
+        if (isDead)
             return;
         isDead = true;
         Debug.Log("스테이지 실패");
@@ -26,13 +31,37 @@ public class player1 : character1
         hp = CurrentBattleStat.maxHp;
     }
 
+    public void Knockback(Vector2 direction, float force, float duration)
+    {
+        if (isKnockback) return;
+
+        isKnockback = true;
+        rb.AddForce(direction.normalized * force, ForceMode2D.Impulse);
+        KnockbackRoutine(duration).Forget(); //넉백 도중 플레이어의 조작 봉인
+    }
+
+    // 넉백 시간 동안 기다렸다가 상태를 복구하는 비동기 함수
+    private async UniTaskVoid KnockbackRoutine(float duration)
+    {
+        //넉백 지속 시간만큼 대기
+        await UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: this.GetCancellationTokenOnDestroy());
+
+        //넉백 종료: 속도 초기화 및 조작 가능 상태로 변경
+        rb.velocity = Vector2.zero;
+        isKnockback = false;
+    }
+
     protected override void FixedUpdateFeat()
     {
+        if (isKnockback) return;
+
         FixedUpdateMoveFeat();
     }
 
     protected override void UpdateFeat()
     {
+        if (isKnockback) return;
+
         UpdateMoveFeat();
     }
     private void OnDrawGizmos()
@@ -57,7 +86,7 @@ public class player1 : character1
     {
         cm.UpdateMoveInput(CurrentBattleStat.moveSpeed);
         TestMoveTargetSet();
-        //AtkFeat();
+        AtkFeat();
     }
     void TestMoveTargetSet()
     {
@@ -65,7 +94,7 @@ public class player1 : character1
             target = obj.transform;
     }
 
-    /*void AtkFeat()
+    void AtkFeat()
     {
         if (!cm.IsInputMoving && CheckAtkRangeCollision(ref monColArr))
         {
@@ -76,5 +105,4 @@ public class player1 : character1
             }
         }
     }
-    */
 }
