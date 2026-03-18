@@ -14,7 +14,7 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] Power_Set powerText;
         [SerializeField] Gold_Set goldText;
         [SerializeField] Stone_Set StoneText;
-        [SerializeField] Stage_Set stageText;
+        [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set AutoButton;
         [SerializeField] Skill_Set skillIcons;
 
