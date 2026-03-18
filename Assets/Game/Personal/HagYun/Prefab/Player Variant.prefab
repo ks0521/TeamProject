@@ -213,7 +213,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1450563698047221803, guid: b8b30c638fec9cc4180f08037a81dd5a,
         type: 3}
       insertIndex: 2
-      addedObject: {fileID: 462210280049282555}
+      addedObject: {fileID: 854228405095252200}
   m_SourcePrefab: {fileID: 100100000, guid: b8b30c638fec9cc4180f08037a81dd5a, type: 3}
 --- !u!4 &261396162153432000 stripped
 Transform:
@@ -227,7 +227,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 970136403281109304}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &462210280049282555
+--- !u!114 &854228405095252200
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,24 +236,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1826194342961766675}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77eeef66d412a4a4d9ad7edacb92e08f, type: 3}
+  m_Script: {fileID: 11500000, guid: 58dbe987732c81947b4f21c72552d719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sr: {fileID: 5209136559947245021}
-  equipSkillArr:
-  - skill: {fileID: 0}
-    priority: 0
-  - skill: {fileID: 0}
-    priority: 0
-  - skill: {fileID: 0}
-    priority: 0
-  - skill: {fileID: 0}
-    priority: 0
-  - skill: {fileID: 0}
-    priority: 0
-  - skill: {fileID: 0}
-    priority: 0
+  skillPool: {fileID: 0}
+  equipSkillArr: []
   col: {fileID: 1726345361701111320}
+  autoSkillUsePossibleCnt: 0
+  isTestAutoSkill: 0
+  autoSkillUseOrderNum: 0
 --- !u!212 &5209136559947245021 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 4988880015368717541, guid: b8b30c638fec9cc4180f08037a81dd5a,
