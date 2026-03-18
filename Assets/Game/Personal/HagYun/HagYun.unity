@@ -1200,6 +1200,11 @@ PrefabInstance:
       propertyPath: equipSkillArr.Array.data[1].skill
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 854228405095252200, guid: 59005165786004e46b386f56fbe894c3,
+        type: 3}
+      propertyPath: skillPool
+      value: 
+      objectReference: {fileID: 734295258}
     - target: {fileID: 1826194342961766675, guid: 59005165786004e46b386f56fbe894c3,
         type: 3}
       propertyPath: m_Name
