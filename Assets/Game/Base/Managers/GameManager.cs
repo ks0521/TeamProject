@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Base.Data;
 using Base.Save;
 using UnityEngine;
 
@@ -11,7 +7,6 @@ namespace Base.Managers
     {
         public static GameManager Instance;
         [SerializeField] private StageManager stageManager;
-        [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
             //첫 시작시 실행
@@ -25,10 +20,8 @@ namespace Base.Managers
 
         private void Start()
         {
-            GameDataManager.Instance.Init();
+            PlayerProgressManager.Instance.Init();
             stageManager.Init();
         }
     }
-
-    
 }

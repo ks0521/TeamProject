@@ -53,14 +53,14 @@ namespace Base.Managers
         {
             GameSaveData data =  new GameSaveData()
             {
-                stageProgress = new StageProgressData()
+                stage = new StageProgressState()
                 {
                     selectedNormalStage = 1,
                     selectedNormalChapter = 1,
                     nextChallangeStage = 2,
                     nextChallangeChapter = 1
                 },
-                currencyData = new PlayerCurrencyData()
+                currency = new PlayerCurrencyState()
                 {
                     level = 0,
                     exp = 0,
@@ -69,29 +69,29 @@ namespace Base.Managers
                 },
                 //equipmentInventory = new PlayerEquipmentInventoryData(),
                 //equipment = new PlayerEquipmentData(),
-                itemInventory = new PlayerItemInventoryData()
+                itemInventory = new PlayerItemInventoryState()
                 {
-                    items = new()
+                    owneditemCounts = new()
                 },
-                stat = new PlayerStatUpgradeData()
+                statUpgrades = new PlayerStatUpgradeState()
                 {
-                    upgrade = new()
+                    upgradeLevelsByType = new()
                 },
-                skill = new PlayerSkillData()
+                skillProgress = new PlayerSkillState()
                 {
-                    skills = new()
+                    skillProgressState = new()
                 },
-                lastAccess = new PlayerAccessTimeData()
+                lastAccess = new LastSessionTime()
                 {
                     lastConnectTime = DateTime.Now.ToBinary() //최종 접속시간 저장
                 }
             };
             foreach (StatusType type in Enum.GetValues(typeof(StatusType)))
             {
-                data.stat.upgrade.Add(new StatusEntry
+                data.statUpgrades.upgradeLevelsByType.Add(new StatusEntry
                 {
-                    type = type,
-                    count = 0
+                    statType = type,
+                    enhancementLevel = 0
                 });
             }
             string json = JsonUtility.ToJson(data, true);
