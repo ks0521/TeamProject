@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Base.Save
 {
     [Serializable]
-    public struct StageInfo
+    public struct StageProgress
     {
-        public int selectedStage;
         public int selectedChapter;
-        public int nextChallengeStage;
+        public int selectedStage;
         public int nextChallengeChapter;
+        public int nextChallengeStage;
     }
     /// <summary> 실제 런타임 데이터를 보유 / 저장 / 로드하는 데이터 매니저  </summary>
     public class GameDataManager : MonoBehaviour
@@ -56,9 +56,9 @@ namespace Base.Save
         public RuntimeData GetData() => runtimeData;
         public bool HasData() => runtimeData != null;
 
-        public StageInfo GetStageInfo()
+        public StageProgress GetStageInfo()
         {
-            return new StageInfo()
+            return new StageProgress()
             {
                 selectedChapter = runtimeData.stageProgress.selectedNormalChapter,
                 selectedStage = runtimeData.stageProgress.selectedNormalStage,
@@ -66,7 +66,21 @@ namespace Base.Save
                 nextChallengeStage = runtimeData.stageProgress.nextChallangeStage
             };
         }
-
+        /// <summary> 런타임 데이터의 현재 챕터 - 스테이지 변경 </summary>
+        /// <returns> 변경된 런타임 스테이지 데이터</returns>
+        public StageProgress StageChanged(int changeChapter,int changeStage)
+        {
+            runtimeData.stageProgress.selectedNormalChapter = changeChapter;
+            runtimeData.stageProgress.selectedNormalStage = changeStage;
+            SaveManager.Save(DataConverter.RuntimeToSave(runtimeData));
+            return new StageProgress()
+            {
+                selectedChapter = runtimeData.stageProgress.selectedNormalChapter,
+                selectedStage = runtimeData.stageProgress.selectedNormalStage,
+                nextChallengeChapter = runtimeData.stageProgress.nextChallangeChapter,
+                nextChallengeStage = runtimeData.stageProgress.nextChallangeStage
+            };
+        }
         public bool RequestStatEnhance(StatusType type, int count)
         {
             statusConfig.TryGetStatEntry(type, out var stat);
