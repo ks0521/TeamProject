@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: Test Stage SO 2
+  m_Name: 1-2Test Stage
   m_EditorClassIdentifier: 
-  stageKey: 3
-  stageName: 
-  stage: 1
-  chapter: 3
-  dropTable: {fileID: 11400000, guid: 337c6c2a32873824487f28799fdad98f, type: 2}
+  stageKey: 6002
+  stageName: 2
+  chapter: 1
+  stage: 2
+  dropTable: {fileID: 11400000, guid: ba42fc30f4437fe4097ed45a855a1692, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
-    weights: 4
-  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
-    weights: 1
+  - monster: {fileID: 11400000, guid: fb98063b6aaa3e248b791248f2474747, type: 2}
+    weights: 2
   type: 0
   deadLine: 100
   targetKillScore: 100

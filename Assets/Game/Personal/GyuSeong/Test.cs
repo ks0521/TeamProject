@@ -1,12 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Base.Managers;
 using Base.Save;
 using Growth.StatUpgrade;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Test : MonoBehaviour
 {
@@ -43,16 +38,6 @@ public class Test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             runData = DataConverter.SaveToRuntime(saveData);
-        }
-
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            GameDataManager.Instance.Load();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            GameDataManager.Instance.RequestStatEnhance(StatusType.Atk, 5);
         }
     }
 }
