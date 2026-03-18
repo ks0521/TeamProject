@@ -14,53 +14,53 @@ namespace Base.Save
     {
         /// <summary> 런타임 데이터를 세이브용 데이터로 변경</summary>
         /// <returns></returns>
-        public static GameSaveData RuntimeToSave(RuntimeData runData)
+        public static GameSaveData RuntimeToSave(RuntimeProgressState runProgressState)
         {
             GameSaveData saveData = new()
             {
-                stageProgress =
+                stage =
                 {
-                    selectedNormalStage = runData.stageProgress.selectedNormalStage,
-                    selectedNormalChapter = runData.stageProgress.selectedNormalChapter,
-                    nextChallangeStage = runData.stageProgress.nextChallangeStage,
-                    nextChallangeChapter = runData.stageProgress.nextChallangeChapter
+                    selectedNormalStage = runProgressState.stage.selectedNormalStage,
+                    selectedNormalChapter = runProgressState.stage.selectedNormalChapter,
+                    nextChallangeStage = runProgressState.stage.nextChallangeStage,
+                    nextChallangeChapter = runProgressState.stage.nextChallangeChapter
                 },
-                currencyData =
+                currency =
                 {
-                    exp = runData.currencyData.exp,
-                    gold = runData.currencyData.gold,
-                    level = runData.currencyData.level,
-                    statStone = runData.currencyData.statStone
+                    exp = runProgressState.currency.exp,
+                    gold = runProgressState.currency.gold,
+                    level = runProgressState.currency.level,
+                    statStone = runProgressState.currency.statStone
                 },
-                itemInventory = { items = new List<ItemEntry>() },
-                stat = { upgrade = new List<StatusEntry>() },
-                skill =
+                itemInventory = { owneditemCounts = new List<ItemEntry>() },
+                statUpgrades = { upgradeLevelsByType = new List<StatusEntry>() },
+                skillProgress =
                 {
-                    skillSlots = runData.skill.skillSlots, //임시용, 나중에 스킬슬롯 정보들어오면 추가
-                    skills = new List<SkillEntry>()
+                    skillSlots = runProgressState.skillProgress.skillSlots, //임시용, 나중에 스킬슬롯 정보들어오면 추가
+                    skillProgressState = new List<SkillEntry>()
                 },
                 lastAccess =
                 {
-                    lastConnectTime = runData.lastAccess.lastConnectTime
+                    lastConnectTime = runProgressState.lastSession.lastConnectTime
                 }
             };
             //runtimedata의 딕셔너리를 savedata의 리스트로 변환
-            foreach (var item in runData.itemInventory.items)
+            foreach (var item in runProgressState.itemInventory.ownedItemCounts)
             {
-                ItemEntry entry = new ItemEntry { key = item.Key, count = item.Value };
-                saveData.itemInventory.items.Add(entry);
+                ItemEntry entry = new ItemEntry { key = item.Key, ownedCount = item.Value };
+                saveData.itemInventory.owneditemCounts.Add(entry);
             }
 
-            foreach (var stat in runData.stat.upgrade)
+            foreach (var stat in runProgressState.statUpgrades.upgradeLevelsByType)
             {
-                StatusEntry entry = new StatusEntry { type = stat.Key, count = stat.Value };
-                saveData.stat.upgrade.Add(entry);
+                StatusEntry entry = new StatusEntry { statType = stat.Key, enhancementLevel = stat.Value };
+                saveData.statUpgrades.upgradeLevelsByType.Add(entry);
             }
 
-            foreach (var skill in runData.skill.skills)
+            foreach (var skill in runProgressState.skillProgress.skillProgressState)
             {
-                SkillEntry entry = new SkillEntry { key = skill.Key, count = skill.Value };
-                saveData.skill.skills.Add(entry);
+                SkillEntry entry = new SkillEntry { key = skill.Key, enhancementCount = skill.Value };
+                saveData.skillProgress.skillProgressState.Add(entry);
             }
 
             return saveData;
@@ -68,32 +68,32 @@ namespace Base.Save
 
         /// <summary> 세이브 데이터를 런타임용 데이터로 변경 </summary>
         /// <returns></returns>
-        public static RuntimeData SaveToRuntime(GameSaveData saveData)
+        public static RuntimeProgressState SaveToRuntime(GameSaveData saveData)
         {
-            RuntimeData runData = new RuntimeData
+            RuntimeProgressState runProgressState = new RuntimeProgressState
             {
-                stageProgress =
+                stage =
                 {
-                    selectedNormalStage = saveData.stageProgress.selectedNormalStage,
-                    selectedNormalChapter = saveData.stageProgress.selectedNormalChapter,
-                    nextChallangeStage = saveData.stageProgress.nextChallangeStage,
-                    nextChallangeChapter = saveData.stageProgress.nextChallangeChapter
+                    selectedNormalStage = saveData.stage.selectedNormalStage,
+                    selectedNormalChapter = saveData.stage.selectedNormalChapter,
+                    nextChallangeStage = saveData.stage.nextChallangeStage,
+                    nextChallangeChapter = saveData.stage.nextChallangeChapter
                 },
-                currencyData =
+                currency =
                 {
-                    exp = saveData.currencyData.exp,
-                    gold = saveData.currencyData.gold,
-                    level = saveData.currencyData.level,
-                    statStone = saveData.currencyData.statStone
+                    exp = saveData.currency.exp,
+                    gold = saveData.currency.gold,
+                    level = saveData.currency.level,
+                    statStone = saveData.currency.statStone
                 },
-                itemInventory = { items = new Dictionary<int, int>() },
-                stat = { upgrade = new Dictionary<StatusType, int>() },
-                skill =
+                itemInventory = { ownedItemCounts = new Dictionary<int, int>() },
+                statUpgrades = { upgradeLevelsByType = new Dictionary<StatusType, int>() },
+                skillProgress =
                 {
-                    skillSlots = saveData.skill.skillSlots, //임시용, 나중에 스킬슬롯 정보들어오면 추가
-                    skills = new Dictionary<int, int>()
+                    skillSlots = saveData.skillProgress.skillSlots, //임시용, 나중에 스킬슬롯 정보들어오면 추가
+                    skillProgressState = new Dictionary<int, int>()
                 },
-                lastAccess =
+                lastSession =
                 {
                     lastConnectTime = saveData.lastAccess.lastConnectTime
                 }
@@ -106,19 +106,19 @@ namespace Base.Save
                 runData.itemInventory.items.TryAdd(item.key, item.count);
                 Debug.Log($"{item.key}키값을 가진 장비 추가 : {runData.itemInventory.items[item.key]}개 ");
             }*/
-            foreach (var stat in saveData.stat.upgrade)
+            foreach (var stat in saveData.statUpgrades.upgradeLevelsByType)
             {
-                runData.stat.upgrade.TryAdd(stat.type, stat.count);
-                Debug.Log($"{stat.type}키값을 가진 스탯 추가 : {runData.stat.upgrade[stat.type]}개 ");
+                runProgressState.statUpgrades.upgradeLevelsByType.TryAdd(stat.statType, stat.enhancementLevel);
+                Debug.Log($"{stat.statType}키값을 가진 스탯 추가 : {runProgressState.statUpgrades.upgradeLevelsByType[stat.statType]}개 ");
             }
 
-            foreach (var skill in saveData.skill.skills)
+            foreach (var skill in saveData.skillProgress.skillProgressState)
             {
-                runData.skill.skills.TryAdd(skill.key, skill.count);
-                Debug.Log($"{skill.key}키값을 가진 스킬 추가 : {runData.skill.skills[skill.key]}개 ");
+                runProgressState.skillProgress.skillProgressState.TryAdd(skill.key, skill.enhancementCount);
+                Debug.Log($"{skill.key}키값을 가진 스킬 추가 : {runProgressState.skillProgress.skillProgressState[skill.key]}개 ");
             }
 
-            return runData;
+            return runProgressState;
         }
     }
 }
