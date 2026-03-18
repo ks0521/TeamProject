@@ -1,11 +1,11 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Skill_Set : MonoBehaviour
 {
-    [Header("½ºÅ³ ½½·Ô")]
+    [Header("ìŠ¤í‚¬ ìŠ¬ë¡¯")]
     [SerializeField] Image[] skill;
     // Start is called before the first frame update
 
