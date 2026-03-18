@@ -1,192 +1,113 @@
-﻿using System.Collections;
+﻿using Base.Data;
+using Base.Save;
+using Growth.StatUpgrade;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
 
 namespace UI.Scripts.Ability
 {
     public class Ability : MonoBehaviour
     {
-        public enum StatusType
-        {
-            Atk, MaxHp, Def, AtkSpeed, CritChance, CritDmg, MoveSpeed, GoldRate, ExpRate, ItemDropRate
-        }//나중에 참고
+        [Header("매니저")]
+        [SerializeField] private GameDataManager gameManager;
+
+        [Header("스텟 UI 목록")]
+        [SerializeField] StatItemView[] statItemViews;
+        
         [Header("능력치 구매 버튼")]
-        [SerializeField] Button[] Upbtn;
+        [SerializeField] private Button[] Upbtn;
 
         [Header("곱하기 버튼")]
-        [SerializeField] Button_Set btnX;
+        [SerializeField] private Button_Set btnX;
         private enum XState
         {
-            X1, X10, X100
+            X1 , X10 , X100
         }
         private XState X_state;
         private float multiValue;
 
-        [Header("UI 참조")]
-        [SerializeField] Atk_Set atk;
-        [SerializeField] MaxHp_Set maxHp;
-        [SerializeField] Def_Set def;
-        [SerializeField] AtkSpeed_Set atkspeed;
-        [SerializeField] CritChance_Set critChance;
-        [SerializeField] CritDmg_Set critDmg;
-        [SerializeField] MoveSpeed_Set moveSpeed;
-        [SerializeField] GoldRate_Set goldRate;
-        [SerializeField] ExpRate_Set expRate;
-        [SerializeField] ItemDropRate_Set itemDropRate;
-
-        // 테스트용 데이터(나중에 삭제 예정)
-        private int playerLevel = 1;
-        private int playerGold = 1000;
-
-        private int atkLevel = 1;
-        private int atkMaxLevel = 10;
-        private int atkUnlockLevel = 10;
-
-        private int cost;
-        private float currentValue;
-        private float nextValue;
 
         // Start is called before the first frame update
         public void OnEnable()
         {
-            ReFreshUI();
+            ReFreshAllUI();
         }
         private void Start()
         {
-            atk.BindLevelUp(OnClickAtkLevelUp);
-            maxHp.BindLevelUp(OnClickMaxHPLevelUp);
-            def.BindLevelUp(OnClickDefLevelUp);
-            atkspeed.BindLevelUp(OnClickAtkSpeedLevelUp);
-            critChance.BindLevelUp(OnClickCritChanceLevelUp);
-            critDmg.BindLevelUp(OnClickCritDmgLevelUp);
-            moveSpeed.BindLevelUp(OnClickMoveSpeedLevelUp);
-            goldRate.BindLevelUp(OnClickGoldRateLevelUp);
-            expRate.BindLevelUp(OnClickExpRateLevelUp);
-            itemDropRate.BindLevelUp(OnClickItmeDropRateLevelUp);
-
-            ReFreshUI();
+            BindAllButtons();
+            ReFreshAllUI();
             ChangeState(XState.X1);
         }
-        public void ReFreshUI()
+        private StatItemView GetType(StatusType type)
         {
-            RefreshAtkUI();
-        }//능력치팝업창 UI 갱신용 함수(능력치 팝업창 안에있는 UI 갱신용 함수 추가 예정)
-
-        private void OnClickAtkLevelUp()
-        {
-            Debug.Log("공격력 레벨업");
-            if (playerLevel < atkUnlockLevel)
+            foreach (var view in statItemViews)
             {
-                Debug.Log("플레이어 레벨이 부족해서 공격력 해금이 안됨");
-                return;
+                if (view.statusType == type)
+                    return view;
             }
 
-            if (atkLevel >= atkMaxLevel)
+            return null;
+        }//타입에 해당하는 StatItemView 찾아주는 함수
+        private void BindAllButtons()
+        {
+            foreach (var stat in statItemViews)
             {
-                Debug.Log("이미 최대 레벨");
+                StatusType type = stat.statusType;
+                stat.BindLevelUp(() => OnClickLevelUp(type));
+            }
+        }
+        public void ReFreshAllUI()
+        {
+            foreach (var stat in statItemViews)
+            {
+                ReFreshStatUI(stat.statusType);
+            }
+        }
+        public void ReFreshStatUI(StatusType type)
+        {
+            if (!gameManager.statusConfig.TryGetStatEntry(type, out var statEntry))
+            {
+                Debug.Log($"{type} : statEntry를 찾지 못함");
                 return;
+            }//null 방지
+
+            int playerLevel = gameManager.runtimeData.currencyData.level;
+            int playerGold = gameManager.runtimeData.currencyData.gold;
+            int currentLevle = gameManager.runtimeData.stat.upgrade[type];
+
+            float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
+            float nextValue = (currentLevle + 1) * statEntry.increasePerEnhance; //증가 후 스텟 수치
+            int cost = currentLevle * statEntry.enhanceCost; //스텟 가격 부분
+
+            bool isUnLock = playerLevel <= statEntry.unlockLevel;
+            bool canLevelUp = isUnLock && playerGold >= cost && currentLevle < statEntry.maxLevel;
+
+            StatItemView itemView = GetType(type);
+
+            if (itemView == null)
+            {
+                Debug.Log($"{type}에 해당되는 스텟 UI가 없음");
             }
 
-            if (playerGold < cost)
-            {
-                Debug.Log("골드 부족");
-                return;
-            }
+            itemView.RefreshUI(statEntry , currentLevle , currentValue , nextValue ,cost , canLevelUp , isUnLock);
+                
 
-            playerGold -= cost;
-            atkLevel++;
+        }//능력치팝업창 UI 갱신용 함수
 
-            Debug.Log($"공격력 레벨업 성공 / 현재 레벨 : {atkLevel} / 남은 골드 : {playerGold}");
-
-            RefreshAtkUI();
-        }//테스트용(나중에 수정할 예정)
-        private void OnClickMaxHPLevelUp()
+        private void OnClickLevelUp(StatusType type)
         {
 
-        }
-        private void OnClickDefLevelUp()
-        {
-
-        }
-        private void OnClickAtkSpeedLevelUp()
-        {
-
-        }
-        private void OnClickCritChanceLevelUp()
-        {
-
-        }
-        private void OnClickCritDmgLevelUp()
-        {
-
-        }
-        private void OnClickMoveSpeedLevelUp()
-        {
-
-        }
-        private void OnClickGoldRateLevelUp()
-        {
-
-        }
-        private void OnClickExpRateLevelUp()
-        {
-
-        }
-        private void OnClickItmeDropRateLevelUp()
-        {
-
-        }
+        } // 미구현
 
 
-        private void RefreshAtkUI()
-        {
-            currentValue = atkLevel * 5;
-            cost = atkLevel * 500;
-            nextValue = (atkLevel + 1) * 5;
 
-            bool canLevelUp = playerLevel >= atkUnlockLevel && playerGold >= cost &&  atkLevel < atkMaxLevel;
 
-            atk.RefreshUI( atkLevel, atkMaxLevel, currentValue, nextValue, cost, canLevelUp, playerLevel, atkUnlockLevel);
-        }//테스트용(나중에 수정할 예정)
-        private void RefreshMaxHPUI()
-        {
-
-        }
-        private void RefreshDef()
-        {
-
-        }
-        private void RefreshAtkSpeedUI()
-        {
-
-        }
-        private void RefreshCritChanceUI()
-        {
-
-        }
-        private void RefreshCritDmgUI()
-        {
-
-        }
-        private void RefreshMoveSpeed()
-        {
-
-        }
-        private void RefreshGoldRate()
-        {
-
-        }
-        private void RefreshExpRate()
-        {
-
-        }
-        private void RefreshItemDropRate()
-        {
-
-        }
 
         void ChangeState(XState newState)
         {
@@ -209,7 +130,7 @@ namespace UI.Scripts.Ability
                     btnX.SelectButton(2);
                     break;
             }
-            ReFreshUI();
+            ReFreshAllUI();
         }//상태 전환 함수
         public void OnClickX1()
         {
@@ -227,19 +148,7 @@ namespace UI.Scripts.Ability
         // Update is called once per frame
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Q))
-            {
-                playerGold += 100;
-                Debug.Log($"골드 획득 : 현재 골드 {playerGold}");
-                RefreshAtkUI();
-            }
 
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                playerLevel++;
-                Debug.Log($"플레이어 레벨업 : 현재 레벨 {playerLevel}");
-                RefreshAtkUI();
-            }
         }
     }
 
