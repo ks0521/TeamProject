@@ -73,7 +73,7 @@ namespace Base.Data
     }
     public class MonsterPoolManager : MonoBehaviour
     {
-        public static Dictionary<int, ObjectPool> poolDic = new(); //키 : 몬스터 키, 밸류 : 몬스터 프리팹
+        private Dictionary<int, ObjectPool> poolDic = new(); //키 : 몬스터 키, 밸류 : 몬스터 프리팹
         
         public void ChangeStage(StageSO stage)
         {
@@ -90,6 +90,17 @@ namespace Base.Data
                 Debug.Log($"{preset.monster.name} {preset.weights * 3}만큼 풀에 생성");
                 poolDic.Add(preset.monster.key, new ObjectPool(preset.monster, preset.weights* 3, gameObject));
             }
+        }
+
+        public GameObject UsePool(int key)
+        {
+            GameObject obj = poolDic[key].UsePool();
+            return obj;
+        }
+
+        public void ReturnPool(int key, GameObject returnObj)
+        {
+            poolDic[key].ReturnPool(returnObj);
         }
     }
 }
