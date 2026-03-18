@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Stage_Set : MonoBehaviour
+public class MainUIStage_Set : MonoBehaviour
 {
     [Header("스테이지 Text")]
     [SerializeField] TextMeshProUGUI stageText;
