@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Atk_Set : MonoBehaviour
 {
-    [Header("UI ÂüÁ¶")]
+    [Header("UI ì°¸ì¡°")]
     [SerializeField] private TextMeshProUGUI statsNameText;
     [SerializeField] private TextMeshProUGUI statsLevelText;
     [SerializeField] private TextMeshProUGUI currentStats;
@@ -16,7 +16,7 @@ public class Atk_Set : MonoBehaviour
     [SerializeField] private Image costImage; 
     [SerializeField] private Button levelUpButton;
 
-    [Header("Àá±İ UI")]
+    [Header("ì ê¸ˆ UI")]
     [SerializeField] private GameObject lockPanel;
     [SerializeField] private TextMeshProUGUI unlockLevelText;
 
@@ -36,7 +36,7 @@ public class Atk_Set : MonoBehaviour
         {
             lockPanel.SetActive(false);
         }
-        unlockLevelText.text = $"Lv : {unlockLevel} °³¹æ";
+        unlockLevelText.text = $"Lv : {unlockLevel} ê°œë°©";
         
         if (statslevel < maxLevel)
         {
@@ -60,12 +60,12 @@ public class Atk_Set : MonoBehaviour
 
 
 
-    }//ÇÔ¼ö°¡ ³Ê¹« ¸¹¾Æ¼­ ÇÏ³ª·Î ¹­Àº ¹öÀü
+    }//í•¨ìˆ˜ê°€ ë„ˆë¬´ ë§ì•„ì„œ í•˜ë‚˜ë¡œ ë¬¶ì€ ë²„ì „
    
     public void BindLevelUp(Action action)
     {
         levelUpButton.onClick.RemoveAllListeners();
         levelUpButton.onClick.AddListener(() => action?.Invoke());
-    }//¹öÆ° OnClick ¿¡ ÇÔ¼ö ³Ö¾îÁÖ´Â ÇÔ¼ö
+    }//ë²„íŠ¼ OnClick ì— í•¨ìˆ˜ ë„£ì–´ì£¼ëŠ” í•¨ìˆ˜
 
 }

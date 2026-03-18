@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game_UI.Scripts.PopupManager
@@ -18,14 +18,15 @@ namespace Game_UI.Scripts.PopupManager
             }
         }
 
-        [Header("ÆË¾÷")]
+        [Header("íŒì—…")]
         [SerializeField] private GameObject abilityPop;
         [SerializeField] private GameObject equipmentPop;
         [SerializeField] private GameObject skillPop;
         [SerializeField] private GameObject stagePop;
         [SerializeField] private GameObject dungeonPop;
+        [SerializeField] private GameObject gameEndPop;
 
-        private Stack<GameObject>popupStack = new();
+        private Stack<GameObject> popupStack = new();
         private void Awake()
         {
             if (instance == null)
@@ -37,12 +38,19 @@ namespace Game_UI.Scripts.PopupManager
             {
                 Destroy(gameObject);
             }
-        }//½Ì±ÛÅæ
+        }//ì‹±ê¸€í†¤
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                CloseLastPopup();
+                if (popupStack.Count == 0)
+                {
+                    OpenPopup(gameEndPop);
+                }
+                else
+                {
+                    CloseLastPopup();
+                }
             }
         }
 
@@ -56,10 +64,10 @@ namespace Game_UI.Scripts.PopupManager
             {
                 return;
             }
-            pop.transform.SetAsLastSibling(); //ÆË¾÷ Á¦ÀÏ ¾ÕÀ¸·Î ¿Å°ÜÁÖ´Â ÄÚµå
+            pop.transform.SetAsLastSibling(); //íŒì—… ì œì¼ ì•ìœ¼ë¡œ ì˜®ê²¨ì£¼ëŠ” ì½”ë“œ
             pop.SetActive(true);
             popupStack.Push(pop);
-        }//ÆË¾÷ ¿­±â
+        }//íŒì—… ì—´ê¸°
         void ClosePopup(GameObject pop)
         {
             if (pop == null)
@@ -72,7 +80,7 @@ namespace Game_UI.Scripts.PopupManager
             }
             pop.SetActive(false);
             RemoveFromStack(pop);
-        }//ÆË¾÷ ´İ±â
+        }//íŒì—… ë‹«ê¸°
         private void RemoveFromStack(GameObject target)
         {
             Stack<GameObject> tempStack = new Stack<GameObject>();
@@ -93,24 +101,24 @@ namespace Game_UI.Scripts.PopupManager
             {
                 popupStack.Push(tempStack.Pop());
             }
-        }//Áß°£ ÆË¾÷ »èÁ¦
+        }//ì¤‘ê°„ íŒì—… ì‚­ì œ
         void CloseLastPopup()
         {
             if (popupStack.Count == 0)
             {
                 return;
             }
-            GameObject lastPop= popupStack.Pop();
+            GameObject lastPop = popupStack.Pop();
             if (lastPop != null)
             {
                 lastPop.SetActive(false);
             }
-        }//Á¦ÀÏ ¸¶Áö¸· ÆË¾÷ ´İ±â
+        }//ì œì¼ ë§ˆì§€ë§‰ íŒì—… ë‹«ê¸°
 
-        public void OpenAbilityPop() { OpenPopup(abilityPop); } //¹öÆ° OnClick ¿¬°á¿ë ÇÔ¼ö
+        public void OpenAbilityPop() { OpenPopup(abilityPop); } //ë²„íŠ¼ OnClick ì—°ê²°ìš© í•¨ìˆ˜
         public void OpenEquipmentPop() { OpenPopup(equipmentPop); }
         public void OpenSkillPop() { OpenPopup(skillPop); }
-        public void OpenStagePop()  { OpenPopup(stagePop); }
+        public void OpenStagePop() { OpenPopup(stagePop); }
         public void OpenDungeonPop() { OpenPopup(dungeonPop); }
 
         public void CloseAbilityPop() { ClosePopup(abilityPop); }

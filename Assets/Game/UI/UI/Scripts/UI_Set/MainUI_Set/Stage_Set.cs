@@ -1,11 +1,11 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class Stage_Set : MonoBehaviour
 {
-    [Header("½ºÅ×ÀÌÁö Text")]
+    [Header("ìŠ¤í…Œì´ì§€ Text")]
     [SerializeField] TextMeshProUGUI stageText;
 
     public void SetStage(int chapter , int stage)

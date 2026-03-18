@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Growth.Skill;
 using UnityEngine;
@@ -31,12 +31,12 @@ namespace Battle
             if (stageDic == null)
             {
                 MakeDictionary();
-                Debug.Log("딕셔너리를 생성했습니다. ");
+                Debug.Log("StageDictionary : 딕셔너리를 생성했습니다. ");
             }
 
             if (!stageDic.TryGetValue((chapter,stage, stageType), out var stageSo))
             {
-                Debug.LogWarning("키에 해당하는 스테이지가 없습니다. ");
+                Debug.LogWarning($"StageDictionary : {chapter}-{stage} ({stageType}) 스테이지가 없습니다. ");
                 return null;
             }
 
