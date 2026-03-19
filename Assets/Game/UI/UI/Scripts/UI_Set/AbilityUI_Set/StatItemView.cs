@@ -63,9 +63,9 @@ public class StatItemView : MonoBehaviour
             levelUpButton.gameObject.SetActive(true);
 
             statsLevelText.text = currentLevel.ToString();
-            currentStats.text = currentValue.ToString();
-            nextStats.text = nextValue.ToString();
-            levelupcost.text = cost.ToString();
+            currentStats.text = currentValue.ToString("0.00");
+            nextStats.text = nextValue.ToString("0.00");
+            levelupcost.text = cost.ToString("0.00");
         }
         else
         {

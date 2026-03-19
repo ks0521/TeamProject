@@ -1,4 +1,7 @@
-﻿using Base.Save;
+﻿using Base.Data;
+using Base.Save;
+using Battle;
+using Growth.StatUpgrade;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +12,9 @@ namespace UI.Scripts.UiPresenter
 {
     public class UiPresenter : MonoBehaviour
     {
+        [Header("매니저")] 
+        [SerializeField]PlayerProgressManager manager;
+        
         [Header("UI 참조")]
         [SerializeField] Hp_Set hp;
         [SerializeField] Exp_Set expBar;
@@ -19,6 +25,8 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] Auto_Set AutoButton;
         [SerializeField] Skill_Set skillIcons;
 
+        [SerializeField] StatusType [] type;
+
         bool autoType;
         private void Start()
         {
@@ -27,14 +35,19 @@ namespace UI.Scripts.UiPresenter
 
         public void RefreshHp()
         {
-            goldText.SetGold(PlayerProgressManager.Instance.progress.currency.gold);
-          
+            
         }
         public void AutoBattle()
         {
             AutoButton.SetAutoBattle(autoType);
             autoType = !autoType;
         }
+
+        public void Hp()
+        {
+            
+        }
+
        
        
     }

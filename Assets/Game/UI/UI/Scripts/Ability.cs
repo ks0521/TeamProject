@@ -62,14 +62,14 @@ namespace UI.Scripts.Ability
                 StatusType type = stat.statusType;
                 stat.BindLevelUp(() => OnClickLevelUp(type));
             }
-        }
+        }//능력치 구매 버튼 OnClick 에 자동으로 함수 넣어주기
         public void ReFreshAllUI()
         {
             foreach (var stat in statItemViews)
             {
                 ReFreshStatUI(stat.statusType);
             }
-        }
+        }//모든 UI 새로고침
         public void ReFreshStatUI(StatusType type)
         {
             if (!manager.statUpgradeConfig.TryGetStatEntry(type, out var statEntry))
@@ -78,7 +78,7 @@ namespace UI.Scripts.Ability
                 return;
             }//null 방지
 
-            int playerGold = manager.progress.currency.gold;
+            int playerGold = manager.progress.currency.statStone;
             int currentLevle = manager.GetStatUpgradeLevel(type);
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
@@ -101,11 +101,11 @@ namespace UI.Scripts.Ability
 
         private void OnClickLevelUp(StatusType type)
         {
-           bool success = manager.TryUpgradeStat(type, multiPress);
+           manager.TryUpgradeStat(type, multiPress);
 
             ReFreshAllUI();
             
-        } // 능력치 강화
+        } //능력치 강화
 
         void ChangeState(XState newState)
         {
