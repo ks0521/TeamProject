@@ -1,5 +1,6 @@
 using System;
 using Base.Managers;
+using Battle;
 using Growth.StatUpgrade;
 using UnityEngine;
 
@@ -77,7 +78,29 @@ namespace Base.Save
                 nextChallengeStage = progress.stage.nextChallangeStage
             };
         }
-        
+
+        public StageProgress ProgressChallengeStage(StageSO clearStage)
+        {
+            //보스를 잡았으면 다음 챕터 2-1
+            if (clearStage.type == StageType.Boss)
+            {
+                progress.stage.nextChallangeChapter = clearStage.chapter + 1;
+                progress.stage.nextChallangeStage = 2;
+            }
+            //아니면 스테이지 +1만
+            else
+            {
+                progress.stage.nextChallangeStage++;
+            }
+            SaveManager.Save(DataConverter.RuntimeToSave(progress));
+            return new StageProgress()
+            {
+                selectedNormalChapter = progress.stage.selectedNormalChapter,
+                selectedNormalStage = progress.stage.selectedNormalStage,
+                nextChallengeChapter = progress.stage.nextChallangeChapter,
+                nextChallengeStage = progress.stage.nextChallangeStage
+            };
+        } 
         /// <summary> 현재 재화로 스탯 강화가 가능한지 확인하는 함수</summary>
         /// <param name="statType">강화하고 싶은 스탯 타입</param>
         /// <param name="upgradeCount">강화 횟수</param>
