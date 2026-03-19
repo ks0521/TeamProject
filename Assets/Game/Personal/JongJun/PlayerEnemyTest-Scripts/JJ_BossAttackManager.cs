@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-public class monster1 : character1
+public class JJ_BossAttackManager : character1
 {
     public MonsterSO monsterSO;
     public SFXPlayer sfx;
@@ -23,31 +23,41 @@ public class monster1 : character1
 
     [Header("Skill1(돌진)")]
     [SerializeField] private GameObject atkRange1;
-    [SerializeField] private float chargePrepareTime = 1.2f;
+    [SerializeField] private float skill1CoolTime = 10f;
+    [SerializeField] private float skill1WarningDuration = 1.2f;
+    [SerializeField] private float skill1Damage = 15f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
+    [SerializeField] private float skill1KnockbackForce = 9.9f;
+    [SerializeField] private float skill1KnockbackDuration = 0.2f;
 
     [Header("Skill2(화염 장막)")]
     [SerializeField] private GameObject atkRange2;
+    [SerializeField] private float skill2CoolTime = 15f;
     [SerializeField] private float skill2WarningDuration = 1.5f;
+    [SerializeField] private float skill2Damage = 10f;
     [SerializeField] private float skill2Range = 4.0f;
+    [SerializeField] private float skill2TotalDotDamage = 10f;
+    [SerializeField] private float skill2DotDuration = 5f;
+    [SerializeField] private float skill2DotInterval = 0.5f;
 
     [Header("Skill3(메테오)")]
     [SerializeField] private GameObject atkRange3;
+    [SerializeField] private float skill3CoolTime = 12f;
     [SerializeField] private float skill3WarningDuration = 1.5f;
-    [SerializeField] private float skill3Range = 3.0f;
+    [SerializeField] private float skill3Damage = 33f;
+    [SerializeField] private float skill3Range = 4.0f;
 
     private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
     private bool isUsingSkill = false;
+    private float currentSkill1CoolTime = 0f;
+    private float currentSkill2CoolTime = 0f;
+    private float currentSkill3CoolTime = 0f;
 
-    public void Update()
+    bool CanUseSkill(float currentCoolTime)
     {
-        //Q: 예고 후 플레이어를 향한 돌진
-        //W: 예고 후 원형 범위 데미지
-        //E: 시전 시점의 플레이어 위치에 예고 후 메테오
-        if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
-        if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
-        if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
+        Debug.Log($"CanUseSkill Check: {currentCoolTime} <= 0 ? {currentCoolTime <= 0f}");
+        return currentCoolTime <= 0f;
     }
 
     async UniTaskVoid UseMonsterSkill1Async()
@@ -55,6 +65,7 @@ public class monster1 : character1
         // 안전장치: 이 오브젝트가 파괴되면 비동기 작업도 취소하기 위한 토큰을 가져옵니다.
         var cts = this.GetCancellationTokenOnDestroy();
 
+        currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
         Debug.Log("돌진 준비 중...");
 
@@ -70,7 +81,7 @@ public class monster1 : character1
 
         Vector2 directionToTarget = (target.position - transform.position).normalized;
         RotateTowards(directionToTarget);
-        await UniTask.Delay(TimeSpan.FromSeconds(chargePrepareTime), cancellationToken: cts);
+        await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
 
         if (atkRange1 != null) atkRange1.SetActive(false);
         sfx.PlayBossSkillSound();
@@ -89,8 +100,20 @@ public class monster1 : character1
             if (!hasDamaged && Vector2.Distance(transform.position, target.position) < 0.3f)
             {
                 Debug.Log("돌진으로 피격되었습니다.");
+                targetScript.Hit(skill1Damage);
+
+                // 플레이어 스크립트 가져오기 (character1을 player1로 캐스팅)
+                player1 player = targetScript as player1;
+                if (player != null)
+                {
+                    // 넉백 방향 계산 (몬스터 -> 플레이어 방향)
+                    Vector2 knockbackDir = (target.position - transform.position).normalized;
+                    // 넉백 적용
+                    player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
+                }
+
                 hasDamaged = true;
-                Attack(targetScript);
+                break; //충돌 후 몬스터는 이동 중단
             }
 
             elapsed += Time.fixedDeltaTime;
@@ -113,6 +136,7 @@ public class monster1 : character1
     {
         if (target == null || targetScript == null) return;
 
+        currentSkill2CoolTime = skill2CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
         isUsingSkill = true;
         Debug.Log("화염 장막 준비 중...");
@@ -126,7 +150,13 @@ public class monster1 : character1
             if (distance <= skill2Range)
             {
                 Debug.Log("화염 장막에 피격되었습니다.");
-                Attack(targetScript);
+                targetScript.Hit(skill2Damage);
+
+                player1 player = targetScript as player1;
+                if(player != null)
+                {
+                    player.ApplyDotDamage(skill2TotalDotDamage, skill2DotDuration, skill2DotInterval);
+                }
             }
         }
         
@@ -138,6 +168,7 @@ public class monster1 : character1
     {
         if (target == null) return;
 
+        currentSkill3CoolTime = skill3CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
         skillTargetPosition = target.position;
         isUsingSkill = true;
@@ -158,7 +189,7 @@ public class monster1 : character1
             if (distance <= skill3Range)
             {
                 Debug.Log("메테오 적중! 플레이어에게 데미지");
-                Attack(targetScript);
+                targetScript.Hit(skill3Damage);
             }
         }
 
@@ -236,7 +267,19 @@ public class monster1 : character1
 
     protected override void UpdateFeat()
     {
+        //if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
+        //if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
+        //if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
 
+        if (currentSkill1CoolTime > 0) currentSkill1CoolTime = Mathf.Max(0, currentSkill1CoolTime - Time.deltaTime);
+        if (currentSkill2CoolTime > 0) currentSkill2CoolTime = Mathf.Max(0, currentSkill2CoolTime - Time.deltaTime);
+        if (currentSkill3CoolTime > 0) currentSkill3CoolTime = Mathf.Max(0, currentSkill3CoolTime - Time.deltaTime);
+
+        if (target == null || isUsingSkill || isDead) return;
+
+        if (CanUseSkill(currentSkill1CoolTime)) UseMonsterSkill1Async().Forget();
+        else if (CanUseSkill(currentSkill2CoolTime)) UseMonsterSkill2Async().Forget();
+        else if (CanUseSkill(currentSkill3CoolTime)) UseMonsterSkill3Async().Forget();
     }
 
     protected override void FixedUpdateFeat()
