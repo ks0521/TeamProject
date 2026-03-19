@@ -1648,7 +1648,7 @@ MonoBehaviour:
       skillSlots: 0
     lastSession:
       lastConnectTime: 0
-  statUpgradeConfig: {fileID: 0}
+  statUpgradeConfig: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
 --- !u!1 &50952502
 GameObject:
   m_ObjectHideFlags: 0
@@ -14852,8 +14852,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Ability, Assembly-CSharp
+      - m_Target: {fileID: 2020907281}
+        m_TargetAssemblyTypeName: UI.Scripts.Ability.Ability, Assembly-CSharp
         m_MethodName: OnClickX10
         m_Mode: 1
         m_Arguments:
@@ -16501,8 +16501,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Ability, Assembly-CSharp
+      - m_Target: {fileID: 2020907281}
+        m_TargetAssemblyTypeName: UI.Scripts.Ability.Ability, Assembly-CSharp
         m_MethodName: OnClickX100
         m_Mode: 1
         m_Arguments:
@@ -23900,8 +23900,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Ability, Assembly-CSharp
+      - m_Target: {fileID: 2020907281}
+        m_TargetAssemblyTypeName: UI.Scripts.Ability.Ability, Assembly-CSharp
         m_MethodName: OnClickX1
         m_Mode: 1
         m_Arguments:
@@ -42982,7 +42982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48de8e913fe65864485f0fb487e3617d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
+  manager: {fileID: 49017508}
   statItemViews:
   - {fileID: 977796529}
   - {fileID: 388353688}
@@ -43006,6 +43006,7 @@ MonoBehaviour:
   - {fileID: 908875937}
   - {fileID: 576656074}
   btnX: {fileID: 2020907280}
+  multiPress: 1
 --- !u!1 &2023785659
 GameObject:
   m_ObjectHideFlags: 0
