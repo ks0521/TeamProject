@@ -1,17 +1,226 @@
 ﻿using Battle;
-using System.Collections;
+using Growth.Skill;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Growth.Skill;
 
 namespace Personal.HagYun
 {
+    [Serializable]
+    public struct EquipSkillCheckerByPriority
+    {
+        [SerializeField] bool[] isEquipBoolArr;
+        public bool[] IsEquipBoolArr => isEquipBoolArr;
+        [SerializeField] int cnt;
+        public bool IsInThisPrioritySkill => 0 < cnt;
+        public bool IsEquipedTargetIndexSkill(int index)
+        {
+            // index 범위가 0~5 사이일 때만 통과
+            if (index < 0 || 6 <= index) return false;
+            // 장착 여부 return
+            return isEquipBoolArr[index];
+        }
+        public void BoolArrInit() => isEquipBoolArr = new bool[6];
+        public void EquipSkillCheckerInit(in EquipSkillSet[] eSkillArr, Priority pri = Priority.Low)
+        {
+            //if (isEquipBoolArr == null) isEquipBoolArr = new bool[6];
+            for (int i = 0; i < 6; i++)
+            {
+                if (eSkillArr[i].isEquipped && eSkillArr[i].priority == pri)
+                {
+                    SkillPriorityChangeTrueCheck(i);
+                }
+            }
+        }
+        public void SkillPriorityChangeTrueCheck(int equipSkillIndex)
+        {
+            if (isEquipBoolArr[equipSkillIndex]) return;
+            isEquipBoolArr[equipSkillIndex] = true;
+            cnt++;
+        }
+        public void SkillPriorityChangeFalseCheck(int equipSkillIndex)
+        {
+            if (!isEquipBoolArr[equipSkillIndex]) return;
+            isEquipBoolArr[equipSkillIndex] = false;
+            cnt--;
+        }
+    }
+    [Serializable]
+    public class EquipSkillCheckerByPrioritySet
+    {
+        // 0 : Low, 1 : Mid, 2 : High
+        [SerializeField] EquipSkillCheckerByPriority[] equipSkillChecker;
+        public EquipSkillCheckerByPriority[] EquipSkillChecker => equipSkillChecker;
+        public EquipSkillCheckerByPrioritySet()
+        {
+            equipSkillChecker = new EquipSkillCheckerByPriority[3];
+            for (int i = 0; i < 3; i++)
+            {
+                equipSkillChecker[i].BoolArrInit();
+            }
+        }
+        public void PrioritySkillNumSetInitAll(in EquipSkillSet[] eSkillArr)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                equipSkillChecker[i].EquipSkillCheckerInit(eSkillArr, (Priority)i);
+            }
+        }
+        /// <summary> 우선순위 변경 시 사용하는 함수.  </summary>
+        /// <param name="equipSkillIndex"> 해당 스킬이 장착된 번호 </param>
+        /// <param name="pri"> 대상 우선순위 </param>
+        public void EquipSkillPriorityUpdate(int equipSkillIndex, Priority pri)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                // 해당하는 priority checker에 true 체크
+                if (pri == (Priority)i)
+                {
+                    equipSkillChecker[i].SkillPriorityChangeTrueCheck(equipSkillIndex);
+                }
+                // 해당하지 않는 priority checker에 false 체크
+                else
+                {
+                    equipSkillChecker[i].SkillPriorityChangeFalseCheck(equipSkillIndex);
+                }
+            }
+        }
+        /// <summary> 스킬 장착 해제 시 사용하는 함수.  </summary>
+        /// <param name="equipSkillIndex"> 해당 스킬이 장착된 번호 </param>
+        public void SkillUnequipUpdate(int equipSkillIndex)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                //priority checker 전부 false 체크
+                equipSkillChecker[i].SkillPriorityChangeFalseCheck(equipSkillIndex);
+            }
+        }
+    }
+
+    [Serializable]
+    public class PlayerAutoSkillUseController
+    {
+        [SerializeField] int autoSkillUseOrderNum = 0;
+        [SerializeField] PlayerEquipSkillController pesc;
+        [SerializeField] EquipSkillCheckerByPrioritySet eSkillCheckerSet;
+
+        // suto skill 토글용 bool
+        [SerializeField] public bool IsAutoSkillUse { get; private set; }
+        public void ToggleAutoSkillUse() => IsAutoSkillUse = !IsAutoSkillUse;
+        public PlayerAutoSkillUseController(PlayerEquipSkillController pesc)
+        {
+            this.pesc = pesc;
+            eSkillCheckerSet = pesc.ESkillCheckerSet;
+        }
+        void OrderNumUpdate()
+        {
+            autoSkillUseOrderNum++;
+            if (6 <= autoSkillUseOrderNum) autoSkillUseOrderNum = 0;
+        }
+        /// <summary> autoSkillUseOrderNum 번호를 기준으로 자동 스킬 사용 여부 확인
+        /// + 없을 시, 순회 하면서 사용 가능한 스킬이 있는지 체크하는 bool 함수 </summary>
+        /// <param name="pri">확인할 우선순위</param>
+        /// <returns>현재 </returns>
+        bool CheckAutoSkillUsePossibleNumByPriority(Priority pri)
+        {
+            ref EquipSkillCheckerByPriority tESkillChecker = ref eSkillCheckerSet.EquipSkillChecker[(int)pri];
+            // pri 우선순위에 스킬이 장착되어 있는지 체크
+            if (!tESkillChecker.IsInThisPrioritySkill) return false;
+            // 현재 순서의 스킬이 현재 우선순위에 있는지 체크
+            if (!tESkillChecker.IsEquipedTargetIndexSkill(autoSkillUseOrderNum))
+            {
+                //Debug.Log($"{pri} 우선순위에서 스킬 찾지 못함, 다음 번호 확인\n현재 번호 : {autoSkillUseOrderNum}");
+                // 없을 시 순회하면서 다음 번호의 스킬이 있는지 체크
+                int i = 0;
+                // 6번 돌릴 시 최악의 경우에도 처음으로 돌아가, 이전 순서부터 시작 가능
+                // 0(시작) -> 1(1번) -> 2(2번) -> 3(3번) -> 4(4번) -> 5(5번) -> 0(6번)
+                for (; i < 6; i++)
+                {
+                    OrderNumUpdate();
+                    // 마지막 번호일 경우 IsEquipedSkill 시도하지 않고 넘기기
+                    if (5 <= i) continue;
+                    // 순회 중 해당되는 번호의 스킬이 있을 경우 break
+                    else if (tESkillChecker.IsEquipedTargetIndexSkill(autoSkillUseOrderNum)) break;
+                }
+                // 해당되는 번호가 없을 경우 찾기 실패
+                if (6 <= i)
+                {
+                    //Debug.LogWarning($"{pri} 우선순위, 다음 번호 찾지 못함");
+                    return false;
+                }
+                //Debug.Log($"{pri} 우선순위, 다음 번호 : {autoSkillUseOrderNum}");
+            }
+            ref EquipSkillSet tESkillSet = ref pesc.EquipSkillSetArr[autoSkillUseOrderNum];
+            // 해당 순서의 스킬이 사용 가능한지 여부 체크
+            return tESkillSet.IsSkillUsePossible;
+            //if(tESkillSet.IsSkillUsePossible)
+            //{
+            //    Debug.Log($"{autoSkillUseOrderNum}번 스킬 사용 가능");
+            //    return true;
+            //}
+            //else
+            //{
+            //    Debug.LogWarning($"{autoSkillUseOrderNum}번 스킬 사용 불가");
+            //    return false;
+            //}
+        }
+        bool CheckAutoSkillUsePossibleNumByAllPriority()
+        {
+            if (!CheckAutoSkillUsePossibleNumByPriority(Priority.High))
+            {
+                //Debug.Log("High 우선순위 스킬 찾지 못함");
+                if (!CheckAutoSkillUsePossibleNumByPriority(Priority.Mid))
+                {
+                    //Debug.Log("Mid 우선순위 스킬 찾지 못함");
+                    if (!CheckAutoSkillUsePossibleNumByPriority(Priority.Low))
+                    {
+                        //Debug.Log("Low 우선순위 스킬 찾지 못함");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        public bool TryAutoSkillUsePossible()
+        {
+            // 자동 스킬 사용 상태가 아닐 때 or 사용 가능한 스킬이 없을 때 or 캐스팅 중일 때 return
+            if (!IsAutoSkillUse || pesc.AutoSkillUsePossibleCnt <= 0 || pesc.IsCasting)
+            {
+                //Debug.LogWarning("사용 가능한 스킬 없거나, 캐스팅 중");
+                return false;
+            }
+            // 우선순위에 스킬이 없을 때 return
+            else if (!CheckAutoSkillUsePossibleNumByAllPriority())
+            {
+                return false;
+            }
+            pesc.td.ColliderRadiusChange(pesc.EquipSkillSetArr[autoSkillUseOrderNum].Skill.Data.range);
+            //if (pesc.TryGetMonsterTargetToAtk(autoSkillUseOrderNum, out Monster mon))
+            if (pesc.td.IsDetectedTarget)
+            {
+                // 몬스터가 있을 시 스킬 사용 + auto skill 순서를 다음 번호로 변경
+                //pesc.AtkSkillUse(autoSkillUseOrderNum++, mon);
+                pesc.TryAtkSkillUseToMonster(autoSkillUseOrderNum++);
+                if (6 <= autoSkillUseOrderNum) autoSkillUseOrderNum = 0;
+                Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 성공");
+                if(CheckAutoSkillUsePossibleNumByAllPriority())
+                    pesc.td.ColliderRadiusChange(pesc.EquipSkillSetArr[autoSkillUseOrderNum].Skill.Data.range);
+            }
+            return true;
+        }
+    }
     public class PlayerEquipSkillController : EquipSkillController
     {
         //public bool IsForceSkillSelect { get; private set; }
         // auto skill use
         [SerializeField] int autoSkillUsePossibleCnt = 0;
-        [SerializeField] bool isTestAutoSkill;
+        public int AutoSkillUsePossibleCnt => autoSkillUsePossibleCnt;
+        // auto 스킬 사용 시 우선순위 설정용
+        [SerializeField] EquipSkillCheckerByPrioritySet eSkillCheckerSet;
+        public EquipSkillCheckerByPrioritySet ESkillCheckerSet => eSkillCheckerSet;
+        // auto 스킬 사용 용 클래스
+        [SerializeField] PlayerAutoSkillUseController autoSkillController;
+
         void DecreaseUseSkillPossibleCnt() => autoSkillUsePossibleCnt--;
         void EncreaseUseSkillPossibleCnt() => autoSkillUsePossibleCnt++;
         void SetUseSkillPossibleCnt() => autoSkillUsePossibleCnt = skillCnt;
@@ -19,6 +228,7 @@ namespace Personal.HagYun
         {
             UnsubscribeUseSkillPossibleCntAll();
         }
+        public TargetDetectorUsingCircleCollider2D td;
         public override void Init(Character cha)
         {
             if (cha is Player pl)
@@ -27,6 +237,8 @@ namespace Personal.HagYun
                 if (Skill.PlOwner == null) Debug.LogWarning("skill에 플레이어 주입 안 됨");
                 SkillEquipInit();
                 AutoSkillUsePossibleCntInit();
+
+                td = GetComponent<TargetDetectorUsingCircleCollider2D>();
             }
         }
         void SkillEquipInit()
@@ -36,18 +248,15 @@ namespace Personal.HagYun
                 Debug.LogWarning("스킬풀 없음");
                 return;
             }
-            equipSkillArr = new EquipSkillSet[6];
+            equipSkillSetArr = new EquipSkillSet[6];
             for (int i = 0; i < 6; i++)
             {
-                equipSkillArr[i].Init();
-                //test
-                if (1 < i) continue;
+                equipSkillSetArr[i].Init();
 
                 if (skillPool.TryGetSkill(i, out Skill skill))
                 {
-                    //equipSkillArr[i] = new EquipSkillSet(i);
+                    Debug.Log($"{i}번 스킬 장착 시도");
                     SkillEquip(i, skill, true);
-                    //Debug.Log($"{equipSkillArr[i].num}번호 부여\nskillPool에서 {i}번 스킬 장착");
                     Debug.Log($"skillPool에서 {i}번 스킬 장착");
                 }
                 else
@@ -58,9 +267,15 @@ namespace Personal.HagYun
             }
             SetUseSkillPossibleCnt();
         }
+        void EquipSkillPrioritySetInit()
+        {
+            eSkillCheckerSet = new EquipSkillCheckerByPrioritySet();
+            eSkillCheckerSet.PrioritySkillNumSetInitAll(equipSkillSetArr);
+        }
         public void AutoSkillUsePossibleCntInit()
         {
-            PrisoritySkillNumSetInitAll();
+            EquipSkillPrioritySetInit();
+            autoSkillController = new PlayerAutoSkillUseController(this);
             SubscribeUseSkillPossibleCntAll();
         }
         protected override void UpdateFeat()
@@ -72,21 +287,15 @@ namespace Personal.HagYun
             // test
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                if (!equipSkillArr[2].isEquipped && skillPool.TryGetSkill(2, out Skill skill))
-                {
-                    SkillEquip(2, skill);
-                    Debug.Log($"skillPool에서 {2}번 스킬 장착");
-                }
+                PriorityUpdate(1, Priority.High);
+                PriorityUpdate(0, Priority.Mid);
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                isTestAutoSkill = !isTestAutoSkill;
+                autoSkillController.ToggleAutoSkillUse();
             }
 
-            if (isTestAutoSkill)
-            {
-                AutoSkillUse();
-            }
+            autoSkillController.TryAutoSkillUsePossible();
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 TryAtkSkillUseToMonster(0);
@@ -118,15 +327,22 @@ namespace Personal.HagYun
             SetUseSkillPossibleCnt();
             DecreaseUseSkillPossibleCnt();
         }
+        public override void PriorityUpdate(int index, Priority pri)
+        {
+            equipSkillSetArr[index].priority = pri;
+            eSkillCheckerSet.EquipSkillPriorityUpdate(index, pri);
+        }
         public override void SkillUnequip(int index)
         {
             base.SkillUnequip(index);
             SetUseSkillPossibleCnt();
+            UnequipUpdateToEquipSkillChecker(index);
         }
+        public void UnequipUpdateToEquipSkillChecker(int index) => eSkillCheckerSet.SkillUnequipUpdate(index);
 
         public void SubscribeUseSkillPossibleCnt(int index)
         {
-            EquipSkill TESkill = equipSkillArr[index].ESkill;
+            EquipSkill TESkill = equipSkillSetArr[index].ESkill;
             if (TESkill == null)
             {
                 //Debug.LogWarning($"이벤트 구독할 {index}번 EquipSkill 없음");
@@ -145,14 +361,14 @@ namespace Personal.HagYun
         }
         public void UnsubscribeUseSkillPossibleCnt(int index)
         {
-            EquipSkill TESkill = equipSkillArr[index].ESkill;
-            if (TESkill == null)
+            EquipSkill tESkill = equipSkillSetArr[index].ESkill;
+            if (tESkill == null)
             {
                 //Debug.LogWarning($"이벤트 구독할 {index}번 EquipSkill 없음");
                 return;
             }
-            TESkill.RemoveEventCooltimeStart(DecreaseUseSkillPossibleCnt);
-            TESkill.RemoveEventCooltimeEnd(EncreaseUseSkillPossibleCnt);
+            tESkill.RemoveEventCooltimeStart(DecreaseUseSkillPossibleCnt);
+            tESkill.RemoveEventCooltimeEnd(EncreaseUseSkillPossibleCnt);
         }
         public void UnsubscribeUseSkillPossibleCntAll()
         {
@@ -161,106 +377,6 @@ namespace Personal.HagYun
                 int index = i;
                 UnsubscribeUseSkillPossibleCnt(index);
             }
-        }
-        struct PrioritySkillNumSet
-        {
-            public bool[] isEquipArr;
-            public int cnt;
-            public int orderNum;
-            public bool IsInSkill => 0 < cnt;
-        }
-        //PrioritySkillNumSet highPri;
-        PrioritySkillNumSet middlePri;
-        //PrioritySkillNumSet lowPri;
-        [SerializeField] int autoSkillUseOrderNum = 0;
-        void PrisoritySkillNumSetInit(ref PrioritySkillNumSet set, Priority pri)
-        {
-            set = new PrioritySkillNumSet();
-            set.isEquipArr = new bool[6];
-            for (int i = 0; i < 6; i++)
-            {
-                ref EquipSkillSet eSkill = ref equipSkillArr[i];
-                if (eSkill.IsSkillUsePossible && eSkill.priority == pri)
-                {
-                    set.isEquipArr[i] = true;
-                    set.cnt++;
-                }
-            }
-        }
-        void PrisoritySkillNumSetInitAll()
-        {
-            PrisoritySkillNumSetInit(ref middlePri, Priority.Mid);
-        }
-        bool CheckAutoSkillUseCheck(in PrioritySkillNumSet set, int index)
-        {
-            if (!set.IsInSkill || !set.isEquipArr[index])
-            {
-                return false;
-            }
-            //EquipSkill tESkill = equipSkillArr[index].ESkill;
-            //if(!equipSkillArr[index].IsSkillUsePossible)
-            //{
-            //    return false;
-            //}
-            return true;
-        }
-        public void AutoSkillUse()
-        {
-            // 사용 가능한 스킬이 없을 때 return
-            // 캐스팅 중일 때 return
-            if (autoSkillUsePossibleCnt <= 0 || IsCasting) return;
-            Debug.Log("사용 가능한 스킬 있음, 캐스팅 중이지 않음");
-            // 스킬이 장착되어 있는지 체크 (우선순위 따라 확인)
-            if (CheckAutoSkillUseCheck(middlePri, autoSkillUseOrderNum))
-            {
-                Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 가능 여부 체크");
-                // auto skill 순서의 스킬이 사용 가능한지 여부 체크
-                if (equipSkillArr[autoSkillUseOrderNum].IsSkillUsePossible)
-                {
-                    Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 가능, 타겟 체크");
-                    // 사용 가능하다면 주변에 타겟이 있는지 체크
-                    if (TryGetMonsterTargetToAtk(autoSkillUseOrderNum, out Monster mon))
-                    {
-                        // 몬스터가 있을 시 스킬 사용 + auto skill 순서를 다음 번호로 변경
-                        AtkSkillUse(autoSkillUseOrderNum++, mon);
-                        Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 성공");
-                        if (6 <= autoSkillUseOrderNum) autoSkillUseOrderNum = 0;
-                    }
-                    // 타겟 없을 시 다른 동작 없음
-                    else
-                    {
-                        Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 가능, 타겟 없음");
-                    }
-                }
-            }
-            // 해당 우선순위에 auto skill 순서의 스킬이 장착되지 않았을 시 
-            else
-            {
-                Debug.Log($"{autoSkillUseOrderNum}번 스킬 장착 안 됨, 다음 번호 체크");
-                // 번호 증가시키면서 사용 가능한 스킬 확인, 만약을 대비해 6번 까지만 체크
-                for (int i = 0; i < 6; i++)
-                {
-                    autoSkillUseOrderNum++;
-                    if (6 <= autoSkillUseOrderNum) autoSkillUseOrderNum = 0;
-                    // 해당 우선순위 스킬에 있으면서 해당 스킬이 사용 가능할 경우
-                    if (CheckAutoSkillUseCheck(middlePri, autoSkillUseOrderNum) && equipSkillArr[autoSkillUseOrderNum].IsSkillUsePossible)
-                    {
-                        // 스킬 사용 시도
-                        if (TryAtkSkillUseToMonster(autoSkillUseOrderNum))
-                        {
-                            Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용");
-                            autoSkillUseOrderNum++;
-                            if (6 <= autoSkillUseOrderNum) autoSkillUseOrderNum = 0;
-                        }
-                        // 실패 시 다른 동작 없음
-                        else
-                        {
-                            Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 최종 실패");
-                        }
-                    }
-                }
-            }
-
         }
     }
 }

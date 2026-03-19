@@ -15,6 +15,22 @@ namespace Personal.HagYun
         CastingStart,
         CastingEnd
     }
+    // equip skill
+    [Serializable]
+    public struct EquipSkillSet
+    {
+        [SerializeField]EquipSkill eSkill;
+        public EquipSkill ESkill => eSkill;
+        public Priority priority;
+        public bool isEquipped;
+        //public bool IsSkillUsePossible => eSkill != null && !eSkill.IsCooltime;
+        public bool IsSkillUsePossible => isEquipped && !eSkill.IsCooltime;
+        public Skill Skill => eSkill.Skill;
+        public void Init()
+        {
+            eSkill = new EquipSkill();
+        }
+    }
     public class EquipSkillControllerEvent
     {
         public event Action OnCastingStart;
@@ -31,31 +47,16 @@ namespace Personal.HagYun
         // skill pool for get skill
         [SerializeField] protected SkillPool skillPool;
 
-        // equip skill
-        [Serializable]
-        protected struct EquipSkillSet
-        {
-            EquipSkill eSkill;
-            public EquipSkill ESkill => eSkill;
-            public Priority priority;
-            public bool isEquipped;
-            //public bool IsSkillUsePossible => eSkill != null && !eSkill.IsCooltime;
-            public bool IsSkillUsePossible => isEquipped && !eSkill.IsCooltime;
-            public Skill Skill => eSkill.Skill;
-            public void Init()
-            {
-                eSkill = new EquipSkill();
-            }
-        }
-        [SerializeField] protected EquipSkillSet[] equipSkillArr;
-        public EquipSkill this[int index] => equipSkillArr[index].ESkill;
+        [SerializeField] protected EquipSkillSet[] equipSkillSetArr;
+
+        public EquipSkillSet[] EquipSkillSetArr => equipSkillSetArr;
+        public EquipSkill this[int index] => equipSkillSetArr[index].ESkill;
         protected int skillCnt;
         // skill event
         protected EquipSkillControllerEvent eventSet = new EquipSkillControllerEvent();
 
         // skill ready
         public bool IsSkillReady { get; private set; }
-        [SerializeField] CircleCollider2D col;
 
         [Range(0f, 1f)] protected float skillFireTimeValue = 0.5f;
         public bool IsCasting { get; private set; }
@@ -76,25 +77,29 @@ namespace Personal.HagYun
         protected virtual void UpdateFeat() { }
         void ColliderSizeChange(int index)
         {
-            float colRadius = equipSkillArr[index].Skill.Data.range / 2;
-            col.radius = colRadius;
+            float colRadius = equipSkillSetArr[index].Skill.Data.range / 2;
         }
         public void SkillReady(int index)
         {
             ColliderSizeChange(index);
         }
-
+        public virtual void PriorityUpdate(int index, Priority pri)
+        {
+            equipSkillSetArr[index].priority = pri;
+        }
         public virtual void SkillEquip(int index, Skill targetSkill, bool isInit = false)
         {
-            equipSkillArr[index].ESkill.SkillSet(targetSkill, isInit);
-            equipSkillArr[index].priority = Priority.Mid;
-            equipSkillArr[index].isEquipped = true;
+            equipSkillSetArr[index].ESkill.SkillSet(targetSkill, isInit);
+            PriorityUpdate(index, Priority.Low);
+            if (equipSkillSetArr[index].isEquipped) return;
+            equipSkillSetArr[index].isEquipped = true;
             skillCnt++;
         }
         public virtual void SkillUnequip(int index)
         {
-            equipSkillArr[index].ESkill.SkillUnset();
-            equipSkillArr[index].isEquipped = false;
+            equipSkillSetArr[index].ESkill.SkillUnset();
+            if (!equipSkillSetArr[index].isEquipped) return;
+            equipSkillSetArr[index].isEquipped = false;
             skillCnt--;
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
@@ -104,7 +109,7 @@ namespace Personal.HagYun
 
             sr.color = Color.blue;
 
-            float baseCastingTime = equipSkillArr[index].Skill.Data.castingTime;
+            float baseCastingTime = equipSkillSetArr[index].Skill.Data.castingTime;
             float curCastingTime = baseCastingTime;
             float castingTimeValue = 1f;
 
@@ -117,7 +122,7 @@ namespace Personal.HagYun
             }
 
             sr.color = Color.yellow;
-            equipSkillArr[index].ESkill.SkillUse(cha);
+            equipSkillSetArr[index].ESkill.SkillUse(cha);
 
             while (0 < castingTimeValue)
             {
@@ -134,7 +139,7 @@ namespace Personal.HagYun
         }
         bool CheckSkillUsePossible(int index)
         {
-            if (!equipSkillArr[index].IsSkillUsePossible)
+            if (!equipSkillSetArr[index].IsSkillUsePossible)
             {
                 Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
                 return false;
@@ -147,9 +152,9 @@ namespace Personal.HagYun
             else return true;
 
         }
-        protected bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
+        public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            Skill tSkill = equipSkillArr[skillIndex].Skill;
+            Skill tSkill = equipSkillSetArr[skillIndex].Skill;
             Vector2 plPos = tSkill.OwnerPos;
             int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, tSkill.Data.range, tSkill.TargetMask);
             if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
@@ -160,7 +165,7 @@ namespace Personal.HagYun
             mon = null;
             return false;
         }
-        protected void AtkSkillUse(int index, Monster mon)
+        public void AtkSkillUse(int index, Monster mon)
         {
             CastingStartTask(index, mon).Forget();
         }
