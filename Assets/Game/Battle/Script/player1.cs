@@ -15,6 +15,7 @@ public class player1 : character1
     protected override float AttackRange => runtimeStatus.finalRange;
 
     private bool isKnockback = false;
+    private bool isDotDamage = false;
 
     protected override void OnDead()
     {
@@ -50,6 +51,37 @@ public class player1 : character1
         rb.velocity = Vector2.zero;
         isKnockback = false;
     }
+
+    //도트 데미지
+    public void ApplyDotDamage(float totalDamage, float duration, float interval)
+    {
+        if (isDotDamage) return;
+        DotDamageRoutine(totalDamage, duration, interval).Forget();
+    }
+    async UniTaskVoid DotDamageRoutine(float totalDamage, float duration, float interval)
+    {
+        isDotDamage = true;
+
+        int tickCount = Mathf.FloorToInt(duration / interval);
+        if (tickCount <= 0) tickCount = 1; //1회는 보장
+        float damagePerTick = totalDamage / tickCount;
+
+        float elapsed = 0f;
+        int ticks = 0;
+        var cts = this.GetCancellationTokenOnDestroy();
+
+        while (elapsed < duration && ticks < tickCount)
+        {
+            Hit(damagePerTick);
+            ticks++;
+            elapsed += interval;
+            await UniTask.Delay(TimeSpan.FromSeconds(interval), cancellationToken: cts);
+        }
+
+        isDotDamage = false;
+    }
+
+
 
     protected override void FixedUpdateFeat()
     {

@@ -37,6 +37,9 @@ public class JJ_BossAttackManager : character1
     [SerializeField] private float skill2WarningDuration = 1.5f;
     [SerializeField] private float skill2Damage = 10f;
     [SerializeField] private float skill2Range = 4.0f;
+    [SerializeField] private float skill2TotalDotDamage = 10f;
+    [SerializeField] private float skill2DotDuration = 5f;
+    [SerializeField] private float skill2DotInterval = 0.5f;
 
     [Header("Skill3(메테오)")]
     [SerializeField] private GameObject atkRange3;
@@ -47,15 +50,14 @@ public class JJ_BossAttackManager : character1
 
     private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
     private bool isUsingSkill = false;
+    private float currentSkill1CoolTime = 0f;
+    private float currentSkill2CoolTime = 0f;
+    private float currentSkill3CoolTime = 0f;
 
-    public void Update()
+    bool CanUseSkill(float currentCoolTime)
     {
-        //Q: 예고 후 플레이어를 향한 돌진
-        //W: 예고 후 원형 범위 데미지
-        //E: 시전 시점의 플레이어 위치에 예고 후 메테오
-        if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
-        if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
-        if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
+        Debug.Log($"CanUseSkill Check: {currentCoolTime} <= 0 ? {currentCoolTime <= 0f}");
+        return currentCoolTime <= 0f;
     }
 
     async UniTaskVoid UseMonsterSkill1Async()
@@ -63,6 +65,7 @@ public class JJ_BossAttackManager : character1
         // 안전장치: 이 오브젝트가 파괴되면 비동기 작업도 취소하기 위한 토큰을 가져옵니다.
         var cts = this.GetCancellationTokenOnDestroy();
 
+        currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
         Debug.Log("돌진 준비 중...");
 
@@ -133,6 +136,7 @@ public class JJ_BossAttackManager : character1
     {
         if (target == null || targetScript == null) return;
 
+        currentSkill2CoolTime = skill2CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
         isUsingSkill = true;
         Debug.Log("화염 장막 준비 중...");
@@ -147,6 +151,12 @@ public class JJ_BossAttackManager : character1
             {
                 Debug.Log("화염 장막에 피격되었습니다.");
                 targetScript.Hit(skill2Damage);
+
+                player1 player = targetScript as player1;
+                if(player != null)
+                {
+                    player.ApplyDotDamage(skill2TotalDotDamage, skill2DotDuration, skill2DotInterval);
+                }
             }
         }
         
@@ -158,6 +168,7 @@ public class JJ_BossAttackManager : character1
     {
         if (target == null) return;
 
+        currentSkill3CoolTime = skill3CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
         skillTargetPosition = target.position;
         isUsingSkill = true;
@@ -256,7 +267,19 @@ public class JJ_BossAttackManager : character1
 
     protected override void UpdateFeat()
     {
+        //if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
+        //if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
+        //if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
 
+        if (currentSkill1CoolTime > 0) currentSkill1CoolTime = Mathf.Max(0, currentSkill1CoolTime - Time.deltaTime);
+        if (currentSkill2CoolTime > 0) currentSkill2CoolTime = Mathf.Max(0, currentSkill2CoolTime - Time.deltaTime);
+        if (currentSkill3CoolTime > 0) currentSkill3CoolTime = Mathf.Max(0, currentSkill3CoolTime - Time.deltaTime);
+
+        if (target == null || isUsingSkill || isDead) return;
+
+        if (CanUseSkill(currentSkill1CoolTime)) UseMonsterSkill1Async().Forget();
+        else if (CanUseSkill(currentSkill2CoolTime)) UseMonsterSkill2Async().Forget();
+        else if (CanUseSkill(currentSkill3CoolTime)) UseMonsterSkill3Async().Forget();
     }
 
     protected override void FixedUpdateFeat()
