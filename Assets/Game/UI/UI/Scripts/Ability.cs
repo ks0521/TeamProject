@@ -15,29 +15,30 @@ namespace UI.Scripts.Ability
     public class Ability : MonoBehaviour
     {
         [Header("매니저")]
-        [SerializeField] private PlayerProgressManager gameManager;
+        [SerializeField] private PlayerProgressManager manager ;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
-        
+
         [Header("능력치 구매 버튼")]
         [SerializeField] private Button[] Upbtn;
 
         [Header("곱하기 버튼")]
         [SerializeField] private Button_Set btnX;
+
+
         private enum XState
         {
-            X1 , X10 , X100
+            X1, X10, X100
         }
-        private XState X_state;
-        private float multiValue;
-
-
+        private XState multiState;
+        [SerializeField]private int multiPress = 1;
+        
         // Start is called before the first frame update
         public void OnEnable()
         {
             ReFreshAllUI();
-        }
+        }// 나중에 
         private void Start()
         {
             BindAllButtons();
@@ -61,77 +62,73 @@ namespace UI.Scripts.Ability
                 StatusType type = stat.statusType;
                 stat.BindLevelUp(() => OnClickLevelUp(type));
             }
-        }
+        }//능력치 구매 버튼 OnClick 에 자동으로 함수 넣어주기
         public void ReFreshAllUI()
         {
             foreach (var stat in statItemViews)
             {
                 ReFreshStatUI(stat.statusType);
             }
-        }
+        }//모든 UI 새로고침
         public void ReFreshStatUI(StatusType type)
         {
-            if (!gameManager.statUpgradeConfig.TryGetStatEntry(type, out var statEntry))
+            if (!manager.statUpgradeConfig.TryGetStatEntry(type, out var statEntry))
             {
                 Debug.Log($"{type} : statEntry를 찾지 못함");
                 return;
             }//null 방지
 
-            int playerLevel = gameManager.progress.currency.level;
-            int playerGold = gameManager.progress.currency.gold;
-            int currentLevle = gameManager.progress.statUpgrades.upgradeLevelsByType[type];
+            int playerGold = manager.progress.currency.statStone;
+            int currentLevle = manager.GetStatUpgradeLevel(type);
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
-            float nextValue = (currentLevle + 1) * statEntry.increasePerEnhance; //증가 후 스텟 수치
-            int cost = currentLevle * statEntry.enhanceCost; //스텟 가격 부분
+            float nextValue = (currentLevle + multiPress) * statEntry.increasePerEnhance; //증가 후 스텟 수치
+            int cost = (currentLevle + multiPress) * statEntry.enhanceCost; //스텟 가격 부분
 
-            bool isUnLock = playerLevel <= statEntry.unlockLevel;
-            bool canLevelUp = isUnLock && playerGold >= cost && currentLevle < statEntry.maxLevel;
+            bool isUnLock = manager.progress.currency.level <= statEntry.unlockLevel;
+            bool canLevelUp = manager.CanUpgradeStat(type, multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
 
             StatItemView itemView = GetType(type);
-
             if (itemView == null)
             {
                 Debug.Log($"{type}에 해당되는 스텟 UI가 없음");
             }
 
-            itemView.RefreshUI(statEntry , currentLevle , currentValue , nextValue ,cost , canLevelUp , isUnLock);
-                
+            itemView.RefreshUI(statEntry, currentLevle, currentValue, nextValue, cost, canLevelUp, isUnLock);
+
 
         }//능력치팝업창 UI 갱신용 함수
 
         private void OnClickLevelUp(StatusType type)
         {
+           manager.TryUpgradeStat(type, multiPress);
 
-        } // 미구현
-
-
-
-
+            ReFreshAllUI();
+            
+        } //능력치 강화
 
         void ChangeState(XState newState)
         {
-            X_state = newState;
-
-            switch (X_state)
+            switch (newState)
             {
                 case XState.X1:
-                    multiValue = 1;
+                    multiPress = 1;
                     btnX.SelectButton(0);
                     break;
 
                 case XState.X10:
-                    multiValue = 10;
+                    multiPress = 10;
                     btnX.SelectButton(1);
                     break;
 
                 case XState.X100:
-                    multiValue = 100;
+                    multiPress = 100;
                     btnX.SelectButton(2);
                     break;
             }
             ReFreshAllUI();
-        }//상태 전환 함수
+        }//버튼 상태 전환 함수
+
         public void OnClickX1()
         {
             ChangeState(XState.X1);

@@ -54,6 +54,17 @@ namespace Game_UI.Scripts.PopupManager
             }
         }
 
+        public void Init()
+        {
+            popupStack.Clear();
+
+            if (abilityPop != null) abilityPop.SetActive(false);
+            if (equipmentPop != null) equipmentPop.SetActive(false);
+            if (skillPop != null) skillPop.SetActive(false);
+            if (stagePop != null) stagePop.SetActive(false);
+            if (dungeonPop != null) dungeonPop.SetActive(false);
+            if (gameEndPop != null) gameEndPop.SetActive(false);
+        }
         void OpenPopup(GameObject pop)
         {
             if (pop == null)

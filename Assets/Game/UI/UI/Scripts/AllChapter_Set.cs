@@ -47,7 +47,6 @@ public class AllChapter_Set : MonoBehaviour
         } 
     }
 
-
     public void SetChapterName() //나중에 작업 예정
     {
        
