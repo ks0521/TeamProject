@@ -23,11 +23,13 @@ public class JJ_BossAttackManager : character1
 
     [Header("Skill1(돌진)")]
     [SerializeField] private GameObject atkRange1;
+    [SerializeField] private BoxCollider2D chargeCollider;
     [SerializeField] private float skill1CoolTime = 10f;
     [SerializeField] private float skill1WarningDuration = 1.2f;
     [SerializeField] private float skill1Damage = 15f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
+    //[SerializeField] private float chargeCollisionDistance = 0.75f;
     [SerializeField] private float skill1KnockbackForce = 9.9f;
     [SerializeField] private float skill1KnockbackDuration = 0.2f;
 
@@ -36,7 +38,7 @@ public class JJ_BossAttackManager : character1
     [SerializeField] private float skill2CoolTime = 15f;
     [SerializeField] private float skill2WarningDuration = 1.5f;
     [SerializeField] private float skill2Damage = 10f;
-    [SerializeField] private float skill2Range = 4.0f;
+    [SerializeField] private float skill2Range = 2.0f;
     [SerializeField] private float skill2TotalDotDamage = 10f;
     [SerializeField] private float skill2DotDuration = 5f;
     [SerializeField] private float skill2DotInterval = 0.5f;
@@ -85,6 +87,7 @@ public class JJ_BossAttackManager : character1
         await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
 
         if (atkRange1 != null) atkRange1.SetActive(false);
+        if (chargeCollider != null) chargeCollider.enabled = true;
         sfx.PlayBossSkillSound();
 
         float elapsed = 0f;
@@ -97,8 +100,9 @@ public class JJ_BossAttackManager : character1
             // 이렇게 하면 CharacterMove를 수정하지 않고도 물리 기반 이동이 가능합니다.
             // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
             cm.ChaseMove(directionToTarget, chargeSpeed);
+            float distance = Vector2.Distance(transform.position, target.position);
 
-            if (!hasDamaged && Vector2.Distance(transform.position, target.position) < 0.3f)
+            if (chargeCollider.IsTouching(playerCollider))
             {
                 Debug.Log("돌진으로 피격되었습니다.");
                 targetScript.Hit(skill1Damage);
@@ -109,19 +113,16 @@ public class JJ_BossAttackManager : character1
                 {
                     // 넉백 방향 계산 (몬스터 -> 플레이어 방향)
                     Vector2 knockbackDir = (target.position - transform.position).normalized;
-                    // 넉백 적용
                     player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
                 }
-
                 hasDamaged = true;
                 break; //충돌 후 몬스터는 이동 중단
             }
-
+            
             elapsed += Time.fixedDeltaTime;
-            // 다음 물리 프레임까지 대기 (이게 있어야 부드럽게 이동함)
-            await UniTask.WaitForFixedUpdate(cancellationToken: cts);
+            await UniTask.WaitForFixedUpdate(cancellationToken: cts); //다음 프레임까지 대기
         }
-
+        if (chargeCollider != null) chargeCollider.enabled = false;
         isUsingSkill = false;
     }
     private void RotateTowards(Vector2 direction)
@@ -286,9 +287,13 @@ public class JJ_BossAttackManager : character1
         if (target == null || isUsingSkill || isDead) return;
 
         //돌진: 체력 30% 이상일 때만 발동 가능
-        //화염 장막: 체력 50% 이하일 때만 발동 가능
+        //화염 장막: 체력 50% 이하, 범위 내에 플레이어가 있을 때만 발동 가능
         if (CanUseSkill(currentSkill1CoolTime) && hp >= CurrentBattleStat.maxHp * 0.3) UseMonsterSkill1Async().Forget();
-        else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStat.maxHp * 0.5) UseMonsterSkill2Async().Forget();
+        else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStat.maxHp * 0.5)
+        {
+            float distance = Vector2.Distance(transform.position, target.position);
+            if (distance <= skill2Range) UseMonsterSkill2Async().Forget();
+        }
         else if (CanUseSkill(currentSkill3CoolTime)) UseMonsterSkill3Async().Forget();
     }
 
@@ -309,5 +314,22 @@ public class JJ_BossAttackManager : character1
         {
             cm.ChaseMove(target, CurrentBattleStat.moveSpeed);
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        //공격 사거리(MonsterAttackRange)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, MonsterAttackRange);
+
+        /*
+        //스킬 1: 돌진 범위(실제 충돌 범위는 정사각형)
+        Gizmos.color = new Color(0f, 0.5f, 1f); //하늘색
+        Gizmos.DrawWireSphere(transform.position, chargeCollisionDistance);
+        */
+
+        //스킬 2: 화염 장막 범위
+        Gizmos.color = new Color(1f, 0.5f, 0f); //주황색
+        Gizmos.DrawWireSphere(transform.position, skill2Range);
     }
 }
