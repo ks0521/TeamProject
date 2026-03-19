@@ -1943,7 +1943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e76994147330f4b879d5e26cb88645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 9999
+  hp: 10000
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
@@ -1964,6 +1964,9 @@ MonoBehaviour:
   skill2WarningDuration: 1.5
   skill2Damage: 10
   skill2Range: 4
+  skill2TotalDotDamage: 10
+  skill2DotDuration: 5
+  skill2DotInterval: 0.5
   atkRange3: {fileID: 1998848183}
   skill3CoolTime: 12
   skill3WarningDuration: 1.5

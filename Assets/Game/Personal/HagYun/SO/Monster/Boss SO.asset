@@ -15,7 +15,7 @@ MonoBehaviour:
   prefeb: {fileID: 0}
   key: 0
   battleStat:
-    maxHp: 9999
+    maxHp: 10000
     atk: 10
     def: 10
     atkSpeed: 1.2
