@@ -15,105 +15,133 @@ namespace Personal.HagYun
         CastingStart,
         CastingEnd
     }
+    // equip skill
+    [Serializable]
+    public struct EquipSkillSet
+    {
+        [SerializeField]EquipSkill eSkill;
+        public EquipSkill ESkill => eSkill;
+        public Priority priority;
+        public bool isEquipped;
+        //public bool IsSkillUsePossible => eSkill != null && !eSkill.IsCooltime;
+        public bool IsSkillUsePossible => isEquipped && !eSkill.IsCooltime;
+        public Skill Skill => eSkill.Skill;
+        public void Init()
+        {
+            eSkill = new EquipSkill();
+        }
+    }
     public class EquipSkillControllerEvent
     {
         public event Action OnCastingStart;
         public event Action OnCastingEnd;
         public void RaiseCastingStart() => OnCastingStart?.Invoke();
-        public void RaiseOnCastingEnd() => OnCastingEnd?.Invoke();
+        public void RaiseCastingEnd() => OnCastingEnd?.Invoke();
     }
-    public class EquipSkillController : MonoBehaviour
+    public abstract class EquipSkillController : MonoBehaviour
     {
-        private EquipSkill[] equipSkillArr = new EquipSkill[6];
-        private EquipSkillControllerEvent eventSet;
-        int skillEquipMask;
-        [Range(0f, 1f)] private float skillFireTimeValue = 0.5f;
+        // test
+        public static EquipSkillController esc;
+        public SpriteRenderer sr;
+
+        // skill pool for get skill
+        [SerializeField] protected SkillPool skillPool;
+
+        [SerializeField] protected EquipSkillSet[] equipSkillSetArr;
+
+        public EquipSkillSet[] EquipSkillSetArr => equipSkillSetArr;
+        public EquipSkill this[int index] => equipSkillSetArr[index].ESkill;
+        protected int skillCnt;
+        // skill event
+        protected EquipSkillControllerEvent eventSet = new EquipSkillControllerEvent();
+
+        // skill ready
+        public bool IsSkillReady { get; private set; }
+
+        [Range(0f, 1f)] protected float skillFireTimeValue = 0.5f;
         public bool IsCasting { get; private set; }
-        //private Player owner;
+        public void PlOwnerSet(Player pl) => Skill.SetPlOwner(pl);
+        private void Awake()
+        {
+            esc = this;
+        }
         void Start()
         {
-            SkillEquipCheck();
+            Init(GetComponent<Player>());
         }
-        void SkillEquipCheck()
-        {
-            for(int i = 0; i < 6; i++)
-            {
-                skillEquipMask |= 1 << i;
-            }
-        }
+        public abstract void Init(Character cha);
         private void Update()
         {
-            SkillInput();
+            UpdateFeat();
         }
-        public void SkillInput()
+        protected virtual void UpdateFeat() { }
+        void ColliderSizeChange(int index)
         {
-            if(Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                SkillUse(0);
-            }
-            else if(Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                SkillUse(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                SkillUse(2);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                SkillUse(3);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                SkillUse(4);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                SkillUse(5);
-            }
+            float colRadius = equipSkillSetArr[index].Skill.Data.range / 2;
         }
-
-        public void OwnerSet(Player pl)
+        public void SkillReady(int index)
         {
-            Skill.SetPlOwner(pl);
+            ColliderSizeChange(index);
         }
-        public void SkillEquip(int index, Skill targetSkill)
+        public virtual void PriorityUpdate(int index, Priority pri)
         {
-            equipSkillArr[index].SkillSet(targetSkill);
-            equipSkillArr[index].priority = Priority.Mid;
-            skillEquipMask |= (1 << index);
+            equipSkillSetArr[index].priority = pri;
         }
-        public void SkillUnequip(int index)
+        public virtual void SkillEquip(int index, Skill targetSkill, bool isInit = false)
         {
-            equipSkillArr[index].SkillUnset();
-            skillEquipMask &= ~(1 << index);
+            equipSkillSetArr[index].ESkill.SkillSet(targetSkill, isInit);
+            PriorityUpdate(index, Priority.Low);
+            if (equipSkillSetArr[index].isEquipped) return;
+            equipSkillSetArr[index].isEquipped = true;
+            skillCnt++;
         }
-
-        async UniTaskVoid CastingStartTask(int index)
+        public virtual void SkillUnequip(int index)
+        {
+            equipSkillSetArr[index].ESkill.SkillUnset();
+            if (!equipSkillSetArr[index].isEquipped) return;
+            equipSkillSetArr[index].isEquipped = false;
+            skillCnt--;
+        }
+        async UniTaskVoid CastingStartTask(int index, Character cha)
         {
             eventSet.RaiseCastingStart();
             IsCasting = true;
-            float baseCastingTime = equipSkillArr[index].skill.Data.castingTime;
+
+            sr.color = Color.blue;
+
+            float baseCastingTime = equipSkillSetArr[index].Skill.Data.castingTime;
             float curCastingTime = baseCastingTime;
-            while (0 < curCastingTime)
+            float castingTimeValue = 1f;
+
+            while (skillFireTimeValue < castingTimeValue)
             {
-                float castingTimeValue = curCastingTime / baseCastingTime;
-                if (castingTimeValue <= skillFireTimeValue)
-                {
-                    //equipSkillArr[index].skill.
-                }
-                curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소
+                castingTimeValue = curCastingTime / baseCastingTime;
+                curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
                 await UniTask.Yield(Skill.PlOwner.GetCancellationTokenOnDestroy());
                 if (Skill.PlOwner == null) return;
             }
-            eventSet.RaiseOnCastingEnd();
+
+            sr.color = Color.yellow;
+            equipSkillSetArr[index].ESkill.SkillUse(cha);
+
+            while (0 < castingTimeValue)
+            {
+                castingTimeValue = curCastingTime / baseCastingTime;
+                curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
+                await UniTask.Yield(Skill.PlOwner.GetCancellationTokenOnDestroy());
+                if (Skill.PlOwner == null) return;
+            }
+
+            sr.color = Color.white;
+
+            eventSet.RaiseCastingEnd();
             IsCasting = false;
         }
         bool CheckSkillUsePossible(int index)
         {
-            if ((skillEquipMask & (1 << index)) == 0)
+            if (!equipSkillSetArr[index].IsSkillUsePossible)
             {
-                Debug.LogWarning($"{index + 1}번 자리에 장착된 스킬 없음");
+                Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
                 return false;
             }
             else if (IsCasting)
@@ -124,13 +152,35 @@ namespace Personal.HagYun
             else return true;
 
         }
-        public void SkillUse(int index)
+        public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            if (!CheckSkillUsePossible(index)) return;
-            CastingStartTask(index).Forget();
-            equipSkillArr[index].CooltimeStart();
+            Skill tSkill = equipSkillSetArr[skillIndex].Skill;
+            Vector2 plPos = tSkill.OwnerPos;
+            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, tSkill.Data.range, tSkill.TargetMask);
+            if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
+            {
+                mon = targetCol.GetComponent<Monster>();
+                return mon != null;
+            }
+            mon = null;
+            return false;
         }
-        // Func for event subscription
+        public void AtkSkillUse(int index, Monster mon)
+        {
+            CastingStartTask(index, mon).Forget();
+        }
+        public bool TryAtkSkillUseToMonster(int index)
+        {
+            if (!CheckSkillUsePossible(index)) return false;
+            else if (TryGetMonsterTargetToAtk(index, out Monster mon))
+            {
+                AtkSkillUse(index, mon);
+                return true;
+            }
+            return false;
+        }
+
+        // event subscription Func for external use  
         public void SkillEquip1(Skill skill) => SkillEquip(0, skill);
         public void SkillEquip2(Skill skill) => SkillEquip(1, skill);
         public void SkillEquip3(Skill skill) => SkillEquip(2, skill);
@@ -143,14 +193,14 @@ namespace Personal.HagYun
         public void SkillUnequip4() => SkillUnequip(3);
         public void SkillUnequip5() => SkillUnequip(4);
         public void SkillUnequip6() => SkillUnequip(5);
-        public void SkillUse1() => SkillUse(0);
-        public void SkillUse2() => SkillUse(1);
-        public void SkillUse3() => SkillUse(2);
-        public void SkillUse4() => SkillUse(3);
-        public void SkillUse5() => SkillUse(4);
-        public void SkillUse6() => SkillUse(5);
+        public void SkillUse1() => TryAtkSkillUseToMonster(0);
+        public void SkillUse2() => TryAtkSkillUseToMonster(1);
+        public void SkillUse3() => TryAtkSkillUseToMonster(2);
+        public void SkillUse4() => TryAtkSkillUseToMonster(3);
+        public void SkillUse5() => TryAtkSkillUseToMonster(4);
+        public void SkillUse6() => TryAtkSkillUseToMonster(5);
 
-        // event add/remove
+        // event add/remove for external use
         public void AddEventCastingStart(Action func) => eventSet.OnCastingStart += func;
         public void AddEventCastingEnd(Action func) => eventSet.OnCastingEnd += func;
         public void RemoveEventCastingStart(Action func) => eventSet.OnCastingStart -= func;
