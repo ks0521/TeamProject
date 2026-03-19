@@ -15,16 +15,18 @@ namespace Base.Managers
     /// <summary> UI에서 사용하기 위한 정보 모음집</summary>
     public struct StageEntry
     {
-        public int chapter;
-        public int stage;
-        public StageSO stageSO;
-        public StageType type;
+        public int chapter; //챕터
+        public int stage; //스테이지
+        public StageSO stageSO; //해당 챕터 - 스테이지의 SO
+        public StageType type; //스테이지의 도전상태(일반, 도전, 잠금)
     }
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
     public class StageManager : MonoBehaviour
-    {
+    { 
         public int testChapter;
         public int testStage;
+        [SerializeField] private int curChapter = 0;
+        [SerializeField] private int curStage = 0;
         public StageEntry testEntry;
         [SerializeField] private MonsterPoolManager monsterPool; //몬스터 풀
         [SerializeField] private Stage stage; //스테이지 객체
@@ -35,10 +37,8 @@ namespace Base.Managers
         public event Action<int, int> OnChangeStage;
         public void Init()
         {
-            stageProgress = GameDataManager.Instance.GetStageInfo();
-            isLoading = true;
-            ChangeStage(stageProgress.selectedChapter,stageProgress.selectedStage);
-            isLoading = false;
+            stageProgress = PlayerProgressManager.Instance.GetStageProgress();
+            ChangeStage(stageProgress.selectedNormalChapter,stageProgress.selectedNormalStage);
         }
 
         public List<TestMonster> GetStageMonsters()
@@ -56,7 +56,7 @@ namespace Base.Managers
                 return;
             }
 
-            if (selectedChapter == stageProgress.selectedChapter && selectedStage == stageProgress.selectedStage && !isLoading)
+            if (curChapter == selectedChapter && curStage == selectedStage)
             {
                 Debug.LogWarning($"{selectedChapter} - {selectedStage}는 이미 진행중인 스테이지입니다. ");
                 return;
@@ -74,12 +74,22 @@ namespace Base.Managers
                 Debug.LogWarning($"{selectedChapter}-{selectedStage}SO를 불러오지 못해 스테이지를 바꿀 수 없습니다. ");
                 return;
             }
+
+            curChapter = selectedChapter;
+            curStage = selectedStage;
             Debug.Log($"Stage Changed to {selectedChapter} - {selectedStage}");
             stage?.Destroy(); //기존 스테이지 있으면 정리
             monsterPool.ChangeStage(stageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
-            stage = new Stage(stageSO); // 신규 스테이지 생성
+            stage = new Stage(stageSO, monsterPool); // 신규 스테이지 생성
             OnChangeStage?.Invoke(stageSO.chapter,stageSO.stage); // 바뀐 챕터 - 스테이지 정보 전달
-            stageProgress = GameDataManager.Instance.StageChanged(stageSO.chapter, stageSO.stage);
+            if (stageSO.type == StageType.Normal)
+            {
+                stageProgress = PlayerProgressManager.Instance.SelectNormalStage(stageSO.chapter, stageSO.stage);
+            }
+            else if (stageSO.type == StageType.Challenge)
+            {
+                
+            }
         }
 
         private void Start()
@@ -147,21 +157,22 @@ namespace Base.Managers
             return inputStage.CompareTo(baseStage);
         }
     }
+    
     [Serializable]
     public class Stage
     {
+        [SerializeField] private MonsterPoolManager monsterPool;
+        [SerializeField]private StageSO stageSO; //현재 스테이지의 SO
         [SerializeField]public List<TestMonster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
         public IReadOnlyList<TestMonster> MonsterList => monstersList;
-        [SerializeField]private StageSO stageSO; //현재 스테이지의 SO
-        [SerializeField]private bool canSpawning; //스폰 여부 트리거
-        public int CurChapter => stageSO.chapter;
-        public int CurStage => stageSO.stage;
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
-        private float spawnDelay; // 몬스터 스폰 딜레이
+        [SerializeField]private bool canSpawning; //스폰 여부 트리거
+        [SerializeField]private float spawnDelay; // 몬스터 스폰 딜레이
         
-        public Stage(StageSO stage)
+        public Stage(StageSO stage, MonsterPoolManager monsterPool)
         {
             //바꾸려는 챕터와 스테이지의 정보를 SO에서 얻어옴
+            this.monsterPool = monsterPool;
             stageSO = stage;
             if (stageSO == null)
             {
@@ -170,7 +181,7 @@ namespace Base.Managers
             }
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 진입");
             spawnerToken = new CancellationTokenSource();
-            spawnDelay = 5f;
+            spawnDelay = 2.5f;
             Spawning(spawnerToken.Token).Forget();
             canSpawning = true;
         }
@@ -183,12 +194,14 @@ namespace Base.Managers
                         while (true)
                         {
                             await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
-                            GameObject mon = MonsterPoolManager.poolDic[stageSO.preset[0].monster.key].UsePool();
                             float randx = Random.Range(-4f, 4f);
                             float randy = Random.Range(-4f, 4f);
+                            
+                            GameObject mon = monsterPool.UsePool(stageSO.preset[0].monster.key);
                             mon.SetActive(true);
                             mon.transform.position = new Vector3(randx, randy, 0);
                             Register(mon.GetComponent<TestMonster>());
+                            
                             await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
                             await UniTask.WaitWhile(() => monstersList.Count >= 20, cancellationToken: token);
                         }
@@ -198,7 +211,6 @@ namespace Base.Managers
                         Debug.Log("스테이지 전환에 따른 스포너 정상 종료");
                     }
                 } 
-        
         /// <summary> 새 몬스터 풀에서 꺼내왔을 때 스테이지에서 확인할 수 있게 연결</summary>
         /// <param name="monster"> 꺼내온 몬스터 </param>
         public void Register(TestMonster monster)
@@ -215,6 +227,7 @@ namespace Base.Managers
             Debug.Log("리스트 내 몬스터 등록 해제");
             
             monstersList.Remove(monster);
+            monsterPool.ReturnPool(monster.monsterSO.key,monster.gameObject);
             monster.OnMonsterKilled -= ItemDrop;
         }
         
@@ -244,6 +257,16 @@ namespace Base.Managers
             UnRegister(monster);
         }
     }
-
     
+    [Serializable]
+    public class StageRule
+    {
+        [SerializeField]private StageSO curStage;
+
+        StageRule(StageSO stage)
+        {
+            curStage = stage;
+        }
+    }
+
 }

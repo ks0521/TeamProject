@@ -59,7 +59,7 @@ namespace Battle
         {
             Debug.Log("몬스터 처치됨");   
             OnMonsterKilled?.Invoke();
-            MonsterPoolManager.poolDic[monsterSo.key].ReturnPool(gameObject);
+            Destroy(gameObject);
         }
         /// <summary>스테이지 변경등의 이유로 사라질 때 해당 프리팹 삭제</summary>
         public void ForcedReturn()
