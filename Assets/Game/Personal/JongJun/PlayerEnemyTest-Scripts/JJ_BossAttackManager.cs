@@ -64,6 +64,7 @@ public class JJ_BossAttackManager : character1
     {
         // 안전장치: 이 오브젝트가 파괴되면 비동기 작업도 취소하기 위한 토큰을 가져옵니다.
         var cts = this.GetCancellationTokenOnDestroy();
+        if (target == null || targetScript == null) return;
 
         currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
@@ -134,10 +135,10 @@ public class JJ_BossAttackManager : character1
 
     async UniTaskVoid UseMonsterSkill2Async()
     {
+        var cts = this.GetCancellationTokenOnDestroy();
         if (target == null || targetScript == null) return;
 
         currentSkill2CoolTime = skill2CoolTime;
-        var cts = this.GetCancellationTokenOnDestroy();
         isUsingSkill = true;
         Debug.Log("화염 장막 준비 중...");
 
@@ -153,20 +154,20 @@ public class JJ_BossAttackManager : character1
                 targetScript.Hit(skill2Damage);
 
                 player1 player = targetScript as player1;
-                if(player != null)
+                if (player != null)
                 {
                     player.ApplyDotDamage(skill2TotalDotDamage, skill2DotDuration, skill2DotInterval);
                 }
             }
         }
-        
+
         sfx.PlayBossSkillSound();
         isUsingSkill = false;
     }
 
     async UniTaskVoid UseMonsterSkill3Async()
     {
-        if (target == null) return;
+        if (target == null || targetScript == null) return;
 
         currentSkill3CoolTime = skill3CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
@@ -271,14 +272,23 @@ public class JJ_BossAttackManager : character1
         //if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
         //if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
 
+        //체력 40% = 돌진(30% 이상)과 화염 장막(50% 이하) 조건 모두 만족
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            hp = CurrentBattleStat.maxHp * 0.4f;
+            Debug.Log($"보스 체력: {Hp} / {CurrentBattleStat.maxHp}");
+        }
+
         if (currentSkill1CoolTime > 0) currentSkill1CoolTime = Mathf.Max(0, currentSkill1CoolTime - Time.deltaTime);
         if (currentSkill2CoolTime > 0) currentSkill2CoolTime = Mathf.Max(0, currentSkill2CoolTime - Time.deltaTime);
         if (currentSkill3CoolTime > 0) currentSkill3CoolTime = Mathf.Max(0, currentSkill3CoolTime - Time.deltaTime);
 
         if (target == null || isUsingSkill || isDead) return;
 
-        if (CanUseSkill(currentSkill1CoolTime)) UseMonsterSkill1Async().Forget();
-        else if (CanUseSkill(currentSkill2CoolTime)) UseMonsterSkill2Async().Forget();
+        //돌진: 체력 30% 이상일 때만 발동 가능
+        //화염 장막: 체력 50% 이하일 때만 발동 가능
+        if (CanUseSkill(currentSkill1CoolTime) && hp >= CurrentBattleStat.maxHp * 0.3) UseMonsterSkill1Async().Forget();
+        else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStat.maxHp * 0.5) UseMonsterSkill2Async().Forget();
         else if (CanUseSkill(currentSkill3CoolTime)) UseMonsterSkill3Async().Forget();
     }
 
