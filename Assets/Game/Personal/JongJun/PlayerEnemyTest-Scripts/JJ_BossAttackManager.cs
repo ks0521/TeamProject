@@ -23,11 +23,13 @@ public class JJ_BossAttackManager : character1
 
     [Header("Skill1(돌진)")]
     [SerializeField] private GameObject atkRange1;
+    [SerializeField] private BoxCollider2D chargeCollider;
     [SerializeField] private float skill1CoolTime = 10f;
     [SerializeField] private float skill1WarningDuration = 1.2f;
     [SerializeField] private float skill1Damage = 15f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
+    //[SerializeField] private float chargeCollisionDistance = 0.75f;
     [SerializeField] private float skill1KnockbackForce = 9.9f;
     [SerializeField] private float skill1KnockbackDuration = 0.2f;
 
@@ -36,7 +38,7 @@ public class JJ_BossAttackManager : character1
     [SerializeField] private float skill2CoolTime = 15f;
     [SerializeField] private float skill2WarningDuration = 1.5f;
     [SerializeField] private float skill2Damage = 10f;
-    [SerializeField] private float skill2Range = 4.0f;
+    [SerializeField] private float skill2Range = 2.0f;
     [SerializeField] private float skill2TotalDotDamage = 10f;
     [SerializeField] private float skill2DotDuration = 5f;
     [SerializeField] private float skill2DotInterval = 0.5f;
@@ -64,6 +66,7 @@ public class JJ_BossAttackManager : character1
     {
         // 안전장치: 이 오브젝트가 파괴되면 비동기 작업도 취소하기 위한 토큰을 가져옵니다.
         var cts = this.GetCancellationTokenOnDestroy();
+        if (target == null || targetScript == null) return;
 
         currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
@@ -84,6 +87,7 @@ public class JJ_BossAttackManager : character1
         await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
 
         if (atkRange1 != null) atkRange1.SetActive(false);
+        if (chargeCollider != null) chargeCollider.enabled = true;
         sfx.PlayBossSkillSound();
 
         float elapsed = 0f;
@@ -96,8 +100,9 @@ public class JJ_BossAttackManager : character1
             // 이렇게 하면 CharacterMove를 수정하지 않고도 물리 기반 이동이 가능합니다.
             // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
             cm.ChaseMove(directionToTarget, chargeSpeed);
+            float distance = Vector2.Distance(transform.position, target.position);
 
-            if (!hasDamaged && Vector2.Distance(transform.position, target.position) < 0.3f)
+            if (chargeCollider.IsTouching(playerCollider))
             {
                 Debug.Log("돌진으로 피격되었습니다.");
                 targetScript.Hit(skill1Damage);
@@ -108,19 +113,16 @@ public class JJ_BossAttackManager : character1
                 {
                     // 넉백 방향 계산 (몬스터 -> 플레이어 방향)
                     Vector2 knockbackDir = (target.position - transform.position).normalized;
-                    // 넉백 적용
                     player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
                 }
-
                 hasDamaged = true;
                 break; //충돌 후 몬스터는 이동 중단
             }
-
+            
             elapsed += Time.fixedDeltaTime;
-            // 다음 물리 프레임까지 대기 (이게 있어야 부드럽게 이동함)
-            await UniTask.WaitForFixedUpdate(cancellationToken: cts);
+            await UniTask.WaitForFixedUpdate(cancellationToken: cts); //다음 프레임까지 대기
         }
-
+        if (chargeCollider != null) chargeCollider.enabled = false;
         isUsingSkill = false;
     }
     private void RotateTowards(Vector2 direction)
@@ -134,10 +136,10 @@ public class JJ_BossAttackManager : character1
 
     async UniTaskVoid UseMonsterSkill2Async()
     {
+        var cts = this.GetCancellationTokenOnDestroy();
         if (target == null || targetScript == null) return;
 
         currentSkill2CoolTime = skill2CoolTime;
-        var cts = this.GetCancellationTokenOnDestroy();
         isUsingSkill = true;
         Debug.Log("화염 장막 준비 중...");
 
@@ -153,20 +155,20 @@ public class JJ_BossAttackManager : character1
                 targetScript.Hit(skill2Damage);
 
                 player1 player = targetScript as player1;
-                if(player != null)
+                if (player != null)
                 {
                     player.ApplyDotDamage(skill2TotalDotDamage, skill2DotDuration, skill2DotInterval);
                 }
             }
         }
-        
+
         sfx.PlayBossSkillSound();
         isUsingSkill = false;
     }
 
     async UniTaskVoid UseMonsterSkill3Async()
     {
-        if (target == null) return;
+        if (target == null || targetScript == null) return;
 
         currentSkill3CoolTime = skill3CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
@@ -271,14 +273,27 @@ public class JJ_BossAttackManager : character1
         //if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
         //if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
 
+        //체력 40% = 돌진(30% 이상)과 화염 장막(50% 이하) 조건 모두 만족
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            hp = CurrentBattleStat.maxHp * 0.4f;
+            Debug.Log($"보스 체력: {Hp} / {CurrentBattleStat.maxHp}");
+        }
+
         if (currentSkill1CoolTime > 0) currentSkill1CoolTime = Mathf.Max(0, currentSkill1CoolTime - Time.deltaTime);
         if (currentSkill2CoolTime > 0) currentSkill2CoolTime = Mathf.Max(0, currentSkill2CoolTime - Time.deltaTime);
         if (currentSkill3CoolTime > 0) currentSkill3CoolTime = Mathf.Max(0, currentSkill3CoolTime - Time.deltaTime);
 
         if (target == null || isUsingSkill || isDead) return;
 
-        if (CanUseSkill(currentSkill1CoolTime)) UseMonsterSkill1Async().Forget();
-        else if (CanUseSkill(currentSkill2CoolTime)) UseMonsterSkill2Async().Forget();
+        //돌진: 체력 30% 이상일 때만 발동 가능
+        //화염 장막: 체력 50% 이하, 범위 내에 플레이어가 있을 때만 발동 가능
+        if (CanUseSkill(currentSkill1CoolTime) && hp >= CurrentBattleStat.maxHp * 0.3) UseMonsterSkill1Async().Forget();
+        else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStat.maxHp * 0.5)
+        {
+            float distance = Vector2.Distance(transform.position, target.position);
+            if (distance <= skill2Range) UseMonsterSkill2Async().Forget();
+        }
         else if (CanUseSkill(currentSkill3CoolTime)) UseMonsterSkill3Async().Forget();
     }
 
@@ -299,5 +314,22 @@ public class JJ_BossAttackManager : character1
         {
             cm.ChaseMove(target, CurrentBattleStat.moveSpeed);
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        //공격 사거리(MonsterAttackRange)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, MonsterAttackRange);
+
+        /*
+        //스킬 1: 돌진 범위(실제 충돌 범위는 정사각형)
+        Gizmos.color = new Color(0f, 0.5f, 1f); //하늘색
+        Gizmos.DrawWireSphere(transform.position, chargeCollisionDistance);
+        */
+
+        //스킬 2: 화염 장막 범위
+        Gizmos.color = new Color(1f, 0.5f, 0f); //주황색
+        Gizmos.DrawWireSphere(transform.position, skill2Range);
     }
 }
