@@ -15,7 +15,7 @@ namespace UI.Scripts.Ability
     public class Ability : MonoBehaviour
     {
         [Header("매니저")]
-        [SerializeField] private GameDataManager gameManager;
+        [SerializeField] private PlayerProgressManager gameManager;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
@@ -71,15 +71,15 @@ namespace UI.Scripts.Ability
         }
         public void ReFreshStatUI(StatusType type)
         {
-            if (!gameManager.statusConfig.TryGetStatEntry(type, out var statEntry))
+            if (!gameManager.statUpgradeConfig.TryGetStatEntry(type, out var statEntry))
             {
                 Debug.Log($"{type} : statEntry를 찾지 못함");
                 return;
             }//null 방지
 
-            int playerLevel = gameManager.runtimeData.currencyData.level;
-            int playerGold = gameManager.runtimeData.currencyData.gold;
-            int currentLevle = gameManager.runtimeData.stat.upgrade[type];
+            int playerLevel = gameManager.progress.currency.level;
+            int playerGold = gameManager.progress.currency.gold;
+            int currentLevle = gameManager.progress.statUpgrades.upgradeLevelsByType[type];
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
             float nextValue = (currentLevle + 1) * statEntry.increasePerEnhance; //증가 후 스텟 수치
