@@ -28,7 +28,7 @@ namespace Battle
         [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType type;
 
         [Header("스테이지 돌파 전용")] 
-        [Tooltip("제한시간")] public int deadLine;
+        [Tooltip("제한시간")] public float deadLine;
         [Tooltip("목표 처치 수")] public int targetKillScore;
     }
 }
