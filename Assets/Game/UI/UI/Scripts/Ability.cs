@@ -32,7 +32,7 @@ namespace UI.Scripts.Ability
             X1, X10, X100
         }
         private XState multiState;
-        private int multiPress = 1;
+        [SerializeField]private int multiPress = 1;
         
         // Start is called before the first frame update
         public void OnEnable()
@@ -127,7 +127,8 @@ namespace UI.Scripts.Ability
                     break;
             }
             ReFreshAllUI();
-        }//상태 전환 함수
+        }//버튼 상태 전환 함수
+
         public void OnClickX1()
         {
             ChangeState(XState.X1);

@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Button_Set : MonoBehaviour
 {
-    [SerializeField] Image [] Xbtn;
+    [SerializeField] Image[] Xbtn;
 
     private Color normal = Color.white;
     private Color press = Color.yellow;
@@ -23,3 +24,4 @@ public class Button_Set : MonoBehaviour
         Xbtn[current].color = press;
     }
 }
+

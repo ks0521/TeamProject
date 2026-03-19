@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Base.Save;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -26,7 +27,8 @@ namespace UI.Scripts.UiPresenter
 
         public void RefreshHp()
         {
-            
+            goldText.SetGold(PlayerProgressManager.Instance.progress.currency.gold);
+          
         }
         public void AutoBattle()
         {
