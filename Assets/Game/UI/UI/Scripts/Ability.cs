@@ -19,25 +19,37 @@ namespace UI.Scripts.Ability
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
-        
+
         [Header("능력치 구매 버튼")]
         [SerializeField] private Button[] Upbtn;
 
         [Header("곱하기 버튼")]
         [SerializeField] private Button_Set btnX;
+
+
         private enum XState
         {
-            X1 , X10 , X100
+            X1, X10, X100
         }
-        private XState X_state;
-        private float multiValue;
-
+        private XState multiState;
+        private float multiPress;
+        public float MultiPress
+        {
+            get
+            {
+                return multiPress;
+            }
+            set
+            {
+                multiPress = value;
+            }
+        }
 
         // Start is called before the first frame update
         public void OnEnable()
         {
             ReFreshAllUI();
-        }
+        }// 나중에 
         private void Start()
         {
             BindAllButtons();
@@ -95,38 +107,65 @@ namespace UI.Scripts.Ability
                 Debug.Log($"{type}에 해당되는 스텟 UI가 없음");
             }
 
-            itemView.RefreshUI(statEntry , currentLevle , currentValue , nextValue ,cost , canLevelUp , isUnLock);
-                
+            itemView.RefreshUI(statEntry, currentLevle, currentValue, nextValue, cost, canLevelUp, isUnLock);
+
 
         }//능력치팝업창 UI 갱신용 함수
 
         private void OnClickLevelUp(StatusType type)
         {
+            if (!gameManager.statusConfig.TryGetStatEntry(type, out var statEntry))
+            {
+                Debug.Log($"{type} : statEntry를 찾지 못함");
+                return;
+            }
 
-        } // 미구현
+            int playerGold = gameManager.runtimeData.currencyData.gold;
+            float PurchaseCount = MaxLevleCheck(type , statEntry, MultiPress);
 
+            if (PurchaseCount <= 0)
+            {
+                Debug.Log("최대 레벨");
+                return;
+            }
+        } // 능력치 강화(미구현)
 
+        private float PriceCheck(StatusType statusType,  StatEntry statEntry, float multiPress)
+        {
+            float totalCost = 0;
+            float multiPurchase = MaxLevleCheck(statusType,  statEntry, multiPress);
+
+            return totalCost;
+        }
+
+        private int MaxLevleCheck(StatusType statusType,  StatEntry statEntry, float multiPress)
+        {
+            int currnetLevel = gameManager.runtimeData.stat.upgrade[statusType];
+            int check = statEntry.maxLevel - currnetLevel;
+
+            return (int)Mathf.Min(multiPress, check);
+        }//강화횟수가 Lv Max 안넘는지 체크
 
 
 
         void ChangeState(XState newState)
         {
-            X_state = newState;
+            multiState = newState;
 
-            switch (X_state)
+            switch (multiState)
             {
                 case XState.X1:
-                    multiValue = 1;
+                    MultiPress = 1;
                     btnX.SelectButton(0);
                     break;
 
                 case XState.X10:
-                    multiValue = 10;
+                    MultiPress = 10;
                     btnX.SelectButton(1);
                     break;
 
                 case XState.X100:
-                    multiValue = 100;
+                    MultiPress = 100;
                     btnX.SelectButton(2);
                     break;
             }

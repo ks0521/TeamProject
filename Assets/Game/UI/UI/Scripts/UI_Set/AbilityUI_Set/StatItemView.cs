@@ -27,9 +27,12 @@ public class StatItemView : MonoBehaviour
     [Header("잠금 UI")]
     [SerializeField] private GameObject lockPanel;
     [SerializeField] private TextMeshProUGUI unlockLevelText;
-
-
-    public void RefreshUI(StatEntry statEntry , int currentLevel, float currentValue ,float nextValue , int cost , bool canLevelUp , bool isUnlock)
+    public void BindLevelUp(Action action)
+    {
+        levelUpButton.onClick.RemoveAllListeners();
+        levelUpButton.onClick.AddListener(() => action?.Invoke());
+    }//버튼 OnClick 에 함수 넣어주는 함수
+    public void RefreshUI(StatEntry statEntry , int currentLevel, float currentValue ,float nextValue , float cost , bool canLevelUp , bool isUnlock)
     {
         levelUpButton.interactable = canLevelUp;
         if (canLevelUp)
@@ -41,14 +44,15 @@ public class StatItemView : MonoBehaviour
             levelUpButton.image.color = Color.gray;
         }
         lockPanel.SetActive(!isUnlock);
-        unlockLevelText.text = $"Lv : {statEntry.unlockLevel}";
+        unlockLevelText.text = $"Lv : {statEntry.unlockLevel} 개방";
 
+        
         statsNameText.text = statEntry.type.ToString();
-
         if (currentLevel < statEntry.maxLevel)
         {
             statsLevelText.color = Color.white;
             currentStats.color = Color.white;
+
             nextStats.enabled = true;
             levelupcost.enabled = true;
             costImage.enabled = true;
@@ -63,6 +67,7 @@ public class StatItemView : MonoBehaviour
         {
             statsLevelText.color = Color.yellow;
             currentStats.color = Color.yellow;
+
             nextStats.enabled = false;
             levelupcost.enabled = false;
             costImage.enabled = false;
@@ -72,10 +77,7 @@ public class StatItemView : MonoBehaviour
             currentStats.text = currentValue.ToString();
         }
     }//스텟 UI 표시
-    public void BindLevelUp(Action action)
-    {
-        levelUpButton.onClick.RemoveAllListeners();
-        levelUpButton.onClick.AddListener(() => action?.Invoke());
-    }//버튼 OnClick 에 함수 넣어주는 함수
+
+
 
 }
