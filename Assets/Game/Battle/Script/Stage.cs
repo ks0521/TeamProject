@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Base.Data;
+using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
 using Personal.GyuSeong;
@@ -15,7 +16,7 @@ using Random = UnityEngine.Random;
         [SerializeField] private StageSO stageSO; //현재 스테이지의 SO
         public List<TestMonster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
-        [SerializeField] private bool canSpawning; //스폰 여부 트리거
+        public bool canSpawning; //스폰 여부 트리거(디버깅용)
         [SerializeField] private float spawnDelay; // 몬스터 스폰 딜레이
         public event Action<TestMonster> OnMonsterKilled;
         //초기화
@@ -64,7 +65,7 @@ using Random = UnityEngine.Random;
 
         /// <summary> 새 몬스터 풀에서 꺼내왔을 때 스테이지에서 확인할 수 있게 연결</summary>
         /// <param name="monster"> 꺼내온 몬스터 </param>
-        public void Register(TestMonster monster)
+        private void Register(TestMonster monster)
         {
             Debug.Log("리스트 내 신규 몬스터 등록");
 
@@ -74,15 +75,16 @@ using Random = UnityEngine.Random;
 
         /// <summary> 몬스터 처치시 스테이지 내부 처리부</summary>
         /// <param name="monster"></param>
-        public void MonsterKilled(TestMonster monster)
+        private void MonsterKilled(TestMonster monster)
         {
-            OnMonsterKilled?.Invoke(monster);
+            //스테이지 클리어 등 작업전에 몬스터 반환먼저 하기
             UnRegister(monster);
+            OnMonsterKilled?.Invoke(monster); 
         }
         
         /// <summary> 몬스터가 스테이지에서 사라졌을 시(사망 or 스테이지 변경으로 인한 강제삭제) 스테이지에서 분리</summary>
         /// <param name="monster"> 사라지는 몬스터 </param>
-        public void UnRegister(TestMonster monster)
+        private void UnRegister(TestMonster monster)
         {
             Debug.Log("리스트 내 몬스터 등록 해제");
 
@@ -94,6 +96,7 @@ using Random = UnityEngine.Random;
         /// <summary> 스테이지 변경으로 인한 기존 스테이지 종료시 실행</summary>
         public void Destroy()
         {
+            canSpawning = false;
             spawnerToken?.Cancel();
             spawnerToken?.Dispose();
             for (int i = monstersList.Count - 1; i >= 0; i--)

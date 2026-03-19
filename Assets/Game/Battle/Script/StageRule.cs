@@ -53,12 +53,13 @@ public class ChallengeStageRule : StageRule
 
     public override void MonsterKilled(TestMonster monster)
     {
-        Debug.Log($"현재 적 {killScore} 처치 / 목표 처치 : {stage.targetKillScore}");
-        if (++killScore > stage.targetKillScore)
+        if (++killScore >= stage.targetKillScore)
         {
             Debug.Log("목표처치 달성");
             ChallengeSuccess?.Invoke(stage);
+            return;
         }
+        Debug.Log($"현재 적 {killScore} 처치 / 목표 처치 : {stage.targetKillScore}");
     }
 
     public override void Destroy()
