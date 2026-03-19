@@ -462,18 +462,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testChapter: 0
   testStage: 0
-  curChapter: 0
-  curStage: 0
   testEntry:
     chapter: 0
     stage: 0
     stageSO: {fileID: 0}
     type: 0
+  BlockSpawning: 0
+  curChapter: 0
+  curStage: 0
   monsterPool: {fileID: 894400310}
   stage:
     monsterPool: {fileID: 0}
-    monstersList: []
     stageSO: {fileID: 0}
+    monstersList: []
     canSpawning: 0
     spawnDelay: 0
   stageSO: {fileID: 0}

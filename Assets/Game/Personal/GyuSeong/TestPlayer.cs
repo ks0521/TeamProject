@@ -35,7 +35,7 @@ namespace Personal.GyuSeong
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)
             {
-                Debug.LogWarning("현재 스테이지에 나와있는 몬스터가 없습니다. ");
+                //Debug.LogWarning("현재 스테이지에 나와있는 몬스터가 없습니다. ");
                 return false;
             }
 
@@ -96,7 +96,7 @@ namespace Personal.GyuSeong
             {
                 if (!FindTarget())
                 {
-                    Debug.Log("스테이지 내 적이없어 이동할 수 없습니다. ");
+                    //Debug.Log("스테이지 내 적이없어 이동할 수 없습니다. ");
                     return;
                 }
             }   
@@ -135,7 +135,7 @@ namespace Personal.GyuSeong
             {
                 if (!FindTarget())
                 {
-                    Debug.Log("스폰된 적 없음");
+                    //Debug.Log("스폰된 적 없음");
                     return;
                 }
             }

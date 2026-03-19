@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
   m_Name: 1-4CTest ChallengeStage
   m_EditorClassIdentifier: 
-  stageKey: 3
+  stageKey: 4
   stageName: 
   chapter: 1
-  stage: 3
-  dropTable: {fileID: 11400000, guid: 337c6c2a32873824487f28799fdad98f, type: 2}
+  stage: 4
+  dropTable: {fileID: 0}
   preset:
-  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
+  - monster: {fileID: 11400000, guid: fb98063b6aaa3e248b791248f2474747, type: 2}
     weights: 1
-  type: 0
-  deadLine: 100
-  targetKillScore: 100
+  type: 1
+  deadLine: 200
+  targetKillScore: 2
