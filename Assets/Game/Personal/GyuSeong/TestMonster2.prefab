@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
     type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.8550179, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -168,4 +168,4 @@ MonoBehaviour:
     m_Bits: 0
   isDead: 0
   monsterSO: {fileID: 11400000, guid: fb98063b6aaa3e248b791248f2474747, type: 2}
-  TestDie: 0
+  TestDead: 0
