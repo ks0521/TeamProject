@@ -1342,7 +1342,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 567675133214853090}
@@ -1940,27 +1940,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 158475285488791633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 938dac596688e89488500b2c068fc13a, type: 3}
+  m_Script: {fileID: 11500000, guid: 22e76994147330f4b879d5e26cb88645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 111
+  hp: 9999
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  monsterSO: {fileID: 11400000, guid: f2e7516420955284880cb3f9c04fe14f, type: 2}
+  monsterSO: {fileID: 11400000, guid: eb37631e85de66a47a324e68da27ae2b, type: 2}
   sfx: {fileID: 506807007}
   playerCollider: {fileID: 302155615079852397}
   atkRange1: {fileID: 1663986358}
-  chargePrepareTime: 1.2
+  skill1CoolTime: 10
+  skill1WarningDuration: 1.2
+  skill1Damage: 15
   chargeDuration: 0.6
   chargeSpeed: 9
+  skill1KnockbackForce: 9.9
+  skill1KnockbackDuration: 0.2
   atkRange2: {fileID: 1652250398}
+  skill2CoolTime: 15
   skill2WarningDuration: 1.5
+  skill2Damage: 10
   skill2Range: 4
   atkRange3: {fileID: 1998848183}
-  skill3warningDuration: 1.5
-  skill3Range: 3
+  skill3CoolTime: 12
+  skill3WarningDuration: 1.5
+  skill3Damage: 33
+  skill3Range: 4
 --- !u!4 &8126616492717096160
 Transform:
   m_ObjectHideFlags: 0
@@ -1986,6 +1994,6 @@ SceneRoots:
   - {fileID: 1717061327}
   - {fileID: 632184226}
   - {fileID: 993320638}
+  - {fileID: 1175818257}
   - {fileID: 1796616194}
   - {fileID: 1069103017834923022}
-  - {fileID: 1175818257}
