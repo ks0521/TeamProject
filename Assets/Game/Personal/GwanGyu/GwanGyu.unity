@@ -1229,9 +1229,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 43916090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02a1058f9b0243442a3f34a999e2e5cc, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 8
   statsNameText: {fileID: 875179178}
   statsLevelText: {fileID: 1832754775}
   currentStats: {fileID: 723636048}
@@ -1631,23 +1632,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a94006e5af37774b91d6f7d080a1594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calculator: {fileID: 0}
-  runtimeData:
-    stageProgress:
+  playerStatCalculator: {fileID: 0}
+  progress:
+    stage:
       selectedNormalStage: 0
       selectedNormalChapter: 0
       nextChallangeStage: 0
       nextChallangeChapter: 0
-    currencyData:
+    currency:
       level: 0
       exp: 0
       gold: 0
       statStone: 0
-    skill:
+    skillProgress:
       skillSlots: 0
-    lastAccess:
+    lastSession:
       lastConnectTime: 0
-  statusConfig: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
+  statUpgradeConfig: {fileID: 0}
 --- !u!1 &50952502
 GameObject:
   m_ObjectHideFlags: 0
@@ -4247,7 +4248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageManager: {fileID: 1446303954}
-  calculator: {fileID: 0}
 --- !u!4 &157926036
 Transform:
   m_ObjectHideFlags: 0
@@ -9073,7 +9073,7 @@ GameObject:
   - component: {fileID: 388353684}
   - component: {fileID: 388353687}
   - component: {fileID: 388353686}
-  - component: {fileID: 388353685}
+  - component: {fileID: 388353688}
   m_Layer: 5
   m_Name: MaxHp
   m_TagString: Untagged
@@ -9109,27 +9109,6 @@ RectTransform:
   m_AnchoredPosition: {x: 316.5, y: -94.5}
   m_SizeDelta: {x: 500, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &388353685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388353683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24aa203440fbf174a912e7cac8ea3f93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statsNameText: {fileID: 266713278}
-  statsLevelText: {fileID: 1255688647}
-  currentStats: {fileID: 2025240743}
-  nextStats: {fileID: 684698771}
-  levelupcost: {fileID: 226037796}
-  costImage: {fileID: 1649017558}
-  levelUpButton: {fileID: 1018003591}
-  lockPanel: {fileID: 156953704}
-  unlockLevelText: {fileID: 222650841}
 --- !u!114 &388353686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9168,6 +9147,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388353683}
   m_CullTransparentMesh: 1
+--- !u!114 &388353688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388353683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusType: 1
+  statsNameText: {fileID: 266713278}
+  statsLevelText: {fileID: 1255688647}
+  currentStats: {fileID: 2025240743}
+  nextStats: {fileID: 684698771}
+  levelupcost: {fileID: 226037796}
+  costImage: {fileID: 1649017558}
+  levelUpButton: {fileID: 1018003591}
+  lockPanel: {fileID: 156953704}
+  unlockLevelText: {fileID: 222650841}
 --- !u!1 &389527478
 GameObject:
   m_ObjectHideFlags: 0
@@ -10895,9 +10896,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 466993400}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70daeda1a8d96724a8ab7729ddb2efe0, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 3
   statsNameText: {fileID: 1680102466}
   statsLevelText: {fileID: 683186286}
   currentStats: {fileID: 43517328}
@@ -16718,9 +16720,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 767206449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d82a7b31937713a438c73eb7a836ecee, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 6
   statsNameText: {fileID: 2109850460}
   statsLevelText: {fileID: 1144897206}
   currentStats: {fileID: 823337129}
@@ -21594,6 +21597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 0
   statsNameText: {fileID: 590747108}
   statsLevelText: {fileID: 1893714432}
   currentStats: {fileID: 899535003}
@@ -28852,9 +28856,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1354588329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19fbb77e797f0c140b5cade4ce86dcd1, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 9
   statsNameText: {fileID: 372516715}
   statsLevelText: {fileID: 1574610911}
   currentStats: {fileID: 1523108108}
@@ -30697,6 +30702,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testChapter: 0
   testStage: 0
+  curChapter: 0
+  curStage: 0
   testEntry:
     chapter: 0
     stage: 0
@@ -30704,13 +30711,15 @@ MonoBehaviour:
     type: 0
   monsterPool: {fileID: 1792531360}
   stage:
-    monstersList: []
+    monsterPool: {fileID: 0}
     stageSO: {fileID: 0}
+    monstersList: []
     canSpawning: 0
+    spawnDelay: 0
   stageSO: {fileID: 0}
   stageProgress:
-    selectedChapter: 0
-    selectedStage: 0
+    selectedNormalChapter: 0
+    selectedNormalStage: 0
     nextChallengeChapter: 0
     nextChallengeStage: 0
   type: 0
@@ -32215,9 +32224,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1505766661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2be27d53e6192da45946ddded0bd7ae4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 2
   statsNameText: {fileID: 867875208}
   statsLevelText: {fileID: 1956595565}
   currentStats: {fileID: 1976435604}
@@ -33387,9 +33397,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1560174011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6244d9e3a83ad8842aa5cd376d3a9081, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 7
   statsNameText: {fileID: 1550766897}
   statsLevelText: {fileID: 1977549056}
   currentStats: {fileID: 48977544}
@@ -35882,9 +35893,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1692585169}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cab1cd3459541d14f983c44c80e5ca1a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 5
   statsNameText: {fileID: 346574714}
   statsLevelText: {fileID: 1405847983}
   currentStats: {fileID: 149818544}
@@ -39496,9 +39508,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1879186214}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 583f712b98144cf4a85d5caa7076d802, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f46970797312444a9c79e2b2c70c37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusType: 4
   statsNameText: {fileID: 605094939}
   statsLevelText: {fileID: 1805358192}
   currentStats: {fileID: 1175143530}
@@ -42969,19 +42982,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48de8e913fe65864485f0fb487e3617d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  Upbtn: []
+  manager: {fileID: 0}
+  statItemViews:
+  - {fileID: 977796529}
+  - {fileID: 388353688}
+  - {fileID: 1505766666}
+  - {fileID: 466993405}
+  - {fileID: 1879186219}
+  - {fileID: 1692585174}
+  - {fileID: 767206454}
+  - {fileID: 1560174016}
+  - {fileID: 43916095}
+  - {fileID: 1354588334}
+  Upbtn:
+  - {fileID: 1782970446}
+  - {fileID: 1018003591}
+  - {fileID: 775156520}
+  - {fileID: 812373224}
+  - {fileID: 724041575}
+  - {fileID: 587267033}
+  - {fileID: 276714843}
+  - {fileID: 1448495578}
+  - {fileID: 908875937}
+  - {fileID: 576656074}
   btnX: {fileID: 2020907280}
-  atk: {fileID: 977796529}
-  maxHp: {fileID: 388353685}
-  def: {fileID: 1505766666}
-  atkspeed: {fileID: 466993405}
-  critChance: {fileID: 1879186219}
-  critDmg: {fileID: 1692585174}
-  moveSpeed: {fileID: 767206454}
-  goldRate: {fileID: 1560174016}
-  expRate: {fileID: 43916095}
-  itemDropRate: {fileID: 1354588334}
 --- !u!1 &2023785659
 GameObject:
   m_ObjectHideFlags: 0
@@ -44806,39 +44830,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveData:
-    stageProgress:
+    stage:
       selectedNormalStage: 0
       selectedNormalChapter: 0
       nextChallangeStage: 0
       nextChallangeChapter: 0
-    currencyData:
+    currency:
       level: 0
       exp: 0
       gold: 0
       statStone: 0
     itemInventory:
-      items: []
-    stat:
-      upgrade: []
-    skill:
+      owneditemCounts: []
+    statUpgrades:
+      upgradeLevelsByType: []
+    skillProgress:
       skillSlots: 0
-      skills: []
+      skillProgressState: []
     lastAccess:
       lastConnectTime: 0
-  runData:
-    stageProgress:
+  runProgressState:
+    stage:
       selectedNormalStage: 0
       selectedNormalChapter: 0
       nextChallangeStage: 0
       nextChallangeChapter: 0
-    currencyData:
+    currency:
       level: 0
       exp: 0
       gold: 0
       statStone: 0
-    skill:
+    skillProgress:
       skillSlots: 0
-    lastAccess:
+    lastSession:
       lastConnectTime: 0
   runStat: {fileID: 0}
   calc: {fileID: 0}

@@ -14,6 +14,10 @@ public class StatItemView : MonoBehaviour
 {
     [Header("담당 타입")]
     [SerializeField] public StatusType statusType;
+    public StatusType StatType
+    {
+        get { return statusType; }
+    }
 
     [Header("UI 참조")]
     [SerializeField] private TextMeshProUGUI statsNameText;

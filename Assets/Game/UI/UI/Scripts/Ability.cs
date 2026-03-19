@@ -15,7 +15,7 @@ namespace UI.Scripts.Ability
     public class Ability : MonoBehaviour
     {
         [Header("매니저")]
-        [SerializeField] private GameDataManager gameManager;
+        [SerializeField] private PlayerProgressManager manager ;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
@@ -32,19 +32,8 @@ namespace UI.Scripts.Ability
             X1, X10, X100
         }
         private XState multiState;
-        private float multiPress;
-        public float MultiPress
-        {
-            get
-            {
-                return multiPress;
-            }
-            set
-            {
-                multiPress = value;
-            }
-        }
-
+        private int multiPress = 1;
+        
         // Start is called before the first frame update
         public void OnEnable()
         {
@@ -83,25 +72,23 @@ namespace UI.Scripts.Ability
         }
         public void ReFreshStatUI(StatusType type)
         {
-            if (!gameManager.statusConfig.TryGetStatEntry(type, out var statEntry))
+            if (!manager.statUpgradeConfig.TryGetStatEntry(type, out var statEntry))
             {
                 Debug.Log($"{type} : statEntry를 찾지 못함");
                 return;
             }//null 방지
 
-            int playerLevel = gameManager.runtimeData.currencyData.level;
-            int playerGold = gameManager.runtimeData.currencyData.gold;
-            int currentLevle = gameManager.runtimeData.stat.upgrade[type];
+            int playerGold = manager.progress.currency.gold;
+            int currentLevle = manager.GetStatUpgradeLevel(type);
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
-            float nextValue = (currentLevle + 1) * statEntry.increasePerEnhance; //증가 후 스텟 수치
-            int cost = currentLevle * statEntry.enhanceCost; //스텟 가격 부분
+            float nextValue = (currentLevle + multiPress) * statEntry.increasePerEnhance; //증가 후 스텟 수치
+            int cost = (currentLevle + multiPress) * statEntry.enhanceCost; //스텟 가격 부분
 
-            bool isUnLock = playerLevel <= statEntry.unlockLevel;
-            bool canLevelUp = isUnLock && playerGold >= cost && currentLevle < statEntry.maxLevel;
+            bool isUnLock = manager.progress.currency.level <= statEntry.unlockLevel;
+            bool canLevelUp = manager.CanUpgradeStat(type, multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
 
             StatItemView itemView = GetType(type);
-
             if (itemView == null)
             {
                 Debug.Log($"{type}에 해당되는 스텟 UI가 없음");
@@ -114,58 +101,28 @@ namespace UI.Scripts.Ability
 
         private void OnClickLevelUp(StatusType type)
         {
-            if (!gameManager.statusConfig.TryGetStatEntry(type, out var statEntry))
-            {
-                Debug.Log($"{type} : statEntry를 찾지 못함");
-                return;
-            }
+           bool success = manager.TryUpgradeStat(type, multiPress);
 
-            int playerGold = gameManager.runtimeData.currencyData.gold;
-            float PurchaseCount = MaxLevleCheck(type , statEntry, MultiPress);
-
-            if (PurchaseCount <= 0)
-            {
-                Debug.Log("최대 레벨");
-                return;
-            }
-        } // 능력치 강화(미구현)
-
-        private float PriceCheck(StatusType statusType,  StatEntry statEntry, float multiPress)
-        {
-            float totalCost = 0;
-            float multiPurchase = MaxLevleCheck(statusType,  statEntry, multiPress);
-
-            return totalCost;
-        }
-
-        private int MaxLevleCheck(StatusType statusType,  StatEntry statEntry, float multiPress)
-        {
-            int currnetLevel = gameManager.runtimeData.stat.upgrade[statusType];
-            int check = statEntry.maxLevel - currnetLevel;
-
-            return (int)Mathf.Min(multiPress, check);
-        }//강화횟수가 Lv Max 안넘는지 체크
-
-
+            ReFreshAllUI();
+            
+        } // 능력치 강화
 
         void ChangeState(XState newState)
         {
-            multiState = newState;
-
-            switch (multiState)
+            switch (newState)
             {
                 case XState.X1:
-                    MultiPress = 1;
+                    multiPress = 1;
                     btnX.SelectButton(0);
                     break;
 
                 case XState.X10:
-                    MultiPress = 10;
+                    multiPress = 10;
                     btnX.SelectButton(1);
                     break;
 
                 case XState.X100:
-                    MultiPress = 100;
+                    multiPress = 100;
                     btnX.SelectButton(2);
                     break;
             }
