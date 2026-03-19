@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -27,6 +28,34 @@ namespace Personal.HagYun
         {
             filter.layerMask = lm;
             return Physics2D.OverlapCollider(col, filter, targetCols);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryGetNearTarget<T>(Vector2 thisPos, List<T> targetList, out T target) where T : MonoBehaviour
+        {
+            target = null;
+            if (targetList == null) return false;
+            int cnt = targetList.Count;
+            if (cnt <= 0) return false;
+            else if (cnt == 1)
+            {
+                target = targetList[0];
+                return target != null;
+            }
+            float minDis = (targetList[0].transform.position.ToV2() - thisPos).sqrMagnitude;
+            int targetNum = 0;
+            for (int i = 1; i < cnt; i++)
+            {
+                T tTarget = targetList[i];
+                Vector2 tTargetPos = tTarget.transform.position;
+                float curDis = (tTargetPos - thisPos).sqrMagnitude;
+                if (curDis < minDis)
+                {
+                    minDis = curDis;
+                    targetNum = i;
+                }
+            }
+            target = targetList[targetNum];
+            return true;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetNearTarget(Vector2 thisPos, Collider2D[] colArr, int cnt, out Collider2D targetCol)
