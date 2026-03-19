@@ -65,7 +65,7 @@ public class StatItemView : MonoBehaviour
             statsLevelText.text = currentLevel.ToString();
             currentStats.text = currentValue.ToString("0.00");
             nextStats.text = nextValue.ToString("0.00");
-            levelupcost.text = cost.ToString("0.00");
+            levelupcost.text = cost.ToString("0");
         }
         else
         {
