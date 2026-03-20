@@ -162,28 +162,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac04515384c2f94e852af1e300b5b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  atkRange: 1
-  atkSpeed: 1
-  maxHp: 20
-  curHp: 0
-  atk: 10
-  def: 2
-  criChance: 0.1
-  criDmgPower: 1.5
-  rb: {fileID: 0}
+  hp: 0
   moveTarget: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
   isAtkCooltime: 0
-  monsterSo: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
-  stat:
-    maxHp: 0
-    atk: 0
-    def: 0
-    atkSpeed: 0
-    moveSpeed: 0
-    critChance: 0
-    critDamage: 0
+  monsterSO: {fileID: 11400000, guid: 68118a1267b113247a2ecf8f055513b6, type: 2}
   player: {fileID: 0}

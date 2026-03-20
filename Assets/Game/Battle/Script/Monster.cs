@@ -9,57 +9,48 @@ namespace Battle
 {
     public class Monster : Character
     {
-        [SerializeField]private float hp;
-        public float Hp
-        {
-            get => hp;
-            private set
-            {
-                hp = value;
-                if (hp <= 0f)
-                {
-                    Killed();
-                }
-            }
-        }
+        public MonsterSO monsterSO;
+        public const float MonsterAttackRange = 0.6f;
+        protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
+        protected override float AttackRange => MonsterAttackRange;
         public const float ApproachStopRange = 0.15f;
-        public MonsterSO monsterSo;
-        public BattleStat stat;
-        public Transform player;
-        public event Action OnMonsterKilled;
-        public bool TestDie = false;
-        private void Awake()
-        {
-            stat = monsterSo.battleStat;
-        }
-        /// <summary> 풀에서 꺼내질때 초기화</summary>
-        private void OnEnable()
-        {
-            Init();
-        }
+        //public Transform player;
 
-        private void Init()
+
+        protected override void AwakeInit()
         {
-            if (monsterSo == null)
+            base.AwakeInit();
+        }
+        protected override void OnEnableInit()
+        {
+            if (monsterSO == null)
             {
                 Debug.LogWarning("몬스터 SO가 삽입되지 않았습니다!");
                 return;
             }
             //몬스터 스폰 시작하기전에 무조건 플레이어 활성화 되어있어야 함
-            player = GameObject.FindGameObjectWithTag("Player").transform;
-            if (player == null)
+            //player = GameObject.FindGameObjectWithTag("Player").transform;
+            target = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            //if (player == null)
+            if (target == null)
             {
                 Debug.LogWarning("플레이어 태그 찾을 수 없음");
             }
-            stat = monsterSo.battleStat;
-            hp = stat.maxHp;
+            base.OnEnableInit();
+        }
+        protected override void StartInit()
+        {
+            base.StartInit();
+
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
-        public void Killed()
+        protected override void OnDead()
         {
-            Debug.Log("몬스터 처치됨");   
-            OnMonsterKilled?.Invoke();
-            Destroy(gameObject);
+            if (isDead) //여러번 죽지 않게하기
+                return;
+            isDead = true;
+            Debug.Log("몬스터 처치됨");
+            cEvent.RaiseDead(this);
         }
         /// <summary>스테이지 변경등의 이유로 사라질 때 해당 프리팹 삭제</summary>
         public void ForcedReturn()
@@ -74,22 +65,19 @@ namespace Battle
 
         private void FixedUpdate()
         {
-            if (TestDie) Killed();
-            if (player is null) 
+            if (isDead || target is null) 
                 return;
-            
-            //ChasePlayer();
         }
 
         protected override void FixedUpdateFeat()
         {
-            throw new NotImplementedException();
+
         }
 
         public void ChasePlayer()
         {
-            if(Vector2.Distance(transform.position,player.transform.position) > ApproachStopRange)
-                transform.position = Vector2.MoveTowards(transform.position,player.transform.position,1 * Time.deltaTime);
+            if(Vector2.Distance(transform.position, target.transform.position) > ApproachStopRange)
+                transform.position = Vector2.MoveTowards(transform.position,target.transform.position, CurrentBattleStat.moveSpeed * Time.deltaTime);
         }
     }
 }
