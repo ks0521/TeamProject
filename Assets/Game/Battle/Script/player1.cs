@@ -32,6 +32,7 @@ public class player1 : character1
         hp = CurrentBattleStat.maxHp;
     }
 
+    /*
     public void Knockback(Vector2 direction, float force, float duration)
     {
         if (isKnockback) return;
@@ -51,6 +52,7 @@ public class player1 : character1
         rb.velocity = Vector2.zero;
         isKnockback = false;
     }
+    */
 
     //도트 데미지
     public void ApplyDotDamage(float totalDamage, float duration, float interval)
