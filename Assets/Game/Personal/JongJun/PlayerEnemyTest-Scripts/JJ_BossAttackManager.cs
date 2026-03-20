@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Threading;
-using System.Threading.Tasks;
 using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
@@ -24,14 +21,15 @@ public class JJ_BossAttackManager : character1
     [Header("Skill1(돌진)")]
     [SerializeField] private GameObject atkRange1;
     [SerializeField] private BoxCollider2D chargeCollider;
+    [SerializeField] private LayerMask wallLayer;
     [SerializeField] private float skill1CoolTime = 10f;
     [SerializeField] private float skill1WarningDuration = 1.2f;
     [SerializeField] private float skill1Damage = 15f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
     //[SerializeField] private float chargeCollisionDistance = 0.75f;
-    [SerializeField] private float skill1KnockbackForce = 9.9f;
-    [SerializeField] private float skill1KnockbackDuration = 0.2f;
+    //[SerializeField] private float skill1KnockbackForce = 9.9f;
+    //[SerializeField] private float skill1KnockbackDuration = 0.2f;
 
     [Header("Skill2(화염 장막)")]
     [SerializeField] private GameObject atkRange2;
@@ -52,6 +50,7 @@ public class JJ_BossAttackManager : character1
 
     private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
     private bool isUsingSkill = false;
+    private bool isCharging = false;
     private float currentSkill1CoolTime = 0f;
     private float currentSkill2CoolTime = 0f;
     private float currentSkill3CoolTime = 0f;
@@ -70,6 +69,7 @@ public class JJ_BossAttackManager : character1
 
         currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
+        isCharging = true;
         Debug.Log("돌진 준비 중...");
 
         if (atkRange1 != null) atkRange1.SetActive(true);
@@ -93,20 +93,28 @@ public class JJ_BossAttackManager : character1
         float elapsed = 0f;
         bool hasDamaged = false;
 
-        while (elapsed < chargeDuration)
+        while (elapsed < chargeDuration && isCharging)
         {
             if (target == null || isDead) break;
             // CharacterMove에 있는 방향 기반 이동 함수를 재활용합니다.
             // 이렇게 하면 CharacterMove를 수정하지 않고도 물리 기반 이동이 가능합니다.
             // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
-            cm.ChaseMove(directionToTarget, chargeSpeed);
+            // cm.ChaseMove(directionToTarget, chargeSpeed);
             float distance = Vector2.Distance(transform.position, target.position);
+            RaycastHit2D hit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
+            if (hit.collider != null) //벽과 충돌한 경우
+            {
+                Debug.Log("벽과 충돌");
+                break;
+            }
 
+            cm.ChaseMove(directionToTarget, chargeSpeed);
             if (chargeCollider.IsTouching(playerCollider))
             {
                 Debug.Log("돌진으로 피격되었습니다.");
                 targetScript.Hit(skill1Damage);
 
+                /*
                 // 플레이어 스크립트 가져오기 (character1을 player1로 캐스팅)
                 player1 player = targetScript as player1;
                 if (player != null)
@@ -115,14 +123,17 @@ public class JJ_BossAttackManager : character1
                     Vector2 knockbackDir = (target.position - transform.position).normalized;
                     player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
                 }
+                */
                 hasDamaged = true;
-                break; //충돌 후 몬스터는 이동 중단
+                //break; //충돌 후 몬스터는 이동 중단
             }
-            
+
             elapsed += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate(cancellationToken: cts); //다음 프레임까지 대기
         }
         if (chargeCollider != null) chargeCollider.enabled = false;
+
+        isCharging = false;
         isUsingSkill = false;
     }
     private void RotateTowards(Vector2 direction)
@@ -132,6 +143,16 @@ public class JJ_BossAttackManager : character1
         // 몬스터의 스프라이트가 기본적으로 오른쪽(0도)을 보고 있다고 가정합니다.
         // 만약 위쪽을 보고 있다면 angle - 90f 등으로 보정이 필요할 수 있습니다.
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 충돌한 오브젝트가 "Wall" 태그를 가지고 있는지 확인
+        if (isUsingSkill && isCharging && collision.gameObject.CompareTag("Wall"))
+        {
+            Debug.Log("돌진 중 벽에 부딪혀 중단됨");
+            isCharging = false;
+            cm.MoveStop();
+        }
     }
 
     async UniTaskVoid UseMonsterSkill2Async()
@@ -269,7 +290,7 @@ public class JJ_BossAttackManager : character1
 
     protected override void UpdateFeat()
     {
-        //if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
+        if (Input.GetKeyDown(KeyCode.Q)) UseMonsterSkill1Async().Forget();
         //if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
         //if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
 
