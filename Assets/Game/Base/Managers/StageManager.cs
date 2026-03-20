@@ -36,6 +36,8 @@ namespace Base.Managers
         [SerializeField] private StageProgress stageProgress; //저장된 스테이지 해금 , 현재 스테이지 상태
         [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         public event Action<StageSO> OnChangeStage;
+        public event Action<StageSO> OnClearStage;
+        public event Action<StageSO> OnFailStage;
 
         public void Init()
         {
@@ -223,6 +225,7 @@ namespace Base.Managers
         private void OnChallengeSucceeded(StageSO clearStage)
         {
             Debug.Log("스테이지 클리어, 클리어 기록이 저장됩니다. ");
+            OnClearStage?.Invoke(clearStage);
             //stageProgress = PlayerProgressManager.Instance.ProgressChallengeStage(clearStage); <- 디버그 목적으로 막아놓음
             Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Base.Data;
 using Battle;
 using Growth.StatUpgrade;
 using Reward;
