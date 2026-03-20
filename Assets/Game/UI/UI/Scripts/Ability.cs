@@ -9,13 +9,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using Base.Managers;
+using Unity.VisualScripting;
+using Unity.Mathematics;
 
 namespace UI.Scripts.Ability
 {
     public class Ability : MonoBehaviour
     {
         [Header("매니저")]
-        [SerializeField] private PlayerProgressManager manager ;
+        [SerializeField] private StatUpgradeManager manager ;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
@@ -60,7 +63,8 @@ namespace UI.Scripts.Ability
             foreach (var stat in statItemViews)
             {
                 StatusType type = stat.statusType;
-                stat.BindLevelUp(() => OnClickLevelUp(type));
+                GameData.StatusDB.TryGetStatEntry(type, out var entry);
+                stat.BindLevelUp(() => OnClickLevelUp(type , entry));
             }
         }//능력치 구매 버튼 OnClick 에 자동으로 함수 넣어주기
         public void ReFreshAllUI()
@@ -72,21 +76,25 @@ namespace UI.Scripts.Ability
         }//모든 UI 새로고침
         public void ReFreshStatUI(StatusType type)
         {
-            if (!manager.statUpgradeConfig.TryGetStatEntry(type, out var statEntry))
+            if (!GameData.StatusDB.TryGetStatEntry(type, out var statEntry))
             {
                 Debug.Log($"{type} : statEntry를 찾지 못함");
                 return;
             }//null 방지
-
-            int playerGold = manager.progress.currency.statStone;
+            
+            int playerGold = PlayerProgressManager.Instance.progress.currency.statStone;
             int currentLevle = manager.GetStatUpgradeLevel(type);
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
-            float nextValue = (currentLevle + multiPress) * statEntry.increasePerEnhance; //증가 후 스텟 수치
-            int cost = (currentLevle + multiPress) * statEntry.enhanceCost; //스텟 가격 부분
+            float nextValue = (math.min(currentLevle + multiPress ,statEntry.maxLevel)) * statEntry.increasePerEnhance; //증가 후 스텟 수치
 
-            bool isUnLock = manager.progress.currency.level <= statEntry.unlockLevel;
-            bool canLevelUp = manager.CanUpgradeStat(type, multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
+            int cost = 0;
+            for (int i = 1; i <= multiPress; i++)
+            {
+                cost += (currentLevle * i) * statEntry.enhanceCost; //스텟 가격 부분
+            }
+            bool isUnLock = PlayerProgressManager.Instance.progress.currency.level <= statEntry.unlockLevel;
+            bool canLevelUp = manager.CanUpgradeStat(type,multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
 
             StatItemView itemView = GetType(type);
             if (itemView == null)
@@ -99,10 +107,17 @@ namespace UI.Scripts.Ability
 
         }//능력치팝업창 UI 갱신용 함수
 
-        private void OnClickLevelUp(StatusType type)
+        private void OnClickLevelUp(StatusType type ,  StatEntry stat)
         {
-           manager.TryUpgradeStat(type, multiPress);
-
+            int currntLevel = manager.GetStatUpgradeLevel(type);
+            if (currntLevel + multiPress <= stat.maxLevel)
+            {
+                manager.TryUpgradeStat(type, multiPress);
+            }
+            else
+            {
+                manager.TryUpgradeStat(type , stat.maxLevel - currntLevel);
+            }
             ReFreshAllUI();
             
         } //능력치 강화
