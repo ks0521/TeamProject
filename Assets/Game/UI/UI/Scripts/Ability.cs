@@ -1,6 +1,8 @@
 ﻿using Base.Data;
+using Base.Managers;
 using Base.Save;
 using Growth.StatUpgrade;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,6 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System;
 
 namespace UI.Scripts.Ability
 {
@@ -79,14 +80,14 @@ namespace UI.Scripts.Ability
             }//null 방지
 
             int playerGold = manager.progress.currency.statStone;
-            int currentLevle = manager.GetStatUpgradeLevel(type);
+            int currentLevle = GameManager.Instance.GetManager<StatUpgradeManager>().GetStatUpgradeLevel(type);
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
             float nextValue = (currentLevle + multiPress) * statEntry.increasePerEnhance; //증가 후 스텟 수치
             int cost = (currentLevle + multiPress) * statEntry.enhanceCost; //스텟 가격 부분
 
             bool isUnLock = manager.progress.currency.level <= statEntry.unlockLevel;
-            bool canLevelUp = manager.CanUpgradeStat(type, multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
+            bool canLevelUp = GameManager.Instance.GetManager<StatUpgradeManager>().CanUpgradeStat(type, multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
 
             StatItemView itemView = GetType(type);
             if (itemView == null)
@@ -101,7 +102,7 @@ namespace UI.Scripts.Ability
 
         private void OnClickLevelUp(StatusType type)
         {
-           manager.TryUpgradeStat(type, multiPress);
+            GameManager.Instance.GetManager<StatUpgradeManager>().TryUpgradeStat(type, multiPress);
 
             ReFreshAllUI();
             
