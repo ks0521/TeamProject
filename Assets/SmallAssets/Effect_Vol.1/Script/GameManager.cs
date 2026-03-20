@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace Assets.Effect
 {
-
-    public GameObject[] Setact;
-
-    public void setAcc(int num)
+    public class GameManager : MonoBehaviour
     {
-        for (int i = 0; i < Setact.Length; i++)
+
+        public GameObject[] Setact;
+
+        public void setAcc(int num)
         {
-            Setact[i].SetActive(false);
+            for (int i = 0; i < Setact.Length; i++)
+            {
+                Setact[i].SetActive(false);
+            }
+
+            Setact[num].SetActive(true);
+
         }
-
-        Setact[num].SetActive(true);
-
     }
 }
+
