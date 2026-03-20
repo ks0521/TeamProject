@@ -35,10 +35,4 @@ public class VolumeController : MonoBehaviour
     {
         audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
