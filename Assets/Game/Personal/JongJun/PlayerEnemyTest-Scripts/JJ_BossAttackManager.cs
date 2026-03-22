@@ -71,8 +71,12 @@ public class JJ_BossAttackManager : character1
         isUsingSkill = true;
         isCharging = true;
         Debug.Log("돌진 준비 중...");
-
         if (atkRange1 != null) atkRange1.SetActive(true);
+
+        Vector2 directionToTarget = (target.position - transform.position).normalized;
+        //RotateTowards(directionToTarget); //캐릭터까지 회전시키고 있음
+        float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+        Quaternion skillRotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
         // 타겟이 도중에 사라졌을 경우를 대비한 방어 코드
         if (target == null)
@@ -82,11 +86,16 @@ public class JJ_BossAttackManager : character1
             return;
         }
 
-        Vector2 directionToTarget = (target.position - transform.position).normalized;
-        RotateTowards(directionToTarget);
-        await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
+        if (atkRange1 != null)
+        {
+            atkRange1.transform.rotation = skillRotation;
+            atkRange1.SetActive(true);
+        }
+        if (chargeCollider != null) chargeCollider.transform.rotation = skillRotation;
 
+        await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
         if (atkRange1 != null) atkRange1.SetActive(false);
+
         if (chargeCollider != null) chargeCollider.enabled = true;
         sfx.PlayBossSkillSound();
 
@@ -136,7 +145,8 @@ public class JJ_BossAttackManager : character1
         isCharging = false;
         isUsingSkill = false;
     }
-    private void RotateTowards(Vector2 direction)
+    /*
+    void RotateTowards(Vector2 direction)
     {
         // Atan2는 벡터(y, x)를 입력받아 각도(라디안)를 반환합니다.
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -144,6 +154,7 @@ public class JJ_BossAttackManager : character1
         // 만약 위쪽을 보고 있다면 angle - 90f 등으로 보정이 필요할 수 있습니다.
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
+    */
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 충돌한 오브젝트가 "Wall" 태그를 가지고 있는지 확인
