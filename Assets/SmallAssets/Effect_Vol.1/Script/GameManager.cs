@@ -5,7 +5,6 @@ namespace Assets.Effect
 {
     public class GameManager : MonoBehaviour
     {
-
         public GameObject[] Setact;
 
         public void setAcc(int num)
@@ -16,8 +15,6 @@ namespace Assets.Effect
             }
 
             Setact[num].SetActive(true);
-
         }
     }
 }
-

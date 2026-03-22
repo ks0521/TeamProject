@@ -1,8 +1,5 @@
 using System;
-using Base.Data;
 using Base.Managers;
-using Battle;
-using Growth.StatUpgrade;
 using UnityEngine;
 
 namespace Base.Save
@@ -20,9 +17,7 @@ namespace Base.Save
     {
         public static PlayerProgressManager Instance;
         public RuntimeProgressState progress; //현재 플레이어의 정보를 전부 저장하고 있는 데이터
-        public StatusSO statUpgradeConfig; //UI파트에서 바꾸면 지울 예정
-        public RuntimeProgressState GetProgress() => progress;
-        public bool IsLoaded() => progress != null;
+        public RuntimeProgressState Progress => progress;
         [SerializeField] private StatusCalculator playerStatCalculator;
 
         private void Awake()
@@ -38,15 +33,12 @@ namespace Base.Save
         public void Init()
         {
             LoadProgress();
-            statUpgradeConfig = GameDataProvider.Instance.hub.statusTable;
             Debug.Log($"상태 계산중 {playerStatCalculator == null}");
             playerStatCalculator?.Calculate(progress);
         }
 
-        public int GetOrder()
-        {
-            return 1;
-        }
+        public int GetOrder()=> 1; //일단 진행사항이 로딩되어야 다른 매니저가 참고 가능
+        
 
         /// <summary> 런타임 데이터 기기에 저장</summary>
         public void SaveProgress()

@@ -87,7 +87,9 @@ public class NormalStageRule : StageRule
         ++killScore;
         List<DropedItem> items =
             stage.dropTable.GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatus.itemDropRateBonus);
+        
         Debug.Log($"{items.Count}종 아이템 드랍");
+        
     }
 
     public override void Destroy()
