@@ -18,12 +18,14 @@ using Random = UnityEngine.Random;
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
         public bool canSpawning; //스폰 여부 트리거(디버깅용)
         [SerializeField] private float spawnDelay; // 몬스터 스폰 딜레이
+        private BoxCollider2D spawnArea;
         public event Action<TestMonster> OnMonsterKilled;
         //초기화
-        public Stage(StageSO stage, MonsterPoolManager monsterPool)
+        public Stage(StageSO stage, MonsterPoolManager monsterPool, BoxCollider2D spawnArea)
         {
             //바꾸려는 챕터와 스테이지의 정보를 SO에서 얻어옴
             this.monsterPool = monsterPool;
+            this.spawnArea = spawnArea;
             stageSO = stage;
             spawnDelay = 2f;
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 초기화");
@@ -45,14 +47,14 @@ using Random = UnityEngine.Random;
                 while (true)
                 {
                     await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
-                    float randx = Random.Range(-4f, 4f);
-                    float randy = Random.Range(-4f, 4f);
+                    float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
+                    float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
 
                     GameObject mon = monsterPool.UsePool(stageSO.preset[0].monster.key);
                     mon.SetActive(true);
                     mon.transform.position = new Vector3(randx, randy, 0);
                     Register(mon.GetComponent<TestMonster>());
-
+                    Debug.Log($"Spawn : {mon.transform.position}");
                     await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
                     await UniTask.WaitWhile(() => monstersList.Count >= 10, cancellationToken: token);
                 }

@@ -35,6 +35,7 @@ namespace Base.Managers
         [SerializeField] private StageSO stageSO; //스테이지 정보
         [SerializeField] private StageProgress stageProgress; //저장된 스테이지 해금 , 현재 스테이지 상태
         [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
+        [SerializeField] private BoxCollider2D spawnArea;
         public event Action<StageSO> OnChangeStage;
         public event Action<StageSO> OnClearStage;
         public event Action<StageSO> OnFailStage;
@@ -92,7 +93,7 @@ namespace Base.Managers
 
             OnChangeStage?.Invoke(stageSO); // 바뀐 챕터 - 스테이지 정보 전달
             monsterPool.ChangeStage(stageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
-            stage = new Stage(stageSO, monsterPool); // 신규 스테이지 생성
+            stage = new Stage(stageSO, monsterPool, spawnArea); // 신규 스테이지 생성
             if (stageSO.type == StageType.Normal)
             {
                 stageProgress = SelectNormalStage(stageSO.chapter, stageSO.stage);
