@@ -97,23 +97,24 @@ namespace Personal.HagYun
         }
         public abstract void SkillUseTargeting(TargetChecker target);
         public abstract void SkillEffect();
-        public float PlSkillDmg()
-        {
-            float resultDmg = PlOwner.atk;
-            resultDmg *= Data.baseDamage;
-            if (IsCriticalChance(PlOwner))
-                resultDmg *= PlOwner.criDmgPower;
-            Debug.Log($"{gameObject.name} 스킬 데미지 : {resultDmg}");
-            return resultDmg;
-        }
+        //public float PlSkillDmg()
+        //{
+        //    float resultDmg = PlOwner.atk;
+        //    resultDmg *= Data.baseDamage;
+        //    if (IsCriticalChance(PlOwner))
+        //        resultDmg *= PlOwner.criDmgPower;
+        //    Debug.Log($"{gameObject.name} 스킬 데미지 : {resultDmg}");
+        //    return resultDmg;
+        //}
         public void PlSkillAtk(Character cha)
         {
-            cha.Hit(PlSkillDmg());
+            //cha.Hit(PlSkillDmg());
+            cha.Hit(PlOwner.SkillResultDmg(data.baseDamage));
         }
         public void AreaAtk(int inAreaTargetCnt)
         {
             if (inAreaTargetCnt <= 0) return;
-            float resultDmg = PlSkillDmg();
+            float resultDmg = PlOwner.SkillResultDmg(data.baseDamage);
             for (int i = 0; i < inAreaTargetCnt; i++)
             {
                 if (OverlapChecker.GetTargetCol(i).GetComponent<Monster>() is Monster mon)
@@ -130,13 +131,13 @@ namespace Personal.HagYun
             int cnt = OverlapChecker.GetCapsuleTargetsCount(targetPos, overlapCapsuleSize, capsuleDir, targetMask);
             AreaAtk(cnt);
         }
-        public bool IsCriticalChance(Character ch)
-        {
-            if (Random.Range(0f, 1f) < ch.criChance)
-                return true;
-            else
-                return false;
-        }
+        //public bool IsCriticalChance(Character ch)
+        //{
+        //    if (Random.Range(0f, 1f) < ch.criChance)
+        //        return true;
+        //    else
+        //        return false;
+        //}
         protected virtual void EnableSkill()
         {
             gameObject.SetActive(true);
