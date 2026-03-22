@@ -1,6 +1,7 @@
 ﻿using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks.Triggers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -76,6 +77,12 @@ namespace UI.Scripts.Stage
                     break;
             }
         }
+
+        public void Bind(Action action)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => action?.Invoke());
+        }//버튼 OnClick 에 함수 넣어주는 함수
     }
 
 }

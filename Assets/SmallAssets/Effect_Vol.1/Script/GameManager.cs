@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace Assets.Effect
 {
     public class GameManager : MonoBehaviour

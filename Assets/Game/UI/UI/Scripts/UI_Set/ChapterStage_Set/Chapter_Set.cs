@@ -12,17 +12,26 @@ using UnityEngine;
 public class Chapter_Set : MonoBehaviour
 {
     [SerializeField] int chapterNum;
+
     [SerializeField] Stage_Set[] stages;
     public void SetChapter(StageManager stageManager)
     {
+        AllChapter_Set allChapterSet = GetComponentInParent<AllChapter_Set>();
+
         for (int i = 0; i < stages.Length; i++)
         {
             int stageNum = i + 1;
 
-            Base.Managers.StageEntry entry = stageManager.GetStageEntry(chapterNum, stageNum);
+            var entry = stageManager.GetStageEntry(chapterNum, stageNum);
+
+            stages[i].Bind(() => allChapterSet.EnterStage(chapterNum, stageNum));
             stages[i].SetStage(entry);
         }
     }
+
+  
 }
+
+
 
 
