@@ -1,15 +1,16 @@
+using Base.Managers;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-//BGMChanger, SkillSoundPlayer¸¦ ¿©±â¿¡¼­ ÂüÁ¶
-public class AudioManager : MonoBehaviour
+//BGMChanger, SkillSoundPlayerë¥¼ ì—¬ê¸°ì—ì„œ ì°¸ì¡°
+public class AudioManager : MonoBehaviour, IManager
 {
     public static AudioManager instance;
 
-    //¾ÕÀ¸·Î ¿Àµğ¿À°ú °ü·ÃµÈ »õ·Î¿î ·ÎÁ÷ÀÌ ÇÊ¿äÇÒ °æ¿ì
-    //¿©±â¿¡ ±× cs ÆÄÀÏÀ» µî·ÏÇÏ°í 'csÆÄÀÏ¸í?.½ÇÇàÇÒÇÔ¼ö¸í'À» ÀÔ·ÂÇÏ¸é µË´Ï´Ù
-    [Header("ÇÏÀ§ cs ÆÄÀÏµé")]
+    //ì•ìœ¼ë¡œ ì˜¤ë””ì˜¤ê³¼ ê´€ë ¨ëœ ìƒˆë¡œìš´ ë¡œì§ì´ í•„ìš”í•  ê²½ìš°
+    //ì—¬ê¸°ì— ê·¸ cs íŒŒì¼ì„ ë“±ë¡í•˜ê³  'csíŒŒì¼ëª…?.ì‹¤í–‰í• í•¨ìˆ˜ëª…'ì„ ì…ë ¥í•˜ë©´ ë©ë‹ˆë‹¤
+    [Header("í•˜ìœ„ cs íŒŒì¼ë“¤")]
     [SerializeField] private VolumeController _volumeController;
     [SerializeField] private BGMChanger _bgmChanger;
     [SerializeField] private SkillSoundPlayer _skillPlayer;
@@ -19,7 +20,6 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        //½Ì±ÛÅæ
         if (instance == null)
         {
             instance = this;
@@ -27,8 +27,16 @@ public class AudioManager : MonoBehaviour
         }
         else Destroy(gameObject);
 
+        //ë””ë²„ê·¸ìš©
+        Init();
+    }
+
+    public void Init()
+    {
         _volumeController?.InitVolumeSliders();
     }
+
+    public int GetOrder() => 300;
 
     #region BGM
     public void ChangeMap(BGMChanger.MapType mapType)
@@ -70,15 +78,14 @@ public class AudioManager : MonoBehaviour
     public void PlayBossDeadSound()
     {
         _sfxPlayer?.PlayBossDeadSound();
-
     }
     #endregion
 
 
-    //Áö±İÀº ÀÓ½Ã·Î SFXPlayer¿¡ ÀüºÎ ÇÒ´çÇß½À´Ï´Ù
-    //³ªÁß¿¡ ÇÊ¿ä¿¡ µû¶ó ´Ù¸¥ cs ÆÄÀÏ·Î ºĞÇÒÇÏ´Â °Ô ÁÁ½À´Ï´Ù
+    //ì§€ê¸ˆì€ ì„ì‹œë¡œ SFXPlayerì— ì „ë¶€ í• ë‹¹í–ˆìŠµë‹ˆë‹¤
+    //ë‚˜ì¤‘ì— í•„ìš”ì— ë”°ë¼ ë‹¤ë¥¸ cs íŒŒì¼ë¡œ ë¶„í• í•˜ëŠ” ê²Œ ì¢‹ìŠµë‹ˆë‹¤
     #region SFXs
-    //°øÅë »ç¿îµåµé
+    //ê³µí†µ ì‚¬ìš´ë“œë“¤
     public void PlayClickSound()
     {
         _sfxPlayer?.PlayClickSound();
@@ -101,7 +108,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    //ÀüÅõ °ü·Ã È¿°úÀ½µé
+    //ì „íˆ¬ ê´€ë ¨ íš¨ê³¼ìŒë“¤
     public void PlayGetGoldSound()
     {
         _sfxPlayer?.PlayGetItemSound();
@@ -109,7 +116,7 @@ public class AudioManager : MonoBehaviour
     public void PlayGetItemSound()
     {
         _sfxPlayer?.PlayGetItemSound();
-        //³ªÁß¿¡ °íµî±Ş Àåºñ Àü¿ë È¿°úÀ½ Àç»ı ·ÎÁ÷ ³ÖÀ» °Í
+        //ë‚˜ì¤‘ì— ê³ ë“±ê¸‰ ì¥ë¹„ ì „ìš© íš¨ê³¼ìŒ ì¬ìƒ ë¡œì§ ë„£ì„ ê²ƒ
     }
     public void PlayLevelupSound()
     {
@@ -119,13 +126,13 @@ public class AudioManager : MonoBehaviour
     {
         _sfxPlayer?.PlayWinSound();
     }
-    public void PlayLoseSound() //»ç¸Á Æ÷ÇÔ, BGM ±³Ã¼
+    public void PlayLoseSound() //ì‚¬ë§ í¬í•¨, BGM êµì²´
     {
         _sfxPlayer?.PlayLoseSound();
     }
 
 
-    //ÀåºñÃ¢ È¿°úÀ½
+    //ì¥ë¹„ì°½ íš¨ê³¼ìŒ
     public void PlayEquipItemSound()
     {
         _sfxPlayer?.PlayEquipItemSound();
@@ -154,8 +161,8 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    //½ºÅ³Ã¢ È¿°úÀ½(ÀÓ½Ã·Î sfxPlayer ¹èÁ¤, ÃßÈÄ ¹Ù²ğ ¼ö ÀÖÀ½)
-    public void PlayAddSkillSound() //½ºÅ³ µî·Ï ¹× ±³Ã¼
+    //ìŠ¤í‚¬ì°½ íš¨ê³¼ìŒ(ì„ì‹œë¡œ sfxPlayer ë°°ì •, ì¶”í›„ ë°”ë€” ìˆ˜ ìˆìŒ)
+    public void PlayAddSkillSound() //ìŠ¤í‚¬ ë“±ë¡ ë° êµì²´
     {
         _sfxPlayer?.PlayAddSkillSound();
     }
@@ -173,7 +180,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    //¹ÌÁ¢¼Ó º¸»ó È¹µæ È¿°úÀ½
+    //ë¯¸ì ‘ì† ë³´ìƒ íšë“ íš¨ê³¼ìŒ
     public void PlayGetIdleRewardSound()
     {
         _sfxPlayer?.PlayGetIdleRewardSound();
