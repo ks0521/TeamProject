@@ -4,6 +4,7 @@ using Base.Data;
 using Battle;
 using Growth.StatUpgrade;
 using Reward;
+using Unity.VisualScripting;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Data/SOHub")]
 public class ScriptableObjectHub : ScriptableObject
@@ -12,4 +13,6 @@ public class ScriptableObjectHub : ScriptableObject
     public StageDictionarySO stageTable;
     public StatusSO statusTable;
     public SkillDictionarySO SkillDictionarySo;
+
+    
 }

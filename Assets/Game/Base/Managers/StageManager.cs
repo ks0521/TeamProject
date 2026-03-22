@@ -45,7 +45,7 @@ namespace Base.Managers
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
 
-        public int GetOrder() => 2;
+        public int GetOrder() => 3;
         public List<TestMonster> GetStageMonsters() => stage.monstersList;
 
         /// <summary>스테이지 변경(도전 / 일반 / 잠김 스테이지 판별은 이 메서드에서 진행)</summary>
