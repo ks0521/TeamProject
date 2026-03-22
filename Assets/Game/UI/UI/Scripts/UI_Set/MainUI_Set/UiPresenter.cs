@@ -1,14 +1,6 @@
-﻿using Base.Data;
-using Base.Managers;
+﻿using Base.Managers;
 using Base.Save;
-using Battle;
-using Growth.StatUpgrade;
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 namespace UI.Scripts.UiPresenter
 {
     public class UiPresenter : MonoBehaviour , IManager

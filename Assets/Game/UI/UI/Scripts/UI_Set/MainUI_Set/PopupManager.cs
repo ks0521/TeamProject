@@ -32,8 +32,9 @@ namespace Game_UI.Scripts.PopupManager
         {
             if (instance == null)
             {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
+                instance = this; 
+                //DontDestroyOnLoad(gameObject); 
+                //-> 3.23(규성) : DontDestroy는 오브젝트 중 가장 루트 오브젝트에 붙어야합니다(UIManager -> Canvas_UI)
             }
             else
             {

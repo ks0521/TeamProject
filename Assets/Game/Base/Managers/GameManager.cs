@@ -24,7 +24,6 @@ namespace Base.Managers
     {
         public static GameManager Instance;
         private List<IGameSystem> gameSystems;
-        [SerializeField] private StageManager stageManager;
 
         private void Awake()
         {
@@ -60,7 +59,13 @@ namespace Base.Managers
         /// <returns>찾으려는 컴포넌트</returns>
         public T GetGameSystem<T>() where T : IGameSystem
         {
-            return gameSystems.OfType<T>().FirstOrDefault();
+            T result = gameSystems.OfType<T>().FirstOrDefault();
+            if (result == null)
+            {
+                Debug.LogWarning("찾고자 하는 요소가 없습니다. ");
+                return default;
+            }
+            return result;
         }
     }
 }

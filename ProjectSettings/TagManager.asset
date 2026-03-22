@@ -19,7 +19,7 @@ TagManager:
   - PlayerSkill
   - 
   - 
-  - 
+  - BackGround
   - Wall
   - 
   - 
@@ -38,6 +38,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 2814650383
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Monster
+    uniqueID: 1240091397
+    locked: 0
+  - name: Player
+    uniqueID: 3860854091
     locked: 0
