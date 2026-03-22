@@ -1,9 +1,11 @@
 using Base.Data;
+using Base.Managers;
 using UnityEngine;
 
-public class PlayerRuntimeStatus : MonoBehaviour
+public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
 {
-    public static PlayerRuntimeStatus Instance;
+    
+    public static PlayerRuntimeStatus Instance; //MVP종료후 제거
     public PlayerBaseStatusSO baseStat;
     public BattleStat finalBattleStatus;
     public RewardStat finalRewardStatus;
@@ -17,7 +19,9 @@ public class PlayerRuntimeStatus : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
     }
+
+    public int GetOrder() => 2; //PlayerProgressManager(1) 실행이 보장되어야 함
+
 }

@@ -70,7 +70,7 @@ public class ItemDropManager : MonoBehaviour, IManager
 
     public void Init()
     {
-        progress = GameManager.Instance.GetManager<PlayerProgressManager>().progress;
+        progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
     }
 
     public int GetOrder() => 10;
