@@ -18,11 +18,16 @@ public class AllChapter_Set : MonoBehaviour
     [Header("챕터 이름")]
     [SerializeField] TextMeshProUGUI chapterName;
 
-    [Header("스테이지 이동 버튼")]
+    [Header("챕터 이동 버튼")]
     [SerializeField] Button before;
     [SerializeField] Button after;
-
     private int currentChapter;
+
+    [Header("스테이지 이동 버튼")]
+    [SerializeField] Button enter;
+    int enterChapter;
+    int enterStage;
+
     private void Awake()
     {
         if (stageManager == null)
@@ -33,11 +38,32 @@ public class AllChapter_Set : MonoBehaviour
     private void Start()
     {
         currentChapter = 0;
+        if (enter != null)
+        {
+            enter.gameObject.SetActive(false);
+        }
     }
     private void OnEnable()
     {
         AllChapter();
         ShowChapter();
+    }
+    
+    
+    public void EnterStage(int chatperNum , int stageNum)
+    {
+        enterChapter = chatperNum;
+        enterStage = stageNum;
+        
+        //여기 나중에 몬스터 이미지 , 보상 목록 이미지 변경 추가 할 예정
+        if (enter != null)
+        {
+            enter.gameObject.SetActive(true);
+        }
+    }
+    public void  OnClickChangeStage()
+    {
+        stageManager.ChangeStage(enterChapter , enterStage);
     }
     void AllChapter()
     {
@@ -46,7 +72,6 @@ public class AllChapter_Set : MonoBehaviour
             chapter[i].SetChapter(stageManager);
         } 
     }
-
     public void SetChapterName() //나중에 작업 예정
     {
        
