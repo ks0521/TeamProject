@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Base.Managers;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game_UI.Scripts.PopupManager
 {
-    public class PopupManager : MonoBehaviour
+    public class PopupManager : MonoBehaviour , IManager
     {
         private static PopupManager instance;
         public static PopupManager Instance
@@ -38,7 +39,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 Destroy(gameObject);
             }
-        }//싱글톤
+        }
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -58,13 +59,35 @@ namespace Game_UI.Scripts.PopupManager
         {
             popupStack.Clear();
 
-            if (abilityPop != null) abilityPop.SetActive(false);
-            if (equipmentPop != null) equipmentPop.SetActive(false);
-            if (skillPop != null) skillPop.SetActive(false);
-            if (stagePop != null) stagePop.SetActive(false);
-            if (dungeonPop != null) dungeonPop.SetActive(false);
-            if (gameEndPop != null) gameEndPop.SetActive(false);
+            if (abilityPop != null)
+            {
+                abilityPop.SetActive(false);
+            }
+            if (equipmentPop != null)
+            {
+                equipmentPop.SetActive(false);
+            }
+            if (skillPop != null)
+            {
+                skillPop.SetActive(false);
+            }
+            if (stagePop != null)
+            {
+                stagePop.SetActive(false);
+            }
+            if (dungeonPop != null)
+            {
+                dungeonPop.SetActive(false);
+            }
+            if (gameEndPop != null)
+            {
+                gameEndPop.SetActive(false);
+            }
         }
+        public int GetOrder() => 200; 
+        
+       
+        
         void OpenPopup(GameObject pop)
         {
             if (pop == null)
@@ -137,6 +160,7 @@ namespace Game_UI.Scripts.PopupManager
         public void CloseSkillPop() { ClosePopup(skillPop); }
         public void CloseStagePop() { ClosePopup(stagePop); }
         public void CloseDungeonPop() { ClosePopup(dungeonPop); }
+
     }
 
 }
