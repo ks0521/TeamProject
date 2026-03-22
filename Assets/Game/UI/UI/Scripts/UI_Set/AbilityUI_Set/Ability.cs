@@ -93,15 +93,19 @@ namespace UI.Scripts.Ability
             int cost = 0;
             for (int i = 1; i <= multiPress; i++)
             {
-                cost += (currentLevle * i) * statEntry.enhanceCost; //스텟 가격 부분
+                cost += (currentLevle + i) * statEntry.enhanceCost; //3.23(규성) : 계산식이 잘못된것같아 수정했습니다. 
+                //cost += (currentLevle * i) * statEntry.enhanceCost; //스텟 가격 부분
             }
-            bool isUnLock = PlayerProgressManager.Instance.progress.currency.level <= statEntry.unlockLevel;
-            bool canLevelUp = manager.CanUpgradeStat(type,multiPress) && currentLevle < statEntry.maxLevel && isUnLock;
+            bool isUnLock = PlayerProgressManager.Instance.progress.currency.level >= statEntry.unlockLevel;
+            //PlayerProgressManager.Instance.progress.currency.level <= statEntry.unlockLevel;
+            //3.23(규성) isUnLock이름과 canLevelUp에서의 용도를 보면 조건이 반대로 되어있는것 같아 수정했습니다. 
+            bool canLevelUp = manager.CanUpgradeStat(type,multiPress) && (currentLevle < statEntry.maxLevel) && isUnLock;
 
             StatItemView itemView = GetType(type);
             if (itemView == null)
             {
                 Debug.Log($"{type}에 해당되는 스텟 UI가 없음");
+                return; //3.23(규성) : null일때 추가처리 없이 다시 itemView를 호출해 null 참조가 발생할 위험이 있어 임시로 수정했습니다. 
             }
 
             itemView.RefreshUI(statEntry, currentLevle, currentValue, nextValue, cost, canLevelUp, isUnLock);
