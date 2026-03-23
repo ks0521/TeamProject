@@ -7,25 +7,28 @@ namespace Battle
 {
     public class Player : Character
     {
-        [SerializeField] private PlayerRuntimeStatus runtimeStatus;
+        public static Player Pl { get; protected set; }
+        // outside component
+        [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
+        [SerializeField] protected PlayerEquipSkillController equipSkillController;
         //StatusCalculator statCal;
         protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
-        [SerializeField] Collider2D[] monColArr = new Collider2D[64];
-        protected override void AwakeInit()
+        protected static void StaticPlSet(Player newPl) => Pl = newPl;
+        void OnDestroy()
         {
-            base.AwakeInit();
+            if (Pl == this) Pl = null;
+        }
+        protected override void Init()
+        {
+            if (Pl == null)
+            {
+                Pl = this;
+                base.Init();
+
+                equipSkillController.Init(this);
+            }
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
-        }
-        protected override void OnEnableInit()
-        {
-
-            base.OnEnableInit();
-        }
-        protected override void StartInit()
-        {
-
-            base.StartInit();
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
@@ -83,10 +86,7 @@ namespace Battle
         }
         void AtkFeat()
         {
-            if (!cm.IsInputMoving && !isAtkCooltime)
-            {
-                NormalAttack(target);
-            }
+            NormalAttack(target);
         }
     }
 }

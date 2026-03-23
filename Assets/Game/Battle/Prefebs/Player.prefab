@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 302155613776940955}
   - component: {fileID: 3874761790419925107}
   - component: {fileID: 2613657829212925110}
-  - component: {fileID: 1589158739056373854}
-  - component: {fileID: 7476970757925647289}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -87,77 +85,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 0
-  moveTarget: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
   isAtkCooltime: 0
   runtimeStatus: {fileID: 1523400318190689276}
-  monColArr:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  equipSkillController: {fileID: 7065709201030374676}
 --- !u!50 &2613657829212925110
 Rigidbody2D:
   serializedVersion: 4
@@ -185,59 +118,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1589158739056373854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450563698047221803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58dbe987732c81947b4f21c72552d719, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sr: {fileID: 4988880015368717541}
-  skillPool: {fileID: 0}
-  equipSkillSetArr: []
-  autoSkillUsePossibleCnt: 0
-  eSkillCheckerSet:
-    equipSkillChecker:
-    - isEquipBoolArr: 000000000000
-      cnt: 0
-    - isEquipBoolArr: 000000000000
-      cnt: 0
-    - isEquipBoolArr: 000000000000
-      cnt: 0
-  autoSkillController:
-    autoSkillUseOrderNum: 0
-    pesc: {fileID: 0}
-    eSkillCheckerSet:
-      equipSkillChecker:
-      - isEquipBoolArr: 000000000000
-        cnt: 0
-      - isEquipBoolArr: 000000000000
-        cnt: 0
-      - isEquipBoolArr: 000000000000
-        cnt: 0
-  td: {fileID: 0}
---- !u!114 &7476970757925647289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450563698047221803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efe35989c3517414a8eff6a79f69ec01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectedTargetCnt: 0
-  lm:
-    serializedVersion: 2
-    m_Bits: 256
-  col: {fileID: 8261003749569794967}
 --- !u!1 &3504440221717847127
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,8 +213,10 @@ GameObject:
   m_Component:
   - component: {fileID: 9028418635071569666}
   - component: {fileID: 8261003749569794967}
+  - component: {fileID: 7065709201030374676}
+  - component: {fileID: 7223564765208943539}
   m_Layer: 6
-  m_Name: AttackRangeCollider
+  m_Name: AtkAndSkillRangeComponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -390,6 +272,59 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &7065709201030374676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6794474411529937581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dbe987732c81947b4f21c72552d719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sr: {fileID: 4988880015368717541}
+  skillPool: {fileID: 0}
+  equipSkillSetArr: []
+  autoSkillUsePossibleCnt: 0
+  eSkillCheckerSet:
+    equipSkillChecker:
+    - isEquipBoolArr: 000000000000
+      cnt: 0
+    - isEquipBoolArr: 000000000000
+      cnt: 0
+    - isEquipBoolArr: 000000000000
+      cnt: 0
+  autoSkillController:
+    autoSkillUseOrderNum: 0
+    pesc: {fileID: 0}
+    eSkillCheckerSet:
+      equipSkillChecker:
+      - isEquipBoolArr: 000000000000
+        cnt: 0
+      - isEquipBoolArr: 000000000000
+        cnt: 0
+      - isEquipBoolArr: 000000000000
+        cnt: 0
+  td: {fileID: 0}
+--- !u!114 &7223564765208943539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6794474411529937581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efe35989c3517414a8eff6a79f69ec01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectedTargetCnt: 0
+  lm:
+    serializedVersion: 2
+    m_Bits: 256
+  col: {fileID: 8261003749569794967}
 --- !u!1 &9032101198995393817
 GameObject:
   m_ObjectHideFlags: 0
