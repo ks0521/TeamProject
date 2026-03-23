@@ -1,40 +1,40 @@
-﻿using Base.Managers;
+using Base.Managers;
+using Cysharp.Threading.Tasks.Triggers;
 using System.Collections.Generic;
+using UI.Scripts.Ability;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game_UI.Scripts.PopupManager
 {
     public class PopupManager : MonoBehaviour , IManager
     {
         private static PopupManager instance;
-        public static PopupManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    return null;
-                }
-                return instance;
-            }
-        }
 
         [Header("팝업")]
-        [SerializeField] private GameObject abilityPop;
+        [SerializeField] private Ability abilityPop;
+        [SerializeField] private AllChapter_Set chapterPop;
+
+        [SerializeField] private GameObject skillPop; 
         [SerializeField] private GameObject equipmentPop;
-        [SerializeField] private GameObject skillPop;
-        [SerializeField] private GameObject stagePop;
         [SerializeField] private GameObject dungeonPop;
         [SerializeField] private GameObject gameEndPop;
 
         private Stack<GameObject> popupStack = new();
+
+        [Header("팝업 버튼")]
+        [SerializeField] private Button abilityBtn;
+        [SerializeField] private Button chapterBtn;
+        [SerializeField] private Button skillBtn;
+        [SerializeField] private Button equipmentBtn;
+        [SerializeField] private Button dungeonBtn;
+
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this; 
-                //DontDestroyOnLoad(gameObject); 
-                //-> 3.23(규성) : DontDestroy는 오브젝트 중 가장 루트 오브젝트에 붙어야합니다(UIManager -> Canvas_UI)
+                DontDestroyOnLoad(gameObject); 
             }
             else
             {
@@ -58,13 +58,8 @@ namespace Game_UI.Scripts.PopupManager
 
         public void Init()
         {
-            popupStack.Clear();
 
-            if (abilityPop != null)
-            {
-                abilityPop.SetActive(false);
-            }
-            if (equipmentPop != null)
+            if (equipmentPop != null) // 해당 코드들은 아직 스크립트가 아직 없어서 이렇게 해뒀습니다.
             {
                 equipmentPop.SetActive(false);
             }
@@ -72,10 +67,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 skillPop.SetActive(false);
             }
-            if (stagePop != null)
-            {
-                stagePop.SetActive(false);
-            }
+           
             if (dungeonPop != null)
             {
                 dungeonPop.SetActive(false);
@@ -84,8 +76,16 @@ namespace Game_UI.Scripts.PopupManager
             {
                 gameEndPop.SetActive(false);
             }
+            
+
+            BindAllButton();
+            popupStack.Clear();
+
+            abilityPop.Init();
+            chapterPop.Init();
+
         }
-        public int GetOrder() => 200; 
+        public int GetOrder() => 201; 
         
        
         
@@ -115,7 +115,7 @@ namespace Game_UI.Scripts.PopupManager
             }
             pop.SetActive(false);
             RemoveFromStack(pop);
-        }//팝업 닫기
+        }//팝업 닫기(나중에 팝업에 닫기 버튼 구현 예정)
         private void RemoveFromStack(GameObject target)
         {
             Stack<GameObject> tempStack = new Stack<GameObject>();
@@ -143,25 +143,24 @@ namespace Game_UI.Scripts.PopupManager
             {
                 return;
             }
+
             GameObject lastPop = popupStack.Pop();
+
             if (lastPop != null)
             {
                 lastPop.SetActive(false);
             }
         }//제일 마지막 팝업 닫기
 
-        public void OpenAbilityPop() { OpenPopup(abilityPop); } //버튼 OnClick 연결용 함수
-        public void OpenEquipmentPop() { OpenPopup(equipmentPop); }
-        public void OpenSkillPop() { OpenPopup(skillPop); }
-        public void OpenStagePop() { OpenPopup(stagePop); }
-        public void OpenDungeonPop() { OpenPopup(dungeonPop); }
-
-        public void CloseAbilityPop() { ClosePopup(abilityPop); }
-        public void CloseEquipmentPop() { ClosePopup(equipmentPop); }
-        public void CloseSkillPop() { ClosePopup(skillPop); }
-        public void CloseStagePop() { ClosePopup(stagePop); }
-        public void CloseDungeonPop() { ClosePopup(dungeonPop); }
-
+        void BindAllButton()
+        {
+            abilityBtn.onClick.AddListener(() => OpenPopup(abilityPop.gameObject));
+            chapterBtn.onClick.AddListener(() => OpenPopup(chapterPop.gameObject));
+            skillBtn.onClick.AddListener(() => OpenPopup(skillPop.gameObject));
+            equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
+            dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
+        }//버튼에 함수 넣기
+       
     }
 
 }
