@@ -23,7 +23,7 @@ public abstract class StageRule
         this.stage = stage;
     }
     public abstract void Enter();
-    public abstract void MonsterKilled(TestMonster monster);
+    public abstract void MonsterKilled(Monster monster);
     public abstract void Destroy();
 }
 
@@ -62,7 +62,7 @@ public class ChallengeStageRule : StageRule
         ChallengeFail?.Invoke(stage);
     }
 
-    public override void MonsterKilled(TestMonster monster)
+    public override void MonsterKilled(Monster monster)
     {
         if (++killScore >= stage.targetKillScore)
         {
@@ -87,7 +87,7 @@ public class NormalStageRule : StageRule
         Debug.Log($"일반 스테이지{stage.chapter} - {stage.stage} StageRule 시작");
     }
 
-    public override void MonsterKilled(TestMonster monster)
+    public override void MonsterKilled(Monster monster)
     {
         ++killScore;
         //몬스터 처치에 대한 기타 작동기전 구현

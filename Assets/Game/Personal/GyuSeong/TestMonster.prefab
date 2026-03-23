@@ -277,7 +277,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isAtkCooltime: 0
-  monsterSO: {fileID: 0}
+  monsterSO: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
 --- !u!1 &8957391344724036063
 GameObject:
   m_ObjectHideFlags: 0

@@ -48,7 +48,7 @@ namespace Base.Managers
         }
 
         public int GetOrder() => 10;
-        public List<TestMonster> GetStageMonsters() => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
+        public List<Monster> GetStageMonsters() => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
         
 
         /// <summary>스테이지 변경(도전 / 일반 / 잠김 스테이지 판별은 이 메서드에서 진행)</summary>

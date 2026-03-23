@@ -15,6 +15,8 @@ namespace Battle
         protected override float AttackRange => MonsterAttackRange;
         public const float ApproachStopRange = 0.15f;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
+
+        public event Action<Monster> OnMonsterKilled;
         //public Transform player;
 
 
