@@ -22,7 +22,10 @@ namespace Battle
             base.Init();
             var playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
+            {
                 target = playerObj.GetComponent<Character>();
+                targetTransform = target.transform;
+            }
         }
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
         public void ForcedReturn()
@@ -42,12 +45,12 @@ namespace Battle
         }
         protected override void UpdateFeat()
         {
-            
+
         }
 
         private void FixedUpdate()
         {
-            if (isDead || target is null) 
+            if (isDead || target is null)
                 return;
         }
 
