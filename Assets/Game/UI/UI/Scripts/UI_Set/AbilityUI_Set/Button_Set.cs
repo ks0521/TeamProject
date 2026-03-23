@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Button_Set : MonoBehaviour
 {
-    [SerializeField] Image[] Xbtn;
+    [SerializeField] public Button [] Xbtn;
 
     private Color normal = Color.white;
     private Color press = Color.yellow;
@@ -19,9 +19,9 @@ public class Button_Set : MonoBehaviour
 
         for (int i = 0; i < Xbtn.Length; i++)
         {
-            Xbtn[i].color = normal;
+            Xbtn[i].image.color = normal;
         }
-        Xbtn[current].color = press;
+        Xbtn[current].image.color = press;
     }
 }
 
