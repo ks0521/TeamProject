@@ -33,6 +33,7 @@ public class player1 : character1
         //hp = CurrentBattleStat.maxHp;
         SyncHpAfterManagersReady().Forget();
     }
+    //팀원 영역을 건드리지 않는 선에서 Player의 hp를 가져오는 로직
     async UniTaskVoid SyncHpAfterManagersReady()
     {
         // GameManager의 Start()가 실행되고 매니저들의 Init()이 끝날 때까지 넉넉히 대기

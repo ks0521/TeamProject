@@ -23,11 +23,11 @@ public abstract class character1 : MonoBehaviour
         }
     }
 
-    protected bool isDead; //객체의 사망 확인
+    protected bool isDead;
     protected Rigidbody2D rb; 
     protected CharacterMove cm; //커스텀 클래스
     [SerializeField] protected Transform target; //대상의 위치
-    [SerializeField]protected LayerMask targetLayer; //대상 레이어마스크
+    [SerializeField] protected LayerMask targetLayer; //대상 레이어마스크
     protected bool CanAttack; //지금 공격 가능한지(가능하면 true / 안되면 false )
     protected abstract BattleStat CurrentBattleStat { get; } //자식 (몬스터나 플레이어에서 전투 스탯을 구현)
     protected abstract float AttackRange { get; } //공격 거리

@@ -2,6 +2,7 @@ using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UnityEngine;
 
 public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 것
@@ -144,6 +145,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
             elapsed += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate(cancellationToken: cts); //다음 프레임까지 대기
         }
+        await WaitMotion("ATTACK", cts);
         if (chargeCollider != null) chargeCollider.enabled = false;
 
         isCharging = false;
@@ -201,8 +203,8 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
                 }
             }
         }
-
         sfx.PlayBossSkillSound();
+        await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
 
@@ -238,8 +240,8 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
                 targetScript.Hit(skill3Damage);
             }
         }
-
         sfx.PlayBossSkillSound();
+        await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
 
@@ -256,6 +258,22 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         UseMonsterSkill3Async().Forget();
     }
 
+    async UniTask WaitMotion(string stateName, CancellationToken token)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: token);
+        if (spumController == null || spumController._anim == null) return;
+
+        Animator ani = spumController._anim;
+
+        //재생 중인 애니메이션의 진행도가 100% 미만일 때까지 대기하는 람다문
+        await UniTask.WaitUntil(() =>
+        {
+            var stateInfo = ani.GetCurrentAnimatorStateInfo(0);
+            //모션의 상태가 바뀌거나 애니메이션 재생 완료 시 종료
+            return !stateInfo.IsName(stateName) || stateInfo.normalizedTime >= 0.99f;
+        }, cancellationToken: token);
+    }
+
     protected override void OnDead()
     {
         if (isDead) //여러번 죽지 않게하기
@@ -265,6 +283,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         rb.velocity = Vector2.zero;
         Destroy(gameObject);
         //Killed();
+        sfx.PlayBossDeadSound();
     }
 
     void Killed()
