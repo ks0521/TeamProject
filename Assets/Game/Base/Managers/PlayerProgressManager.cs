@@ -1,5 +1,7 @@
 using System;
 using Base.Managers;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 namespace Base.Save
@@ -35,11 +37,20 @@ namespace Base.Save
             LoadProgress();
             Debug.Log($"상태 계산중 {playerStatCalculator == null}");
             playerStatCalculator?.Calculate(progress);
+            AutoSave(this.GetCancellationTokenOnDestroy(), 3f).Forget();
         }
 
         public int GetOrder()=> 1; //일단 진행사항이 로딩되어야 다른 매니저가 참고 가능
-        
 
+        async UniTaskVoid AutoSave(CancellationToken token, float period)
+        {
+            while (true)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(period), cancellationToken: token);
+                Debug.Log($"자동저장 실행 ({period}초 주기)");
+                SaveProgress();
+            }
+        }
         /// <summary> 런타임 데이터 기기에 저장</summary>
         public void SaveProgress()
         {
