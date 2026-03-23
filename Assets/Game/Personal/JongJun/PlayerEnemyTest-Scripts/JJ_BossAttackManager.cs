@@ -57,7 +57,7 @@ public class JJ_BossAttackManager : character1
 
     bool CanUseSkill(float currentCoolTime)
     {
-        Debug.Log($"CanUseSkill Check: {currentCoolTime} <= 0 ? {currentCoolTime <= 0f}");
+        //Debug.Log($"CanUseSkill Check: {currentCoolTime} <= 0 ? {currentCoolTime <= 0f}");
         return currentCoolTime <= 0f;
     }
 
@@ -102,6 +102,10 @@ public class JJ_BossAttackManager : character1
         float elapsed = 0f;
         bool hasDamaged = false;
 
+        if (spumController != null)
+        {
+            spumController.PlayAnimation(PlayerState.ATTACK, 1);
+        }
         while (elapsed < chargeDuration && isCharging)
         {
             if (target == null || isDead) break;
@@ -177,6 +181,10 @@ public class JJ_BossAttackManager : character1
 
         if (atkRange2 != null) atkRange2.SetActive(true);
         await UniTask.Delay(TimeSpan.FromSeconds(skill2WarningDuration), cancellationToken: cts);
+        if (spumController != null)
+        {
+            spumController.PlayAnimation(PlayerState.ATTACK, 2);
+        }
         if (atkRange2 != null)
         {
             atkRange2.SetActive(false);
@@ -216,6 +224,10 @@ public class JJ_BossAttackManager : character1
         }
 
         await UniTask.Delay(TimeSpan.FromSeconds(skill3WarningDuration), cancellationToken: cts);
+        if (spumController != null)
+        {
+            spumController.PlayAnimation(PlayerState.ATTACK, 2);
+        }
         if (atkRange3 != null)
         {
             atkRange3.SetActive(false);
