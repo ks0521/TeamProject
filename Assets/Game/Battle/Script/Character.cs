@@ -19,7 +19,7 @@ namespace Battle
         // stat
         //[SerializeField] PlayerBaseStatusSO baseStat;
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
-        protected abstract BattleStat CurrentBattleStat { get; }
+        public abstract BattleStat CurrentBattleStat { get; }
         [SerializeField] protected float hp;
         public float Hp
         {
@@ -110,7 +110,6 @@ namespace Battle
             Hp -= damage - CurrentBattleStat.def;
             if (Hp <= 0)
             {
-                Destroy(gameObject);
                 Debug.Log($"{gameObject.name} 죽음!");
             }
             else

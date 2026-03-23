@@ -47,7 +47,9 @@ public class StatItemView : MonoBehaviour
         {
             levelUpButton.image.color = Color.gray;
         }
-        lockPanel.SetActive(isUnlock);
+        lockPanel.SetActive(!isUnlock);
+        //lockPanel.SetActive(isUnlock);
+        //3.23(규성) 용어만 보면 isUnlock이 true일때 locpPanel이 켜지고 false일때 꺼지는것 같은데 확인해보셔야 될것 같습니당 
         unlockLevelText.text = $"Lv : {statEntry.unlockLevel} 개방";
 
         
