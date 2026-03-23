@@ -37,7 +37,7 @@ namespace Base.Save
             LoadProgress();
             Debug.Log($"상태 계산중 {playerStatCalculator == null}");
             playerStatCalculator?.Calculate(progress);
-            //AutoSave(this.GetCancellationTokenOnDestroy(), 3f);
+            AutoSave(this.GetCancellationTokenOnDestroy(), 3f).Forget();
         }
 
         public int GetOrder()=> 1; //일단 진행사항이 로딩되어야 다른 매니저가 참고 가능
@@ -46,7 +46,7 @@ namespace Base.Save
         {
             while (true)
             {
-                UniTask.Delay(TimeSpan.FromSeconds(period), cancellationToken: token);
+                await UniTask.Delay(TimeSpan.FromSeconds(period), cancellationToken: token);
                 Debug.Log($"자동저장 실행 ({period}초 주기)");
                 SaveProgress();
             }

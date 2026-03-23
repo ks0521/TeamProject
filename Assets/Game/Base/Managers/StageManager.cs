@@ -33,6 +33,7 @@ namespace Base.Managers
         [SerializeField] private MonsterPoolManager monsterPool; //몬스터 풀
         [SerializeField] private Stage stage; //스테이지 객체
         [SerializeField] private StageSO stageSO; //스테이지 정보
+        public StageSO CurStageSO => stageSO;
         [SerializeField] private StageProgress stageProgress; //저장된 스테이지 해금 , 현재 스테이지 상태
         [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         [SerializeField] private BoxCollider2D spawnArea;
