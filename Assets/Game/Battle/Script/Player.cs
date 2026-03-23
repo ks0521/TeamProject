@@ -7,27 +7,17 @@ namespace Battle
 {
     public class Player : Character
     {
-        public static Player Pl { get; protected set; }
         // outside component
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
         //StatusCalculator statCal;
         protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
-        protected static void StaticPlSet(Player newPl) => Pl = newPl;
-        void OnDestroy()
-        {
-            if (Pl == this) Pl = null;
-        }
         protected override void Init()
         {
-            if (Pl == null)
-            {
-                Pl = this;
-                base.Init();
+            base.Init();
 
-                equipSkillController.Init(this);
-            }
+            equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
@@ -69,7 +59,8 @@ namespace Battle
                 {
                     if (target != null)
                     {
-                        cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        // cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        cm.VChaseMove(DirFromPosToTarget());
                     }
                 }
                 else
@@ -82,7 +73,10 @@ namespace Battle
         void TestMoveTargetSet()
         {
             if (target == null && MonsterSetComponent.ins.TryGetMonster(out GameObject obj))
+            {
                 target = obj.GetComponent<Monster>();
+                targetTransform = obj.transform;
+            }
         }
         void AtkFeat()
         {
