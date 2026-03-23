@@ -1,4 +1,4 @@
-﻿using Base.Managers;
+using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks.Triggers;
 using System;
