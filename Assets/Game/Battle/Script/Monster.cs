@@ -17,31 +17,19 @@ namespace Battle
         //public Transform player;
 
 
-        protected override void AwakeInit()
+        protected override void Init()
         {
-            base.AwakeInit();
+            base.Init();
+            var playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                target = playerObj.GetComponent<Character>();
         }
-        protected override void OnEnableInit()
+        /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
+        public void ForcedReturn()
         {
-            if (monsterSO == null)
-            {
-                Debug.LogWarning("몬스터 SO가 삽입되지 않았습니다!");
-                return;
-            }
-            //몬스터 스폰 시작하기전에 무조건 플레이어 활성화 되어있어야 함
-            //player = GameObject.FindGameObjectWithTag("Player").transform;
-            target = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            //if (player == null)
-            if (target == null)
-            {
-                Debug.LogWarning("플레이어 태그 찾을 수 없음");
-            }
-            base.OnEnableInit();
-        }
-        protected override void StartInit()
-        {
-            base.StartInit();
-
+            //현재는 구현할 필요 없습니다. 
+            Debug.Log("오브젝트 강제 정리");
+            Destroy(gameObject);
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
@@ -51,12 +39,6 @@ namespace Battle
             isDead = true;
             Debug.Log("몬스터 처치됨");
             cEvent.RaiseDead(this);
-        }
-        /// <summary>스테이지 변경등의 이유로 사라질 때 해당 프리팹 삭제</summary>
-        public void ForcedReturn()
-        {
-            Debug.Log("오브젝트 풀에 강제 반환");
-            Destroy(gameObject);
         }
         protected override void UpdateFeat()
         {
@@ -74,10 +56,10 @@ namespace Battle
 
         }
 
-        public void ChasePlayer()
-        {
-            if(Vector2.Distance(transform.position, target.transform.position) > ApproachStopRange)
-                transform.position = Vector2.MoveTowards(transform.position,target.transform.position, CurrentBattleStat.moveSpeed * Time.deltaTime);
-        }
+        // public void ChasePlayer()
+        // {
+        //     if(Vector2.Distance(transform.position, target.transform.position) > ApproachStopRange)
+        //         transform.position = Vector2.MoveTowards(transform.position,target.transform.position, CurrentBattleStat.moveSpeed * Time.deltaTime);
+        // }
     }
 }
