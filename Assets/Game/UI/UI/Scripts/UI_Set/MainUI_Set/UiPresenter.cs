@@ -1,4 +1,5 @@
-﻿using Base.Managers;
+﻿using Base.Data;
+using Base.Managers;
 using Base.Save;
 using UnityEngine;
 namespace UI.Scripts.UiPresenter
@@ -17,7 +18,7 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set AutoButton;
         [SerializeField] Skill_Set skillIcons;
-
+        private EventHub hub;
         bool autoType;
         private void Start()
         {

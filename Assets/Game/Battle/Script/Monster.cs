@@ -14,6 +14,7 @@ namespace Battle
         protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
         protected override float AttackRange => MonsterAttackRange;
         public const float ApproachStopRange = 0.15f;
+        public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
         //public Transform player;
 
 
@@ -44,7 +45,11 @@ namespace Battle
         {
             
         }
-
+        public override void Hit(float damage)
+        {
+            base.Hit(damage);
+            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+        }
         private void FixedUpdate()
         {
             if (isDead || target is null) 

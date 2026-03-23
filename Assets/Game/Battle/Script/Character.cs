@@ -94,7 +94,7 @@ namespace Battle
             // 사이 거리 / 판정 거리 : 판정 거리보다 짧아야 true
             return (targetPos - thisPos).sqrMagnitude <= TargetSqrMagnitudeRange;
         }
-        public void Hit(float damage)
+        public virtual void Hit(float damage)
         {
             float resultDmg = damage - CurrentBattleStat.def;
             Hp -= damage - CurrentBattleStat.def;
