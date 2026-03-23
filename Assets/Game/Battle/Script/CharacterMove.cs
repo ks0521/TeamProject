@@ -4,6 +4,20 @@ using UnityEngine;
 
 namespace Battle
 {
+    public struct MovingStatus
+    {
+        public bool canMove;
+        public float speed;
+        public float atkRange;
+        public Vector2 targetPos;
+        public MovingStatus(bool canMove, Vector2 targetPos, float speed, float atkRange)
+        {
+            this.canMove = canMove;
+            this.speed = speed;
+            this.atkRange = atkRange;
+            this.targetPos = targetPos;
+        }
+    }
     public class CharacterMove
     {
         //float speed;
@@ -52,12 +66,12 @@ namespace Battle
                 rb.velocity = dir * speed;
             }
         }
-        public void VChaseMove(Vector2 moveVec)
+        public void VChaseMove(Vector2 dis)
         {
             if (IsInputMoving) return;
-            isAutoMoving = moveVec != Vector2.zero;
+            isAutoMoving = dis != Vector2.zero;
             if (isAutoMoving)
-                rb.velocity = moveVec;
+                rb.velocity = dis;
             else
                 rb.velocity = Vector2.zero;
         }

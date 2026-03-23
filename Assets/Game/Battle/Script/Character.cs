@@ -40,7 +40,7 @@ namespace Battle
         }
         public float MaxHp => CurrentBattleStat.maxHp;
         // get component
-        protected Rigidbody2D rb;
+        // protected Rigidbody2D rb;
 
 
         // action split class (component X)
@@ -63,15 +63,15 @@ namespace Battle
         }
         protected virtual void Init()
         {
-            rb = GetComponent<Rigidbody2D>();
+            // rb = GetComponent<Rigidbody2D>();
             cm = new CharacterMove();
             cEvent = new CharacterCommonEvent();
 
             hp = CurrentBattleStat.maxHp;
             isAtkCooltime = false;
 
-            cm.Init(rb);
-            // hub = GameManager.get
+            cm.Init(GetComponent<Rigidbody2D>());
+            // hub = GameManager.Instance.GetGameSystem<EventHub>();
         }
         protected void TargetSet(Character target)
         {
@@ -91,9 +91,9 @@ namespace Battle
         protected abstract void FixedUpdateFeat();
         protected Vector2 DirFromPosToTarget()
         {
-            //Vector2 targetPos = moveTarget.position;
+            Vector2 thisPos = transform.position;
             Vector2 targetPos = targetTransform.position;
-            return (targetPos - rb.position).normalized;
+            return (targetPos - thisPos).normalized;
         }
         protected bool CheckTargetIsClose()
         {
