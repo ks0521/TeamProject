@@ -101,7 +101,6 @@ GameObject:
   - component: {fileID: 5507930084491488507}
   - component: {fileID: 2924232697604019033}
   - component: {fileID: 7039238379840763003}
-  - component: {fileID: 5071897566468668954}
   - component: {fileID: 7738459602127724406}
   m_Layer: 8
   m_Name: TestMonster
@@ -241,25 +240,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5071897566468668954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8440162612199579799}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6cfe0dd930da7f48a87276b2176f363, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hp: 0
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  isDead: 0
-  monsterSO: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
-  TestDead: 0
 --- !u!114 &7738459602127724406
 MonoBehaviour:
   m_ObjectHideFlags: 0

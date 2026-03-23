@@ -13,21 +13,16 @@ namespace Battle
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
         //StatusCalculator statCal;
-        protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
+        public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
-        protected static void StaticPlSet(Player newPl) => Pl = newPl;
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private List<Monster> stageMonsters;//현재 스테이지에 존재하는 몬스터의 리스트
-        void OnDestroy()
-        {
-            if (Pl == this) Pl = null;
-        }
+
         protected override void Init()
         {
             base.Init();
-
-            equipSkillController.Init(this);
+            //equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
-            stageMonsters = GameManager.Instance.GetGameSystem<StageManager>().GetStageMonsters();
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
@@ -50,6 +45,7 @@ namespace Battle
 
         protected override void FixedUpdateFeat()
         {
+            if (!FindTarget()) return;
             FixedUpdateMoveFeat();
         }
         void UpdateMoveFeat()
@@ -60,7 +56,12 @@ namespace Battle
         }
         private bool FindTarget()
         {
-            //stageMonsters = stageManager.GetStageMonsters();
+            if (stageManager == null)
+            {
+                stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+            }
+
+            stageMonsters = stageManager.GetStageMonsters();
             float minDist = Single.MaxValue;
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)
@@ -77,12 +78,12 @@ namespace Battle
                 {
                     minDist = dist;
                     target = monster;
-                    //target = monster.transform;
+                    targetTransform = monster.transform;
                 }
             }
             return true;
         }
-
+        
         void FixedUpdateMoveFeat()
         {
             cm.FixedMove();
@@ -100,6 +101,7 @@ namespace Battle
                     {
                         //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
                         AtkFeat();
+                        //cm.VChaseMove(DirFromPosToTarget());
                     }
                 }
             }
@@ -114,7 +116,12 @@ namespace Battle
         // }
         void AtkFeat()
         {
+            if (target == null)
+            {
+                if (!FindTarget()) return;
+            }
             NormalAttack(target);
         }
+
     }
 }
