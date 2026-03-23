@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using Battle;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,8 +9,8 @@ public class MainUIStage_Set : MonoBehaviour
     [Header("스테이지 Text")]
     [SerializeField] TextMeshProUGUI stageText;
 
-    public void SetStage(int chapter , int stage)
+    public void SetStage(StageSO stageSO)
     {
-        stageText.text = $"{chapter}-{stage}";
+        stageText.text = $"{stageSO.chapter}-{stageSO.stage}";
     }
 }

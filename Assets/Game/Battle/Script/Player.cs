@@ -55,7 +55,7 @@ namespace Battle
         void UpdateMoveFeat()
         {
             cm.UpdateMoveInput(CurrentBattleStat.moveSpeed);
-            //TestMoveTargetSet();
+            // TestMoveTargetSet();
             //AtkFeat();
         }
         private bool FindTarget()
@@ -89,25 +89,28 @@ namespace Battle
             //if (!CheckAtkRangeCollision(ref monColArr))
             if (!isAtkCooltime)
             {
-                if (!CheckTargetIsClose())
+                if (target != null)
                 {
-                    if (target != null)
+                    if (!CheckTargetIsClose())
                     {
-                        // cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
-                        cm.VChaseMove(DirFromPosToTarget());
+                        cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        // cm.VChaseMove(DirFromPosToTarget());
                     }
-                }
-                else
-                {
-                    //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
-                    AtkFeat();
+                    else
+                    {
+                        //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
+                        AtkFeat();
+                    }
                 }
             }
         }
         // void TestMoveTargetSet()
         // {
         //     if (target == null && MonsterSetComponent.ins.TryGetMonster(out GameObject obj))
+        //     {
         //         target = obj.GetComponent<Monster>();
+        //         targetTransform = obj.transform;
+        //     }
         // }
         void AtkFeat()
         {
