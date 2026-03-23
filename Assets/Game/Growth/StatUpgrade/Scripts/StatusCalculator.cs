@@ -1,3 +1,4 @@
+using Base.Managers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using Base.Save;
 using Growth.StatUpgrade;
 using UnityEngine;
 
-public class StatusCalculator : MonoBehaviour
+public class StatusCalculator : MonoBehaviour,IGameSystem
 {
     [SerializeField] private PlayerRuntimeStatus runtimeStatus;
     [SerializeField] private StatusSO statusConfig;
@@ -105,4 +106,6 @@ public class StatusCalculator : MonoBehaviour
 
         runtimeStatus.finalRange = runtimeStatus.baseStat.baseAttackRange; //공격 범위는 고정
     }
+
+    public int GetOrder() => 0;
 }

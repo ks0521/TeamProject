@@ -33,8 +33,10 @@ namespace Base.Data
         public void GoldChanged(int gold) => OnGoldChange?.Invoke(gold);
         public event Action<int> OnStatStoneChange; //스탯 강화석 수치 변경
         public void StatStoneChanged(int statStone) => OnStatStoneChange?.Invoke(statStone);
-        public event Action<int> OnExpChange; //경험치 변경
-        public void ExpChanged(int exp) => OnExpChange?.Invoke(exp);
+        public event Action<float> OnExpChange; //경험치 변경
+        public void ExpChanged(float exp) => OnExpChange?.Invoke(exp);
+        public event Action<int> OnLevelChange;
+        public void LevelChanged(int level) => OnLevelChange?.Invoke(level);
 
         
         public int GetOrder() => 0;

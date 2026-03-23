@@ -11,7 +11,7 @@ namespace Battle
     {
         public MonsterSO monsterSO;
         public const float MonsterAttackRange = 0.6f;
-        protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
+        public override BattleStat CurrentBattleStat => monsterSO.battleStat;
         protected override float AttackRange => MonsterAttackRange;
         public const float ApproachStopRange = 0.15f;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
@@ -44,7 +44,7 @@ namespace Battle
                 return;
             isDead = true;
             Debug.Log("몬스터 처치됨");
-            cEvent.RaiseDead(this);
+            OnMonsterKilled?.Invoke(this);
         }
         protected override void UpdateFeat()
         {
@@ -63,7 +63,6 @@ namespace Battle
 
         protected override void FixedUpdateFeat()
         {
-
         }
 
         // public void ChasePlayer()

@@ -9,11 +9,13 @@ namespace Base.Managers
     {
         //UI파트보다 먼저 초기화되어야함
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
+        private StatusCalculator calculator;
         private StatusSO statUpgradeConfig;
 
         public void Init()
         {
             statUpgradeConfig = GameDataProvider.Instance.hub.statusTable;
+            calculator = GameManager.Instance.GetGameSystem<StatusCalculator>();
         }
 
         public int GetOrder()
@@ -76,6 +78,7 @@ namespace Base.Managers
             
             Debug.Log($"{statType}스탯 {upgradeCount}번 강화, {requireCost}강화석 사용, 남은 강화석 : {Progress.currency.statStone} " +
                       $"\n {statType}스탯 강화횟수 : {Progress.statUpgrades.upgradeLevelsByType[statType]}(+{upgradeCount})");
+            calculator.Calculate(Progress);
             return true;
         }
     }

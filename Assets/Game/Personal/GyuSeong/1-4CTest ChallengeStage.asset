@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
   m_Name: 1-4CTest ChallengeStage
   m_EditorClassIdentifier: 
-  stageKey: 4
+  stageKey: 6104
   stageName: 
   chapter: 1
   stage: 4

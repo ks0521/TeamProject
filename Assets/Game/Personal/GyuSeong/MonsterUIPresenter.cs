@@ -1,15 +1,16 @@
+using Battle;
 using Personal.GyuSeong;
 using UnityEngine;
 
 public class MonsterUIPresenter : MonoBehaviour
 {
     [SerializeField] private MonsterHpBar hpBar;
-    [SerializeField] private TestMonster monster;
+    [SerializeField] private Monster monster;
     private void Awake()
     {
         hpBar = GetComponentInChildren<MonsterHpBar>();
         hpBar.Init();
-        monster = GetComponentInParent<TestMonster>();
+        monster = GetComponentInParent<Monster>();
     }
 
     private void OnEnable()

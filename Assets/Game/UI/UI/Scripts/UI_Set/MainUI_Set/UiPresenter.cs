@@ -18,16 +18,13 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set autoButton;
         [SerializeField] Skill_Set skillIcons;
+        PlayerProgressManager manager;
         private EventHub hub;
         bool autoType;
         private void Start()
         {
             autoType = false;
         }
-
-        PlayerProgressManager manager;
-        EventHub hub;
-
 
         public void Init()
         {
@@ -40,9 +37,8 @@ namespace UI.Scripts.UiPresenter
             hub.OnHpChange += hp.SetHp;
             hub.OnExpChange += expBar.SetExp;
             hub.OnGoldChange += goldText.SetGold;
-            hub.OnStatStoneChange += stoneText.SetGrowthStone;
+            hub.OnStatStoneChange += stoneText.SetGrowthStone; 
             hub.OnChangeStage += stageText.SetStage;
-
             //스킬 부분 미구현
             //자동전투 버튼 미구현
         }
@@ -66,9 +62,6 @@ namespace UI.Scripts.UiPresenter
                 stageText.SetStage(stageManager.CurStageSO);
             }
         }//초기값 세팅
-
-
-
     }
 }
 

@@ -40,17 +40,19 @@ namespace UI.Scripts.Ability
         {
             hub.OnGoldChange += ReFreshAllUI;
             hub.OnStatStoneChange += ReFreshAllUI;
+            hub.OnLevelChange += ReFreshAllUI;
         }
         private void OnDisable()
         {
             hub.OnGoldChange -= ReFreshAllUI;
             hub.OnStatStoneChange -= ReFreshAllUI;
+            hub.OnLevelChange -= ReFreshAllUI;
         }
         public void Init() 
         {
             manager = GameManager.Instance.GetGameSystem<StatUpgradeManager>();
-
-            ReFreshAllUI(1);
+            hub = GameManager.Instance.GetGameSystem<EventHub>();
+            //ReFreshAllUI(1); //3.23(규성) : 처음에 팝업 열려있는게 아니라 refresh할 필요가 없을것 같아 닫아두었습니다
             BindAllButtons();
             ChangeState(XState.X1);
             gameObject.SetActive(false);
@@ -131,7 +133,6 @@ namespace UI.Scripts.Ability
                 manager.TryUpgradeStat(type , stat.maxLevel - currntLevel);
             }
             ReFreshAllUI(1);
-            
         } //능력치 강화
 
         void ChangeState(XState newState)

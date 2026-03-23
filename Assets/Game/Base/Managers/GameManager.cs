@@ -58,11 +58,11 @@ namespace Base.Managers
         /// <summary> IGameSystem 붙은 컴포넌트 가져오기</summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>찾으려는 컴포넌트</returns>
-        public T GetGameSystem<T>() where T : IGameSystem
+        public T GetGameSystem<T>() where T : IGameSystem 
         {
             if (dic.TryGetValue(typeof(T),out var system))
             {
-                return (T)system;
+                return (T)system; //define
             }
             Debug.LogWarning($"찾으려는 {typeof(T)}타입은 존재하지 않습니다. ");
             return default;
