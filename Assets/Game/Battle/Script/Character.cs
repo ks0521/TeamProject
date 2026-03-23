@@ -37,18 +37,16 @@ namespace Battle
                 }
             }
         }
+        public float MaxHp => CurrentBattleStat.maxHp;
         // get component
         protected Rigidbody2D rb;
 
 
-        // action class (component X)
+        // action split class (component X)
         protected CharacterMove cm;
 
-        // target
-        //[SerializeField] protected Transform moveTarget;
-        [SerializeField] protected LayerMask targetLayer;
-
         // battle element
+        [SerializeField] protected LayerMask targetLayer;
         protected Character target;
         [SerializeField] protected bool isAtkCooltime;
         protected bool isDead;
@@ -56,38 +54,21 @@ namespace Battle
         protected float TargetSqrMagnitudeRange => AttackRange * AttackRange;
         // event
         protected CharacterCommonEvent cEvent;
-        private void Awake()
-        {
-            AwakeInit();
-        }
         private void OnEnable()
         {
-            OnEnableInit();
+            Init();
         }
-        private void Start()
-        {
-            StartInit();
-        }
-        /// <summary> 적합 시점 : Awake - 처음 / Component, 일반 클래스 등 할당 (GetComponent, new 등) </summary>
-        protected virtual void AwakeInit()
+        protected virtual void Init()
         {
             rb = GetComponent<Rigidbody2D>();
             cm = new CharacterMove();
             cEvent = new CharacterCommonEvent();
-        }
-        /// <summary> 적합 시점 : OnEnable - MemberInit 실행 후 및 비활성화 된 몬스터 등이 새로운 스탯을 부여받을 때 / Character class의 멤버 변수에 값 할당 </summary>
-        protected virtual void OnEnableInit()
-        {
+
             hp = CurrentBattleStat.maxHp;
             isAtkCooltime = false;
-        }
-        /// <summary> 적합 시점 : Start 등 MemberInit 실행 후 / Component, 일반 클래스 등의 Init 실행 </summary>
-        protected virtual void StartInit()
-        {
+
             cm.Init(rb);
-            //targetSqrMagnitudeRange = AttackRange * AttackRange;
-        }
-        protected abstract void OnDead();
+        }        protected abstract void OnDead();
         private void Update()
         {
             UpdateFeat();
@@ -103,11 +84,6 @@ namespace Battle
             //Vector2 targetPos = moveTarget.position;
             Vector2 targetPos = target.transform.position;
             return (targetPos - rb.position).normalized;
-        }
-        protected bool CheckAtkRangeCollision(ref Collider2D[] colArr)
-        {
-            int cnt = Physics2D.OverlapCircleNonAlloc(transform.position, AttackRange, colArr, targetLayer);
-            return cnt > 0;
         }
         protected bool CheckTargetIsClose()
         {

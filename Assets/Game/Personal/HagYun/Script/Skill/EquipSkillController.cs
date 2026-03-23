@@ -26,9 +26,10 @@ namespace Personal.HagYun
         //public bool IsSkillUsePossible => eSkill != null && !eSkill.IsCooltime;
         public bool IsSkillUsePossible => isEquipped && !eSkill.IsCooltime;
         public Skill Skill => eSkill.Skill;
-        public void Init()
+        public void Init(Character owner)
         {
             eSkill = new EquipSkill();
+            eSkill.Init(owner);
         }
     }
     public class EquipSkillControllerEvent
@@ -41,8 +42,10 @@ namespace Personal.HagYun
     public abstract class EquipSkillController : MonoBehaviour
     {
         // test
-        public static EquipSkillController esc;
         public SpriteRenderer sr;
+        
+        // owner
+        protected Character owner;
 
         // skill pool for get skill
         [SerializeField] protected SkillPool skillPool;
@@ -60,15 +63,11 @@ namespace Personal.HagYun
 
         [Range(0f, 1f)] protected float skillFireTimeValue = 0.5f;
         public bool IsCasting { get; private set; }
-        public void PlOwnerSet(Player pl) => Skill.SetPlOwner(pl);
-        private void Awake()
-        {
-            esc = this;
-        }
-        void Start()
-        {
-            Init(GetComponent<Player>());
-        }
+        public void OwnerSet(Character owner) => this.owner = owner;
+        // void Start()
+        // {
+        //     Init(GetComponent<Player>());
+        // }
         public abstract void Init(Character cha);
         private void Update()
         {
@@ -117,8 +116,8 @@ namespace Personal.HagYun
             {
                 castingTimeValue = curCastingTime / baseCastingTime;
                 curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
-                await UniTask.Yield(Skill.PlOwner.GetCancellationTokenOnDestroy());
-                if (Skill.PlOwner == null) return;
+                await UniTask.Yield(this.GetCancellationTokenOnDestroy());
+                if (this == null) return;
             }
 
             sr.color = Color.yellow;
@@ -128,8 +127,8 @@ namespace Personal.HagYun
             {
                 castingTimeValue = curCastingTime / baseCastingTime;
                 curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
-                await UniTask.Yield(Skill.PlOwner.GetCancellationTokenOnDestroy());
-                if (Skill.PlOwner == null) return;
+                await UniTask.Yield(this.GetCancellationTokenOnDestroy());
+                if (this == null) return;
             }
 
             sr.color = Color.white;

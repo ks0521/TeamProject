@@ -400,6 +400,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 50879365}
   m_CullTransparentMesh: 1
+--- !u!1 &300694062
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 300694063}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &300694063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 300694062}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1514846491}
+  - {fileID: 797501427}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &380338113
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,7 +623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &501623856
 Transform:
   m_ObjectHideFlags: 0
@@ -633,7 +666,6 @@ MonoBehaviour:
       skillSlots: 0
     lastSession:
       lastConnectTime: 0
-  statUpgradeConfig: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
   playerStatCalculator: {fileID: 1892574516}
 --- !u!1 &557917606
 GameObject:
@@ -801,6 +833,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 45972331}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &654513828 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7065709201030374676, guid: b8b30c638fec9cc4180f08037a81dd5a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2480037390527182722}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dbe987732c81947b4f21c72552d719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &734295258 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
@@ -887,6 +931,37 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 754048536}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &797501426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 797501427}
+  m_Layer: 0
+  m_Name: EffectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &797501427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797501426}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 300694063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &853909022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1206,6 +1281,50 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4016635213604604840}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1514846490
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1514846491}
+  - component: {fileID: 1514846492}
+  m_Layer: 0
+  m_Name: MonsterPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1514846491
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514846490}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 300694063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514846492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514846490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b86cc68229f0a94e81aeab6664e9309, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1578171070 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7061408015102516792, guid: 63dd8263e523236488c56221d70ff54d,
@@ -1228,7 +1347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1804106753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1241,7 +1360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 867ae1c3e9597d941b93bd5c6be8acd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageManager: {fileID: 1858746700}
 --- !u!4 &1804106754
 Transform:
   m_ObjectHideFlags: 0
@@ -1295,6 +1413,7 @@ MonoBehaviour:
   btnArr:
   - {fileID: 1136956959}
   - {fileID: 1988985573}
+  es: {fileID: 654513828}
 --- !u!114 &1820692778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1395,7 +1514,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1858746700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1418,9 +1537,9 @@ MonoBehaviour:
   BlockSpawning: 0
   curChapter: 0
   curStage: 0
-  monsterPool: {fileID: 0}
+  monsterPool: {fileID: 1514846492}
   stage:
-    monsterPool: {fileID: 0}
+    monsterPool: {fileID: 1514846492}
     stageSO: {fileID: 11400000, guid: 97cf2c0cafd0b9440a324f760b50810f, type: 2}
     monstersList: []
     canSpawning: 0
@@ -1432,6 +1551,7 @@ MonoBehaviour:
     nextChallengeChapter: 0
     nextChallengeStage: 0
   type: 0
+  spawnArea: {fileID: 0}
 --- !u!4 &1858746701
 Transform:
   m_ObjectHideFlags: 0
@@ -1798,7 +1918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2082803864
 Transform:
   m_ObjectHideFlags: 0
@@ -2182,7 +2302,57 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalAttackSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.atk
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.def
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.maxHp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.atkSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.moveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.critChance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1523400318190689276, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: finalBattleStatus.critDamage
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1589158739056373854, guid: b8b30c638fec9cc4180f08037a81dd5a,
+        type: 3}
+      propertyPath: skillPool
+      value: 
+      objectReference: {fileID: 734295258}
+    - target: {fileID: 7065709201030374676, guid: b8b30c638fec9cc4180f08037a81dd5a,
         type: 3}
       propertyPath: skillPool
       value: 
@@ -2337,3 +2507,4 @@ SceneRoots:
   - {fileID: 1820692781}
   - {fileID: 877143827}
   - {fileID: 1804106754}
+  - {fileID: 300694063}
