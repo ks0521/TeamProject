@@ -39,8 +39,6 @@ namespace Battle
                 Debug.LogWarning($"StageDictionary : {chapter}-{stage} ({stageType}) 스테이지가 없습니다. ");
                 return null;
             }
-
-            Debug.Log($"{stageSo.stageName}");
             return stageSo;
         }
     }

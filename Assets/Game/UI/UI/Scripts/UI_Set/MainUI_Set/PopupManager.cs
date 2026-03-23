@@ -34,7 +34,8 @@ namespace Game_UI.Scripts.PopupManager
             if (instance == null)
             {
                 instance = this; 
-                DontDestroyOnLoad(gameObject); 
+                //DontDestroyOnLoad(gameObject);
+                //3.23(규성) : PopUpManager스크립트가 있는 오브젝트가 루트 오브젝트가 아니라서 오류가 발생합니다 
             }
             else
             {

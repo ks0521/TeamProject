@@ -9,9 +9,10 @@ namespace Personal.GyuSeong
     {
         public MonsterSO monsterSO;
         public const float MonsterAttackRange = 0.6f;
-        protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
+        public override BattleStat CurrentBattleStat => monsterSO.battleStat;
         protected override float AttackRange => MonsterAttackRange;
         public event Action<TestMonster> OnMonsterKilled;
+        public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
         public bool TestDead;
         /// <summary> 플레이어 피격에 의한 정상적 사망일때 실행</summary>
         protected override void OnDead()
@@ -38,7 +39,13 @@ namespace Personal.GyuSeong
             if (playerObj != null)
                 target = playerObj.transform;
         }
-
+        public override void Hit(float damage)
+        {
+            float finalDmg = Mathf.Max(1f, damage - CurrentBattleStat.def);
+            Hp -= finalDmg;
+            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+            Debug.Log($"{finalDmg} Damage!\n{gameObject.name} HP : {Hp} 남음");
+        }
         protected override void UpdateFeat()
         {
         }

@@ -11,7 +11,7 @@ namespace Personal.GyuSeong
     {
         [SerializeField] private StageManager stageManager; //몬스터 리스트를 찾기 위한 매니저
         [SerializeField] private PlayerRuntimeStatus runtimeStatus; //실시간 정보(이건 안쓰고 CurrentBattleState씀)
-        protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus; //진짜 플레이어의 실시간 정보
+        public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus; //진짜 플레이어의 실시간 정보
         protected override float AttackRange => runtimeStatus.finalRange;//공격 사거리
         [SerializeField] Collider2D[] monColArr = new Collider2D[64];
         private TestMonster targetMonster;
@@ -31,7 +31,7 @@ namespace Personal.GyuSeong
         /// <returns>curTarget 갱신여부(true - 갱신성공 / false - 갱신실패)</returns>
         private bool FindTarget()
         {
-            stageMonsters = stageManager.GetStageMonsters();
+            //stageMonsters = stageManager.GetStageMonsters();
             float minDist = Single.MaxValue;
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)

@@ -29,7 +29,7 @@ namespace Personal.GyuSeong
         protected CharacterMove cm; //커스텀 클래스
         protected Transform target; //대상의 위치
         [SerializeField] protected LayerMask targetLayer; //대상 레이어마스크
-        protected abstract BattleStat CurrentBattleStat { get; } //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
+        public abstract BattleStat CurrentBattleStat { get; } //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
         protected bool CanAttack; //지금 공격 가능한지(가능하면 true / 안되면 false )
         [SerializeField]protected bool isDead; //객체의 사망 여부 (죽으면 true / 살아있으면 false)
         public bool IsDead => isDead;
@@ -78,7 +78,7 @@ namespace Personal.GyuSeong
             return cnt > 0;
         }
         
-        public void Hit(float damage)
+        public virtual void Hit(float damage)
         {
             float finalDmg = Mathf.Max(1f, damage - CurrentBattleStat.def);
             Hp -= finalDmg;
