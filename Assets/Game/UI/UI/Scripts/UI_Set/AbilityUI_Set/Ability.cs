@@ -18,6 +18,7 @@ namespace UI.Scripts.Ability
     public class Ability : MonoBehaviour
     {
         private StatUpgradeManager manager;
+        private EventHub hub;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
@@ -28,28 +29,33 @@ namespace UI.Scripts.Ability
         [Header("곱하기 버튼")]
         [SerializeField] private Button_Set btnX;
 
-
         private enum XState
         {
             X1, X10, X100
         }
         private XState multiState;
         private int multiPress = 1;
-        
-        // Start is called before the first frame update
-        public void OnEnable()
+
+        private void OnEnable()
         {
-            ReFreshAllUI();
-        }// 나중에 이벤트 구독형식으로 변경 예정
-       
+            hub.OnGoldChange += ReFreshAllUI;
+            hub.OnStatStoneChange += ReFreshAllUI;
+        }
+        private void OnDisable()
+        {
+            hub.OnGoldChange -= ReFreshAllUI;
+            hub.OnStatStoneChange -= ReFreshAllUI;
+        }
         public void Init() 
         {
             manager = GameManager.Instance.GetGameSystem<StatUpgradeManager>();
-            ReFreshAllUI();
+
+            ReFreshAllUI(1);
             BindAllButtons();
             ChangeState(XState.X1);
             gameObject.SetActive(false);
         }
+
         private StatItemView GetType(StatusType type)
         {
             foreach (var view in statItemViews)
@@ -71,7 +77,7 @@ namespace UI.Scripts.Ability
             btnX.Xbtn[1].onClick.AddListener(() => ChangeState(XState.X10));
             btnX.Xbtn[2].onClick.AddListener(() => ChangeState(XState.X100));
         }//능력치 구매 버튼 , 곱하기 버튼 OnClick 에 자동으로 함수 넣어주기
-        public void ReFreshAllUI()
+        public void ReFreshAllUI(int fake)
         {
             foreach (var stat in statItemViews)
             {
@@ -124,7 +130,7 @@ namespace UI.Scripts.Ability
             {
                 manager.TryUpgradeStat(type , stat.maxLevel - currntLevel);
             }
-            ReFreshAllUI();
+            ReFreshAllUI(1);
             
         } //능력치 강화
 
@@ -147,7 +153,7 @@ namespace UI.Scripts.Ability
                     btnX.SelectButton(2);
                     break;
             }
-            ReFreshAllUI();
+            ReFreshAllUI(1);
         }//버튼 상태 전환 함수
     }
 
