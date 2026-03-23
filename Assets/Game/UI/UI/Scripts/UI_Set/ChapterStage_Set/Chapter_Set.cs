@@ -21,8 +21,7 @@ public class Chapter_Set : MonoBehaviour
     
     public void SetChapter(StageManager stageManager)
     {
-        Transform content = transform.Find("Viewport/Content");
-
+       
         int count = stageContent.childCount;
 
         stages = new Stage_Set[count];

@@ -35,7 +35,6 @@ namespace Game_UI.Scripts.PopupManager
             {
                 instance = this; 
                 DontDestroyOnLoad(gameObject); 
-                //-> 3.23(규성) : DontDestroy는 오브젝트 중 가장 루트 오브젝트에 붙어야합니다(UIManager -> Canvas_UI)
             }
             else
             {
@@ -60,7 +59,7 @@ namespace Game_UI.Scripts.PopupManager
         public void Init()
         {
 
-            if (equipmentPop != null)
+            if (equipmentPop != null) // 해당 코드들은 아직 스크립트가 아직 없어서 이렇게 해뒀습니다.
             {
                 equipmentPop.SetActive(false);
             }
@@ -77,6 +76,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 gameEndPop.SetActive(false);
             }
+            
 
             BindAllButton();
             popupStack.Clear();
@@ -159,7 +159,7 @@ namespace Game_UI.Scripts.PopupManager
             skillBtn.onClick.AddListener(() => OpenPopup(skillPop.gameObject));
             equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
             dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
-        }
+        }//버튼에 함수 넣기
        
     }
 

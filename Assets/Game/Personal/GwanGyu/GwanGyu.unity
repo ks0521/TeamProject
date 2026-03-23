@@ -173,10 +173,10 @@ MonoBehaviour:
       nextChallangeStage: 0
       nextChallangeChapter: 0
     currency:
-      level: 0
+      level: 50
       exp: 0
-      gold: 0
-      statStone: 0
+      gold: 100
+      statStone: 100
     skillProgress:
       skillSlots: 0
     lastSession:
@@ -781,11 +781,11 @@ MonoBehaviour:
   monsterPool: {fileID: 267975936}
   stage:
     monsterPool: {fileID: 0}
-    stageSO: {fileID: 0}
+    stageSO: {fileID: 11400000, guid: 97cf2c0cafd0b9440a324f760b50810f, type: 2}
     monstersList: []
     canSpawning: 0
     spawnDelay: 0
-  stageSO: {fileID: 0}
+  stageSO: {fileID: 11400000, guid: 97cf2c0cafd0b9440a324f760b50810f, type: 2}
   stageProgress:
     selectedNormalChapter: 0
     selectedNormalStage: 0
@@ -45785,14 +45785,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e1f24ce97444d0419844347c4121a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 38601356}
   hp: {fileID: 7450922552592881766}
   expBar: {fileID: 6007511804700765766}
   powerText: {fileID: 8999299672039378152}
   goldText: {fileID: 7542516652686626830}
-  stoneText: {fileID: 0}
+  stoneText: {fileID: 6878094315757361139}
   stageText: {fileID: 8718658542356371128}
-  autoButton: {fileID: 0}
+  autoButton: {fileID: 5588222003679638999}
   skillIcons: {fileID: 6357080804001114155}
 --- !u!224 &8357452260003097094
 RectTransform:
