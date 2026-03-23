@@ -37,6 +37,7 @@ namespace Battle
                 }
             }
         }
+        public float MaxHp => CurrentBattleStat.maxHp;
         // get component
         protected Rigidbody2D rb;
 
