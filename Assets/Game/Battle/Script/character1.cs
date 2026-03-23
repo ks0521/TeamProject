@@ -4,6 +4,7 @@ using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public abstract class character1 : MonoBehaviour

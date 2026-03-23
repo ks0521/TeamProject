@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-public class JJ_BossAttackManager : character1
+public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 것
 {
     public MonsterSO monsterSO;
     public SFXPlayer sfx;
@@ -183,7 +183,7 @@ public class JJ_BossAttackManager : character1
         await UniTask.Delay(TimeSpan.FromSeconds(skill2WarningDuration), cancellationToken: cts);
         if (spumController != null)
         {
-            spumController.PlayAnimation(PlayerState.ATTACK, 2);
+            spumController.PlayAnimation(PlayerState.ATTACK, 3);
         }
         if (atkRange2 != null)
         {
@@ -226,7 +226,7 @@ public class JJ_BossAttackManager : character1
         await UniTask.Delay(TimeSpan.FromSeconds(skill3WarningDuration), cancellationToken: cts);
         if (spumController != null)
         {
-            spumController.PlayAnimation(PlayerState.ATTACK, 2);
+            spumController.PlayAnimation(PlayerState.ATTACK, 3);
         }
         if (atkRange3 != null)
         {
