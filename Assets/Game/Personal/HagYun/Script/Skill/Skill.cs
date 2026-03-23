@@ -1,4 +1,4 @@
-﻿using Battle;
+using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
 using System.Collections.Generic;
@@ -89,9 +89,9 @@ namespace Personal.HagYun
         // etc
         //protected CancellationTokenSource cts;
 
-        public void Init(Character Owner)
+        public void Init(Character owner)
         {
-            if (this.owner == null) this.owner = Owner;
+            if (this.owner == null) this.owner = owner;
             // else if (this.Owner != Owner)
             // {
             //     Debug.LogWarning($"{name} skill은 owner 설정된 skill");
