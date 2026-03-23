@@ -73,5 +73,5 @@ public class ItemDropManager : MonoBehaviour, IManager
         progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
     }
 
-    public int GetOrder() => 10;
+    public int GetOrder() => 3; //ItemDropTable은 stage이전에 생성 필요
 }

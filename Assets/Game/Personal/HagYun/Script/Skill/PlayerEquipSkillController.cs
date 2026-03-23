@@ -233,8 +233,8 @@ namespace Personal.HagYun
         {
             if (cha is Player pl)
             {
-                PlOwnerSet(pl);
-                if (Skill.PlOwner == null) Debug.LogWarning("skill에 플레이어 주입 안 됨");
+                OwnerSet(pl);
+                if (owner == null) Debug.LogWarning("플레이어 주입 안 됨");
                 SkillEquipInit();
                 AutoSkillUsePossibleCntInit();
 
@@ -251,7 +251,7 @@ namespace Personal.HagYun
             equipSkillSetArr = new EquipSkillSet[6];
             for (int i = 0; i < 6; i++)
             {
-                equipSkillSetArr[i].Init();
+                equipSkillSetArr[i].Init(owner);
 
                 if (skillPool.TryGetSkill(i, out Skill skill))
                 {

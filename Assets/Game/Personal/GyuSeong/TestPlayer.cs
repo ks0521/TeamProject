@@ -9,14 +9,15 @@ namespace Personal.GyuSeong
 {
     public class TestPlayer : TestCharacter
     {
-        [SerializeField] private StageManager stageManager;
-        [SerializeField] private PlayerRuntimeStatus runtimeStatus;
-        protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
-        protected override float AttackRange => runtimeStatus.finalRange;
+        [SerializeField] private StageManager stageManager; //몬스터 리스트를 찾기 위한 매니저
+        [SerializeField] private PlayerRuntimeStatus runtimeStatus; //실시간 정보(이건 안쓰고 CurrentBattleState씀)
+        protected override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus; //진짜 플레이어의 실시간 정보
+        protected override float AttackRange => runtimeStatus.finalRange;//공격 사거리
         [SerializeField] Collider2D[] monColArr = new Collider2D[64];
         private TestMonster targetMonster;
-        [SerializeField] private List<TestMonster> stageMonsters;
-
+        [SerializeField] private List<TestMonster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
+        //플레이어의 탐색 기준
+        
         protected override void OnDead()
         {
             if (isDead)
@@ -36,7 +37,7 @@ namespace Personal.GyuSeong
             if (stageMonsters is null || stageMonsters.Count == 0)
             {
                 //Debug.LogWarning("현재 스테이지에 나와있는 몬스터가 없습니다. ");
-                return false;
+                return false; 
             }
 
             targetMonster = stageMonsters[0]; // 일단 버그 방지

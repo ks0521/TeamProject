@@ -54,7 +54,7 @@ namespace Personal.HagYun
             EnableEffect();
             if (Data.SoE == Growth.Skill.ScopeOfEffect.Single)
             {
-                PlSkillAtk(target);
+                SkillAtk(target);
             }
             else if (Data.effectArea == 0)
             {
