@@ -31,6 +31,36 @@ namespace Battle
             float y = Input.GetAxisRaw("Vertical");
             IsInputMoving = IsMovingCheck(x, y, speed);
         }
+        public void VFixedMove()
+        {
+
+        }
+        public void VChaseMove(Transform targetTransform, float speed)
+        {
+            if (IsInputMoving) return;
+            Vector2 targetPos = targetTransform.position;
+            Vector2 resultVec = targetPos - rb.position;
+            float dis = resultVec.sqrMagnitude;
+            isAutoMoving = dis < 0.01f;
+            if (isAutoMoving)
+            {
+                rb.velocity = Vector2.zero;
+            }
+            else
+            {
+                Vector2 dir = resultVec.normalized;
+                rb.velocity = dir * speed;
+            }
+        }
+        public void VChaseMove(Vector2 moveVec)
+        {
+            if (IsInputMoving) return;
+            isAutoMoving = moveVec != Vector2.zero;
+            if (isAutoMoving)
+                rb.velocity = moveVec;
+            else
+                rb.velocity = Vector2.zero;
+        }
         public void FixedMove()
         {
             if (IsInputMoving)
@@ -51,7 +81,7 @@ namespace Battle
             if (IsInputMoving) return;
             Vector2 autoMoveVelocity = Vector2.MoveTowards(rb.position, targetTransform.position, speed * Time.deltaTime);
             isAutoMoving = autoMoveVelocity != Vector2.zero;
-            if(isAutoMoving)
+            if (isAutoMoving)
                 rb.MovePosition(autoMoveVelocity);
         }
 
