@@ -30,12 +30,21 @@ public abstract class character1 : MonoBehaviour
     protected bool CanAttack; //지금 공격 가능한지(가능하면 true / 안되면 false )
     protected abstract BattleStat CurrentBattleStat { get; } //자식 (몬스터나 플레이어에서 전투 스탯을 구현)
     protected abstract float AttackRange { get; } //공격 거리
-    
+
+    [Header("Animation (SPUM)")]
+    [SerializeField] protected SPUM_Prefabs spumController;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         cm = new CharacterMove();
         cm.Init(rb);
+
+        if (spumController == null)
+        {
+            spumController = GetComponent<SPUM_Prefabs>();
+            spumController.OverrideControllerInit();
+        }
     }
     
     private void OnEnable()
@@ -83,8 +92,13 @@ public abstract class character1 : MonoBehaviour
 
     protected void Attack(character1 target)
     {
-        if (!CanAttack || target == null) return;
+        if (!CanAttack || target == null || isDead) return;
         Debug.Log($"{gameObject.name}가 {target.name} 공격함!");
+        if (spumController != null)
+        {
+            spumController.PlayAnimation(PlayerState.ATTACK, 0);
+        }
+
         float resultDmg = CurrentBattleStat.atk;
         if (Random.Range(0f, 1f) < CurrentBattleStat.critChance)
         {
