@@ -1,4 +1,5 @@
 ﻿using Base.Data;
+using Base.Managers;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
@@ -20,7 +21,7 @@ namespace Battle
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
         protected abstract BattleStat CurrentBattleStat { get; }
         [SerializeField] protected float hp;
-        public virtual float Hp
+        public float Hp
         {
             get => hp;
             protected set
@@ -48,12 +49,14 @@ namespace Battle
         // battle element
         [SerializeField] protected LayerMask targetLayer;
         protected Character target;
+        protected Transform targetTransform;
         [SerializeField] protected bool isAtkCooltime;
         protected bool isDead;
         protected abstract float AttackRange { get; } //공격 거리
         protected float TargetSqrMagnitudeRange => AttackRange * AttackRange;
         // event
         protected CharacterCommonEvent cEvent;
+        protected EventHub hub;
         private void OnEnable()
         {
             Init();
@@ -68,7 +71,14 @@ namespace Battle
             isAtkCooltime = false;
 
             cm.Init(rb);
-        }        protected abstract void OnDead();
+            // hub = GameManager.get
+        }
+        protected void TargetSet(Character target)
+        {
+            this.target = target;
+            targetTransform = target.transform;
+        }
+        protected abstract void OnDead();
         private void Update()
         {
             UpdateFeat();
@@ -82,19 +92,19 @@ namespace Battle
         protected Vector2 DirFromPosToTarget()
         {
             //Vector2 targetPos = moveTarget.position;
-            Vector2 targetPos = target.transform.position;
+            Vector2 targetPos = targetTransform.position;
             return (targetPos - rb.position).normalized;
         }
         protected bool CheckTargetIsClose()
         {
             if (target == null) return false;
             Vector2 thisPos = transform.position;
-            Vector2 targetPos = target.transform.position;
+            Vector2 targetPos = targetTransform.position;
             // targetPos - thisPos 거리가 TargetSqrMagnitudeRange 보다 작을 때 true
             // 사이 거리 / 판정 거리 : 판정 거리보다 짧아야 true
             return (targetPos - thisPos).sqrMagnitude <= TargetSqrMagnitudeRange;
         }
-        public void Hit(float damage)
+        public virtual void Hit(float damage)
         {
             float resultDmg = damage - CurrentBattleStat.def;
             Hp -= damage - CurrentBattleStat.def;
@@ -119,7 +129,7 @@ namespace Battle
             AtkCooltimeTask().Forget();
             Debug.Log($"{name} 이 {target.name}에게 일반공격!");
             float resultDmg = CurrentBattleStat.atk;
-            if(IsCriticalChance())
+            if (IsCriticalChance())
             {
                 resultDmg *= CurrentBattleStat.critDamage;
                 Debug.Log("크리티컬!");
@@ -130,7 +140,7 @@ namespace Battle
         {
             float resultDmg = CurrentBattleStat.atk;
             resultDmg *= increasePower;
-            if(IsCriticalChance())
+            if (IsCriticalChance())
             {
                 resultDmg *= CurrentBattleStat.critDamage;
             }
