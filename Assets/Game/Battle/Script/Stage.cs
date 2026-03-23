@@ -54,7 +54,7 @@ using Random = UnityEngine.Random;
                     mon.SetActive(true);
                     mon.transform.position = new Vector3(randx, randy, 0);
                     Register(mon.GetComponent<TestMonster>());
-                    Debug.Log($"Spawn : {mon.transform.position}");
+                    //Debug.Log($"Spawn : {mon.transform.position}");
                     await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
                     await UniTask.WaitWhile(() => monstersList.Count >= 10, cancellationToken: token);
                 }
@@ -69,7 +69,7 @@ using Random = UnityEngine.Random;
         /// <param name="monster"> 꺼내온 몬스터 </param>
         private void Register(TestMonster monster)
         {
-            Debug.Log("리스트 내 신규 몬스터 등록");
+            //Debug.Log("리스트 내 신규 몬스터 등록");
 
             monstersList.Add(monster);
             monster.OnMonsterKilled += MonsterKilled;
@@ -88,7 +88,7 @@ using Random = UnityEngine.Random;
         /// <param name="monster"> 사라지는 몬스터 </param>
         private void UnRegister(TestMonster monster)
         {
-            Debug.Log("리스트 내 몬스터 등록 해제");
+            //Debug.Log("리스트 내 몬스터 등록 해제");
 
             monstersList.Remove(monster);
             monsterPool.ReturnPool(monster.monsterSO.key, monster.gameObject);

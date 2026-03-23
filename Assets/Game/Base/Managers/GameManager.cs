@@ -24,7 +24,7 @@ namespace Base.Managers
     {
         public static GameManager Instance;
         private List<IGameSystem> gameSystems;
-
+        private Dictionary<Type, IGameSystem> dic = new();
         private void Awake()
         {
             //첫 시작시 실행
@@ -42,8 +42,9 @@ namespace Base.Managers
             //시작시 IManager붙은 컴포넌트 전부 찾고 GetOrder순 정렬
             gameSystems = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IGameSystem>().ToList();
             gameSystems.Sort((x, y) => x.GetOrder().CompareTo(y.GetOrder()));
-            foreach (var gameSystem in gameSystems)
+            foreach (IGameSystem gameSystem in gameSystems)
             {
+                dic.Add(gameSystem.GetType(), gameSystem);
                 if (gameSystem is not IManager manager)
                 {
                     Debug.Log($"{gameSystem} 시스템 추가");
@@ -59,13 +60,12 @@ namespace Base.Managers
         /// <returns>찾으려는 컴포넌트</returns>
         public T GetGameSystem<T>() where T : IGameSystem
         {
-            T result = gameSystems.OfType<T>().FirstOrDefault();
-            if (result == null)
+            if (dic.TryGetValue(typeof(T),out var system))
             {
-                Debug.LogWarning("찾고자 하는 요소가 없습니다. ");
-                return default;
+                return (T)system;
             }
-            return result;
+            Debug.LogWarning($"찾으려는 {typeof(T)}타입은 존재하지 않습니다. ");
+            return default;
         }
     }
 }
