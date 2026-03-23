@@ -9,7 +9,6 @@ namespace Battle
 {
     public class Player : Character
     {
-        public static Player Pl { get; protected set; }
         // outside component
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
@@ -24,13 +23,9 @@ namespace Battle
         }
         protected override void Init()
         {
-            if (Pl == null)
-            {
-                Pl = this;
-                base.Init();
+            base.Init();
 
-                equipSkillController.Init(this);
-            }
+            equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
             stageMonsters = GameManager.Instance.GetGameSystem<StageManager>().GetStageMonsters();
         }
@@ -98,7 +93,8 @@ namespace Battle
                 {
                     if (target != null)
                     {
-                        cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        // cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        cm.VChaseMove(DirFromPosToTarget());
                     }
                 }
                 else
