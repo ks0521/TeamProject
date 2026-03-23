@@ -1,4 +1,4 @@
-﻿using Base.Data;
+using Base.Data;
 using Base.Managers;
 using Base.Save;
 using Growth.StatUpgrade;
@@ -10,8 +10,6 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System;
-using Base.Managers;
 using Unity.VisualScripting;
 using Unity.Mathematics;
 
@@ -19,8 +17,8 @@ namespace UI.Scripts.Ability
 {
     public class Ability : MonoBehaviour
     {
-        [Header("매니저")]
-        [SerializeField] private StatUpgradeManager manager ;
+        private StatUpgradeManager manager;
+        private EventHub hub;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
@@ -31,25 +29,33 @@ namespace UI.Scripts.Ability
         [Header("곱하기 버튼")]
         [SerializeField] private Button_Set btnX;
 
-
         private enum XState
         {
             X1, X10, X100
         }
         private XState multiState;
-        [SerializeField]private int multiPress = 1;
-        
-        // Start is called before the first frame update
-        public void OnEnable()
+        private int multiPress = 1;
+
+        private void OnEnable()
         {
-            ReFreshAllUI();
-        }// 나중에 
-        private void Start()
-        {
-            BindAllButtons();
-            ReFreshAllUI();
-            ChangeState(XState.X1);
+            hub.OnGoldChange += ReFreshAllUI;
+            hub.OnStatStoneChange += ReFreshAllUI;
         }
+        private void OnDisable()
+        {
+            hub.OnGoldChange -= ReFreshAllUI;
+            hub.OnStatStoneChange -= ReFreshAllUI;
+        }
+        public void Init() 
+        {
+            manager = GameManager.Instance.GetGameSystem<StatUpgradeManager>();
+
+            ReFreshAllUI(1);
+            BindAllButtons();
+            ChangeState(XState.X1);
+            gameObject.SetActive(false);
+        }
+
         private StatItemView GetType(StatusType type)
         {
             foreach (var view in statItemViews)
@@ -57,7 +63,6 @@ namespace UI.Scripts.Ability
                 if (view.statusType == type)
                     return view;
             }
-
             return null;
         }//타입에 해당하는 StatItemView 찾아주는 함수
         private void BindAllButtons()
@@ -68,8 +73,11 @@ namespace UI.Scripts.Ability
                 GameData.StatusDB.TryGetStatEntry(type, out var entry);
                 stat.BindLevelUp(() => OnClickLevelUp(type , entry));
             }
-        }//능력치 구매 버튼 OnClick 에 자동으로 함수 넣어주기
-        public void ReFreshAllUI()
+            btnX.Xbtn[0].onClick.AddListener(() => ChangeState(XState.X1));
+            btnX.Xbtn[1].onClick.AddListener(() => ChangeState(XState.X10));
+            btnX.Xbtn[2].onClick.AddListener(() => ChangeState(XState.X100));
+        }//능력치 구매 버튼 , 곱하기 버튼 OnClick 에 자동으로 함수 넣어주기
+        public void ReFreshAllUI(int fake)
         {
             foreach (var stat in statItemViews)
             {
@@ -93,19 +101,17 @@ namespace UI.Scripts.Ability
             int cost = 0;
             for (int i = 1; i <= multiPress; i++)
             {
-                cost += (currentLevle + i) * statEntry.enhanceCost; //3.23(규성) : 계산식이 잘못된것같아 수정했습니다. 
-                //cost += (currentLevle * i) * statEntry.enhanceCost; //스텟 가격 부분
+                cost += (currentLevle + i) * statEntry.enhanceCost;
             }
             bool isUnLock = PlayerProgressManager.Instance.progress.currency.level >= statEntry.unlockLevel;
-            //PlayerProgressManager.Instance.progress.currency.level <= statEntry.unlockLevel;
-            //3.23(규성) isUnLock이름과 canLevelUp에서의 용도를 보면 조건이 반대로 되어있는것 같아 수정했습니다. 
+            
             bool canLevelUp = manager.CanUpgradeStat(type,multiPress) && (currentLevle < statEntry.maxLevel) && isUnLock;
 
             StatItemView itemView = GetType(type);
             if (itemView == null)
             {
                 Debug.Log($"{type}에 해당되는 스텟 UI가 없음");
-                return; //3.23(규성) : null일때 추가처리 없이 다시 itemView를 호출해 null 참조가 발생할 위험이 있어 임시로 수정했습니다. 
+                return; 
             }
 
             itemView.RefreshUI(statEntry, currentLevle, currentValue, nextValue, cost, canLevelUp, isUnLock);
@@ -124,7 +130,7 @@ namespace UI.Scripts.Ability
             {
                 manager.TryUpgradeStat(type , stat.maxLevel - currntLevel);
             }
-            ReFreshAllUI();
+            ReFreshAllUI(1);
             
         } //능력치 강화
 
@@ -147,27 +153,8 @@ namespace UI.Scripts.Ability
                     btnX.SelectButton(2);
                     break;
             }
-            ReFreshAllUI();
+            ReFreshAllUI(1);
         }//버튼 상태 전환 함수
-
-        public void OnClickX1()
-        {
-            ChangeState(XState.X1);
-        }//버튼 연결용 함수
-        public void OnClickX10()
-        {
-            ChangeState(XState.X10);
-        }
-        public void OnClickX100()
-        {
-            ChangeState(XState.X100);
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
-
-        }
     }
 
 }
