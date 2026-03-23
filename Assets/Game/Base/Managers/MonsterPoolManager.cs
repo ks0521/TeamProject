@@ -95,7 +95,7 @@ namespace Base.Data
                 return pool.Dequeue();
             }
 
-            Debug.Log($"{useObj.name} 사용함");
+            //Debug.Log($"{useObj.name} 사용함");
             return useObj;
         }
 
@@ -103,7 +103,7 @@ namespace Base.Data
         {
             returnObject.SetActive(false);
             pool.Enqueue(returnObject);
-            Debug.Log($"{returnObject.name} 반환됨");
+            //Debug.Log($"{returnObject.name} 반환됨");
         }
 
         public void ClearPool()

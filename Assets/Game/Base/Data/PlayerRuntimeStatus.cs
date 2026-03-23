@@ -23,5 +23,4 @@ public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
     }
 
     public int GetOrder() => 2; //PlayerProgressManager(1) 실행이 보장되어야 함
-
 }
