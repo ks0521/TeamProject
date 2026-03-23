@@ -31,7 +31,7 @@ namespace Personal.GyuSeong
         /// <returns>curTarget 갱신여부(true - 갱신성공 / false - 갱신실패)</returns>
         private bool FindTarget()
         {
-            stageMonsters = stageManager.GetStageMonsters();
+            //stageMonsters = stageManager.GetStageMonsters();
             float minDist = Single.MaxValue;
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)

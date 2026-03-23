@@ -394,4 +394,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isAtkCooltime: 0
-  monsterSO: {fileID: 0}
+  monsterSO: {fileID: 11400000, guid: fb98063b6aaa3e248b791248f2474747, type: 2}

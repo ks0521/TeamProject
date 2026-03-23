@@ -14,12 +14,12 @@ using Random = UnityEngine.Random;
     {
         [SerializeField] private MonsterPoolManager monsterPool;
         [SerializeField] private StageSO stageSO; //현재 스테이지의 SO
-        public List<TestMonster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
+        public List<Monster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
         public bool canSpawning; //스폰 여부 트리거(디버깅용)
         [SerializeField] private float spawnDelay; // 몬스터 스폰 딜레이
         private BoxCollider2D spawnArea;
-        public event Action<TestMonster> OnMonsterKilled;
+        public event Action<Monster> OnMonsterKilled;
         //초기화
         public Stage(StageSO stage, MonsterPoolManager monsterPool, BoxCollider2D spawnArea)
         {
@@ -53,7 +53,7 @@ using Random = UnityEngine.Random;
                     GameObject mon = monsterPool.UsePool(stageSO.preset[0].monster.key);
                     mon.SetActive(true);
                     mon.transform.position = new Vector3(randx, randy, 0);
-                    Register(mon.GetComponent<TestMonster>());
+                    Register(mon.GetComponent<Monster>());
                     //Debug.Log($"Spawn : {mon.transform.position}");
                     await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
                     await UniTask.WaitWhile(() => monstersList.Count >= 10, cancellationToken: token);
@@ -67,7 +67,7 @@ using Random = UnityEngine.Random;
 
         /// <summary> 새 몬스터 풀에서 꺼내왔을 때 스테이지에서 확인할 수 있게 연결</summary>
         /// <param name="monster"> 꺼내온 몬스터 </param>
-        private void Register(TestMonster monster)
+        private void Register(Monster monster)
         {
             //Debug.Log("리스트 내 신규 몬스터 등록");
 
@@ -77,7 +77,7 @@ using Random = UnityEngine.Random;
 
         /// <summary> 몬스터 처치시 스테이지 내부 처리부</summary>
         /// <param name="monster"></param>
-        private void MonsterKilled(TestMonster monster)
+        private void MonsterKilled(Monster monster)
         {
             //스테이지 클리어 등 작업전에 몬스터 반환먼저 하기
             UnRegister(monster);
@@ -86,7 +86,7 @@ using Random = UnityEngine.Random;
         
         /// <summary> 몬스터가 스테이지에서 사라졌을 시(사망 or 스테이지 변경으로 인한 강제삭제) 스테이지에서 분리</summary>
         /// <param name="monster"> 사라지는 몬스터 </param>
-        private void UnRegister(TestMonster monster)
+        private void UnRegister(Monster monster)
         {
             //Debug.Log("리스트 내 몬스터 등록 해제");
 
@@ -103,7 +103,7 @@ using Random = UnityEngine.Random;
             spawnerToken?.Dispose();
             for (int i = monstersList.Count - 1; i >= 0; i--)
             {
-                TestMonster monster = monstersList[i];
+                Monster monster = monstersList[i];
                 monstersList.Remove(monster);
                 monster.OnMonsterKilled -= MonsterKilled; //해당 몬스터와 연결된 이벤트 삭제
                 monster.ForcedReturn(); //모든 몬스터 제거, 초기화
