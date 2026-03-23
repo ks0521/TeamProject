@@ -1,4 +1,4 @@
-﻿using Base.Save;
+using Base.Save;
 using Battle;
 using Growth.StatUpgrade;
 using JetBrains.Annotations;
@@ -47,7 +47,7 @@ public class StatItemView : MonoBehaviour
         {
             levelUpButton.image.color = Color.gray;
         }
-        lockPanel.SetActive(!isUnlock);
+        lockPanel.SetActive(isUnlock);
         unlockLevelText.text = $"Lv : {statEntry.unlockLevel} 개방";
 
         
