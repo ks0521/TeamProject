@@ -1,10 +1,10 @@
+using Base.Data;
+using Cysharp.Threading.Tasks; // UniTask 사용을 위해 추가
+using Personal.HagYun;
+using System; // TimeSpan 사용을 위해 추가
 using System.Collections;
 using System.Collections.Generic;
-using Base.Data;
-using Personal.HagYun;
 using UnityEngine;
-using Cysharp.Threading.Tasks; // UniTask 사용을 위해 추가
-using System; // TimeSpan 사용을 위해 추가
 
 public class player1 : character1
 {
@@ -23,13 +23,31 @@ public class player1 : character1
             return;
         isDead = true;
         Debug.Log("스테이지 실패");
-        //이후 기능 구현
+        spumController.PlayAnimation(PlayerState.DEATH, 0);
+        //SFXPlayer가 사망 이벤트를 구독받고 효과음 재생
     }
 
     protected override void Init()
     {
         runtimeStatus = GetComponent<PlayerRuntimeStatus>();
-        hp = CurrentBattleStat.maxHp;
+        //hp = CurrentBattleStat.maxHp;
+        SyncHpAfterManagersReady().Forget();
+    }
+    async UniTaskVoid SyncHpAfterManagersReady()
+    {
+        // GameManager의 Start()가 실행되고 매니저들의 Init()이 끝날 때까지 넉넉히 대기
+        // 보통 1~2프레임이면 충분합니다.
+        await UniTask.DelayFrame(2);
+
+        if (runtimeStatus != null)
+        {
+            float calculatedHp = CurrentBattleStat.maxHp;
+            if (calculatedHp > 0)
+            {
+                hp = calculatedHp;
+                Debug.Log($"매니저 계산 완료! 강화가 적용된 HP로 갱신되었습니다: {hp}");
+            }
+        }
     }
 
     /*

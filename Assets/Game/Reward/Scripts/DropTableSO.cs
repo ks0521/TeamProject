@@ -29,7 +29,7 @@ public class DropTableSO : ScriptableObject
 {
     public int chapter; //챕터
     public int stage; //스테이지
-    //public int rewardGold; //골드
+    public int rewardGold; //골드
     public int rewardStatStone; //강화석
     public int rewardExp; //경험치
     public List<DropEntry> dropList = new();
