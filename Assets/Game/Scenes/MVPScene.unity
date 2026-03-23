@@ -2038,6 +2038,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1437971253}
   - component: {fileID: 1437971254}
+  - component: {fileID: 1437971255}
   m_Layer: 0
   m_Name: GrowthManager
   m_TagString: Untagged
@@ -2072,6 +2073,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daf146daa5a13f74396013fa0c7d7c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1437971255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437971252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a465a8bfe77eb4941939656ee6ad63af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  progress:
+    stage:
+      selectedNormalStage: 0
+      selectedNormalChapter: 0
+      nextChallangeStage: 0
+      nextChallangeChapter: 0
+    currency:
+      level: 0
+      exp: 0
+      gold: 0
+      statStone: 0
+    skillProgress:
+      skillSlots: 0
+    lastSession:
+      lastConnectTime: 0
 --- !u!1 &1497378962
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,6 +33,7 @@ namespace Base.Managers
         [SerializeField] private MonsterPoolManager monsterPool; //몬스터 풀
         [SerializeField] private Stage stage; //스테이지 객체
         [SerializeField] private StageSO stageSO; //스테이지 정보
+        public StageSO CurStageSO => stageSO;
         [SerializeField] private StageProgress stageProgress; //저장된 스테이지 해금 , 현재 스테이지 상태
         [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         [SerializeField] private BoxCollider2D spawnArea;
@@ -46,8 +47,9 @@ namespace Base.Managers
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
 
-        public int GetOrder() => 3;
-        public List<TestMonster> GetStageMonsters() => stage.monstersList;
+        public int GetOrder() => 10;
+        public List<TestMonster> GetStageMonsters() => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
+        
 
         /// <summary>스테이지 변경(도전 / 일반 / 잠김 스테이지 판별은 이 메서드에서 진행)</summary>
         /// <param name="selectedChapter"> 변경하려는 챕터</param>
@@ -87,7 +89,7 @@ namespace Base.Managers
 
             curChapter = selectedChapter;
             curStage = selectedStage;
-            Debug.Log($"Stage Changed to {selectedChapter} - {selectedStage}");
+            //Debug.Log($"Stage Changed to {selectedChapter} - {selectedStage}");
             stage?.Destroy(); //기존 스테이지 있으면 정리
             stageRule?.Destroy();
 
@@ -97,16 +99,17 @@ namespace Base.Managers
             if (stageSO.type == StageType.Normal)
             {
                 stageProgress = SelectNormalStage(stageSO.chapter, stageSO.stage);
-                stageRule = new NormalStageRule(stageSO);
+                stageRule = new NormalStageRule();
                 stage.OnMonsterKilled += stageRule.MonsterKilled;
             }
             else if (stageSO.type == StageType.Challenge || stageSO.type == StageType.Boss)
             {
-                stageRule = new ChallengeStageRule(stageSO);
+                stageRule = new ChallengeStageRule();
                 stage.OnMonsterKilled += stageRule.MonsterKilled;
                 ((ChallengeStageRule)stageRule).ChallengeSuccess += OnChallengeSucceeded;
             }
-
+            stageRule.Init(stageSO);
+            
             stage.Enter();
             stageRule.Enter();
             if (BlockSpawning)

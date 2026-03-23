@@ -89,18 +89,18 @@ namespace Personal.GyuSeong
         protected void Attack(TestCharacter target)
         {
             if (!CanAttack || target == null) return;
-            Debug.Log($"{gameObject.name}가 {target.name} 공격함!");
+            //Debug.Log($"{gameObject.name}가 {target.name} 공격함!");
             float resultDmg = CurrentBattleStat.atk;
             if (Random.Range(0f, 1f) < CurrentBattleStat.critChance)
             {
                 resultDmg *= CurrentBattleStat.critDamage;
-                Debug.Log($"크리티컬! {CurrentBattleStat.critDamage}배의 피해!");
+                //Debug.Log($"크리티컬! {CurrentBattleStat.critDamage}배의 피해!");
             }
 
             target.Hit(resultDmg);
             AtkCooltimeTask(CurrentBattleStat.atkSpeed, this.GetCancellationTokenOnDestroy()).Forget();
         }
-
+        
         /// <summary> 공격 쿨타임 구현 유니태스크</summary>
         /// <param name="duration"> 정지 시간(초)</param>
         async UniTaskVoid AtkCooltimeTask(float duration, CancellationToken token)

@@ -1,3 +1,5 @@
+using Base.Data;
+using Base.Managers;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,7 +13,15 @@ public abstract class StageRule
 {
     [SerializeField] protected StageSO stage;
     [SerializeField] protected int killScore;
+    protected ItemDropManager dropManager;
+    protected EventHub eventHub;
 
+    public virtual void Init(StageSO stage)
+    {
+        dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
+        eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+        this.stage = stage;
+    }
     public abstract void Enter();
     public abstract void MonsterKilled(TestMonster monster);
     public abstract void Destroy();
@@ -25,23 +35,24 @@ public class ChallengeStageRule : StageRule
     public event Action<StageSO> ChallengeSuccess;
     public event Action<StageSO> ChallengeFail;
     private CancellationTokenSource token;
-
-    public ChallengeStageRule(StageSO stage)
+    
+    public override void Init(StageSO stage)
     {
-        this.stage = stage;
+        base.Init(stage);
         remainTime = stage.deadLine;
     }
 
     public override void Enter()
     {
+        Debug.Log($"{stage.chapter} - {stage.stage}(Challenge) StageRule 시작. \n" +
+                  $"제한시간 : {stage.deadLine} / 목표 처치 수 : {stage.targetKillScore}");
+        dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         token = new CancellationTokenSource();
         ChallengeTimeAttack(token.Token).Forget();
     }
         
     async UniTaskVoid ChallengeTimeAttack(CancellationToken token)
     {
-        Debug.Log($"{stage.chapter} - {stage.stage}(Challenge) 입장. \n" +
-                  $"제한시간 : {stage.deadLine} / 목표 처치 수 : {stage.targetKillScore}");
         while (remainTime > 0)
         {
             remainTime -= Time.deltaTime;
@@ -71,27 +82,27 @@ public class ChallengeStageRule : StageRule
 [Serializable]
 public class NormalStageRule : StageRule
 {
-
-    public NormalStageRule(StageSO stage)
-    {
-        this.stage = stage;
-    }
-
     public override void Enter()
     {
-        
+        Debug.Log($"일반 스테이지{stage.chapter} - {stage.stage} StageRule 시작");
     }
 
     public override void MonsterKilled(TestMonster monster)
     {
         ++killScore;
-        List<DropedItem> items =
-            stage.dropTable.GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatus.itemDropRateBonus);
-        
-        Debug.Log($"{items.Count}종 아이템 드랍");
-        
+        //몬스터 처치에 대한 기타 작동기전 구현
+        ItemDrop();
     }
 
+    public void ItemDrop()
+    {
+        List<DropedItem> items =
+            stage.dropTable.GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatus.itemDropRateBonus);
+        dropManager.GetGold(stage.dropTable.rewardGold);
+        dropManager.GetStatStone(stage.dropTable.rewardStatStone);
+        dropManager.GetExp(stage.dropTable.rewardExp);
+        Debug.Log($"{items.Count}종 아이템 드랍");
+    }
     public override void Destroy()
     {
         
