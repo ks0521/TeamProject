@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
 {
-    
     public static PlayerRuntimeStatus Instance; //MVP종료후 제거
     public PlayerBaseStatusSO baseStat;
     public BattleStat finalBattleStatus;
