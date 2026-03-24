@@ -50,3 +50,6 @@ TagManager:
   - name: Player
     uniqueID: 3860854091
     locked: 0
+  - name: Player Skil
+    uniqueID: 894245979
+    locked: 0
