@@ -88,9 +88,13 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
+  target: {fileID: 0}
+  targetTransform: {fileID: 0}
   isAtkCooltime: 0
   runtimeStatus: {fileID: 1523400318190689276}
   equipSkillController: {fileID: 7065709201030374676}
+  stageManager: {fileID: 0}
+  stageMonsters: []
 --- !u!50 &2613657829212925110
 Rigidbody2D:
   serializedVersion: 4
@@ -266,7 +270,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -372,19 +376,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseStat: {fileID: 11400000, guid: 9bc408a21e5de5d4487bfbd5b50b1255, type: 2}
   finalBattleStatus:
-    maxHp: 0
-    atk: 0
-    def: 0
-    atkSpeed: 0
-    moveSpeed: 0
-    critChance: 0
-    critDamage: 0
+    maxHp: 100
+    atk: 10
+    def: 2
+    atkSpeed: 1
+    moveSpeed: 1
+    critChance: 0.1
+    critDamage: 1.5
   finalRewardStatus:
     goldRate: 0
     expRate: 0
     itemDropRateBonus: 0
-  finalRange: 0
-  finalAttackSpeed: 0
+  finalRange: 2
+  finalAttackSpeed: 1
 --- !u!114 &3422407362685527321
 MonoBehaviour:
   m_ObjectHideFlags: 0

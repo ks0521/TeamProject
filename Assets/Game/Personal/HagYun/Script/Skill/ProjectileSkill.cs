@@ -9,8 +9,7 @@ namespace Personal.HagYun
     {
         [SerializeField] protected Character target;
         protected override Vector2 TargetPos => target.transform.position;
-        [SerializeField] BoxCollider2D col;
-        [SerializeField] Animator projectileAnim;
+        [SerializeField] protected Animator projectileAnim;
         bool isHoming;
         //private void OnEnable()
         //{
@@ -49,24 +48,27 @@ namespace Personal.HagYun
         }
         public override void SkillEffect()
         {
-            Debug.Log("스킬 효과");
             DisableProjectile();
             EnableEffect();
-            if (Data.SoE == Growth.Skill.ScopeOfEffect.Single)
-            {
-                SkillAtk(target);
-            }
-            else if (Data.effectArea == 0)
-            {
-                Debug.LogWarning($"{gameObject.name}의 range 값이 0입니다.");
-            }
-            else
-            {
-                PlSkillCircleAreaAtk(TargetPos);
-            }
+            SkillAtk(target);
+            // if (Data.SoE == Growth.Skill.ScopeOfEffect.Single)
+            // {
+            //     SkillAtk(target);
+            // }
+            // else if (Data.effectArea == 0)
+            // {
+            //     Debug.LogWarning($"{gameObject.name}의 range 값이 0입니다.");
+            //     SkillAtk(target);
+            // }
+            // else
+            // {
+            //     // PlSkillCircleAreaAtk(TargetPos);
+            //     PlSkillCapsuleAreaAtk(TargetPos, effectRangeOffset, CapsuleDirection2D.Horizontal);
+            // }
         }
         void EnableProjectile()
         {
+            if (effectAnim.gameObject.activeSelf) effectAnim.gameObject.SetActive(false);
             ThisPos = OwnerPos;
             transform.LookToTarget(TargetPos);
             projectileAnim.gameObject.SetActive(true);
@@ -74,7 +76,7 @@ namespace Personal.HagYun
             isHoming = true;
             //MoveToTarget();
         }
-        void DisableProjectile()
+        protected void DisableProjectile()
         {
             isHoming = false;
             projectileAnim.gameObject.SetActive(false);

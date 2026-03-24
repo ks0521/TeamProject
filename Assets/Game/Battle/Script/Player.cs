@@ -21,7 +21,7 @@ namespace Battle
         protected override void Init()
         {
             base.Init();
-            //equipSkillController.Init(this);
+            equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>

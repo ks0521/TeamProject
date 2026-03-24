@@ -16,12 +16,12 @@ MonoBehaviour:
   skillName: Fire Ball
   type: 1
   priority: 1
-  SoE: 0
+  SoE: 1
   Targeting: 1
-  castingTime: 0.25
-  range: 2
-  baseDamage: 1.5
+  castingTime: 0.5
+  range: 3
+  baseDamage: 2
   incDamagePerLevel: 0.4
-  coolDown: 2
+  coolDown: 3
   speed: 5
-  effectArea: 0
+  effectArea: 2
