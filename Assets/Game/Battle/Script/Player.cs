@@ -24,7 +24,7 @@ namespace Battle
         protected override void Init()
         {
             base.Init();
-            //equipSkillController.Init(this);
+            equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
             SyncHpAfterManagersReady().Forget();
         }

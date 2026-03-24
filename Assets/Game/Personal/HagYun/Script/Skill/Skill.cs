@@ -89,7 +89,7 @@ namespace Personal.HagYun
         // etc
         //protected CancellationTokenSource cts;
 
-        public void Init(Character owner)
+        public virtual void Init(Character owner)
         {
             if (this.owner == null) this.owner = owner;
             // else if (this.Owner != Owner)
@@ -99,13 +99,6 @@ namespace Personal.HagYun
 
         }
         //public void TargetSet(Character target) => this.target = target;
-        private void Awake()
-        {
-            if (data == null)
-            {
-                Debug.LogWarning($"{gameObject.name}에 skill data 없음");
-            }
-        }
         public abstract void SkillUseTargeting(TargetChecker target);
         public abstract void SkillEffect();
         public void SkillAtk(Character cha)
@@ -145,7 +138,7 @@ namespace Personal.HagYun
         protected virtual void EnableEffect()
         {
             ThisPos = TargetPos;
-            gameObject.SetActive(true);
+            effectAnim.gameObject.SetActive(true);
             effectAnim.Rebind();
         }
         protected virtual void DisableEffect()
@@ -166,6 +159,7 @@ namespace Personal.HagYun
         {
             await CurAnimTimerTask(1f);
             if (this == null) return;
+            DisableEffect();
             DisableSkill();
         }
     }
