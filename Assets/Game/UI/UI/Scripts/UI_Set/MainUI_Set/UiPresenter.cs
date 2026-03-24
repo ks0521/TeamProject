@@ -3,6 +3,7 @@ using Base.Managers;
 using Base.Save;
 using Battle;
 using Growth.StatUpgrade;
+using System.Linq;
 using UnityEngine;
 namespace UI.Scripts.UiPresenter
 {
@@ -11,30 +12,27 @@ namespace UI.Scripts.UiPresenter
 
         [Header("UI 참조")]
         [SerializeField] Hp_Set hp;
-        [SerializeField] Exp_Set expBar;
         [SerializeField] Power_Set powerText;
-        [SerializeField] Gold_Set goldText;
-        [SerializeField] Stone_Set stoneText;
+
+        [Header("골드 , 성장석 , 경험치 넣기")]
+        [SerializeField] MainUItype_Set[] mainUItype;
+
         [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set autoButton;
         [SerializeField] Skill_Set skillIcons;
-        PlayerProgressManager manager;
+        private PlayerProgressManager manager;
         private EventHub hub;
-        bool autoType;
-        private void Start()
-        {
-            autoType = false;
-        }
-
+        
         public void Init()
         {
             manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
-            //나중에 메인 화면에 있는 UI 초기화하는 함수 추가 예정
+
 
             RefreshAll();
 
             hub.OnHpChange += hp.SetHp;
+            hub.OnCurrencyChange += ReFreshCurrency;
             //hub.OnExpChange += expBar.SetExp; <- 해당 부분을 바꾸시면 됩니다
             //hub.OnGoldChange += goldText.SetGold;
             //hub.OnStatStoneChange += stoneText.SetGrowthStone; 
@@ -43,25 +41,53 @@ namespace UI.Scripts.UiPresenter
             //자동전투 버튼 미구현
         }
 
-        public int GetOrder() => 201;
+        public int GetOrder() => 210;
 
         void RefreshAll()
         {
             StageManager stageManager = GameManager.Instance.GetGameSystem<StageManager>();
             Character player = FindAnyObjectByType<Character>();
+            
 
             if (player != null)
             {
                 hp.SetHp(player.Hp, player.MaxHp);
             }
-            goldText.SetGold(manager.progress.currency.gold);
-            stoneText.SetGrowthStone(manager.progress.currency.statStone);
 
+            foreach (var ui in mainUItype)
+            {
+                switch (ui.Currency)
+                {
+                    case CurrencyType.GOLD:
+                        ui.SetUI(PlayerProgressManager.Instance.progress.currency.gold);
+                        break;
+
+                    case CurrencyType.EXP:
+                        ui.SetUI(PlayerProgressManager.Instance.progress.currency.exp);
+                        break;
+
+                    case CurrencyType.STATSTONE:
+                        ui.SetUI(PlayerProgressManager.Instance.progress.currency.statStone);
+                        break;
+                }
+            }
+            
             if (stageManager != null)
             {
                 stageText.SetStage(stageManager.CurStageSO);
             }
+
         }//초기값 세팅
+        void ReFreshCurrency(CurrencyType type, int currency)
+        {
+            foreach (var ui in mainUItype)
+            {
+                if (ui.Currency == type)
+                {
+                    ui.SetUI(currency);
+                }
+            }
+        }
     }
 }
 
