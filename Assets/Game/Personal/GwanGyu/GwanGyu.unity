@@ -819,6 +819,7 @@ GameObject:
   - component: {fileID: 1584412836}
   - component: {fileID: 1584412835}
   - component: {fileID: 1584412837}
+  - component: {fileID: 1584412838}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -865,6 +866,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: daf146daa5a13f74396013fa0c7d7c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1584412838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584412834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e583e9b74eb0354990dddbb0ead48a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!222 &6686352567214389
@@ -4145,6 +4158,7 @@ GameObject:
   - component: {fileID: 2992431686472637497}
   - component: {fileID: 8234051489853046514}
   - component: {fileID: 3732955731018209175}
+  - component: {fileID: 8234051489853046515}
   m_Layer: 5
   m_Name: Monster_List
   m_TagString: Untagged
@@ -13390,7 +13404,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4239375040077688024}
   - component: {fileID: 5474172396614673646}
-  - component: {fileID: 6007511804700765766}
+  - component: {fileID: 5474172396614673647}
   m_Layer: 5
   m_Name: Exp
   m_TagString: Untagged
@@ -22797,7 +22811,7 @@ GameObject:
   - component: {fileID: 1692679515500709790}
   - component: {fileID: 7374692830113489750}
   - component: {fileID: 5292849017998693013}
-  - component: {fileID: 7542516652686626830}
+  - component: {fileID: 7374692830113489751}
   m_Layer: 5
   m_Name: Gold
   m_TagString: Untagged
@@ -24230,8 +24244,8 @@ MonoBehaviour:
   before: {fileID: 6549714942142418009}
   after: {fileID: 6193982351890672048}
   enter: {fileID: 5959173651222184901}
-  stageMon: {fileID: 0}
-  reward: {fileID: 0}
+  stageMon: {fileID: 8234051489853046515}
+  reward: {fileID: 7652060031994857302}
 --- !u!1 &4387327637453757963
 GameObject:
   m_ObjectHideFlags: 0
@@ -29435,6 +29449,21 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5474172396614673647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2319312119569747423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb20d5fa55d791489449d763eee123d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currencyType: 0
+  valueText: {fileID: 2826375125106492558}
+  slider: {fileID: 5474172396614673646}
 --- !u!114 &5475636568119530551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31795,6 +31824,7 @@ GameObject:
   - component: {fileID: 2245175979079331870}
   - component: {fileID: 7652060031994857301}
   - component: {fileID: 4136139991283038636}
+  - component: {fileID: 7652060031994857302}
   m_Layer: 5
   m_Name: Rewards_List
   m_TagString: Untagged
@@ -32790,20 +32820,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6007511804700765766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2319312119569747423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76572e0b4bc6f8544b0367dfb5459778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  expBar: {fileID: 5474172396614673646}
-  expPercent: {fileID: 2826375125106492558}
 --- !u!114 &6009393588790243217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37708,20 +37724,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &6878094315757361139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8690053364468951924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a71086923dc7f404093989b8efedb5f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  growthStoneText: {fileID: 1234532060951007664}
-  Auto: 0
 --- !u!222 &6879220074274965860
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -39885,6 +39887,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7374692830113489751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092999754960972036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb20d5fa55d791489449d763eee123d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currencyType: 1
+  valueText: {fileID: 3562009679184821340}
+  slider: {fileID: 0}
 --- !u!114 &7375542570144070311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41037,19 +41054,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7542516652686626830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4092999754960972036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a09f86467cb9ee840aeef014781dcab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goldText: {fileID: 3562009679184821340}
 --- !u!1 &7549236517046237530
 GameObject:
   m_ObjectHideFlags: 0
@@ -41668,6 +41672,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5792029783163506006}
   m_CullTransparentMesh: 1
+--- !u!114 &7652060031994857302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5792029783163506006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2c3b57423f64747b9c6a44d65c2f3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardImg:
+  - {fileID: 7886245249193947685}
+  - {fileID: 4290099076527940822}
+  - {fileID: 734086954021493134}
+  - {fileID: 6040975792716672584}
+  - {fileID: 811758301376547129}
+  - {fileID: 8794812920892773270}
+  gold: {fileID: 21300000, guid: f90931864524c4d51845c8d771dfb44b, type: 3}
+  stone: {fileID: 21300000, guid: 84bd1da595d004666a66ca2b246b80e9, type: 3}
+  exp: {fileID: 21300000, guid: b422b3761d07f43e0abb1f48f1447678, type: 3}
 --- !u!222 &7652184547926865214
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -45117,6 +45143,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 704788724870511451}
   m_CullTransparentMesh: 1
+--- !u!114 &8234051489853046515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704788724870511451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e754c7052809ea94f9524a8399621a0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterImg:
+  - {fileID: 4058916716241780599}
+  - {fileID: 1420084606441941630}
+  - {fileID: 8218356075912038248}
+  - {fileID: 1008282294380633011}
+  - {fileID: 867980951609093892}
+  - {fileID: 5666758327275905764}
 --- !u!114 &8234796105742827891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45789,10 +45834,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: {fileID: 7450922552592881766}
-  expBar: {fileID: 6007511804700765766}
   powerText: {fileID: 8999299672039378152}
-  goldText: {fileID: 7542516652686626830}
-  stoneText: {fileID: 6878094315757361139}
+  mainUItype:
+  - {fileID: 5474172396614673647}
+  - {fileID: 7374692830113489751}
+  - {fileID: 8866840428088721686}
   stageText: {fileID: 8718658542356371128}
   autoButton: {fileID: 5588222003679638999}
   skillIcons: {fileID: 6357080804001114155}
@@ -47547,7 +47593,7 @@ GameObject:
   - component: {fileID: 8304853302518692981}
   - component: {fileID: 3293773645225999414}
   - component: {fileID: 8866840428088721685}
-  - component: {fileID: 6878094315757361139}
+  - component: {fileID: 8866840428088721686}
   m_Layer: 5
   m_Name: growth stone
   m_TagString: Untagged
@@ -48782,6 +48828,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &8866840428088721686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8690053364468951924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb20d5fa55d791489449d763eee123d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currencyType: 2
+  valueText: {fileID: 1234532060951007664}
+  slider: {fileID: 0}
 --- !u!114 &8867175697145394856
 MonoBehaviour:
   m_ObjectHideFlags: 0
