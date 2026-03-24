@@ -5,6 +5,10 @@ using UnityEngine.Serialization;
 
 namespace Base.Save
 {
+    public enum CurrencyType
+    {
+        EXP, GOLD, STATSTONE
+    }
     [Serializable]
     public class GameSaveData
     {
@@ -28,7 +32,7 @@ namespace Base.Save
     [Serializable]public class PlayerCurrencyState
     {
         public int level;
-        public float exp;
+        public int exp;
         public int gold;
         public int statStone;
     }

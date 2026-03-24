@@ -11,9 +11,6 @@ public class ItemDropManager : MonoBehaviour, IManager
     [SerializeField] private RuntimeProgressState progress;
     [SerializeField] private PlayerRuntimeStatus stat => PlayerRuntimeStatus.Instance;
     private EventHub hub;
-    public event Action OnGoldChanged;
-    public event Action OnStatStoneChanged;
-    public event Action OnExpChanged;
 
     private void Start()
     {
@@ -26,7 +23,7 @@ public class ItemDropManager : MonoBehaviour, IManager
         progress.currency.gold += finalGold;
         Debug.Log($"{dropGold} 획득, 플레이어 골드획득량 증가 {stat.finalRewardStatus.goldRate}적용되어 최종 {finalGold} 획득\n" +
                   $"현재 소유 골드 : {progress.currency.gold}");
-        hub.GoldChanged(progress.currency.gold);
+        hub.CurrencyChange(CurrencyType.GOLD,progress.currency.gold);
     }
 
     public void GetStatStone(int dropStatStone)
@@ -36,7 +33,7 @@ public class ItemDropManager : MonoBehaviour, IManager
         Debug.Log(
             $"스탯강화석 {dropStatStone} 획득, 플레이어 스탯강화석 증가 {stat.finalRewardStatus.goldRate}적용되어 최종 {finalStatStone} 획득\n" +
             $"현재 소유 스탯강화석 : {progress.currency.statStone}");
-        hub.StatStoneChanged(progress.currency.statStone);
+        hub.CurrencyChange(CurrencyType.STATSTONE,progress.currency.statStone);
     }
 
     public void GetExp(int dropExp)
@@ -51,7 +48,7 @@ public class ItemDropManager : MonoBehaviour, IManager
             progress.currency.exp -= 100;
             Debug.Log($"레벨 상승, 경험치 -100, 남은 경험치 : {progress.currency.exp}");
         }
-        hub.ExpChanged(progress.currency.exp);
+        hub.CurrencyChange(CurrencyType.EXP,progress.currency.exp);
         hub.LevelChanged(progress.currency.level);
     }
 
