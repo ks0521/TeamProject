@@ -80,8 +80,8 @@ using Random = UnityEngine.Random;
         private void MonsterKilled(Monster monster)
         {
             //스테이지 클리어 등 작업전에 몬스터 반환먼저 하기
-            UnRegister(monster);
             OnMonsterKilled?.Invoke(monster); 
+            UnRegister(monster);
         }
         
         /// <summary> 몬스터가 스테이지에서 사라졌을 시(사망 or 스테이지 변경으로 인한 강제삭제) 스테이지에서 분리</summary>
