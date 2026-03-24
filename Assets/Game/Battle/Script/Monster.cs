@@ -141,7 +141,7 @@ namespace Battle
             {
                 state = CharacterState.Move;
                 cm.ChaseMove(target.transform, CurrentBattleStat.moveSpeed);
-                if (spumController != null) //걷기 모션이 제대로 나오는지 검증 필요
+                if (spumController != null)
                 {
                     spumController.PlayAnimation(PlayerState.MOVE, 0);
                 }

@@ -145,7 +145,10 @@ namespace Battle
         
         void FixedUpdateMoveFeat()
         {
+            if (target == null || isDead) return;
+
             cm.FixedMove();
+            UpdateFacing(target.transform.position.x - transform.position.x);
             //if (!CheckAtkRangeCollision(ref monColArr))
             if (!isAtkCooltime)
             {
@@ -153,12 +156,18 @@ namespace Battle
                 {
                     if (!CheckTargetIsClose())
                     {
+                        state = CharacterState.Move;
                         cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        if (spumController != null)
+                        {
+                            spumController.PlayAnimation(PlayerState.MOVE, 0);
+                        }
                         // cm.VChaseMove(DirFromPosToTarget());
                     }
                     else
                     {
                         //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
+                        state = CharacterState.Attack;
                         AtkFeat();
                         //cm.VChaseMove(DirFromPosToTarget());
                     }
