@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a3f5588857c8140b54f7bee1d2b911, type: 3}
   m_Name: Test Monster SO
   m_EditorClassIdentifier: 
-  prefeb: {fileID: 8440162612199579799, guid: 07dd065a2fc3788428d1694661c86b88, type: 3}
+  prefeb: {fileID: 2343375463384217552, guid: aef2334b7f574cd459323c8929992dd1, type: 3}
   key: 9554
   battleStat:
-    maxHp: 800
+    maxHp: 20
     atk: 5
-    def: 10
-    atkSpeed: 0
-    moveSpeed: 0
+    def: 0
+    atkSpeed: 1
+    moveSpeed: 1
     critChance: 0
     critDamage: 0
