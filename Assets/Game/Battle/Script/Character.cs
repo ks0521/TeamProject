@@ -52,8 +52,8 @@ namespace Battle
 
         // battle element
         [SerializeField] protected LayerMask targetLayer;
-        protected Character target;
-        protected Transform targetTransform;
+        [SerializeField]protected Character target;
+        [SerializeField]protected Transform targetTransform;
         [SerializeField] protected bool isAtkCooltime;
         protected bool isDead;
         protected bool blockMove;
@@ -63,6 +63,9 @@ namespace Battle
         // event
         protected CharacterCommonEvent cEvent;
         protected EventHub hub;
+        // test
+        public bool canMove;
+        public bool canAtk;
         // SPUM Animation
         protected CharacterState state;
         [Header("Animation (SPUM)")]
@@ -84,6 +87,9 @@ namespace Battle
             cm.Init(GetComponent<Rigidbody2D>());
             // hub = GameManager.Instance.GetGameSystem<EventHub>();
 
+            //test
+            canMove = true;
+            canAtk = true;
             state = CharacterState.Idle;
             if (spumController == null)
             {
@@ -112,6 +118,8 @@ namespace Battle
         private void Update()
         {
             UpdateFeat();
+            // test
+            cm.canMove = canMove;
         }
         protected abstract void UpdateFeat();
         private void FixedUpdate()
@@ -136,8 +144,9 @@ namespace Battle
         }
         public virtual void Hit(float damage)
         {
-            float resultDmg = damage - CurrentBattleStat.def;
-            Hp -= damage - CurrentBattleStat.def;
+            float resultDmg = Mathf.Max(1 , damage - CurrentBattleStat.def);
+            // Hp -= damage - CurrentBattleStat.def;
+            Hp -= resultDmg;
             if (Hp <= 0)
             {
                 Debug.Log($"{gameObject.name} 죽음!");
@@ -154,7 +163,7 @@ namespace Battle
         }
         protected void NormalAttack(Character target)
         {
-            if (target == null || blockAttack || isDead || isAtkCooltime) return;
+            if (!canAtk || target == null || blockAttack || isDead || isAtkCooltime) return;
 
             AtkCooltimeTask().Forget();
             Debug.Log($"{name} 이 {target.name}에게 일반공격!");
@@ -167,7 +176,7 @@ namespace Battle
             if (IsCriticalChance())
             {
                 resultDmg *= CurrentBattleStat.critDamage;
-                Debug.Log("크리티컬!");
+                // Debug.Log("크리티컬!");
             }
             target.Hit(resultDmg);
         }

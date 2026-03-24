@@ -181,7 +181,7 @@ namespace Personal.HagYun
             }
             return true;
         }
-        public bool TryAutoSkillUsePossible()
+        public bool TryAutoSkillUse()
         {
             // 자동 스킬 사용 상태가 아닐 때 or 사용 가능한 스킬이 없을 때 or 캐스팅 중일 때 return
             if (!IsAutoSkillUse || pesc.AutoSkillUsePossibleCnt <= 0 || pesc.IsCasting)
@@ -203,7 +203,7 @@ namespace Personal.HagYun
                 pesc.TryAtkSkillUseToMonster(autoSkillUseOrderNum++);
                 if (6 <= autoSkillUseOrderNum) autoSkillUseOrderNum = 0;
                 Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 성공");
-                if(CheckAutoSkillUsePossibleNumByAllPriority())
+                if (CheckAutoSkillUsePossibleNumByAllPriority())
                     pesc.td.ColliderRadiusChange(pesc.EquipSkillSetArr[autoSkillUseOrderNum].Skill.Data.range);
             }
             return true;
@@ -243,26 +243,31 @@ namespace Personal.HagYun
         }
         void SkillEquipInit()
         {
-            if (skillPool == null)
-            {
-                Debug.LogWarning("스킬풀 없음");
-                return;
-            }
             equipSkillSetArr = new EquipSkillSet[6];
             for (int i = 0; i < 6; i++)
             {
                 equipSkillSetArr[i].Init(owner);
+            }
 
-                if (skillPool.TryGetSkill(i, out Skill skill))
+            if (skillPool == null)
+            {
+                Debug.LogWarning("스킬풀 없음");
+            }
+            else
+            {
+                for (int i = 0; i < 6; i++)
                 {
-                    Debug.Log($"{i}번 스킬 장착 시도");
-                    SkillEquip(i, skill, true);
-                    Debug.Log($"skillPool에서 {i}번 스킬 장착");
-                }
-                else
-                {
-                    Debug.LogWarning("스킬 없음");
-                    break;
+                    if (skillPool.TryGetSkill(i, out Skill skill))
+                    {
+                        Debug.Log($"{i}번 스킬 장착 시도");
+                        SkillEquip(i, skill, true);
+                        Debug.Log($"skillPool에서 {i}번 스킬 장착");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("스킬 없음");
+                        break;
+                    }
                 }
             }
             SetUseSkillPossibleCnt();
@@ -284,6 +289,7 @@ namespace Personal.HagYun
         }
         public void SkillInput()
         {
+            if(!owner.canAtk) return;
             // test
             if (Input.GetKeyDown(KeyCode.Return))
             {
@@ -295,7 +301,7 @@ namespace Personal.HagYun
                 autoSkillController.ToggleAutoSkillUse();
             }
 
-            autoSkillController.TryAutoSkillUsePossible();
+            autoSkillController.TryAutoSkillUse();
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 TryAtkSkillUseToMonster(0);

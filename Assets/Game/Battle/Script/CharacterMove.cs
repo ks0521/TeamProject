@@ -23,10 +23,14 @@ namespace Battle
         //float speed;
         Rigidbody2D rb;
         Vector2 moveVelocity;
-        public bool IsInputMoving { get; private set; }
+        [field: SerializeField] public bool IsInputMoving { get; private set; }
         public bool isAutoMoving;
+        [field: SerializeField] public bool IsLeftMove { get; private set; }
+        //test
+        public bool canMove;
         public void Init(Rigidbody2D rb)
         {
+            canMove = true;
             this.rb = rb;
         }
         bool IsMovingCheck(float x, float y, float speed)
@@ -36,11 +40,13 @@ namespace Battle
                 moveVelocity = Vector2.zero;
                 return false;
             }
+            IsLeftMove = x < 0 ? true : false;
             moveVelocity = new Vector2(x, y) * speed;
             return true;
         }
         public void UpdateMoveInput(float speed)
         {
+            if(!canMove)return;
             float x = Input.GetAxisRaw("Horizontal");
             float y = Input.GetAxisRaw("Vertical");
             IsInputMoving = IsMovingCheck(x, y, speed);
@@ -51,6 +57,7 @@ namespace Battle
         }
         public void VChaseMove(Transform targetTransform, float speed)
         {
+            if(!canMove)return;
             if (IsInputMoving) return;
             Vector2 targetPos = targetTransform.position;
             Vector2 resultVec = targetPos - rb.position;
@@ -68,6 +75,7 @@ namespace Battle
         }
         public void VChaseMove(Vector2 dis)
         {
+            if(!canMove)return;
             if (IsInputMoving) return;
             isAutoMoving = dis != Vector2.zero;
             if (isAutoMoving)
@@ -77,6 +85,7 @@ namespace Battle
         }
         public void FixedMove()
         {
+            if(canMove)return;
             if (IsInputMoving)
                 rb.MovePosition(rb.position + moveVelocity * Time.deltaTime);
         }
@@ -86,17 +95,26 @@ namespace Battle
         }
         public void ChaseMove(Vector2 targetDir, float speed)
         {
+            if(!canMove)return;
             if (IsInputMoving) return;
             isAutoMoving = targetDir != Vector2.zero;
-            rb.MovePosition(rb.position + targetDir * speed * Time.deltaTime);
+            if (isAutoMoving)
+            {
+                rb.MovePosition(rb.position + targetDir * speed * Time.deltaTime);
+                IsLeftMove = targetDir.x < 0 ? true : false;
+            }
         }
         public void ChaseMove(Transform targetTransform, float speed)
         {
+            if(!canMove)return;
             if (IsInputMoving) return;
             Vector2 autoMoveVelocity = Vector2.MoveTowards(rb.position, targetTransform.position, speed * Time.deltaTime);
             isAutoMoving = autoMoveVelocity != Vector2.zero;
             if (isAutoMoving)
                 rb.MovePosition(autoMoveVelocity);
+            // Vector2 targetPos = targetTransform.position;
+            // Vector2 autoMoveDir = (targetPos - rb.position).normalized;
+            // ChaseMove(autoMoveDir, speed);
         }
 
     }

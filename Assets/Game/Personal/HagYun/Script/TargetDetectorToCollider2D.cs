@@ -6,7 +6,7 @@ namespace Personal.HagYun
 {
     public class TargetDetectorUsingCircleCollider2D : MonoBehaviour
     {
-        HashSet<Collider2D> detectedTarget = new HashSet<Collider2D>();
+        HashSet<Collider2D> detectedTarget = new HashSet<Collider2D>(200);
         public bool IsDetectedTarget => detectedTarget.Count > 0;
         public int DetectedTargetCnt => detectedTarget.Count;
         public int detectedTargetCnt;
