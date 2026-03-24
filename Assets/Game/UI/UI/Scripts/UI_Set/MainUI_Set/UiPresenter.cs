@@ -13,6 +13,8 @@ namespace UI.Scripts.UiPresenter
         [Header("UI 참조")]
         [SerializeField] Hp_Set hp;
         [SerializeField] Power_Set powerText;
+
+        [Header("골드 , 성장석 , 경험치 넣기")]
         [SerializeField] MainUItype_Set[] mainUItype;
 
         [SerializeField] MainUIStage_Set stageText;
