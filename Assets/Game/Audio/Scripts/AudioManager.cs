@@ -1,3 +1,4 @@
+using Base.Data;
 using Base.Managers;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -18,6 +19,8 @@ public class AudioManager : MonoBehaviour, IManager
     //[SerializeField] private PopupManager _popupManager;
     [SerializeField] private QuestManager _questManager;
 
+    private EventHub eventHub;
+
     void Awake()
     {
         if (instance == null)
@@ -34,6 +37,7 @@ public class AudioManager : MonoBehaviour, IManager
     public void Init()
     {
         _volumeController?.InitVolumeSliders();
+        //eventHub.OnMonsterHit += PlayNormalHitSound();
     }
 
     public int GetOrder() => 300;
