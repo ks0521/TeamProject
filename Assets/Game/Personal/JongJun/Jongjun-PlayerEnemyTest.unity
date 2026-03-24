@@ -931,6 +931,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   spumController: {fileID: 0}
+  uniRoot: {fileID: 1179724870}
   runtimeStatus: {fileID: 263103298}
   monColArr:
   - {fileID: 0}
@@ -2826,6 +2827,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   spumController: {fileID: 0}
+  uniRoot: {fileID: 1728782067}
   monsterSO: {fileID: 11400000, guid: eb37631e85de66a47a324e68da27ae2b, type: 2}
   sfx: {fileID: 506807007}
   playerCollider: {fileID: 302155615079852397}
@@ -2937,6 +2939,12 @@ Transform:
   - {fileID: 506807008}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1179724870 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4716958891363834410, guid: 8de879af22b253b4faaaa6ad62cdba86,
+    type: 3}
+  m_PrefabInstance: {fileID: 263103295}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1215911198
 GameObject:
   m_ObjectHideFlags: 0
@@ -3481,6 +3489,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1728782067 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6741787016663005601, guid: baf0f498110d0a347b9baa62371c285d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1154115763}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1796616192
 GameObject:
   m_ObjectHideFlags: 0
@@ -4240,6 +4254,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   spumController: {fileID: 0}
+  uniRoot: {fileID: 0}
   runtimeStatus: {fileID: 2613657830494718531}
   monColArr:
   - {fileID: 0}
@@ -4561,6 +4576,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   spumController: {fileID: 0}
+  uniRoot: {fileID: 0}
   monsterSO: {fileID: 11400000, guid: eb37631e85de66a47a324e68da27ae2b, type: 2}
   sfx: {fileID: 506807007}
   playerCollider: {fileID: 302155615079852397}
