@@ -14,57 +14,31 @@ namespace Battle
     {
         public MonsterSO monsterSO;
         public const float MonsterAttackRange = 0.6f;
-        public override BattleStat CurrentBattleStat => monsterSO.battleStat;
-        protected override float AttackRange => MonsterAttackRange;
         public const float ApproachStopRange = 0.15f;
+        protected override float AttackRange => MonsterAttackRange; 
+        public override BattleStat CurrentBattleStat => monsterSO.battleStat;
+        private CancellationTokenSource monsterCts;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
-        private EventHub eventHub;
-
-        public CharacterState state;
         public event Action<Monster> OnMonsterKilled;
-        //public Transform player;
 
-        //공격 대상의 스크립트를 미리 캐싱해둘 변수
-        private Character targetCharacter;
-
-        protected override void Init()
+        public override void Init()
         {
-            state = CharacterState.Idle;
             base.Init();
-
-            GameManager gm = GameObject.FindAnyObjectByType<GameManager>();
-            if (gm != null)
+            monsterCts?.Dispose();
+            monsterCts = new CancellationTokenSource();
+            PlayerManager playerRef = GameManager.Instance.GetGameSystem<PlayerManager>();
+            if (playerRef == null)
             {
-                eventHub = gm.GetGameSystem<EventHub>();
-                Debug.Log($"{gameObject.name}: GameManager를 찾아 EventHub를 연결했습니다.");
+                Debug.LogWarning("플레이어가 존재하지 않습니다. ");
+                return;
             }
-            else
-            {
-                Debug.LogError($"{gameObject.name}: 씬에서 GameManager를 찾을 수 없습니다!");
-            }
-
-            var playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-            {
-                target = playerObj.GetComponent<Character>();
-                targetTransform = target.transform;
-                targetCharacter = target;
-            }
-            else
-            {
-                Debug.LogWarning($"{gameObject.name}: 플레이어를 찾지 못했습니다. 태그를 확인하세요.");
-            }
-
-            if (GameManager.Instance != null)
-            {
-                eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-            }
+            target = playerRef.GetComponent<Character>();
+            targetTransform = playerRef.transform;
         }
 
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
         public void ForcedReturn()
         {
-            //현재는 구현할 필요 없습니다. 
             Debug.Log("오브젝트 강제 정리");
             Destroy(gameObject);
         }
@@ -75,13 +49,14 @@ namespace Battle
             if (isDead) //여러번 죽지 않게하기
                 return;
             isDead = true;
-            
-            DeadMotionAsync().Forget();
+            Debug.Log($"isDead : {isDead}");
+            DeadMotionAsync(monsterCts.Token).Forget();
         }
-        async UniTaskVoid DeadMotionAsync()
-        {
-            var cts = this.GetCancellationTokenOnDestroy();
 
+        async UniTaskVoid DeadMotionAsync(CancellationToken cts)
+        {
+            //var cts = this.GetCancellationTokenOnDestroy();
+            //3.24(규성) : 몬스터는 사망할때 Destroy가 아닌 비활성화이기 때문에 해당 토큰은 사용이 제한됩니다
             Debug.Log("몬스터 처치됨");
             state = CharacterState.Dead;
             if (spumController != null)
@@ -130,7 +105,7 @@ namespace Battle
 
         protected override void FixedUpdateFeat()
         {
-            if (target == null || targetCharacter == null || isDead) return;
+            if (target == null || target == null || isDead) return;
 
             UpdateFacing(target.transform.position.x - transform.position.x);
 
@@ -139,7 +114,7 @@ namespace Battle
             if (distanceToTarget <= AttackRange)
             {
                 state = CharacterState.Attack;
-                NormalAttack(targetCharacter);
+                NormalAttack(target);
             }
             else
             {
@@ -152,6 +127,15 @@ namespace Battle
             }
         }
 
+        private void OnDisable()
+        {
+            monsterCts?.Cancel();
+        }
+        private void OnDestroy()
+        {
+            monsterCts?.Cancel();
+            monsterCts?.Dispose();
+        }
         // public void ChasePlayer()
         // {
         //     if(Vector2.Distance(transform.position, target.transform.position) > ApproachStopRange)

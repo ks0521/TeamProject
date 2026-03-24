@@ -1,12 +1,9 @@
 using Base.Managers;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Battle
 {
-    public class PlayerReference : MonoBehaviour, IGameSystem
+    public class PlayerManager : MonoBehaviour, IManager
     {
         private Player player;
         private PlayerRuntimeStatus runtimeStatus;
@@ -17,10 +14,14 @@ namespace Battle
         private void Awake()
         {
             player = GetComponent<Player>();
-            runtimeStatus = GetComponent<PlayerRuntimeStatus>();
+            runtimeStatus = GetComponentInChildren<PlayerRuntimeStatus>();
             transform = GetComponent<Transform>();
         }
+        public void Init()
+        {
+            player.Init();
+        }
 
-        public int GetOrder() => 0;
+        public int GetOrder() => 5; //StageManager에서 PlayerManager를 호출하기 때문에 StageManager(10)보다 먼저 초기화 되어야함
     }
 }
