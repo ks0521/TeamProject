@@ -6,12 +6,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Unity.VisualScripting;
-using Unity.Mathematics;
 
 namespace UI.Scripts.Ability
 {
@@ -40,12 +41,14 @@ namespace UI.Scripts.Ability
         {
             //hub.OnGoldChange += ReFreshAllUI; <- 해당부분 동합하시면 됩니다
             //hub.OnStatStoneChange += ReFreshAllUI;
+            hub.OnCurrencyChange += EventChain;
             hub.OnLevelChange += ReFreshAllUI;
         }
         private void OnDisable()
         {
             //hub.OnGoldChange -= ReFreshAllUI;
             //hub.OnStatStoneChange -= ReFreshAllUI;
+            hub.OnCurrencyChange -= EventChain;
             hub.OnLevelChange -= ReFreshAllUI;
         }
         public void Init() 
@@ -79,14 +82,18 @@ namespace UI.Scripts.Ability
             btnX.Xbtn[1].onClick.AddListener(() => ChangeState(XState.X10));
             btnX.Xbtn[2].onClick.AddListener(() => ChangeState(XState.X100));
         }//능력치 구매 버튼 , 곱하기 버튼 OnClick 에 자동으로 함수 넣어주기
-        public void ReFreshAllUI(int fake)
+        void EventChain(CurrencyType type , int value)
+        {
+            ReFreshAllUI(1);
+        }//이벤트 연결용
+        void ReFreshAllUI(int fake)
         {
             foreach (var stat in statItemViews)
             {
                 ReFreshStatUI(stat.statusType);
             }
         }//모든 UI 새로고침
-        public void ReFreshStatUI(StatusType type)
+        void ReFreshStatUI(StatusType type)
         {
             if (!GameData.StatusDB.TryGetStatEntry(type, out var statEntry))
             {

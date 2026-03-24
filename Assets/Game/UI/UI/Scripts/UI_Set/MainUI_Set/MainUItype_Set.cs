@@ -1,3 +1,4 @@
+using Base.Save;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,16 +7,26 @@ using UnityEngine.UI;
 
 public class MainUItype_Set : MonoBehaviour
 {
-    [Header("담당 타입")]
-    [SerializeField] GameObject types;
+    [Header("타입 설정")]
+    [SerializeField]  CurrencyType currencyType;
+    public CurrencyType Currency
+    {
+        get {  return currencyType; }
+    }
 
-    [Header("UI 연결용")]
+    [Header("Text 연결")]
     [SerializeField] private TextMeshProUGUI valueText;
-    [SerializeField] private Image uiImage;
+
+    [Header("게이지 요소")]
     [SerializeField] private Slider slider;
         
-   public void SetUI()
-    {
+   public void SetUI(int value , int maxValue = 1)
+   {
+        valueText.text = value.ToString();
 
-    }
+        if (slider != null)
+        {
+            slider.value = value / maxValue;
+        }
+   }
 }
