@@ -10,11 +10,6 @@ using UnityEngine.PlayerLoop;
 
 namespace Battle
 {
-    public enum CharacterState
-    {
-        Idle, Move, Attack
-    }
-
     public class Monster : Character
     {
         public MonsterSO monsterSO;
