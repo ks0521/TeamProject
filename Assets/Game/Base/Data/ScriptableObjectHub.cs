@@ -6,13 +6,14 @@ using Growth.StatUpgrade;
 using Reward;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 [CreateAssetMenu(menuName = "Game/Data/SOHub")]
 public class ScriptableObjectHub : ScriptableObject
 {
     public DropTableDictionarySO dropTable;
     public StageDictionarySO stageTable;
     public StatusSO statusTable;
-    public SkillDictionarySO SkillDictionarySo;
-
-    
+    public SkillDictionarySO SkillTable;
+    public CurrencyDataBaseSO currencyTable;
 }
