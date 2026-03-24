@@ -75,6 +75,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         if (atkRange1 != null) atkRange1.SetActive(true);
 
         Vector2 directionToTarget = (target.position - transform.position).normalized;
+        UpdateFacing(directionToTarget.x);
         //RotateTowards(directionToTarget); //캐릭터까지 회전시키고 있음
         float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
         Quaternion skillRotation = Quaternion.Euler(new Vector3(0, 0, angle));
@@ -101,7 +102,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         sfx.PlayBossSkillSound();
 
         float elapsed = 0f;
-        bool hasDamaged = false;
+        //bool hasDamaged = false;
 
         if (spumController != null)
         {
@@ -138,7 +139,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
                     player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
                 }
                 */
-                hasDamaged = true;
+                //hasDamaged = true;
                 //break; //충돌 후 몬스터는 이동 중단
             }
 
@@ -179,6 +180,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
 
         currentSkill2CoolTime = skill2CoolTime;
         isUsingSkill = true;
+        UpdateFacing(target.position.x - transform.position.x);
         Debug.Log("화염 장막 준비 중...");
 
         if (atkRange2 != null) atkRange2.SetActive(true);
@@ -216,6 +218,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         var cts = this.GetCancellationTokenOnDestroy();
         skillTargetPosition = target.position;
         isUsingSkill = true;
+        UpdateFacing(target.position.x - transform.position.x);
         Debug.Log("메테오 준비 중...");
 
         if (atkRange3 != null)
@@ -364,6 +367,8 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
     {
         // 타겟이 없거나 이미 죽었다면 아무것도 하지 않음
         if (target == null || targetScript == null || isDead || isUsingSkill) return;
+
+        UpdateFacing(target.position.x - transform.position.x);
 
         // 거리 계산
         float distanceToTarget = Vector2.Distance(transform.position, target.position);
