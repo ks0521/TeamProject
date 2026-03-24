@@ -29,9 +29,9 @@ namespace UI.Scripts.UiPresenter
             RefreshAll();
 
             hub.OnHpChange += hp.SetHp;
-            hub.OnExpChange += expBar.SetExp;
-            hub.OnGoldChange += goldText.SetGold;
-            hub.OnStatStoneChange += stoneText.SetGrowthStone; 
+            //hub.OnExpChange += expBar.SetExp; <- 해당 부분을 바꾸시면 됩니다
+            //hub.OnGoldChange += goldText.SetGold;
+            //hub.OnStatStoneChange += stoneText.SetGrowthStone; 
             hub.OnChangeStage += stageText.SetStage;
             //스킬 부분 미구현
             //자동전투 버튼 미구현
