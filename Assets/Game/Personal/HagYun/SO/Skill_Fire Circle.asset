@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3787f63c74c3244eb6217b75f545d93, type: 3}
   m_Name: Skill_Fire Circle
   m_EditorClassIdentifier: 
-  key: 1003
+  key: 1004
   skillName: Fire Circle
   type: 1
   priority: 1
   SoE: 1
   Targeting: 2
   castingTime: 1
-  range: 3
-  baseDamage: 3
-  incDamagePerLevel: 0.6
+  range: 5
+  baseDamage: 4
+  incDamagePerLevel: 0.8
   coolDown: 5
   speed: 0
   effectArea: 3

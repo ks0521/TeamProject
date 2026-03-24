@@ -1,4 +1,4 @@
-﻿using Base.Data;
+using Base.Data;
 using Base.Managers;
 using Cysharp.Threading.Tasks;
 using System;
@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Battle
 {
+    public enum CharacterState
+    {
+        Idle, Move, Attack, Dead
+    }
     public class CharacterCommonEvent
     {
         public event Action<Character> OnDead;
@@ -48,15 +52,25 @@ namespace Battle
 
         // battle element
         [SerializeField] protected LayerMask targetLayer;
-        protected Character target;
-        protected Transform targetTransform;
+        [SerializeField]protected Character target;
+        [SerializeField]protected Transform targetTransform;
         [SerializeField] protected bool isAtkCooltime;
         protected bool isDead;
+        protected bool blockMove;
+        protected bool blockAttack;
         protected abstract float AttackRange { get; } //공격 거리
         protected float TargetSqrMagnitudeRange => AttackRange * AttackRange;
         // event
         protected CharacterCommonEvent cEvent;
         protected EventHub hub;
+        // test
+        public bool canMove;
+        public bool canAtk;
+        // SPUM Animation
+        protected CharacterState state;
+        [Header("Animation (SPUM)")]
+        [SerializeField] protected SPUM_Prefabs spumController;
+        [SerializeField] protected Transform uniRoot;
         private void OnEnable()
         {
             Init();
@@ -72,6 +86,28 @@ namespace Battle
 
             cm.Init(GetComponent<Rigidbody2D>());
             // hub = GameManager.Instance.GetGameSystem<EventHub>();
+
+            //test
+            canMove = true;
+            canAtk = true;
+            state = CharacterState.Idle;
+            if (spumController == null)
+            {
+                spumController = GetComponentInChildren<SPUM_Prefabs>();
+            }
+            if (spumController != null)
+            {
+                Animator anim = spumController._anim;
+                if (anim != null && anim.runtimeAnimatorController != null)
+                {
+                    //현 애니메이터의 컨트롤러가 이미 있는지 확인(중첩 방지)
+                    if (anim.runtimeAnimatorController is AnimatorOverrideController existingOverride)
+                    {
+                        anim.runtimeAnimatorController = existingOverride.runtimeAnimatorController;
+                    }
+                }
+                spumController.OverrideControllerInit();
+            }
         }
         protected void TargetSet(Character target)
         {
@@ -82,6 +118,8 @@ namespace Battle
         private void Update()
         {
             UpdateFeat();
+            // test
+            cm.canMove = canMove;
         }
         protected abstract void UpdateFeat();
         private void FixedUpdate()
@@ -106,8 +144,9 @@ namespace Battle
         }
         public virtual void Hit(float damage)
         {
-            float resultDmg = damage - CurrentBattleStat.def;
-            Hp -= damage - CurrentBattleStat.def;
+            float resultDmg = Mathf.Max(1 , damage - CurrentBattleStat.def);
+            // Hp -= damage - CurrentBattleStat.def;
+            Hp -= resultDmg;
             if (Hp <= 0)
             {
                 Debug.Log($"{gameObject.name} 죽음!");
@@ -124,14 +163,20 @@ namespace Battle
         }
         protected void NormalAttack(Character target)
         {
-            if (target == null) return;
+            if (!canAtk || target == null || blockAttack || isDead || isAtkCooltime) return;
+
             AtkCooltimeTask().Forget();
             Debug.Log($"{name} 이 {target.name}에게 일반공격!");
+            if (spumController != null)
+            {
+                spumController.PlayAnimation(PlayerState.ATTACK, 0);
+            }
+
             float resultDmg = CurrentBattleStat.atk;
             if (IsCriticalChance())
             {
                 resultDmg *= CurrentBattleStat.critDamage;
-                Debug.Log("크리티컬!");
+                // Debug.Log("크리티컬!");
             }
             target.Hit(resultDmg);
         }
@@ -144,6 +189,19 @@ namespace Battle
                 resultDmg *= CurrentBattleStat.critDamage;
             }
             return resultDmg;
+        }
+        protected void UpdateFacing(float horizontalDir)
+        {
+            if (uniRoot == null) return;
+
+            if (horizontalDir > 0) //오른쪽으로 이동/공격 시
+            {
+                uniRoot.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (horizontalDir < 0) //왼쪽으로 이동/공격 시
+            {
+                uniRoot.localScale = new Vector3(1, 1, 1);
+            }
         }
         async UniTaskVoid AtkCooltimeTask()
         {
