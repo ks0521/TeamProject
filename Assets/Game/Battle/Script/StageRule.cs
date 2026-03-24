@@ -1,12 +1,13 @@
 using Base.Data;
 using Base.Managers;
+using Battle;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Battle;
 using Cysharp.Threading.Tasks;
-using Personal.GyuSeong;
+using Growth.Currency;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public abstract class StageRule
@@ -20,6 +21,7 @@ public abstract class StageRule
     {
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+        
         this.stage = stage;
     }
     public abstract void Enter();
@@ -82,25 +84,36 @@ public class ChallengeStageRule : StageRule
 [Serializable]
 public class NormalStageRule : StageRule
 {
+    private ItemPoolManager itemPool;
+    private PlayerManager player;
     public override void Enter()
     {
         Debug.Log($"일반 스테이지{stage.chapter} - {stage.stage} StageRule 시작");
+        itemPool = GameManager.Instance.GetGameSystem<ItemPoolManager>();
+        player = GameManager.Instance.GetGameSystem<PlayerManager>();
     }
 
     public override void MonsterKilled(Monster monster)
     {
         ++killScore;
         //몬스터 처치에 대한 기타 작동기전 구현
-        ItemDrop();
+        ItemDrop(monster);
     }
 
-    public void ItemDrop()
+    public void ItemDrop(Monster monster)
     {
-        List<DropedItem> items =
+        List<DropReward> items =
             stage.dropTable.GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatus.itemDropRateBonus);
-        dropManager.GetGold(stage.dropTable.rewardGold);
-        dropManager.GetStatStone(stage.dropTable.rewardStatStone);
-        dropManager.GetExp(stage.dropTable.rewardExp);
+        dropManager.GetExp(stage.dropTable.GetExp());
+        foreach (var item in items)
+        {
+            GameObject dropItem = itemPool.UsePool();
+            dropItem.GetComponent<DroppedItem>().Init(item, player.Transform, itemPool);
+            float randx = monster.transform.position.x + Random.Range(-0.5f, 0.5f);
+            float randy = monster.transform.position.y + Random.Range(-0.5f, 0.5f);
+            dropItem.transform.position = new Vector3(randx, randy, 0);
+            dropItem.SetActive(true);
+        }
         Debug.Log($"{items.Count}종 아이템 드랍");
     }
     public override void Destroy()

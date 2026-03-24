@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapter: 1
   stage: 2
-  rewardGold: 20
-  rewardStatStone: 40
   rewardExp: 35
   dropList:
-  - item: {fileID: 11400000, guid: c3f56a8fa159fa64f95a719a641e3421, type: 2}
-    chance: 0.4
-    minAmount: 1
-    maxAmount: 2
-  - item: {fileID: 11400000, guid: faa2abb3a8275c040a4457d767d3bb51, type: 2}
-    chance: 0.2
+  - rewardType: 1
+    currencyType: 1
+    currencySO: {fileID: 11400000, guid: a33d451e9ce1def40bf67ed25b3f98a8, type: 2}
+    chance: 1
+    itemSO: {fileID: 0}
+    minAmount: 20
+    maxAmount: 20
+  - rewardType: 0
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 0.12
+    itemSO: {fileID: 11400000, guid: 70cf03e68257c45468c6c99a0ceba108, type: 2}
     minAmount: 1
     maxAmount: 1

@@ -3,32 +3,37 @@ using Base.Managers;
 using Cysharp.Threading.Tasks;
 using Personal.HagYun;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+
 namespace Battle
 {
     public class Player : Character
     {
         // outside component
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
+
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
+
         //StatusCalculator statCal;
         public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
         [SerializeField] private StageManager stageManager;
-        [SerializeField] private List<Monster> stageMonsters;//현재 스테이지에 존재하는 몬스터의 리스트
+        [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
 
         public event Action<Player> OnPlayerKilled;
-        protected override void Init()
+
+        public override void Init()
         {
             base.Init();
             equipSkillController.Init(this);
-            //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
-            SyncHpAfterManagersReady().Forget();
+            //runtimeStatus = GetComponent<PlayerRuntimeStatus>(); 
+            //SyncHpAfterManagersReady().Forget();
+            //3.24(규성) : 해당 파트 Init순서의 문제는 PlayerManager를 추가하여 Player초기화 순서를 GameManager에 종속시켜 해결했습니다
         }
-        async UniTaskVoid SyncHpAfterManagersReady()
+
+        /*async UniTaskVoid SyncHpAfterManagersReady()
         {
             // GameManager의 Start()가 실행되고 매니저들의 Init()이 끝날 때까지 넉넉히 대기
             // 보통 1~2프레임이면 충분합니다.
@@ -43,7 +48,7 @@ namespace Battle
                     Debug.Log($"매니저 계산 완료! 강화가 적용된 HP로 갱신되었습니다: {hp}");
                 }
             }
-        }
+        }*/
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
         {
@@ -53,6 +58,7 @@ namespace Battle
             DeadMotionAsync().Forget();
             Debug.Log("스테이지 실패");
         }
+
         async UniTaskVoid DeadMotionAsync()
         {
             var cts = this.GetCancellationTokenOnDestroy();
@@ -68,8 +74,10 @@ namespace Battle
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(1.0f), cancellationToken: cts);
             }
+
             OnPlayerKilled?.Invoke(this);
         }
+
         async UniTask WaitMotion(string stateName, CancellationToken token)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: token);
@@ -99,18 +107,24 @@ namespace Battle
 
         protected override void FixedUpdateFeat()
         {
-            if (!FindTarget()) return;
+            if (target == null || target.IsDead || !target.isActiveAndEnabled)
+            {
+                if (!FindTarget()) return;
+                Debug.Log("새로운 타겟 지정완료");
+            }
+
             FixedUpdateMoveFeat();
         }
+
         void UpdateMoveFeat()
         {
             cm.UpdateMoveInput(CurrentBattleStat.moveSpeed);
             // TestMoveTargetSet();
             //AtkFeat();
         }
+
         private bool FindTarget()
         {
-            //GameManager의 Start()가 끝날 때까지 대기
             if (GameManager.Instance == null) return false;
 
             if (stageManager == null)
@@ -126,12 +140,15 @@ namespace Battle
             if (stageMonsters is null || stageMonsters.Count == 0)
             {
                 //Debug.LogWarning("현재 스테이지에 나와있는 몬스터가 없습니다. ");
-                return false; 
+                return false;
             }
 
             target = stageMonsters[0]; // 일단 버그 방지
             foreach (var monster in stageMonsters)
             {
+                if (monster.IsDead) continue;
+                //3.23(규성) : 몬스터가 사망모션이 생겨서 죽어도 타겟에 남아있어서 이를 해결하려고 합니다.
+                //이 방식은 비효율적인것 같아서 이후 바꾸려고 합니다
                 dist = Vector2.Distance(transform.position, monster.transform.position);
                 if (dist < minDist)
                 {
@@ -140,40 +157,41 @@ namespace Battle
                     targetTransform = monster.transform;
                 }
             }
+
             return true;
         }
-        
+
         void FixedUpdateMoveFeat()
         {
             if (target == null || isDead) return;
-
             cm.FixedMove();
             UpdateFacing(target.transform.position.x - transform.position.x);
             //if (!CheckAtkRangeCollision(ref monColArr))
-            if (!isAtkCooltime)
+            //3.24(규성) : 조건문이 살짝 이상하게 걸려있는것 같아서 수정합니다. 
+            //isAtkCooltime은 명칭만 보면 공격에만 영향을 줘야하지만 현재는 이동에도 영향을 주고 있습니다
+            //따라서 isAtkCooltime 조건문을 공격부분에만 지정했습니다
+            if (!CheckTargetIsClose())
             {
-                if (target != null)
+                state = CharacterState.Move;
+                cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                if (spumController != null)
                 {
-                    if (!CheckTargetIsClose())
-                    {
-                        state = CharacterState.Move;
-                        cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
-                        if (spumController != null)
-                        {
-                            spumController.PlayAnimation(PlayerState.MOVE, 0);
-                        }
-                        // cm.VChaseMove(DirFromPosToTarget());
-                    }
-                    else
-                    {
-                        //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
-                        state = CharacterState.Attack;
-                        AtkFeat();
-                        //cm.VChaseMove(DirFromPosToTarget());
-                    }
+                    spumController.PlayAnimation(PlayerState.MOVE, 0);
                 }
+                // cm.VChaseMove(DirFromPosToTarget());
+            }
+            else
+            {
+                //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
+                if (isAtkCooltime) return; 
+                //3.24(규성) : state 변화때문에 isAtkCooltime 조건을 걸어놓았습니다. 
+                //원래는 Character.NormalAtk에 isAtkCooltime 조건이 걸려있어 불필요한 조건입니다
+                state = CharacterState.Attack;
+                AtkFeat();
+                //cm.VChaseMove(DirFromPosToTarget());
             }
         }
+
         // void TestMoveTargetSet()
         // {
         //     if (target == null && MonsterSetComponent.ins.TryGetMonster(out GameObject obj))
@@ -188,8 +206,8 @@ namespace Battle
             {
                 if (!FindTarget()) return;
             }
+
             NormalAttack(target);
         }
-
     }
 }
