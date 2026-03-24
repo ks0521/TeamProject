@@ -51,12 +51,13 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 256
+  owner: {fileID: 0}
   effectAnim: {fileID: 389088784693582235}
   targetPos: {x: -1.2787577, y: -0.8361879}
-  sprites:
-  - {fileID: 6333207098008456314}
-  - {fileID: 3652204893191534049}
-  overlapArea: {fileID: 5245647032827340734}
+  addEffectAnim:
+  - {fileID: 4150119339622635909}
+  effectAreaCollider: {fileID: 0}
+  isSpriteYPosUp: 0
   targetTrans: {fileID: 0}
 --- !u!70 &5245647032827340734
 CapsuleCollider2D:
@@ -164,8 +165,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 894245979
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 4543038839386311801, guid: 9245ba1a77707483fa1c66a62c7a69a6,
     type: 3}
@@ -271,8 +272,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 894245979
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -6696735077354575422, guid: 9fefc0442dbb349c9b12dc41704393fb,
     type: 3}

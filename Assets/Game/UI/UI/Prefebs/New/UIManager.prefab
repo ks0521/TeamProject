@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &169450562660980716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7083054144329678230}
+  - component: {fileID: 2863058303441553911}
+  - component: {fileID: 1842745287679720954}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7083054144329678230
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169450562660980716}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 220.02911, y: 206.84998, z: 0.64708793}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2863058303441553911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169450562660980716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2de545ad731f784b84ae330baad25be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityPop: {fileID: 0}
+  chapterPop: {fileID: 0}
+  skillPop: {fileID: 0}
+  equipmentPop: {fileID: 0}
+  dungeonPop: {fileID: 0}
+  gameEndPop: {fileID: 0}
+  abilityBtn: {fileID: 0}
+  chapterBtn: {fileID: 0}
+  skillBtn: {fileID: 0}
+  equipmentBtn: {fileID: 0}
+  dungeonBtn: {fileID: 0}
+--- !u!114 &1842745287679720954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169450562660980716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e1f24ce97444d0419844347c4121a8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: {fileID: 0}
+  powerText: {fileID: 0}
+  mainUItype:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  stageText: {fileID: 0}
+  autoButton: {fileID: 0}
+  skillIcons: {fileID: 0}

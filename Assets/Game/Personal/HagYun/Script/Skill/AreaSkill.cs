@@ -1,5 +1,6 @@
 ﻿using Battle;
 using Cysharp.Threading.Tasks;
+using Growth.Skill;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -12,33 +13,56 @@ namespace Personal.HagYun
         [SerializeField] protected Vector2 targetPos;
         protected override Vector2 TargetPos => targetPos;
 
-        [SerializeField] SpriteRenderer[] sprites;
+        // [SerializeField] SpriteRenderer[] sprites;
+        [SerializeField] Animator[] addEffectAnim;
         //Vector2 effectArea = new Vector2(2.5f, 2f);
-        Vector2 effectArea = new Vector2(2.5f, 2f);
-        // area check
-        [SerializeField] CapsuleCollider2D overlapArea;
+        // [SerializeField] Vector2 effectArea = new Vector2(2.5f, 2f);
+        // [SerializeField] CapsuleDirection2D effectDir = CapsuleDirection2D.Horizontal;
+        // // area check
+        // [SerializeField] Vector2 spriteSize = new Vector2(1f, 1f);
+        [SerializeField] CapsuleCollider2D effectAreaCollider;
+        // sprite check
+        [SerializeField] bool isSpriteYPosUp = false;
         // targeting test
         [SerializeField] Transform targetTrans;
-        private void Start()
+        // private void Start()
+        // {
+        //     Init();
+        // }
+        public override void Init(Character owner)
         {
-            Init();
+            base.Init(owner);
+            AreaInit();
         }
-        public virtual void Init()
+        protected void AreaInit()
         {
-            AreaInit(new Vector2(2.5f, 2f));
-        }
-        protected void AreaInit(Vector2 area)
-        {
-            effectArea = new Vector2(1f, 1f) * Data.effectArea;
-            sprites[0].transform.localScale = effectArea;
-            if(sprites.Length == 2 && sprites[1] != null) sprites[1].transform.localScale = effectArea;
-            effectArea = area * Data.effectArea;
+            float areaSize = Data.effectArea;
+            Vector2 effectSize = effectAnim.transform.localScale;
+            effectAnim.transform.localScale = effectSize * areaSize;
+            if (isSpriteYPosUp)
+            {
+                Vector2 effectPos = effectAnim.transform.position;
+                effectAnim.transform.position = effectPos * areaSize;
+            }
+            if (addEffectAnim != null)
+            {
+                for (int i = 0; i < addEffectAnim.Length; i++)
+                {
+                    Vector2 addEffectSize = addEffectAnim[i].transform.localScale;
+                    addEffectAnim[i].transform.localScale = addEffectSize * areaSize;
+                    if (isSpriteYPosUp)
+                    {
+                        Vector2 addEffectPos = addEffectAnim[i].transform.position;
+                        addEffectAnim[i].transform.position = addEffectPos * areaSize;
+                    }
+                }
+            }
             AreaShowColliderInit();
         }
         protected void AreaShowColliderInit()
         {
-            overlapArea = GetComponent<CapsuleCollider2D>();
-            overlapArea.size = effectArea;
+            effectAreaCollider = GetComponent<CapsuleCollider2D>();
+            effectAreaCollider.size *= Data.effectArea;
         }
         public override void SkillUseTargeting(TargetChecker target)
         {
@@ -46,6 +70,10 @@ namespace Personal.HagYun
             if (targetTrans == null)
             {
                 targetPos = target.targetPos;
+            }
+            else if (data.Targeting == TargetingMode.Self)
+            {
+                targetPos = ThisPos;
             }
             else
             {
@@ -62,12 +90,19 @@ namespace Personal.HagYun
         public override void SkillEffect()
         {
             Debug.Log("area skill 이펙트");
-            PlSkillCapsuleAreaAtk(TargetPos, effectArea, CapsuleDirection2D.Horizontal);
+            PlSkillCapsuleAreaAtk(TargetPos, effectAreaCollider.size, effectAreaCollider.direction);
         }
         protected override void EnableSkill()
         {
             EnableEffect();
             base.EnableSkill();
+            if (addEffectAnim != null)
+            {
+                for (int i = 0; i < addEffectAnim.Length; i++)
+                {
+                    addEffectAnim[i].Rebind();
+                }
+            }
             SkillEffectTask().Forget();
         }
     }

@@ -1,24 +1,39 @@
-﻿using System.Collections;
+using Base.Managers;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StageMonster_Set : MonoBehaviour
 {
     [Header("UI 이미지")]
-    [SerializeField] Image [] UiMonster;
+    [SerializeField] Image [] monsterImg;
     
-    [Header("몬스터 이미지")]
-    [SerializeField] Image [] monsterImage;
-
-    void Start()
+    public void SetMonster(StageEntry stageEntry)
     {
-        
+        for (int i = 0; i < monsterImg.Length; i++)
+        {
+            monsterImg[i].gameObject.SetActive(false);
+        }
+
+        int currentSlot = 0;
+        var stageMonster = stageEntry.stageSO.preset;
+        for (int i = 0; i < stageMonster.Count; i++)
+        {
+            var stageMon = stageMonster[i].monster;
+            SetSlot(ref currentSlot);
+        }
+
     }
-
-    // Update is called once per frame
-    void Update()
+    void SetSlot(ref int slot, Sprite icon = null)
     {
-        
+        if (slot < monsterImg.Length)
+        {
+            monsterImg[slot].sprite = icon;
+            monsterImg[slot].gameObject.SetActive(true);
+            slot++;
+            Debug.Log("이미지 변경!");
+        }
     }
 }

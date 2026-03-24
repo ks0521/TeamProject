@@ -18,7 +18,9 @@ public class AudioManager : MonoBehaviour, IManager
     [SerializeField] private SFXPlayer _sfxPlayer;
     //[SerializeField] private PopupManager _popupManager;
     [SerializeField] private QuestManager _questManager;
-    private EventHub hub;
+
+    private EventHub eventHub;
+
     void Awake()
     {
         if (instance == null)
@@ -35,7 +37,7 @@ public class AudioManager : MonoBehaviour, IManager
     public void Init()
     {
         _volumeController?.InitVolumeSliders();
-        hub.OnMonsterHit += PlaySkillHitSound;
+        //eventHub.OnMonsterHit += PlayNormalHitSound();
     }
 
     public int GetOrder() => 300;

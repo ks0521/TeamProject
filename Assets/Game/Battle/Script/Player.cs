@@ -1,9 +1,11 @@
-﻿using Base.Data;
+using Base.Data;
 using Base.Managers;
+using Cysharp.Threading.Tasks;
 using Personal.HagYun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 namespace Battle
 {
@@ -18,18 +20,70 @@ namespace Battle
         [SerializeField] private StageManager stageManager;
         [SerializeField] private List<Monster> stageMonsters;//현재 스테이지에 존재하는 몬스터의 리스트
 
+        public event Action<Player> OnPlayerKilled;
         protected override void Init()
         {
             base.Init();
-            //equipSkillController.Init(this);
+            equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>();
+            SyncHpAfterManagersReady().Forget();
+        }
+        async UniTaskVoid SyncHpAfterManagersReady()
+        {
+            // GameManager의 Start()가 실행되고 매니저들의 Init()이 끝날 때까지 넉넉히 대기
+            // 보통 1~2프레임이면 충분합니다.
+            await UniTask.DelayFrame(2);
+
+            if (runtimeStatus != null)
+            {
+                float calculatedHp = CurrentBattleStat.maxHp;
+                if (calculatedHp > 0)
+                {
+                    hp = calculatedHp;
+                    Debug.Log($"매니저 계산 완료! 강화가 적용된 HP로 갱신되었습니다: {hp}");
+                }
+            }
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
         {
             if (isDead) return;
             isDead = true;
+
+            DeadMotionAsync().Forget();
             Debug.Log("스테이지 실패");
+        }
+        async UniTaskVoid DeadMotionAsync()
+        {
+            var cts = this.GetCancellationTokenOnDestroy();
+
+            Debug.Log("플레이어 사망...");
+            state = CharacterState.Dead;
+            if (spumController != null)
+            {
+                spumController.PlayAnimation(PlayerState.DEATH, 0);
+                await WaitMotion("DEATH", cts);
+            }
+            else
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(1.0f), cancellationToken: cts);
+            }
+            OnPlayerKilled?.Invoke(this);
+        }
+        async UniTask WaitMotion(string stateName, CancellationToken token)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: token);
+            if (spumController == null || spumController._anim == null) return;
+
+            Animator ani = spumController._anim;
+
+            //재생 중인 애니메이션의 진행도가 100% 미만일 때까지 대기하는 람다문
+            await UniTask.WaitUntil(() =>
+            {
+                var stateInfo = ani.GetCurrentAnimatorStateInfo(0);
+                //모션의 상태가 바뀌거나 애니메이션 재생 완료 시 종료
+                return !stateInfo.IsName(stateName) || stateInfo.normalizedTime >= 0.99f;
+            }, cancellationToken: token);
         }
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -56,9 +110,14 @@ namespace Battle
         }
         private bool FindTarget()
         {
+            //GameManager의 Start()가 끝날 때까지 대기
+            if (GameManager.Instance == null) return false;
+
             if (stageManager == null)
             {
                 stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+                //아직 GameManager가 StageManager를 등록하지 못했다면 재시도
+                if (stageManager == null) return false;
             }
 
             stageMonsters = stageManager.GetStageMonsters();
@@ -86,7 +145,10 @@ namespace Battle
         
         void FixedUpdateMoveFeat()
         {
+            if (target == null || isDead) return;
+
             cm.FixedMove();
+            UpdateFacing(target.transform.position.x - transform.position.x);
             //if (!CheckAtkRangeCollision(ref monColArr))
             if (!isAtkCooltime)
             {
@@ -94,12 +156,18 @@ namespace Battle
                 {
                     if (!CheckTargetIsClose())
                     {
+                        state = CharacterState.Move;
                         cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                        if (spumController != null)
+                        {
+                            spumController.PlayAnimation(PlayerState.MOVE, 0);
+                        }
                         // cm.VChaseMove(DirFromPosToTarget());
                     }
                     else
                     {
                         //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
+                        state = CharacterState.Attack;
                         AtkFeat();
                         //cm.VChaseMove(DirFromPosToTarget());
                     }

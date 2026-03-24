@@ -88,6 +88,11 @@ namespace Personal.HagYun
         }
         public virtual void SkillEquip(int index, Skill targetSkill, bool isInit = false)
         {
+            if(targetSkill == null)
+            {
+                Debug.Log($"{index}번에 장착할 스킬 없음");
+                return;
+            }
             equipSkillSetArr[index].ESkill.SkillSet(targetSkill, isInit);
             PriorityUpdate(index, Priority.Low);
             if (equipSkillSetArr[index].isEquipped) return;

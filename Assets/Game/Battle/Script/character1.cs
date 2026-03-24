@@ -34,6 +34,7 @@ public abstract class character1 : MonoBehaviour
 
     [Header("Animation (SPUM)")]
     [SerializeField] protected SPUM_Prefabs spumController;
+    [SerializeField] protected Transform uniRoot;
 
     private void Awake()
     {
@@ -69,7 +70,19 @@ public abstract class character1 : MonoBehaviour
     protected abstract void UpdateFeat();
     protected abstract void FixedUpdateFeat();
 
+    protected void UpdateFacing(float horizontalDir)
+    {
+        if (uniRoot == null) return;
 
+        if (horizontalDir > 0) //오른쪽으로 이동/공격 시
+        {
+            uniRoot.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (horizontalDir < 0) //왼쪽으로 이동/공격 시
+        {
+            uniRoot.localScale = new Vector3(1, 1, 1);
+        }
+    }
 
     protected Vector2 DirFromPosToTarget()
     {
