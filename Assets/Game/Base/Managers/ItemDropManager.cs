@@ -1,15 +1,14 @@
 using Base.Data;
-using System;
 using Base.Managers;
 using Base.Save;
+using Growth.Currency;
 using Growth.Equipment;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class ItemDropManager : MonoBehaviour, IManager
 {
     [SerializeField] private RuntimeProgressState progress;
-    [SerializeField] private PlayerRuntimeStatus stat => PlayerRuntimeStatus.Instance;
+    private PlayerRuntimeStatus stat => PlayerRuntimeStatus.Instance;
     private EventHub hub;
 
     private void Start()
@@ -17,7 +16,27 @@ public class ItemDropManager : MonoBehaviour, IManager
         hub = GameManager.Instance.GetGameSystem<EventHub>();
     }
 
-    public void GetGold(int dropGold)
+    public void GetReward(DropReward reward) 
+    {
+        if (reward.rewardType == DropRewardType.Item)
+        {
+            GetItem(reward);
+            return;
+        }
+        switch (reward.currencyType)
+        {
+            case CurrencyType.GOLD:
+                GetGold(reward.amount);
+                break;
+            case CurrencyType.STATSTONE:
+                GetStatStone(reward.amount);
+                break;
+            case CurrencyType.EXP:
+                GetExp(reward.amount);
+                break;
+        }
+    }
+    void GetGold(int dropGold)
     {
         int finalGold = (int)(dropGold * (1 + stat.finalRewardStatus.goldRate));
         progress.currency.gold += finalGold;
@@ -26,7 +45,7 @@ public class ItemDropManager : MonoBehaviour, IManager
         hub.CurrencyChange(CurrencyType.GOLD,progress.currency.gold);
     }
 
-    public void GetStatStone(int dropStatStone)
+    void GetStatStone(int dropStatStone)
     {
         int finalStatStone = (int)(dropStatStone * (1 + stat.finalRewardStatus.goldRate));
         progress.currency.statStone += finalStatStone;
@@ -35,7 +54,7 @@ public class ItemDropManager : MonoBehaviour, IManager
             $"현재 소유 스탯강화석 : {progress.currency.statStone}");
         hub.CurrencyChange(CurrencyType.STATSTONE,progress.currency.statStone);
     }
-
+    //경험치는 드랍없이 바로 가서 일단 public으로 쓰긴 하는데 바꿔야함
     public void GetExp(int dropExp)
     {
         int finalExp = (int)(dropExp * (1 + stat.finalRewardStatus.expRate));
@@ -52,30 +71,33 @@ public class ItemDropManager : MonoBehaviour, IManager
         hub.LevelChanged(progress.currency.level);
     }
 
-    public void GetItem(DropedItem droppedItem)
+    public void GetItem(DropReward droppedItem)
     {
-        if (droppedItem.item is EquipmentSO)
+        if (droppedItem.itemSO is EquipmentSO)
         {
             GetEquip(droppedItem);
             return;
         }
 
-        int itemKey = droppedItem.item.key;
+        int itemKey = droppedItem.itemSO.key;
         //이미 아이템이 있으면 획득수량만 추가
         if (progress.itemInventory.ownedItemCounts.ContainsKey(itemKey))
         {
             progress.itemInventory.ownedItemCounts[itemKey] += droppedItem.amount;
+            Debug.Log($"{droppedItem.itemSO.name} 추가 획득");
         }
         //없으면 개수까지 추가
         else
         {
             progress.itemInventory.ownedItemCounts.Add(itemKey, droppedItem.amount);
+            Debug.Log($"{droppedItem.itemSO.name} 신규 획득");
         }
         
     }
 
-    public void GetEquip(DropedItem dropedItem)
+    public void GetEquip(DropReward droppedItem)
     {
+        Debug.Log($"{droppedItem} 장비 획득");
         //MVP 이후 개발
     }
 

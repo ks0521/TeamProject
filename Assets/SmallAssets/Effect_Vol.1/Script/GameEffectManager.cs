@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Assets.Effect
 {
-    public class GameManager : MonoBehaviour
+    public class GameEffectManager : MonoBehaviour
     {
         public GameObject[] Setact;
 

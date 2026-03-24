@@ -43,26 +43,21 @@ namespace Battle
             }
         }
         public float MaxHp => CurrentBattleStat.maxHp;
-        // get component
         // protected Rigidbody2D rb;
-
-
+        // battle element
         // action split class (component X)
         protected CharacterMove cm;
-
-        // battle element
         [SerializeField] protected LayerMask targetLayer;
-        [SerializeField]protected Character target;
-        [SerializeField]protected Transform targetTransform;
+        [SerializeField] protected Character target;
+        [SerializeField] protected Transform targetTransform;
         [SerializeField] protected bool isAtkCooltime;
         protected bool isDead;
-        protected bool blockMove;
-        protected bool blockAttack;
+        public bool IsDead => isDead;
         protected abstract float AttackRange { get; } //공격 거리
         protected float TargetSqrMagnitudeRange => AttackRange * AttackRange;
         // event
         protected CharacterCommonEvent cEvent;
-        protected EventHub hub;
+        protected EventHub eventHub;
         // test
         public bool canMove;
         public bool canAtk;
@@ -73,23 +68,10 @@ namespace Battle
         [SerializeField] protected Transform uniRoot;
         private void OnEnable()
         {
-            Init();
-        }
-        protected virtual void Init()
-        {
-            // rb = GetComponent<Rigidbody2D>();
-            cm = new CharacterMove();
-            cEvent = new CharacterCommonEvent();
-
-            hp = CurrentBattleStat.maxHp;
-            isAtkCooltime = false;
-
-            cm.Init(GetComponent<Rigidbody2D>());
-            // hub = GameManager.Instance.GetGameSystem<EventHub>();
-
-            //test
             canMove = true;
             canAtk = true;
+            isDead = false;
+            isAtkCooltime = false;
             state = CharacterState.Idle;
             if (spumController == null)
             {
@@ -108,6 +90,15 @@ namespace Battle
                 }
                 spumController.OverrideControllerInit();
             }
+        }
+        public virtual void Init()
+        {
+            // rb = GetComponent<Rigidbody2D>();
+            hp = CurrentBattleStat.maxHp;
+            cm = new CharacterMove();
+            cm.Init(GetComponent<Rigidbody2D>());
+            cEvent = new CharacterCommonEvent();
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         }
         protected void TargetSet(Character target)
         {
@@ -149,7 +140,7 @@ namespace Battle
             Hp -= resultDmg;
             if (Hp <= 0)
             {
-                Debug.Log($"{gameObject.name} 죽음!");
+                //Debug.Log($"{gameObject.name} 죽음!");
             }
             else
             {
@@ -163,7 +154,7 @@ namespace Battle
         }
         protected void NormalAttack(Character target)
         {
-            if (!canAtk || target == null || blockAttack || isDead || isAtkCooltime) return;
+            if (target == null|| !canAtk || isDead || isAtkCooltime) return;
 
             AtkCooltimeTask().Forget();
             Debug.Log($"{name} 이 {target.name}에게 일반공격!");
