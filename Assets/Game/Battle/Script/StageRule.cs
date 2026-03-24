@@ -1,9 +1,9 @@
 using Base.Data;
 using Base.Managers;
+using Battle;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Currency;
 using UnityEngine;
@@ -85,12 +85,12 @@ public class ChallengeStageRule : StageRule
 public class NormalStageRule : StageRule
 {
     private ItemPoolManager itemPool;
-    private PlayerReference player;
+    private PlayerManager player;
     public override void Enter()
     {
         Debug.Log($"일반 스테이지{stage.chapter} - {stage.stage} StageRule 시작");
         itemPool = GameManager.Instance.GetGameSystem<ItemPoolManager>();
-        player = GameManager.Instance.GetGameSystem<PlayerReference>();
+        player = GameManager.Instance.GetGameSystem<PlayerManager>();
     }
 
     public override void MonsterKilled(Monster monster)
@@ -108,8 +108,7 @@ public class NormalStageRule : StageRule
         foreach (var item in items)
         {
             GameObject dropItem = itemPool.UsePool();
-            DroppedItem temp = dropItem.GetComponent<DroppedItem>();
-            temp.Init(item, player.Transform);
+            dropItem.GetComponent<DroppedItem>().Init(item, player.Transform, itemPool);
             float randx = monster.transform.position.x + Random.Range(-0.5f, 0.5f);
             float randy = monster.transform.position.y + Random.Range(-0.5f, 0.5f);
             dropItem.transform.position = new Vector3(randx, randy, 0);
