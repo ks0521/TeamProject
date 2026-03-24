@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: item2
   m_EditorClassIdentifier: 
   key: 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 41231b1d7e0424f3abdbb28da05a139d, type: 3}
   itemName: 
   context: 

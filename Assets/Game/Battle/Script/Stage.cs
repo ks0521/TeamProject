@@ -27,7 +27,7 @@ using Random = UnityEngine.Random;
             this.monsterPool = monsterPool;
             this.spawnArea = spawnArea;
             stageSO = stage;
-            spawnDelay = 2f;
+            spawnDelay = 1f;
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 초기화");
         }
         //실제 스테이지 시작 지점
@@ -51,6 +51,7 @@ using Random = UnityEngine.Random;
                     float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
 
                     GameObject mon = monsterPool.UsePool(stageSO.preset[0].monster.key);
+                    mon.GetComponent<Monster>().Init();
                     mon.SetActive(true);
                     mon.transform.position = new Vector3(randx, randy, 0);
                     Register(mon.GetComponent<Monster>());
@@ -70,7 +71,7 @@ using Random = UnityEngine.Random;
         private void Register(Monster monster)
         {
             //Debug.Log("리스트 내 신규 몬스터 등록");
-
+            
             monstersList.Add(monster);
             monster.OnMonsterKilled += MonsterKilled;
         }
