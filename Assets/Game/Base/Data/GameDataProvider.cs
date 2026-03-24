@@ -35,6 +35,6 @@ namespace Base.Data
         public static DropTableDictionarySO DropDB => GameDataProvider.Instance.hub.dropTable;
         public static StageDictionarySO StageDB => GameDataProvider.Instance.hub.stageTable;
         public static StatusSO StatusDB => GameDataProvider.Instance.hub.statusTable;
-        public static SkillDictionarySO SkillDB => GameDataProvider.Instance.hub.SkillDictionarySo;
+        public static SkillDictionarySO SkillDB => GameDataProvider.Instance.hub.SkillTable;
     }
 }

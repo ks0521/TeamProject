@@ -15,4 +15,5 @@ MonoBehaviour:
   dropTable: {fileID: 11400000, guid: 39798bc83fa5b324ba917f17ab406b07, type: 2}
   stageTable: {fileID: 11400000, guid: abc9528dc68756b4e91ba7d63c12cc68, type: 2}
   statusTable: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
-  SkillDictionarySo: {fileID: 11400000, guid: cfca264f92d1a5942a73aeec219d2f5d, type: 2}
+  SkillTable: {fileID: 11400000, guid: cfca264f92d1a5942a73aeec219d2f5d, type: 2}
+  currencyTable: {fileID: 11400000, guid: 5c6df047895f0bd4f9f11fe255a93a7f, type: 2}
