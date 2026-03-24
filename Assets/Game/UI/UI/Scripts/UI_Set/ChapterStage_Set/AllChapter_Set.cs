@@ -28,6 +28,9 @@ public class AllChapter_Set : MonoBehaviour
     int enterChapter;
     int enterStage;
 
+    [SerializeField] StageMonster_Set stageMon;
+    [SerializeField] Reward_Set reward;
+
     private void OnEnable()
     {
         AllChapter();
@@ -47,6 +50,8 @@ public class AllChapter_Set : MonoBehaviour
     {
         enterChapter = chatperNum;
         enterStage = stageNum;
+ 
+        StageEntry stageEntry = stageManager.GetStageEntry(enterChapter , enterStage);
 
         //여기 나중에 몬스터 이미지 , 보상 목록 이미지 변경 추가 할 예정
         if (enter != null)

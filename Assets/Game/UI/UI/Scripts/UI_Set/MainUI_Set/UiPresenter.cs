@@ -20,17 +20,11 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] Skill_Set skillIcons;
         PlayerProgressManager manager;
         private EventHub hub;
-        bool autoType;
-        private void Start()
-        {
-            autoType = false;
-        }
-
+        
         public void Init()
         {
             manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
-            hub = GameManager.Instance.GetGameSystem<EventHub>();
-            //나중에 메인 화면에 있는 UI 초기화하는 함수 추가 예정
+            hub = GameManager.Instance.GetGameSystem<EventHub>(); 
 
             RefreshAll();
 
