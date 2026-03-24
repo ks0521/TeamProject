@@ -1,3 +1,4 @@
+using Base.Data;
 using Base.Managers;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -17,7 +18,7 @@ public class AudioManager : MonoBehaviour, IManager
     [SerializeField] private SFXPlayer _sfxPlayer;
     //[SerializeField] private PopupManager _popupManager;
     [SerializeField] private QuestManager _questManager;
-
+    private EventHub hub;
     void Awake()
     {
         if (instance == null)
@@ -28,12 +29,13 @@ public class AudioManager : MonoBehaviour, IManager
         else Destroy(gameObject);
 
         //디버그용
-        Init();
+        //Init();
     }
 
     public void Init()
     {
         _volumeController?.InitVolumeSliders();
+        hub.OnMonsterHit += PlaySkillHitSound;
     }
 
     public int GetOrder() => 300;
@@ -46,36 +48,31 @@ public class AudioManager : MonoBehaviour, IManager
     #endregion
 
     #region Skill Sounds
-    public void PlayNormalAttackSound()
-    {
-        _skillPlayer?.PlayNormalAttackSound();
-    }
-    public void PlayNormalHitSound()
-    {
-        _skillPlayer?.PlayNormalHitSound();
-    }
-    public void PlaySkillCastSound()
+    public void PlaySkillCastSound() //스킬 캐스팅 사운드
     {
         _skillPlayer?.PlaySkillCastSound();
     }
-    public void PlaySkillHitSound()
+    public void PlaySkillHitSound() //스킬 피격 사운드
     {
         _skillPlayer?.PlaySkillHitSound();
     }
-    
-    public void PlayBeAttackedSound()
+    public void PlayNormalAttackSound() //플레이어 일반공격 사운드
+    {
+        _skillPlayer?.PlayNormalAttackSound();
+    }
+    public void PlayBeAttackedSound() //플레이어 피격 사운드
     {
         _sfxPlayer?.PlayBeAttackedSound();
     }
-    public void PlayBossAttackSound()
+    public void PlayBossAttackSound() //보스 공격 사운드
     {
         _sfxPlayer?.PlayBossAttackSound();
     }
-    public void PlayBossSkillSound()
+    public void PlayBossSkillSound() //보스 스킬 사운드
     {
         _sfxPlayer?.PlayBossSkillSound();
     }
-    public void PlayBossDeadSound()
+    public void PlayBossDeadSound() // 보스 사망 사운드
     {
         _sfxPlayer?.PlayBossDeadSound();
     }

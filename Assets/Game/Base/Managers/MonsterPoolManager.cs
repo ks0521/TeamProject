@@ -44,8 +44,8 @@ namespace Base.Data
         }
     }
 
-    #region BlackBox
 
+    #region BlackBox
     [Serializable]
     public struct PoolData
     {
@@ -115,6 +115,5 @@ namespace Base.Data
             }
         }
     }
-
     #endregion
 }
