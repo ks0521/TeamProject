@@ -10,6 +10,11 @@ using UnityEngine.PlayerLoop;
 
 namespace Battle
 {
+    public enum CharacterState
+    {
+        Idle, Move, Attack
+    }
+
     public class Monster : Character
     {
         public MonsterSO monsterSO;
@@ -20,6 +25,7 @@ namespace Battle
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
         private EventHub eventHub;
 
+        public CharacterState state;
         public event Action<Monster> OnMonsterKilled;
         //public Transform player;
 
@@ -28,6 +34,7 @@ namespace Battle
 
         protected override void Init()
         {
+            state = CharacterState.Idle;
             base.Init();
 
             GameManager gm = GameObject.FindAnyObjectByType<GameManager>();
@@ -58,6 +65,7 @@ namespace Battle
                 eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             }
         }
+
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
         public void ForcedReturn()
         {
@@ -65,6 +73,7 @@ namespace Battle
             Debug.Log("오브젝트 강제 정리");
             Destroy(gameObject);
         }
+
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
         {
@@ -108,8 +117,8 @@ namespace Battle
         }
         protected override void UpdateFeat()
         {
-
         }
+
         public override void Hit(float damage)
         {
             base.Hit(damage);

@@ -38,14 +38,14 @@ namespace UI.Scripts.Ability
 
         private void OnEnable()
         {
-            hub.OnGoldChange += ReFreshAllUI;
-            hub.OnStatStoneChange += ReFreshAllUI;
+            //hub.OnGoldChange += ReFreshAllUI; <- 해당부분 동합하시면 됩니다
+            //hub.OnStatStoneChange += ReFreshAllUI;
             hub.OnLevelChange += ReFreshAllUI;
         }
         private void OnDisable()
         {
-            hub.OnGoldChange -= ReFreshAllUI;
-            hub.OnStatStoneChange -= ReFreshAllUI;
+            //hub.OnGoldChange -= ReFreshAllUI;
+            //hub.OnStatStoneChange -= ReFreshAllUI;
             hub.OnLevelChange -= ReFreshAllUI;
         }
         public void Init() 

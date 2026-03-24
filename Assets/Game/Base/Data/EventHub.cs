@@ -1,6 +1,8 @@
 using Base.Managers;
+using Base.Save;
 using Battle;
 using Growth.StatUpgrade;
+using JetBrains.Annotations;
 using Personal.HagYun;
 using System;
 using UnityEngine;
@@ -29,12 +31,8 @@ namespace Base.Data
         public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
-        public event Action<int> OnGoldChange; //골드 수치 변경
-        public void GoldChanged(int gold) => OnGoldChange?.Invoke(gold);
-        public event Action<int> OnStatStoneChange; //스탯 강화석 수치 변경
-        public void StatStoneChanged(int statStone) => OnStatStoneChange?.Invoke(statStone);
-        public event Action<float> OnExpChange; //경험치 변경
-        public void ExpChanged(float exp) => OnExpChange?.Invoke(exp);
+        public event Action<CurrencyType, int> OnCurrencyChange; //재화 변경
+        public void CurrencyChange(CurrencyType type, int amount) => OnCurrencyChange?.Invoke(type, amount);
         public event Action<int> OnLevelChange;
         public void LevelChanged(int level) => OnLevelChange?.Invoke(level);
 
