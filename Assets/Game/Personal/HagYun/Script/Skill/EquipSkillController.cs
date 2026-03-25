@@ -1,4 +1,5 @@
-﻿using Battle;
+﻿using Base.Data;
+using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
 using System;
@@ -7,31 +8,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 namespace Personal.HagYun
 {
-    public enum ESCEventType
-    {
-        CooltimeStart,
-        CooltimeUpdate,
-        CooltimeEnd,
-        CastingStart,
-        CastingEnd
-    }
-    // equip skill
-    [Serializable]
-    public struct EquipSkillSet
-    {
-        [SerializeField]EquipSkill eSkill;
-        public EquipSkill ESkill => eSkill;
-        public Priority priority;
-        public bool isEquipped;
-        //public bool IsSkillUsePossible => eSkill != null && !eSkill.IsCooltime;
-        public bool IsSkillUsePossible => isEquipped && !eSkill.IsCooltime;
-        public Skill Skill => eSkill.Skill;
-        public void Init(Character owner)
-        {
-            eSkill = new EquipSkill();
-            eSkill.Init(owner);
-        }
-    }
     public class EquipSkillControllerEvent
     {
         public event Action OnCastingStart;
@@ -49,42 +25,33 @@ namespace Personal.HagYun
 
         // skill pool for get skill
         [SerializeField] protected SkillPool skillPool;
-
-        [SerializeField] protected EquipSkillSet[] equipSkillSetArr;
-
-        public EquipSkillSet[] EquipSkillSetArr => equipSkillSetArr;
-        public EquipSkill this[int index] => equipSkillSetArr[index].ESkill;
+        [SerializeField] protected EquipSkill[] equipSkillArr;
+        public EquipSkill[] EquipSkillArr => equipSkillArr;
+        public EquipSkill this[int index] => equipSkillArr[index];
         protected int skillCnt;
         // skill event
         protected EquipSkillControllerEvent eventSet = new EquipSkillControllerEvent();
-
+        protected EventHub eventHub;
         // skill ready
         public bool IsSkillReady { get; private set; }
 
         [Range(0f, 1f)] protected float skillFireTimeValue = 0.5f;
-        public bool IsCasting { get; private set; }
+        [field : SerializeField] public bool IsCasting { get; private set; }
         public void OwnerSet(Character owner) => this.owner = owner;
-        // void Start()
-        // {
-        //     Init(GetComponent<Player>());
-        // }
         public abstract void Init(Character cha);
         private void Update()
         {
             UpdateFeat();
         }
         protected virtual void UpdateFeat() { }
-        void ColliderSizeChange(int index)
-        {
-            float colRadius = equipSkillSetArr[index].Skill.Data.range / 2;
-        }
         public void SkillReady(int index)
         {
-            ColliderSizeChange(index);
+            
         }
         public virtual void PriorityUpdate(int index, Priority pri)
         {
-            equipSkillSetArr[index].priority = pri;
+            // equipSkillSetArr[index].priority = pri;
+            equipSkillArr[index].priority = pri;
         }
         public virtual void SkillEquip(int index, Skill targetSkill, bool isInit = false)
         {
@@ -93,17 +60,17 @@ namespace Personal.HagYun
                 Debug.Log($"{index}번에 장착할 스킬 없음");
                 return;
             }
-            equipSkillSetArr[index].ESkill.SkillSet(targetSkill, isInit);
             PriorityUpdate(index, Priority.Low);
-            if (equipSkillSetArr[index].isEquipped) return;
-            equipSkillSetArr[index].isEquipped = true;
+            equipSkillArr[index].SkillSet(targetSkill, isInit);
+            if (equipSkillArr[index].isEquipped) return;
+            equipSkillArr[index].isEquipped = true;
             skillCnt++;
         }
         public virtual void SkillUnequip(int index)
         {
-            equipSkillSetArr[index].ESkill.SkillUnset();
-            if (!equipSkillSetArr[index].isEquipped) return;
-            equipSkillSetArr[index].isEquipped = false;
+            equipSkillArr[index].SkillUnset();
+            if (!equipSkillArr[index].isEquipped) return;
+            equipSkillArr[index].isEquipped = false;
             skillCnt--;
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
@@ -113,7 +80,8 @@ namespace Personal.HagYun
 
             sr.color = Color.blue;
 
-            float baseCastingTime = equipSkillSetArr[index].Skill.Data.castingTime;
+            // float baseCastingTime = equipSkillSetArr[index].Skill.Data.castingTime;
+            float baseCastingTime = equipSkillArr[index].Skill.Data.castingTime;
             float curCastingTime = baseCastingTime;
             float castingTimeValue = 1f;
 
@@ -126,7 +94,8 @@ namespace Personal.HagYun
             }
 
             sr.color = Color.yellow;
-            equipSkillSetArr[index].ESkill.SkillUse(cha);
+            // equipSkillSetArr[index].ESkill.SkillUse(cha);
+            equipSkillArr[index].SkillUse(cha);
 
             while (0 < castingTimeValue)
             {
@@ -143,7 +112,7 @@ namespace Personal.HagYun
         }
         bool CheckSkillUsePossible(int index)
         {
-            if (!equipSkillSetArr[index].IsSkillUsePossible)
+            if (!equipSkillArr[index].IsSkillUsePossible)
             {
                 Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
                 return false;
@@ -158,7 +127,7 @@ namespace Personal.HagYun
         }
         public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            Skill tSkill = equipSkillSetArr[skillIndex].Skill;
+            Skill tSkill = equipSkillArr[skillIndex].Skill;
             Vector2 plPos = tSkill.OwnerPos;
             int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, tSkill.Data.range, tSkill.TargetMask);
             if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
