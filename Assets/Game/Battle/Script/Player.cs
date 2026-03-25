@@ -55,6 +55,15 @@ namespace Battle
             if (isDead) return;
             isDead = true;
 
+            var hub = GameManager.Instance.GetGameSystem<EventHub>();
+            if (stageManager == null)
+                stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+
+            if (hub != null && stageManager != null)
+            {
+                hub.StageFailed(stageManager.CurStageSO);
+            }
+
             DeadMotionAsync().Forget();
             Debug.Log("스테이지 실패");
         }
@@ -208,6 +217,11 @@ namespace Battle
             }
 
             NormalAttack(target);
+        }
+        protected override void SendHitSignal()
+        {
+            //나중에 EventHub에다가 PlayerHit 같은 이벤트 추가하셔야 합니다!
+            if(!isDead) eventHub?.MonsterHit();
         }
     }
 }
