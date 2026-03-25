@@ -24,4 +24,4 @@ MonoBehaviour:
     weights: 2
   type: 1
   deadLine: 60
-  targetKillScore: 20
+  targetKillScore: 3

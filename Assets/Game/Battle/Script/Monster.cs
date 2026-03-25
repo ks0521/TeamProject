@@ -16,7 +16,7 @@ namespace Battle
         public override BattleStat CurrentBattleStat => monsterSO.battleStat;
         private CancellationTokenSource monsterCts;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
-        public event Action<Monster> OnMonsterKilled;
+        public event Action<Monster> OnMonsterKilled; //연산용
         public override float Hp
         {
             get => hp;
@@ -58,7 +58,6 @@ namespace Battle
         public void ForcedReturn()
         {
             Debug.Log("오브젝트 강제 정리");
-            
             Destroy(gameObject);
         }
 

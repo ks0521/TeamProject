@@ -82,7 +82,7 @@ namespace UI.Scripts.Stage
 
         public void Spotlight(bool isSpotlight)
         {
-            spotlightIcon.SetActive(isSpotlight);   
+            //spotlightIcon.SetActive(isSpotlight);   
         }
     }
 

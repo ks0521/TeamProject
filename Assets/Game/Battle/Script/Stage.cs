@@ -19,7 +19,7 @@ using Random = UnityEngine.Random;
         public bool canSpawning; //스폰 여부 트리거(디버깅용)
         [SerializeField] private float spawnDelay; // 몬스터 스폰 딜레이
         private BoxCollider2D spawnArea;
-        public event Action<Monster> OnMonsterKilled;
+        public event Action<Monster> OnMonsterKilledInStage;
         //초기화
         public Stage(StageSO stage, MonsterPoolManager monsterPool, BoxCollider2D spawnArea)
         {
@@ -83,8 +83,9 @@ using Random = UnityEngine.Random;
         private void MonsterKilled(Monster monster)
         {
             //스테이지 클리어 등 작업전에 몬스터 반환먼저 하기
-            OnMonsterKilled?.Invoke(monster); 
             UnRegister(monster);
+            monsterPool.ReturnPool(monster.monsterSO.key, monster.gameObject);
+            OnMonsterKilledInStage?.Invoke(monster); 
         }
         
         /// <summary> 몬스터가 스테이지에서 사라졌을 시(사망 or 스테이지 변경으로 인한 강제삭제) 스테이지에서 분리</summary>
@@ -94,7 +95,6 @@ using Random = UnityEngine.Random;
             //Debug.Log("리스트 내 몬스터 등록 해제");
 
             monstersList.Remove(monster);
-            monsterPool.ReturnPool(monster.monsterSO.key, monster.gameObject);
             monster.OnMonsterKilled -= MonsterKilled;
         }
 
@@ -107,8 +107,7 @@ using Random = UnityEngine.Random;
             for (int i = monstersList.Count - 1; i >= 0; i--)
             {
                 Monster monster = monstersList[i];
-                monstersList.Remove(monster);
-                monster.OnMonsterKilled -= MonsterKilled; //해당 몬스터와 연결된 이벤트 삭제
+                UnRegister(monster);
                 monster.ForcedReturn(); //모든 몬스터 제거, 초기화
             }
 
