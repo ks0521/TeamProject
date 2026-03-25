@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 302155613776940955}
   - component: {fileID: 3874761790419925107}
   - component: {fileID: 2613657829212925110}
+  - component: {fileID: 7147885725483223894}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -91,6 +92,10 @@ MonoBehaviour:
   target: {fileID: 0}
   targetTransform: {fileID: 0}
   isAtkCooltime: 0
+  canMove: 0
+  canAtk: 0
+  spumController: {fileID: 0}
+  uniRoot: {fileID: 0}
   runtimeStatus: {fileID: 1523400318190689276}
   equipSkillController: {fileID: 7065709201030374676}
   stageManager: {fileID: 0}
@@ -122,6 +127,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &7147885725483223894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450563698047221803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93786f9890c7e0458037f09fb5daaad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3504440221717847127
 GameObject:
   m_ObjectHideFlags: 0
