@@ -1,6 +1,8 @@
 using Base.Data;
 using Base.Managers;
 using Battle;
+using Growth.Skill;
+using Personal.HagYun;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -38,10 +40,13 @@ public class AudioManager : MonoBehaviour, IManager
     public void Init()
     {
         _volumeController?.InitVolumeSliders();
+
         var hub = GameManager.Instance.GetGameSystem<EventHub>();
         if (hub != null && _sfxPlayer != null)
         {
             //필요한 이벤트들은 여기서 추가
+            //hub.OnSkillUsed += OnSkillUsed;
+
             hub.OnButtonClicked -= _sfxPlayer.PlayClickButtonSound;
             hub.OnButtonClicked += _sfxPlayer.PlayClickButtonSound;
 
@@ -60,6 +65,18 @@ public class AudioManager : MonoBehaviour, IManager
     }
 
     public int GetOrder() => 300;
+
+
+    /*
+     * //이 코드는 SkillSO에 public AudioClip skillSound;가 존재함을 가정합니다
+    void OnSkillUsed(Skill skill)
+    {
+        if (skill.skillSound != null)
+        {
+            _skillPlayer.PlayOneShot(skill.skillSound);
+        }
+    }
+    */
 
     #region BGM
     public void ChangeMap(BGMChanger.MapType mapType)
