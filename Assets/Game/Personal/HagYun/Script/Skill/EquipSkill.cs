@@ -4,47 +4,58 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Battle;
+using Base.Data;
+using Base.Managers;
 namespace Personal.HagYun
 {
-    public class EquipSkillEvent
-    {
-        public event Action OnCooltimeStart;
-        public event Action OnCooltimeEnd;
-
-        public void RaiseCooltimeStart() => OnCooltimeStart?.Invoke();
-        public void RaiseCooltimeEnd() => OnCooltimeEnd?.Invoke();
-
-        // public event Action<float> OnCooltimeUpdate;
-        // public void RaiseCooltimeUpdate(float value) => OnCooltimeUpdate?.Invoke(value);
-    }
     [Serializable]
     public class EquipSkill
     {
-        //Owner
+        // Owner
         Character owner;
-
+        // Event
+        EventHub eventHub;
+        // EquipSkill index
+        int eSkillIndex;
+        // Equiped Skill
         [SerializeField] Skill skill;
         public Skill Skill => skill;
+
+        // Cooltime Check
         public float CurCooltime { get; private set; }
         public float MaxCooltime { get; private set; }
-        public bool IsCooltime { get; private set; }
-        EquipSkillEvent eventSet = new EquipSkillEvent();
-        public Vector2 SkillOwnerPos => skill.OwnerPos;
-        public void Init(Character owner)
+        [field : SerializeField] public bool IsCooltime { get; private set; }
+
+        // Current priority
+        public Priority priority;
+        // Equip State
+        public bool isEquipped;
+        // Skill Use Possible Check
+        public bool IsSkillUsePossible => isEquipped && !IsCooltime;
+
+
+        public void Init(Character owner, int index)
         {
             this.owner = owner;
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            eSkillIndex = index;
         }
         public void SkillSet(Skill skill, bool isInit = false)
         {
             this.skill = skill;
             skill.Init(owner);
             MaxCooltime = skill.Data.coolDown;
+
+            eventHub.SkillSet(eSkillIndex);
+            
             if (!isInit) CooltimeStart();
         }
         public void SkillUnset()
         {
             skill = null;
             IsCooltime = false;
+
+            eventHub.SkillUnset(eSkillIndex);
         }
         public void SkillChange(Skill skill)
         {
@@ -85,8 +96,8 @@ namespace Personal.HagYun
         async UniTaskVoid CooltimeStartTask()
         {
             IsCooltime = true;
-            eventSet.RaiseCooltimeStart();
-            // float baseCooltime = skill.Data.coolDown;
+            // eventSet.RaiseCooltimeStart();
+            eventHub.SkillUsed(eSkillIndex);
             CurCooltime = MaxCooltime;
             while (0 < CurCooltime)
             {
@@ -98,7 +109,8 @@ namespace Personal.HagYun
             }
             // eventSet.RaiseCooltimeUpdate(1);
             IsCooltime = false;
-            eventSet.RaiseCooltimeEnd();
+            // eventSet.RaiseCooltimeEnd();
+            eventHub.SkillCoolEnd(eSkillIndex);
         }
         public void CooltimeSet(float cooltime)
         {
@@ -116,11 +128,11 @@ namespace Personal.HagYun
         }
 
         // event add/remove
-        public void AddEventCooltimeStart(Action func) => eventSet.OnCooltimeStart += func;
-        public void AddEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd += func;
+        // public void AddEventCooltimeStart(Action func) => eventSet.OnCooltimeStart += func;
+        // public void AddEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd += func;
 
-        public void RemoveEventCooltimeStart(Action func) => eventSet.OnCooltimeStart -= func;
-        public void RemoveEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd -= func;
+        // public void RemoveEventCooltimeStart(Action func) => eventSet.OnCooltimeStart -= func;
+        // public void RemoveEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd -= func;
 
         // public void AddEventCooltimeUpdate(Action<float> func) => eventSet.OnCooltimeUpdate += func;
         // public void RemoveEventCooltimeUpdate(Action<float> func) => eventSet.OnCooltimeUpdate -= func;

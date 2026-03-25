@@ -7,7 +7,6 @@ namespace Battle
     {
         private Player player;
         private PlayerRuntimeStatus runtimeStatus;
-        private Transform transform;
         public Player Player => player;
         public PlayerRuntimeStatus RuntimeStatus => runtimeStatus;
         public Transform Transform => transform;
@@ -15,7 +14,6 @@ namespace Battle
         {
             player = GetComponent<Player>();
             runtimeStatus = GetComponentInChildren<PlayerRuntimeStatus>();
-            transform = GetComponent<Transform>();
         }
         public void Init()
         {
