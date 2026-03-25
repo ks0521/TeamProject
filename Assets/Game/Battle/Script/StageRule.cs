@@ -108,7 +108,7 @@ public class NormalStageRule : StageRule
         foreach (var item in items)
         {
             GameObject dropItem = itemPool.UsePool();
-            dropItem.GetComponent<DroppedItem>().Init(item, player.Transform, itemPool);
+            dropItem.GetComponent<DroppedItem>().Init(item, player.transform, itemPool);
             float randx = monster.transform.position.x + Random.Range(-0.5f, 0.5f);
             float randy = monster.transform.position.y + Random.Range(-0.5f, 0.5f);
             dropItem.transform.position = new Vector3(randx, randy, 0);
