@@ -37,9 +37,11 @@ namespace Base.Data
         public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
+        public event Action OnPlayerHit; //플레이어 피격
+        public void PlayerHit() => OnPlayerHit?.Invoke();
         public event Action<CurrencyType, int> OnCurrencyChange; //재화 변경
         public void CurrencyChange(CurrencyType type, int amount) => OnCurrencyChange?.Invoke(type, amount);
-        public event Action<int> OnLevelChange;
+        public event Action<int> OnLevelChange; //레벨업
         public void LevelChanged(int level) => OnLevelChange?.Invoke(level);
 
 

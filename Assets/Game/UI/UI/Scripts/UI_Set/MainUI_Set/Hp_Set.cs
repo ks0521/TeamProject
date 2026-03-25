@@ -22,9 +22,8 @@ public class Hp_Set : MonoBehaviour
         }
         else
         {
-            hpText.text = currenthp.ToString("F0");
+            hpText.text = currenthp.ToString("F0") + " /\n " + maxhp.ToString("F0");
         }
         hp.fillAmount = (currenthp / maxhp); //Hp 수치 표시하기
-
     }
 }
