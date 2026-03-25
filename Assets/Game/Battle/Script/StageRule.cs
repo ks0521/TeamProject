@@ -25,7 +25,7 @@ public abstract class StageRule
         this.stage = stage;
     }
     public abstract void Enter();
-    public abstract void MonsterKilled(Monster monster);
+    public abstract void MonsterKilledInStage(Monster monster);
     public abstract void Destroy();
 }
 
@@ -64,7 +64,7 @@ public class ChallengeStageRule : StageRule
         ChallengeFail?.Invoke(stage);
     }
 
-    public override void MonsterKilled(Monster monster)
+    public override void MonsterKilledInStage(Monster monster)
     {
         if (++killScore >= stage.targetKillScore)
         {
@@ -93,7 +93,7 @@ public class NormalStageRule : StageRule
         player = GameManager.Instance.GetGameSystem<PlayerManager>();
     }
 
-    public override void MonsterKilled(Monster monster)
+    public override void MonsterKilledInStage(Monster monster)
     {
         ++killScore;
         //몬스터 처치에 대한 기타 작동기전 구현
