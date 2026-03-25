@@ -28,6 +28,12 @@ public class Reward_Set : MonoBehaviour
         }
 
         int currentSlot = 0;
+
+        if (dropTable.rewardExp > 0)
+        {
+            SetSlot(ref currentSlot , exp);
+        }
+        
         foreach (var item in dropTable.dropList)
         {
             switch (item.rewardType)
@@ -35,6 +41,7 @@ public class Reward_Set : MonoBehaviour
                 case DropRewardType.Currency:
                     SetSlot(ref currentSlot, item.currencySO.img);
                     break;
+               
                 case DropRewardType.Item:
                     SetSlot(ref currentSlot, item.itemSO.icon);
                     break;

@@ -73,6 +73,8 @@ namespace Battle
             isDead = false;
             isAtkCooltime = false;
             state = CharacterState.Idle;
+            cm = new CharacterMove();
+            cm.Init(GetComponent<Rigidbody2D>());
             if (spumController == null)
             {
                 spumController = GetComponentInChildren<SPUM_Prefabs>();
@@ -95,8 +97,7 @@ namespace Battle
         {
             // rb = GetComponent<Rigidbody2D>();
             hp = CurrentBattleStat.maxHp;
-            cm = new CharacterMove();
-            cm.Init(GetComponent<Rigidbody2D>());
+            
             cEvent = new CharacterCommonEvent();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         }
@@ -110,7 +111,7 @@ namespace Battle
         {
             UpdateFeat();
             // test
-            cm.canMove = canMove;
+            //cm.canMove = canMove;
         }
         protected abstract void UpdateFeat();
         private void FixedUpdate()
@@ -146,7 +147,9 @@ namespace Battle
             {
                 Debug.Log($"{resultDmg} Damage!\n{gameObject.name} HP {Hp} 남음");
             }
+            SendHitSignal();
         }
+        protected abstract void SendHitSignal();
         bool IsCriticalChance()
         {
             if (UnityEngine.Random.Range(0f, 1f) < CurrentBattleStat.critChance) return true;

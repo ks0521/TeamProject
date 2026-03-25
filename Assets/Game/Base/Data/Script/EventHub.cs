@@ -21,6 +21,10 @@ namespace Base.Data
         public void PlayerDead(Character character) => OnDeadPlayer?.Invoke(character);
         public event Action<float, float> OnHpChange; //HP변경
         public void HpChanged(float hp, float maxHp) => OnHpChange?.Invoke(hp, maxHp);
+        public event Action<int> OnSkillSet;
+        public void SkillSet(int order) => OnSkillSet?.Invoke(order);
+        public event Action<int> OnSkillUnset;
+        public void SkillUnset(int order) => OnSkillUnset?.Invoke(order);
         public event Action<int> OnSkillUsed; //스킬 사용
         public void SkillUsed(int order) => OnSkillUsed?.Invoke(order);
         public event Action<Skill> OnSkillCanUse; //스킬 사용 가능
@@ -40,7 +44,7 @@ namespace Base.Data
         public event Action<int> OnLevelChange; //레벨업
         public void LevelChanged(int level) => OnLevelChange?.Invoke(level);
 
-        
+
         public int GetOrder() => 0;
     }
 }

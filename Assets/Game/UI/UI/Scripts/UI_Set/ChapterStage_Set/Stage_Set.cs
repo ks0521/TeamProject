@@ -17,7 +17,7 @@ namespace UI.Scripts.Stage
         [SerializeField] private Button button;
         [SerializeField] private TextMeshProUGUI stageName;
 
-        [SerializeField] private GameObject normalIcon;
+        [SerializeField] private GameObject spotlightIcon;
         [SerializeField] private GameObject challengeIcon;
         [SerializeField] private GameObject bossIcon;
         [SerializeField] private GameObject lockIcon;
@@ -41,7 +41,6 @@ namespace UI.Scripts.Stage
             switch (entry.type)
             {
                 case StageType.Normal:
-                    normalIcon.SetActive(true);
                     challengeIcon.SetActive(false); 
                     bossIcon.SetActive(false); 
                     lockIcon.SetActive(false);
@@ -50,7 +49,6 @@ namespace UI.Scripts.Stage
                     break;
 
                 case StageType.Challenge:
-                    normalIcon.SetActive(false);
                     challengeIcon.SetActive(true);
                     bossIcon.SetActive(false);
                     lockIcon.SetActive(false);
@@ -59,7 +57,6 @@ namespace UI.Scripts.Stage
                     break;
 
                 case StageType.Boss:
-                    normalIcon.SetActive(false);
                     challengeIcon.SetActive(false);
                     bossIcon.SetActive(true);
                     lockIcon.SetActive(false);
@@ -68,7 +65,6 @@ namespace UI.Scripts.Stage
                     break;
 
                 default:
-                    normalIcon.SetActive(false);
                     challengeIcon.SetActive(false);
                     bossIcon.SetActive(false);
                     lockIcon.SetActive(true);
@@ -83,6 +79,11 @@ namespace UI.Scripts.Stage
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => action?.Invoke());
         }//버튼 OnClick 에 함수 넣어주는 함수
+
+        public void Spotlight(bool isSpotlight)
+        {
+            spotlightIcon.SetActive(isSpotlight);   
+        }
     }
 
 }

@@ -1,5 +1,8 @@
 using Base.Data;
 using Base.Managers;
+using Battle;
+using Growth.Skill;
+using Personal.HagYun;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -37,10 +40,43 @@ public class AudioManager : MonoBehaviour, IManager
     public void Init()
     {
         _volumeController?.InitVolumeSliders();
-        //eventHub.OnMonsterHit += PlayNormalHitSound();
+
+        var hub = GameManager.Instance.GetGameSystem<EventHub>();
+        if (hub != null && _sfxPlayer != null)
+        {
+            //필요한 이벤트들은 여기서 추가
+            //hub.OnSkillUsed += OnSkillUsed;
+
+            hub.OnButtonClicked -= _sfxPlayer.PlayClickButtonSound;
+            hub.OnButtonClicked += _sfxPlayer.PlayClickButtonSound;
+
+            hub.OnMonsterHit -= _sfxPlayer.PlayHitSound;
+            hub.OnMonsterHit += _sfxPlayer.PlayHitSound;
+            //hub.OnPlayerHit -= _sfxPlayer.PlayPlayerHitSound; 
+            //hub.OnPlayerHit += _sfxPlayer.PlayPlayerHitSound;
+
+            hub.OnClearStage -= PlayWinSound;
+            hub.OnClearStage += PlayWinSound;
+            hub.OnFailStage -= PlayLoseSound;
+            hub.OnFailStage += PlayLoseSound;
+            //hub.OnLevelChange += PlayLevelupSound;
+            Debug.Log("AudioManager: 모든 효과음 이벤트 연결 완료");
+        }
     }
 
     public int GetOrder() => 300;
+
+
+    /*
+     * //이 코드는 SkillSO에 public AudioClip skillSound;가 존재함을 가정합니다
+    void OnSkillUsed(Skill skill)
+    {
+        if (skill.skillSound != null)
+        {
+            _skillPlayer.PlayOneShot(skill.skillSound);
+        }
+    }
+    */
 
     #region BGM
     public void ChangeMap(BGMChanger.MapType mapType)
@@ -117,15 +153,15 @@ public class AudioManager : MonoBehaviour, IManager
         _sfxPlayer?.PlayGetItemSound();
         //나중에 고등급 장비 전용 효과음 재생 로직 넣을 것
     }
-    public void PlayLevelupSound()
+    public void PlayLevelupSound(int level)
     {
         _sfxPlayer?.PlayLevelupSound();
     }
-    public void PlayWinSound()
+    public void PlayWinSound(StageSO stage)
     {
         _sfxPlayer?.PlayWinSound();
     }
-    public void PlayLoseSound() //사망 포함, BGM 교체
+    public void PlayLoseSound(StageSO stage) //사망 포함, BGM 교체
     {
         _sfxPlayer?.PlayLoseSound();
     }

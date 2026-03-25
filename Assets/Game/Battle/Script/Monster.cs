@@ -44,6 +44,7 @@ namespace Battle
             base.Init();
             monsterCts?.Dispose();
             monsterCts = new CancellationTokenSource();
+
             PlayerManager playerRef = GameManager.Instance.GetGameSystem<PlayerManager>();
             if (playerRef == null)
             {
@@ -110,7 +111,10 @@ namespace Battle
         public override void Hit(float damage)
         {
             base.Hit(damage);
-            
+            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+        }
+        protected override void SendHitSignal()
+        {
             eventHub?.MonsterHit();
         }
         /*
@@ -123,7 +127,7 @@ namespace Battle
 
         protected override void FixedUpdateFeat()
         {
-            if (target == null || target == null || isDead) return;
+            if (target == null || isDead) return;
 
             UpdateFacing(target.transform.position.x - transform.position.x);
 
