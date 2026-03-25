@@ -67,5 +67,17 @@ namespace Base.Managers
             Debug.LogWarning($"찾으려는 {typeof(T)}타입은 존재하지 않습니다. ");
             return default;
         }
+        //변수대입 + 존재여부 확인용
+        public bool TryGetGameSystem<T>(out T variable) where T : IGameSystem 
+        {
+            if (dic.TryGetValue(typeof(T),out var system))
+            {
+                variable = (T)system;
+                return true; //define
+            }
+            Debug.LogWarning($"찾으려는 {typeof(T)}타입은 존재하지 않습니다. ");
+            variable = default(T);
+            return false;
+        }
     }
 }

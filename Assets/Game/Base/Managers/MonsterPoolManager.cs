@@ -1,3 +1,4 @@
+using Base.Managers;
 using System;
 using System.Collections.Generic;
 using Battle;
@@ -6,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Base.Data
 {
-    public class MonsterPoolManager : MonoBehaviour
+    public class MonsterPoolManager : MonoBehaviour,IGameSystem
     {
         private Dictionary<int, ObjectPool> poolDic = new(); //키 : 몬스터 키, 밸류 : 몬스터 프리팹
 
@@ -42,6 +43,8 @@ namespace Base.Data
                 poolDic.Add(preset.monster.key, new ObjectPool(preset.monster, preset.weights * 3, gameObject));
             }
         }
+
+        public int GetOrder() => 0;
     }
 
 

@@ -22,7 +22,7 @@ namespace Personal.HagYun
     {
         //Owner
         Character owner;
-
+        
         [SerializeField] Skill skill;
         public Skill Skill => skill;
         public float CurCooltime { get; private set; }
