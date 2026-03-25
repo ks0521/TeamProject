@@ -5,17 +5,17 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 것
+public class JJ_BossAttackManager : Character //나중에 Monster로 교체할 것
 {
     public MonsterSO monsterSO;
     public SFXPlayer sfx;
     public const float MonsterAttackRange = 0.6f;
 
-    protected override BattleStat CurrentBattleStat => monsterSO.battleStat;
+    public override BattleStat CurrentBattleStat => monsterSO.battleStat;
     protected override float AttackRange => MonsterAttackRange;
 
     // 공격 대상의 스크립트를 미리 캐싱해둘 변수
-    private character1 targetScript;
+    private Character targetScript;
 
     [SerializeField] private Collider2D playerCollider;
 
@@ -74,7 +74,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         Debug.Log("돌진 준비 중...");
         if (atkRange1 != null) atkRange1.SetActive(true);
 
-        Vector2 directionToTarget = (target.position - transform.position).normalized;
+        Vector2 directionToTarget = (target.transform.position - transform.position).normalized;
         UpdateFacing(directionToTarget.x);
         //RotateTowards(directionToTarget); //캐릭터까지 회전시키고 있음
         float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
@@ -115,7 +115,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
             // 이렇게 하면 CharacterMove를 수정하지 않고도 물리 기반 이동이 가능합니다.
             // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
             // cm.ChaseMove(directionToTarget, chargeSpeed);
-            float distance = Vector2.Distance(transform.position, target.position);
+            float distance = Vector2.Distance(transform.position, target.transform.position);
             RaycastHit2D hit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
             if (hit.collider != null) //벽과 충돌한 경우
             {
@@ -180,7 +180,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
 
         currentSkill2CoolTime = skill2CoolTime;
         isUsingSkill = true;
-        UpdateFacing(target.position.x - transform.position.x);
+        UpdateFacing(target.transform.position.x - transform.position.x);
         Debug.Log("화염 장막 준비 중...");
 
         if (atkRange2 != null) atkRange2.SetActive(true);
@@ -192,16 +192,16 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         if (atkRange2 != null)
         {
             atkRange2.SetActive(false);
-            float distance = Vector2.Distance(transform.position, target.position);
+            float distance = Vector2.Distance(transform.position, target.transform.position);
             if (distance <= skill2Range)
             {
                 Debug.Log("화염 장막에 피격되었습니다.");
                 targetScript.Hit(skill2Damage);
 
-                player1 player = targetScript as player1;
+                Player player = targetScript as Player;
                 if (player != null)
                 {
-                    player.ApplyDotDamage(skill2TotalDotDamage, skill2DotDuration, skill2DotInterval);
+                    //player.ApplyDotDamage(skill2TotalDotDamage, skill2DotDuration, skill2DotInterval);
                 }
             }
         }
@@ -216,9 +216,9 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
 
         currentSkill3CoolTime = skill3CoolTime;
         var cts = this.GetCancellationTokenOnDestroy();
-        skillTargetPosition = target.position;
+        skillTargetPosition = target.transform.position;
         isUsingSkill = true;
-        UpdateFacing(target.position.x - transform.position.x);
+        UpdateFacing(target.transform.position.x - transform.position.x);
         Debug.Log("메테오 준비 중...");
 
         if (atkRange3 != null)
@@ -236,7 +236,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         if (atkRange3 != null)
         {
             atkRange3.SetActive(false);
-            float distance = Vector2.Distance(skillTargetPosition, target.position);
+            float distance = Vector2.Distance(skillTargetPosition, target.transform.position);
             if (distance <= skill3Range)
             {
                 Debug.Log("메테오 적중! 플레이어에게 데미지");
@@ -283,7 +283,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
             return;
         isDead = true;
         Debug.Log("몬스터 사망");
-        rb.velocity = Vector2.zero;
+        //rb.velocity = Vector2.zero;
         Destroy(gameObject);
         //Killed();
         sfx.PlayBossDeadSound();
@@ -301,7 +301,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         Debug.Log("오브젝트 풀에 강제 반환");
     }
     //처음 생성때 초기화되는 내용(불변)
-    protected override void Init() //(Transform tf)
+    public override void Init() //(Transform tf)
     {
         //transform이라는 타입의 변수를 만들어 target에 주입
         //FindGameObjectWithTag보다 가벼운 연산을 찾을 것
@@ -316,8 +316,8 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         if (playerObj != null)
         {
             //target = tf;
-            target = playerObj.transform;
-            targetScript = playerObj.GetComponent<character1>();
+            target = playerObj.GetComponent<Player>();
+            targetScript = playerObj.GetComponent<Character>();
             if (targetScript == null)
             {
                 Debug.LogWarning($"Target {target.name}에게 character1 스크립트가 없습니다");
@@ -357,7 +357,7 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         if (CanUseSkill(currentSkill1CoolTime) && hp >= CurrentBattleStat.maxHp * 0.3) UseMonsterSkill1Async().Forget();
         else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStat.maxHp * 0.5)
         {
-            float distance = Vector2.Distance(transform.position, target.position);
+            float distance = Vector2.Distance(transform.position, target.transform.position);
             if (distance <= skill2Range) UseMonsterSkill2Async().Forget();
         }
         else if (CanUseSkill(currentSkill3CoolTime)) UseMonsterSkill3Async().Forget();
@@ -368,19 +368,19 @@ public class JJ_BossAttackManager : character1 //나중에 Monster로 교체할 
         // 타겟이 없거나 이미 죽었다면 아무것도 하지 않음
         if (target == null || targetScript == null || isDead || isUsingSkill) return;
 
-        UpdateFacing(target.position.x - transform.position.x);
+        UpdateFacing(target.transform.position.x - transform.position.x);
 
         // 거리 계산
-        float distanceToTarget = Vector2.Distance(transform.position, target.position);
+        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
 
         if (distanceToTarget <= AttackRange)
         {
             // 사거리 내: 이동을 멈추고 공격 시도
-            Attack(targetScript);
+            //Attack(targetScript);
         }
         else
         {
-            cm.ChaseMove(target, CurrentBattleStat.moveSpeed);
+            cm.ChaseMove(target.transform, CurrentBattleStat.moveSpeed);
         }
     }
 
