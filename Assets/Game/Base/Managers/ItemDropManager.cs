@@ -9,12 +9,8 @@ public class ItemDropManager : MonoBehaviour, IManager
 {
     [SerializeField] private RuntimeProgressState progress;
     private PlayerRuntimeStatus stat => PlayerRuntimeStatus.Instance;
-    private EventHub hub;
+    [SerializeField] private EventHub hub;
 
-    private void Start()
-    {
-        hub = GameManager.Instance.GetGameSystem<EventHub>();
-    }
 
     public void GetReward(DropReward reward) 
     {
@@ -105,6 +101,7 @@ public class ItemDropManager : MonoBehaviour, IManager
     public void Init()
     {
         progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
+        hub = GameManager.Instance.GetGameSystem<EventHub>();
     }
 
     public int GetOrder() => 3; //ItemDropTable은 stage이전에 생성 필요
