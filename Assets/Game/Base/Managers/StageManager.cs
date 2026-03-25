@@ -42,6 +42,7 @@ namespace Base.Managers
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            monsterPool = GameManager.Instance.GetGameSystem<MonsterPoolManager>();
             stageProgress = GetStageProgress();
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
@@ -99,12 +100,12 @@ namespace Base.Managers
             {
                 stageProgress = SelectNormalStage(stageSO.chapter, stageSO.stage);
                 stageRule = new NormalStageRule();
-                stage.OnMonsterKilled += stageRule.MonsterKilled;
+                stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
             }
             else if (stageSO.type == StageType.Challenge || stageSO.type == StageType.Boss)
             {
                 stageRule = new ChallengeStageRule();
-                stage.OnMonsterKilled += stageRule.MonsterKilled;
+                stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
                 ((ChallengeStageRule)stageRule).ChallengeSuccess += OnChallengeSucceeded;
             }
             stageRule.Init(stageSO);
