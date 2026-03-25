@@ -25,7 +25,7 @@ namespace Battle
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
         public abstract BattleStat CurrentBattleStat { get; }
         [SerializeField] protected float hp;
-        public float Hp
+        public virtual float Hp
         {
             get => hp;
             protected set
@@ -35,7 +35,7 @@ namespace Battle
                 {
                     hp = CurrentBattleStat.maxHp;
                 }
-                cEvent.RaiseHPValueChange(hp, CurrentBattleStat.maxHp);
+                //cEvent.RaiseHPValueChange(hp, CurrentBattleStat.maxHp);
                 if (hp <= 0f)
                 {
                     OnDead();
