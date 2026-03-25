@@ -48,7 +48,7 @@ public class StatItemView : MonoBehaviour
             levelUpButton.image.color = Color.gray;
         }
         lockPanel.SetActive(!isUnlock);
-        unlockLevelText.text = $"Lv : {statEntry.unlockLevel} 개방";
+        unlockLevelText.text = $"Lv : {statEntry.unlockLevel}";
 
         statsNameText.text = statEntry.type.ToString();
         if (currentLevel < statEntry.maxLevel)

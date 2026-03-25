@@ -3,6 +3,7 @@ using Battle;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UI.Scripts.Stage;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,7 @@ public class AllChapter_Set : MonoBehaviour
     [SerializeField] Button enter;
     int enterChapter;
     int enterStage;
+    private Stage_Set lastSpotligh;
 
     [SerializeField] StageMonster_Set stageMon;
     [SerializeField] Reward_Set reward;
@@ -35,6 +37,7 @@ public class AllChapter_Set : MonoBehaviour
     {
         AllChapter();
         ShowChapter();
+        enter.interactable = false;
     }
 
     public void Init()
@@ -43,21 +46,29 @@ public class AllChapter_Set : MonoBehaviour
         currentChapter = 0;
         BindButton();
         AllChapter();
-        EnterStage(stageManager.CurStageSO.chapter , stageManager.CurStageSO.stage);
+       
         gameObject.SetActive(false);
-        enter.gameObject.SetActive(false);
+        enter.interactable = false;
     }
-    public void EnterStage(int chatperNum, int stageNum)
+    public void EnterStage(int chatperNum, int stageNum, Stage_Set clickStage)
     {
+        if (lastSpotligh != null)
+        {
+            lastSpotligh.Spotlight(false);
+        }
+
+        clickStage.Spotlight(true);
+        lastSpotligh = clickStage;
+
         enterChapter = chatperNum;
         enterStage = stageNum;
- 
-        StageEntry stageEntry = stageManager.GetStageEntry(enterChapter , enterStage);
+
+        StageEntry stageEntry = stageManager.GetStageEntry(enterChapter, enterStage);
 
         //여기 나중에 몬스터 이미지 , 보상 목록 이미지 변경 추가 할 예정
         if (reward != null)
         {
-            reward.SetReward(stageEntry);   
+            reward.SetReward(stageEntry);
         }
         if (stageMon != null)
         {
@@ -65,7 +76,7 @@ public class AllChapter_Set : MonoBehaviour
         }
         if (enter != null)
         {
-            enter.gameObject.SetActive(true);
+            enter.interactable = true;
         }
     }
     void AllChapter()
@@ -135,7 +146,6 @@ public class AllChapter_Set : MonoBehaviour
     {
         stageManager.ChangeStage(enterChapter, enterStage);
 
-        enter.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
 
