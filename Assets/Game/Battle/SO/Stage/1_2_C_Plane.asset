@@ -18,9 +18,9 @@ MonoBehaviour:
   stage: 2
   dropTable: {fileID: 0}
   preset:
-  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
+  - monster: {fileID: 11400000, guid: 42928885a97f57f458d12eb14b974bd4, type: 2}
     weights: 8
-  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
+  - monster: {fileID: 11400000, guid: 2362faff452f0f044bedae8d451e8aff, type: 2}
     weights: 2
   type: 1
   deadLine: 60

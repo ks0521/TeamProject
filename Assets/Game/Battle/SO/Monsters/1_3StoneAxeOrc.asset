@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a3f5588857c8140b54f7bee1d2b911, type: 3}
   m_Name: 1_3StoneAxeOrc
   m_EditorClassIdentifier: 
-  prefeb: {fileID: 2343375463384217552, guid: aef2334b7f574cd459323c8929992dd1, type: 3}
-  key: 9554
+  prefeb: {fileID: 1640676981129613262, guid: 01822e18f1be6f447bccb9d9e03c0ac9, type: 3}
+  key: 9557
   battleStat:
-    maxHp: 20
-    atk: 5
-    def: 0
+    maxHp: 40
+    atk: 10
+    def: 1
     atkSpeed: 1
     moveSpeed: 1
     critChance: 0

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageKey: 5001
   stageName: Plane 1
-  stage: 1
   chapter: 1
+  stage: 1
   dropTable: {fileID: 11400000, guid: 4d6965a50db67184b93a60495d7a713a, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: a1887796e032fa54ba290bf15b7688d2, type: 2}
+  - monster: {fileID: 11400000, guid: 815629df0fee5c54daa4408678a00052, type: 2}
     weights: 10
   type: 0
   deadLine: 0
