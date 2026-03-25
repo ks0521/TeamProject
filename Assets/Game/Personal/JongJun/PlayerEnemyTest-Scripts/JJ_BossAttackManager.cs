@@ -3,6 +3,7 @@ using Battle;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class JJ_BossAttackManager : Character //나중에 Monster로 교체할 것

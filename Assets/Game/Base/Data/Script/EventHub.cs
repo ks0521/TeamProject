@@ -21,19 +21,23 @@ namespace Base.Data
         public void PlayerDead(Character character) => OnDeadPlayer?.Invoke(character);
         public event Action<float, float> OnHpChange; //HP변경
         public void HpChanged(float hp, float maxHp) => OnHpChange?.Invoke(hp, maxHp);
-        public event Action<Skill> OnSkillUsed; //스킬 사용
-        public void SkillUsed(Skill skill) => OnSkillUsed?.Invoke(skill);
+        public event Action<int> OnSkillUsed; //스킬 사용
+        public void SkillUsed(int order) => OnSkillUsed?.Invoke(order);
         public event Action<Skill> OnSkillCanUse; //스킬 사용 가능
-        public void SkillCanUse(Skill skill) => OnSkillCanUse?.Invoke(skill); 
+        public void SkillCanUse(Skill skill) => OnSkillCanUse?.Invoke(skill);
+        public event Action<int> OnSkillCoolEnd; //스킬 쿨타임 돌았을 때
+        public void SkillCoolEnd(int order) => OnSkillCoolEnd?.Invoke(order);
         public event Action OnCastingStart; //스킬 캐스팅 시작
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnButtonClicked; //버튼 클릭
         public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
+        public event Action OnPlayerHit; //플레이어 피격
+        public void PlayerHit() => OnPlayerHit?.Invoke();
         public event Action<CurrencyType, int> OnCurrencyChange; //재화 변경
         public void CurrencyChange(CurrencyType type, int amount) => OnCurrencyChange?.Invoke(type, amount);
-        public event Action<int> OnLevelChange;
+        public event Action<int> OnLevelChange; //레벨업
         public void LevelChanged(int level) => OnLevelChange?.Invoke(level);
 
         
