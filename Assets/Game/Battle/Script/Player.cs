@@ -13,9 +13,8 @@ namespace Battle
     {
         // outside component
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
-
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
-
+        
         //StatusCalculator statCal;
         public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
@@ -23,7 +22,23 @@ namespace Battle
         [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
 
         public event Action<Player> OnPlayerKilled;
-
+        public override float Hp
+        {
+            get => hp;
+            protected set
+            {
+                hp = value;
+                if (CurrentBattleStat.maxHp <= hp)
+                {
+                    hp = CurrentBattleStat.maxHp;
+                }
+                eventHub.HpChanged(hp,MaxHp);
+                if (hp <= 0f)
+                {
+                    OnDead();
+                }
+            }
+        }
         public override void Init()
         {
             base.Init();
@@ -59,6 +74,10 @@ namespace Battle
             Debug.Log("스테이지 실패");
         }
 
+        public void RecoveryHP(int value)
+        {
+            Hp += value;
+        }
         async UniTaskVoid DeadMotionAsync()
         {
             var cts = this.GetCancellationTokenOnDestroy();
@@ -110,7 +129,7 @@ namespace Battle
             if (target == null || target.IsDead || !target.isActiveAndEnabled)
             {
                 if (!FindTarget()) return;
-                Debug.Log("새로운 타겟 지정완료");
+                //Debug.Log("새로운 타겟 지정완료");
             }
 
             FixedUpdateMoveFeat();

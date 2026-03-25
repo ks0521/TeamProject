@@ -2,11 +2,8 @@ using Base.Data;
 using Base.Managers;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 namespace Battle
 {
@@ -20,7 +17,28 @@ namespace Battle
         private CancellationTokenSource monsterCts;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
         public event Action<Monster> OnMonsterKilled;
+        public override float Hp
+        {
+            get => hp;
+            protected set
+            {
+                hp = value;
+                if (CurrentBattleStat.maxHp <= hp)
+                {
+                    hp = CurrentBattleStat.maxHp;
+                }
+                OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+                if (hp <= 0f)
+                {
+                    OnDead();
+                }
+            }
+        }
 
+        public void SetUp(MonsterSO monsterso)
+        {
+            monsterSO = monsterso;
+        }
         public override void Init()
         {
             base.Init();
@@ -35,11 +53,11 @@ namespace Battle
             target = playerRef.GetComponent<Character>();
             targetTransform = playerRef.transform;
         }
-
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
         public void ForcedReturn()
         {
             Debug.Log("오브젝트 강제 정리");
+            
             Destroy(gameObject);
         }
 
@@ -92,7 +110,7 @@ namespace Battle
         public override void Hit(float damage)
         {
             base.Hit(damage);
-            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+            
             eventHub?.MonsterHit();
         }
         /*

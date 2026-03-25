@@ -50,11 +50,13 @@ using Random = UnityEngine.Random;
                     float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
                     float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
 
-                    GameObject mon = monsterPool.UsePool(stageSO.preset[0].monster.key);
-                    mon.GetComponent<Monster>().Init();
-                    mon.SetActive(true);
-                    mon.transform.position = new Vector3(randx, randy, 0);
-                    Register(mon.GetComponent<Monster>());
+                    GameObject monsterObj = monsterPool.UsePool(stageSO.preset[0].monster.key);
+                    Monster monster = monsterObj.GetComponent<Monster>();
+                    monster.SetUp(stageSO.preset[0].monster);
+                    monster.Init();
+                    monsterObj.transform.position = new Vector3(randx, randy, 0);
+                    monsterObj.SetActive(true);
+                    Register(monster);
                     //Debug.Log($"Spawn : {mon.transform.position}");
                     await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
                     await UniTask.WaitWhile(() => monstersList.Count >= 10, cancellationToken: token);
