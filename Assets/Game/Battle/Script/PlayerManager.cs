@@ -9,7 +9,6 @@ namespace Battle
         private PlayerRuntimeStatus runtimeStatus;
         public Player Player => player;
         public PlayerRuntimeStatus RuntimeStatus => runtimeStatus;
-        public Transform Transform => transform;
         private void Awake()
         {
             player = GetComponent<Player>();
