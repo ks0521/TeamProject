@@ -40,7 +40,8 @@ public class Chapter_Set : MonoBehaviour
 
             var entry = stageManager.GetStageEntry(chapterNum, stageNum);
 
-            stages[i].Bind(() => allChap.EnterStage(chapterNum, stageNum));
+            Stage_Set currentStage = stages[i];
+            stages[i].Bind(() => allChap.EnterStage(chapterNum, stageNum , currentStage));
             stages[i].SetStage(entry);
         }
     }
