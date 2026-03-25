@@ -30,7 +30,7 @@ namespace Base.Managers
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
         private int curChapter = 0;
         private int curStage = 0;
-        private MonsterPoolManager monsterPool; //몬스터 풀
+        [SerializeField] private MonsterPoolManager monsterPool; //몬스터 풀
         [SerializeField] private Stage stage; //스테이지 객체
         [SerializeField] private StageSO stageSO; //스테이지 정보
         public StageSO CurStageSO => stageSO;
