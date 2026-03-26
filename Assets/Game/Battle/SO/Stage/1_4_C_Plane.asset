@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: 1_4_C_Plane
   m_EditorClassIdentifier: 
   stageKey: 5006
-  stageName: Challenge_Plane 4
+  stageName: '1-4 Challenge
+
+    Plane 4'
   chapter: 1
   stage: 4
   dropTable: {fileID: 0}

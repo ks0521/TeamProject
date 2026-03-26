@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
-  m_Name: 1_5_B_Plane
+  m_Name: 1_5_C_Plane
   m_EditorClassIdentifier: 
   stageKey: 5008
-  stageName: Boss_Orc Boss Base
+  stageName: '1-5 Challenge
+
+    Plane 5'
   chapter: 1
   stage: 5
   dropTable: {fileID: 0}
   preset:
-  - monster: {fileID: 11400000, guid: b6e58e1187e8a3449bd98bdd8714971b, type: 2}
-    weights: 10
+  - monster: {fileID: 11400000, guid: 6c42ff8d968e29c46bc406c3f1c1d9c1, type: 2}
+    weights: 1
   type: 2
   deadLine: 120
   targetKillScore: 1
