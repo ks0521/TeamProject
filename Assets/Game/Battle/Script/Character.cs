@@ -25,7 +25,7 @@ namespace Battle
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
         public abstract BattleStat CurrentBattleStat { get; }
         [SerializeField] protected float hp;
-        public float Hp
+        public virtual float Hp
         {
             get => hp;
             protected set
@@ -35,7 +35,7 @@ namespace Battle
                 {
                     hp = CurrentBattleStat.maxHp;
                 }
-                cEvent.RaiseHPValueChange(hp, CurrentBattleStat.maxHp);
+                //cEvent.RaiseHPValueChange(hp, CurrentBattleStat.maxHp);
                 if (hp <= 0f)
                 {
                     OnDead();
@@ -73,6 +73,8 @@ namespace Battle
             isDead = false;
             isAtkCooltime = false;
             state = CharacterState.Idle;
+            cm = new CharacterMove();
+            cm.Init(GetComponent<Rigidbody2D>());
             if (spumController == null)
             {
                 spumController = GetComponentInChildren<SPUM_Prefabs>();
@@ -95,8 +97,7 @@ namespace Battle
         {
             // rb = GetComponent<Rigidbody2D>();
             hp = CurrentBattleStat.maxHp;
-            cm = new CharacterMove();
-            cm.Init(GetComponent<Rigidbody2D>());
+            
             cEvent = new CharacterCommonEvent();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         }
@@ -110,7 +111,7 @@ namespace Battle
         {
             UpdateFeat();
             // test
-            cm.canMove = canMove;
+            //cm.canMove = canMove;
         }
         protected abstract void UpdateFeat();
         private void FixedUpdate()
@@ -146,7 +147,9 @@ namespace Battle
             {
                 Debug.Log($"{resultDmg} Damage!\n{gameObject.name} HP {Hp} 남음");
             }
+            SendHitSignal();
         }
+        protected abstract void SendHitSignal();
         bool IsCriticalChance()
         {
             if (UnityEngine.Random.Range(0f, 1f) < CurrentBattleStat.critChance) return true;
@@ -164,6 +167,22 @@ namespace Battle
             }
 
             float resultDmg = CurrentBattleStat.atk;
+            if (IsCriticalChance())
+            {
+                resultDmg *= CurrentBattleStat.critDamage;
+                // Debug.Log("크리티컬!");
+            }
+            target.Hit(resultDmg);
+        }
+
+        protected void SkillAttack(Character target, float multiplier)
+        {
+            if (target == null|| !canAtk || isDead || isAtkCooltime) return;
+
+            AtkCooltimeTask().Forget();
+            Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
+
+            float resultDmg = CurrentBattleStat.atk * multiplier;
             if (IsCriticalChance())
             {
                 resultDmg *= CurrentBattleStat.critDamage;

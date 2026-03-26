@@ -2,11 +2,8 @@ using Base.Data;
 using Base.Managers;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 namespace Battle
 {
@@ -19,13 +16,35 @@ namespace Battle
         public override BattleStat CurrentBattleStat => monsterSO.battleStat;
         private CancellationTokenSource monsterCts;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
-        public event Action<Monster> OnMonsterKilled;
+        public event Action<Monster> OnMonsterKilled; //연산용
+        public override float Hp
+        {
+            get => hp;
+            protected set
+            {
+                hp = value;
+                if (CurrentBattleStat.maxHp <= hp)
+                {
+                    hp = CurrentBattleStat.maxHp;
+                }
+                OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+                if (hp <= 0f)
+                {
+                    OnDead();
+                }
+            }
+        }
 
+        public void SetUp(MonsterSO monsterso)
+        {
+            monsterSO = monsterso;
+        }
         public override void Init()
         {
             base.Init();
             monsterCts?.Dispose();
             monsterCts = new CancellationTokenSource();
+
             PlayerManager playerRef = GameManager.Instance.GetGameSystem<PlayerManager>();
             if (playerRef == null)
             {
@@ -35,7 +54,6 @@ namespace Battle
             target = playerRef.GetComponent<Character>();
             targetTransform = playerRef.transform;
         }
-
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
         public void ForcedReturn()
         {
@@ -93,6 +111,9 @@ namespace Battle
         {
             base.Hit(damage);
             OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+        }
+        protected override void SendHitSignal()
+        {
             eventHub?.MonsterHit();
         }
         /*
@@ -105,7 +126,7 @@ namespace Battle
 
         protected override void FixedUpdateFeat()
         {
-            if (target == null || target == null || isDead) return;
+            if (target == null || isDead) return;
 
             UpdateFacing(target.transform.position.x - transform.position.x);
 

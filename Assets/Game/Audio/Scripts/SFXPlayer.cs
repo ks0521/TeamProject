@@ -7,16 +7,17 @@ public class SFXPlayer : MonoBehaviour
 {
     [SerializeField] private AudioSource sfxSource;
 
-    [Header("°øÅë")]
+    [Header("ê³µí†µ")]
     [SerializeField] private AudioClip buttonClick;
     [SerializeField] private AudioClip emptyClick;
     [SerializeField] private AudioClip popupOpen;
     [SerializeField] private AudioClip popupClose;
 
-    [Header("ÀüÅõ")]
+    [Header("ì „íˆ¬")]
     [SerializeField] private AudioClip getGold;
     [SerializeField] private AudioClip getItem;
     [SerializeField] private AudioClip levelUp;
+    [SerializeField] private AudioClip hit;
     [SerializeField] private AudioClip beAttacked;
     [SerializeField] private AudioClip bossAttack;
     [SerializeField] private AudioClip bossSkill;
@@ -24,22 +25,22 @@ public class SFXPlayer : MonoBehaviour
     [SerializeField] private AudioClip win;
     [SerializeField] private AudioClip lose;
 
-    [Header("Àåºñ")]
+    [Header("ì¥ë¹„")]
     [SerializeField] private AudioClip equipItem;
     [SerializeField] private AudioClip unequipItem;
     [SerializeField] private AudioClip enchantItem;
     [SerializeField] private AudioClip synthesizeItem;
 
-    [Header("½ºÅ³Ã¢")]
+    [Header("ìŠ¤í‚¬ì°½")]
     [SerializeField] private AudioClip addSkill;
     [SerializeField] private AudioClip unaddSkill;
     [SerializeField] private AudioClip useSP;
     [SerializeField] private AudioClip initSP;
 
-    [Header("±âÅ¸")]
+    [Header("ê¸°íƒ€")]
     [SerializeField] private AudioClip getIdleReward;
 
-    //°øÅë »ç¿îµåµé
+    //ê³µí†µ ì‚¬ìš´ë“œë“¤
     public void PlayClickSound()
     {
 
@@ -49,14 +50,14 @@ public class SFXPlayer : MonoBehaviour
         sfxSource.clip = buttonClick;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(buttonClick);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
-    public void PlayClickEmptySound() //ÆË¾÷Ã¢ÀÇ ÆĞ³Î¿¡ ¹öÆ° ¼Ó¼ºÀ» ´Ş°í ºÙÀÓ
+    public void PlayClickEmptySound() //íŒì—…ì°½ì˜ íŒ¨ë„ì— ë²„íŠ¼ ì†ì„±ì„ ë‹¬ê³  ë¶™ì„
     {
         sfxSource.clip = emptyClick;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(emptyClick);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
 
     public void PlayPopupOpenSound()
@@ -64,153 +65,160 @@ public class SFXPlayer : MonoBehaviour
         sfxSource.clip = popupOpen;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayPopupCloseSound()
     {
         sfxSource.clip = popupClose;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
 
 
-    //ÀüÅõ °ü·Ã È¿°úÀ½µé
+    //ì „íˆ¬ ê´€ë ¨ íš¨ê³¼ìŒë“¤
     public void PlayGetGoldSound()
     {
         sfxSource.clip = getGold;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayGetItemSound()
     {
-        //³ªÁß¿¡ °íµî±Ş Àåºñ Àü¿ë È¿°úÀ½ Àç»ı ·ÎÁ÷ ³ÖÀ» °Í
+        //ë‚˜ì¤‘ì— ê³ ë“±ê¸‰ ì¥ë¹„ ì „ìš© íš¨ê³¼ìŒ ì¬ìƒ ë¡œì§ ë„£ì„ ê²ƒ
         sfxSource.clip = getItem;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayLevelupSound()
     {
         sfxSource.clip = levelUp;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
-    public void PlayBeAttackedSound()
+    public void PlayHitSound() //ëª¬ìŠ¤í„°ì˜ í”¼ê²©
+    {
+        sfxSource.clip = hit;
+
+        if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
+    }
+    public void PlayBeAttackedSound() //í”Œë ˆì´ì–´ì˜ í”¼ê²©
     {
         sfxSource.clip = beAttacked;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayBossAttackSound()
     {
         sfxSource.clip = bossAttack;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayBossSkillSound()
     {
         sfxSource.clip = bossSkill;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayBossDeadSound()
     {
         sfxSource.clip = bossDead;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayWinSound()
     {
         sfxSource.clip = win;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
-    public void PlayLoseSound() //»ç¸Á Æ÷ÇÔ, BGM ±³Ã¼
+    public void PlayLoseSound() //ì‚¬ë§ í¬í•¨, BGM êµì²´
     {
         sfxSource.clip = lose;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
 
 
-    //ÀåºñÃ¢ È¿°úÀ½
+    //ì¥ë¹„ì°½ íš¨ê³¼ìŒ
     public void PlayEquipItemSound()
     {
         sfxSource.clip = equipItem;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayUnequipItemSound()
     {
         sfxSource.clip = unequipItem;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayEnchantItemSound()
     {
         sfxSource.clip = enchantItem;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlaySynthesizeItemSound()
     {
         sfxSource.clip = synthesizeItem;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
 
 
-    //½ºÅ³Ã¢ È¿°úÀ½(ÀÓ½Ã·Î sfxPlayer ¹èÁ¤, ÃßÈÄ ¹Ù²ğ ¼ö ÀÖÀ½)
-    public void PlayAddSkillSound() //½ºÅ³ µî·Ï ¹× ±³Ã¼
+    //ìŠ¤í‚¬ì°½ íš¨ê³¼ìŒ(ì„ì‹œë¡œ sfxPlayer ë°°ì •, ì¶”í›„ ë°”ë€” ìˆ˜ ìˆìŒ)
+    public void PlayAddSkillSound() //ìŠ¤í‚¬ ë“±ë¡ ë° êµì²´
     {
         sfxSource.clip = addSkill;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayUnaddSkillSound()
     {
         sfxSource.clip = unaddSkill;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayUseSkillPointSound()
     {
         sfxSource.clip = useSP;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
     public void PlayInitSkillPointSound()
     {
         sfxSource.clip = initSP;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
 
 
 
-    //¹ÌÁ¢¼Ó º¸»ó È¹µæ È¿°úÀ½
+    //ë¯¸ì ‘ì† ë³´ìƒ íšë“ íš¨ê³¼ìŒ
     public void PlayGetIdleRewardSound()
     {
         sfxSource.clip = getIdleReward;
 
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource¿¡ Å¬¸³ÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+        else Debug.LogWarning("AudioSourceì— í´ë¦½ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
     }
 }

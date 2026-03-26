@@ -25,3 +25,5 @@ MonoBehaviour:
   coolDown: 4
   speed: 7
   effectArea: 0
+  skillIcon: {fileID: -2895734620076278133, guid: a4ce094c050bd4387bb4ca527872a97e,
+    type: 3}

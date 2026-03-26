@@ -20,7 +20,7 @@ namespace Battle
     {
         [Header("공용")]
         [Tooltip("스테이지 식별용 키")] public int stageKey; 
-        [Tooltip("스테이지 이름")]public string stageName; 
+        [Tooltip("스테이지 이름")][TextArea(2,5)]public string stageName; 
         [Tooltip("챕터")] public int chapter;
         [Tooltip("스테이지")] public int stage;
         [Tooltip("드랍 테이블")] public DropTableSO dropTable;
