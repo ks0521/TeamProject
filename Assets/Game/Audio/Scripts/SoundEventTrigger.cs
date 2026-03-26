@@ -38,4 +38,12 @@ public class SoundEventTrigger : MonoBehaviour
             hub.PopupClosed();
         }
     }
+    public void SendPopupCloseSignal()
+    {
+        var hub = GameManager.Instance.GetGameSystem<EventHub>();
+        if (hub != null)
+        {
+            hub.PopupClose();
+        }
+    }
 }
