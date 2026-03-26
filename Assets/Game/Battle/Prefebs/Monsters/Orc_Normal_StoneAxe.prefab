@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 2379778573038914328}
   - component: {fileID: -3004220771943599815}
   - component: {fileID: -2840790792897915203}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Orc_Normal_StoneAxe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
