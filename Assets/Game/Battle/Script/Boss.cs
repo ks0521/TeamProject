@@ -96,8 +96,12 @@ public class Boss : Monster
         
         if (atkRange1 != null) atkRange1.SetActive(false);
         if (chargeCollider != null) chargeCollider.enabled = true;
+        //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
+        
 
-        sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
+        float elapsed = 0f;
+        //bool hasDamaged = false;
+
         if (spumController != null)
         {
             spumController.PlayAnimation(PlayerState.ATTACK, 1);
