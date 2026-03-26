@@ -15,11 +15,43 @@ namespace Personal.HagYun
         public void RaiseCastingStart() => OnCastingStart?.Invoke();
         public void RaiseCastingEnd() => OnCastingEnd?.Invoke();
     }
+    public struct SpriteShower
+    {
+        Vector2 spriteSize;
+        float radius;
+        public SpriteShower(Vector2 spriteSize, float radius)
+        {
+            this.spriteSize = spriteSize;
+            this.radius = radius;
+        }
+        public void FitSpriteToSize(SpriteRenderer sr)
+        {
+            if (sr == null || sr.sprite == null) return;
+
+            // // 1. 스프라이트 자체의 순수 크기 (Local Bounds)
+            // // import 설정에서 PPU(Pixels Per Unit)에 의해 결정된 월드 크기입니다.
+            // Vector2 spriteSize = sr.sprite.bounds.size;
+
+            // // 2. 타겟 크기 대비 비율 계산
+            // float ratioX = SpriteSize.x / spriteSize.x;
+            // float ratioY = SpriteSize.y / spriteSize.y;
+
+            // // 3. 비율 유지 (전체 영역에 맞추기 위해 더 작은 비율 선택)
+            // float minRatio = Mathf.Min(ratioX, ratioY);
+
+            // // 4. Transform의 스케일을 직접 수정
+            // sr.transform.localScale = new Vector3(minRatio, minRatio, 1f);
+            float spriteWidth = spriteSize.x;
+            radius *= 2f;
+            float scale = radius / spriteWidth;
+            sr.transform.localScale = new Vector3(scale,scale,1f);
+        }
+    }
     public abstract class EquipSkillController : MonoBehaviour
     {
         // test
         public SpriteRenderer sr;
-        
+
         // owner
         protected Character owner;
 
@@ -32,11 +64,9 @@ namespace Personal.HagYun
         // skill event
         protected EquipSkillControllerEvent eventSet = new EquipSkillControllerEvent();
         protected EventHub eventHub;
-        // skill ready
-        public bool IsSkillReady { get; private set; }
 
         [Range(0f, 1f)] protected float skillFireTimeValue = 0.5f;
-        [field : SerializeField] public bool IsCasting { get; private set; }
+        [field: SerializeField] public bool IsCasting { get; private set; }
         public void OwnerSet(Character owner) => this.owner = owner;
         public abstract void Init(Character cha);
         private void Update()
@@ -46,16 +76,22 @@ namespace Personal.HagYun
         protected virtual void UpdateFeat() { }
         public void SkillReady(int index)
         {
-            
+
         }
         public virtual void PriorityUpdate(int index, Priority pri)
         {
-            // equipSkillSetArr[index].priority = pri;
             equipSkillArr[index].priority = pri;
+        }
+        [SerializeField] Vector2 testAreaOffset;
+        protected void SkillRangeChange(float range)
+        {
+            if (sr == null) return;
+            SpriteShower tss = new SpriteShower(testAreaOffset, range);
+            tss.FitSpriteToSize(sr);
         }
         public virtual void SkillEquip(int index, Skill targetSkill, bool isInit = false)
         {
-            if(targetSkill == null)
+            if (targetSkill == null)
             {
                 Debug.Log($"{index}번에 장착할 스킬 없음");
                 return;
@@ -77,10 +113,9 @@ namespace Personal.HagYun
         {
             eventSet.RaiseCastingStart();
             IsCasting = true;
+            float alphaValue = 100f / 255f;
+            if (sr != null) sr.color = new Color(0, 0, 1f, alphaValue);
 
-            sr.color = Color.blue;
-
-            // float baseCastingTime = equipSkillSetArr[index].Skill.Data.castingTime;
             float baseCastingTime = equipSkillArr[index].Skill.Data.castingTime;
             float curCastingTime = baseCastingTime;
             float castingTimeValue = 1f;
@@ -93,8 +128,7 @@ namespace Personal.HagYun
                 if (this == null) return;
             }
 
-            sr.color = Color.yellow;
-            // equipSkillSetArr[index].ESkill.SkillUse(cha);
+            if (sr != null) sr.color = new Color(0, 1f, 0, alphaValue);
             equipSkillArr[index].SkillUse(cha);
 
             while (0 < castingTimeValue)
@@ -105,7 +139,7 @@ namespace Personal.HagYun
                 if (this == null) return;
             }
 
-            sr.color = Color.white;
+            if (sr != null) sr.color = new Color(1f, 0, 0, alphaValue);
 
             eventSet.RaiseCastingEnd();
             IsCasting = false;
@@ -147,6 +181,7 @@ namespace Personal.HagYun
             if (!CheckSkillUsePossible(index)) return false;
             else if (TryGetMonsterTargetToAtk(index, out Monster mon))
             {
+                SkillRangeChange(equipSkillArr[index].Skill.Data.range);
                 AtkSkillUse(index, mon);
                 return true;
             }
