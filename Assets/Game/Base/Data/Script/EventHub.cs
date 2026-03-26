@@ -51,8 +51,8 @@ namespace Base.Data
         public void GetCurrency() => OnGetCurrency?.Invoke(); //사운드 연동용 이벤트
         public event Action OnGetItems;
         public void GetItems() => OnGetItems?.Invoke(); // 사운드 연동용 이벤트
-
-
+        public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
+        public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
         public int GetOrder() => 0;
     }
 }
