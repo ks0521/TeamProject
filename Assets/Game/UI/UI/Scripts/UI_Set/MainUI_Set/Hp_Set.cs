@@ -20,11 +20,10 @@ public class Hp_Set : MonoBehaviour
         {
             hpText.text = "0";
         }
-        else
+        else if(hpText != null)
         {
-            hpText.text = currenthp.ToString("F0");
+            hpText.text = currenthp.ToString("F0") + " /\n " + maxhp.ToString("F0");
         }
         hp.fillAmount = (currenthp / maxhp); //Hp 수치 표시하기
-
     }
 }

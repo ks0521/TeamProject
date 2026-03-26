@@ -50,5 +50,9 @@ namespace Growth.Skill
         public float speed; //투사체 속도
         [Header("범위 전용")] 
         public float effectArea; //효과 범위
+        [Header("스킬 아이콘")] 
+        public Sprite skillIcon;
+        [Header("사운드")] 
+        public AudioClip skillSound;
     }
 }

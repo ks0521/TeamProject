@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2d7329ea3bfe844bb9d487b4f2938a, type: 3}
+  m_Name: 2_2 Graveyard DropTable
+  m_EditorClassIdentifier: 
+  chapter: 2
+  stage: 2
+  rewardExp: 80
+  dropList:
+  - rewardType: 1
+    currencyType: 1
+    currencySO: {fileID: 11400000, guid: a33d451e9ce1def40bf67ed25b3f98a8, type: 2}
+    chance: 0.9
+    itemSO: {fileID: 0}
+    minAmount: 80
+    maxAmount: 82
+  - rewardType: 1
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 0.9
+    itemSO: {fileID: 0}
+    minAmount: 115
+    maxAmount: 120
+  - rewardType: 0
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 0.08
+    itemSO: {fileID: 11400000, guid: 70cf03e68257c45468c6c99a0ceba108, type: 2}
+    minAmount: 115
+    maxAmount: 120
+  - rewardType: 0
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 0.12
+    itemSO: {fileID: 11400000, guid: 6c5afcde1cd74a0469efd96f771a5914, type: 2}
+    minAmount: 1
+    maxAmount: 1

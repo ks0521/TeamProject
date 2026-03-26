@@ -13,8 +13,8 @@ namespace Battle
     {
         // outside component
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
-
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
+        public PlayerEquipSkillController ESController => equipSkillController;
 
         //StatusCalculator statCal;
         public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
@@ -23,11 +23,27 @@ namespace Battle
         [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
 
         public event Action<Player> OnPlayerKilled;
-
+        public override float Hp
+        {
+            get => hp;
+            protected set
+            {
+                hp = value;
+                if (CurrentBattleStat.maxHp <= hp)
+                {
+                    hp = CurrentBattleStat.maxHp;
+                }
+                eventHub.HpChanged(hp,MaxHp);
+                if (hp <= 0f)
+                {
+                    OnDead();
+                }
+            }
+        }
         public override void Init()
         {
             base.Init();
-            equipSkillController.Init(this);
+            //equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>(); 
             //SyncHpAfterManagersReady().Forget();
             //3.24(규성) : 해당 파트 Init순서의 문제는 PlayerManager를 추가하여 Player초기화 순서를 GameManager에 종속시켜 해결했습니다
@@ -55,10 +71,23 @@ namespace Battle
             if (isDead) return;
             isDead = true;
 
+            var hub = GameManager.Instance.GetGameSystem<EventHub>();
+            if (stageManager == null)
+                stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+
+            if (hub != null && stageManager != null)
+            {
+                hub.StageFailed(stageManager.CurStageSO);
+            }
+
             DeadMotionAsync().Forget();
             Debug.Log("스테이지 실패");
         }
 
+        public void RecoveryHP(int value)
+        {
+            Hp += value;
+        }
         async UniTaskVoid DeadMotionAsync()
         {
             var cts = this.GetCancellationTokenOnDestroy();
@@ -110,7 +139,7 @@ namespace Battle
             if (target == null || target.IsDead || !target.isActiveAndEnabled)
             {
                 if (!FindTarget()) return;
-                Debug.Log("새로운 타겟 지정완료");
+                //Debug.Log("새로운 타겟 지정완료");
             }
 
             FixedUpdateMoveFeat();
@@ -208,6 +237,11 @@ namespace Battle
             }
 
             NormalAttack(target);
+        }
+        protected override void SendHitSignal()
+        {
+            //나중에 EventHub에다가 PlayerHit 같은 이벤트 추가하셔야 합니다!
+            if(!isDead) eventHub?.MonsterHit();
         }
     }
 }
