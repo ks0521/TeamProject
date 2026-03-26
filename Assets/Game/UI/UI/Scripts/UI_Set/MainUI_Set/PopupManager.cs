@@ -1,5 +1,8 @@
+using Base.Data;
 using Base.Managers;
+using Battle;
 using Cysharp.Threading.Tasks.Triggers;
+using System.Collections;
 using System.Collections.Generic;
 using UI.Scripts.Ability;
 using UnityEngine;
@@ -7,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Game_UI.Scripts.PopupManager
 {
-    public class PopupManager : MonoBehaviour , IManager
+    public class PopupManager : MonoBehaviour, IManager
     {
         private static PopupManager instance;
 
@@ -15,10 +18,13 @@ namespace Game_UI.Scripts.PopupManager
         [SerializeField] private Ability abilityPop;
         [SerializeField] private AllChapter_Set chapterPop;
 
-        [SerializeField] private GameObject skillPop; 
+        [SerializeField] private GameObject skillPop;
         [SerializeField] private GameObject equipmentPop;
         [SerializeField] private GameObject dungeonPop;
         [SerializeField] private GameObject gameEndPop;
+
+        [SerializeField] private GameObject clearPop;
+        [SerializeField] private GameObject failPop;
 
         private Stack<GameObject> popupStack = new();
 
@@ -29,11 +35,16 @@ namespace Game_UI.Scripts.PopupManager
         [SerializeField] private Button equipmentBtn;
         [SerializeField] private Button dungeonBtn;
 
+        private EventHub hub;
+
+        [Header("닫는 버튼")]
+        [SerializeField] private Button abilityCloseBtn;
+
         private void Awake()
         {
             if (instance == null)
             {
-                instance = this; 
+                instance = this;
                 //DontDestroyOnLoad(gameObject);
                 //3.23(규성) : PopUpManager스크립트가 있는 오브젝트가 루트 오브젝트가 아니라서 오류가 발생합니다 
             }
@@ -59,6 +70,7 @@ namespace Game_UI.Scripts.PopupManager
 
         public void Init()
         {
+            hub = GameManager.Instance.GetGameSystem<EventHub>();
 
             if (equipmentPop != null) // 해당 코드들은 아직 스크립트가 아직 없어서 이렇게 해뒀습니다.
             {
@@ -68,7 +80,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 skillPop.SetActive(false);
             }
-           
+
             if (dungeonPop != null)
             {
                 dungeonPop.SetActive(false);
@@ -77,7 +89,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 gameEndPop.SetActive(false);
             }
-            
+
 
             BindAllButton();
             popupStack.Clear();
@@ -85,11 +97,47 @@ namespace Game_UI.Scripts.PopupManager
             abilityPop.Init();
             chapterPop.Init();
 
+            hub.OnClearStage += ClearEventChain;
+            hub.OnFailStage += FailEventChain;
         }
-        public int GetOrder() => 201; 
-        
-       
-        
+
+        public int GetOrder() => 201;
+
+        void ClearEventChain(StageSO stage)
+        {
+            OpenPopup(clearPop);
+
+            StartCoroutine(FadeOutPopup(clearPop , 4f));
+        }//이벤트 연결용
+        void FailEventChain(StageSO stage)
+        {
+            OpenPopup(failPop);
+
+            StartCoroutine(FadeOutPopup(failPop , 4f));
+        }
+
+        IEnumerator FadeOutPopup(GameObject popup , float time)
+        {
+            CanvasGroup popupCan = popup.GetComponent<CanvasGroup>();
+            if (popupCan == null)
+            {
+                Debug.Log(popup.name + "에 CanvasGroup 이 없음");
+                popup.SetActive(false);
+                yield break;
+            }
+
+            popupCan.alpha = 1f;
+
+            float endTime = 0f;
+
+            while (endTime < time)
+            {
+                endTime += Time.deltaTime;
+                popupCan.alpha = Mathf.Lerp(1f, 0f ,endTime / time);
+                yield return null;
+            }
+            popup.SetActive(false);
+        }//팝업 점점 사라지게 하는 코루틴
         void OpenPopup(GameObject pop)
         {
             if (pop == null)
@@ -152,7 +200,6 @@ namespace Game_UI.Scripts.PopupManager
                 lastPop.SetActive(false);
             }
         }//제일 마지막 팝업 닫기
-
         void BindAllButton()
         {
             abilityBtn.onClick.AddListener(() => OpenPopup(abilityPop.gameObject));
@@ -160,8 +207,15 @@ namespace Game_UI.Scripts.PopupManager
             skillBtn.onClick.AddListener(() => OpenPopup(skillPop.gameObject));
             equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
             dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
+
+
+
+            abilityCloseBtn.onClick.AddListener(() => ClosePopup(abilityPop.gameObject));
+
         }//버튼에 함수 넣기
-       
+
+
+
     }
 
 }

@@ -14,6 +14,7 @@ public abstract class StageRule
 {
     protected StageSO stage;
     protected int killScore;
+    public int KillScore => killScore;
     protected ItemDropManager dropManager;
     protected EventHub eventHub;
     
@@ -37,7 +38,6 @@ public class ChallengeStageRule : StageRule
     public event Action<StageSO> ChallengeSuccess;
     public event Action<StageSO> ChallengeFail;
     private CancellationTokenSource token;
-    public int KillScore => killScore;
     public int TargetKillScore => stage.targetKillScore;
     public float RemainTime => remainTime;
     public float RemainTimeRatio
