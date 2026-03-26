@@ -38,7 +38,6 @@ public class ChallengeStageRule : StageRule
     public event Action<StageSO> ChallengeSuccess;
     public event Action<StageSO> ChallengeFail;
     private CancellationTokenSource token;
-    public int KillScore => killScore;
     public int TargetKillScore => stage.targetKillScore;
     public float RemainTime => remainTime;
     public float RemainTimeRatio
