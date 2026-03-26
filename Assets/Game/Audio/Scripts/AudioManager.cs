@@ -50,6 +50,10 @@ public class AudioManager : MonoBehaviour, IManager
 
             hub.OnButtonClicked -= _sfxPlayer.PlayClickButtonSound;
             hub.OnButtonClicked += _sfxPlayer.PlayClickButtonSound;
+            hub.OnPopupOpened -= _sfxPlayer.PlayPopupOpenSound;
+            hub.OnPopupOpened += _sfxPlayer.PlayPopupOpenSound;
+            hub.OnPopupClosed -= _sfxPlayer.PlayPopupCloseSound;
+            hub.OnPopupClosed += _sfxPlayer.PlayPopupCloseSound;
 
             hub.OnMonsterHit -= _sfxPlayer.PlayHitSound;
             hub.OnMonsterHit += _sfxPlayer.PlayHitSound;

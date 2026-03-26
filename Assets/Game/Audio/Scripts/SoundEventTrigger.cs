@@ -27,7 +27,15 @@ public class SoundEventTrigger : MonoBehaviour
         var hub = GameManager.Instance.GetGameSystem<EventHub>();
         if (hub != null)
         {
-            hub.PopupOpen();
+            hub.PopupOpened();
+        }
+    }
+    public void SendPopupCloseSignal()
+    {
+        var hub = GameManager.Instance.GetGameSystem<EventHub>();
+        if (hub != null)
+        {
+            hub.PopupClosed();
         }
     }
 }
