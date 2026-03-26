@@ -77,7 +77,8 @@ namespace Personal.HagYun
         {
             eventSet.RaiseCastingStart();
             IsCasting = true;
-            if(sr != null) sr.color = Color.blue;
+
+            sr.color = Color.blue;
 
             // float baseCastingTime = equipSkillSetArr[index].Skill.Data.castingTime;
             float baseCastingTime = equipSkillArr[index].Skill.Data.castingTime;
@@ -92,7 +93,7 @@ namespace Personal.HagYun
                 if (this == null) return;
             }
 
-            if(sr != null) sr.color = Color.yellow;
+            sr.color = Color.yellow;
             // equipSkillSetArr[index].ESkill.SkillUse(cha);
             equipSkillArr[index].SkillUse(cha);
 
@@ -104,7 +105,7 @@ namespace Personal.HagYun
                 if (this == null) return;
             }
 
-            if(sr != null) sr.color = Color.white;
+            sr.color = Color.white;
 
             eventSet.RaiseCastingEnd();
             IsCasting = false;
@@ -149,7 +150,6 @@ namespace Personal.HagYun
                 AtkSkillUse(index, mon);
                 return true;
             }
-            Debug.LogWarning("Monster 찾지 못함");
             return false;
         }
 
