@@ -38,6 +38,7 @@ public class AllChapter_Set : MonoBehaviour
     private EventHub hub;
     private void OnEnable()
     {
+        AllChapter();
         ShowChapter();
         enter.interactable = false;
     }
@@ -49,7 +50,6 @@ public class AllChapter_Set : MonoBehaviour
 
         currentChapter = 0;
         BindButton();
-        AllChapter();
        
         gameObject.SetActive(false);
         enter.interactable = false;
@@ -160,7 +160,7 @@ public class AllChapter_Set : MonoBehaviour
     void OnClickChangeStage()
     {
         stageManager.ChangeStage(enterChapter, enterStage);
-
+        
         gameObject.SetActive(false);
     }
 
