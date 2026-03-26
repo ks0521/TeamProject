@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: 1_1_Plane
   m_EditorClassIdentifier: 
   stageKey: 5001
-  stageName: Plane 1
+  stageName: '1-1
+
+    Plane 1'
   chapter: 1
   stage: 1
   dropTable: {fileID: 11400000, guid: 4d6965a50db67184b93a60495d7a713a, type: 2}

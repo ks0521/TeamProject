@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Base.Data;
 using Base.Save;
 using Battle;
-using Personal.GyuSeong;
 using UnityEngine;
 
 namespace Base.Managers
@@ -38,7 +37,8 @@ namespace Base.Managers
         [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         [SerializeField] private BoxCollider2D spawnArea;
         private EventHub eventHub;
-
+        public float RemainTime => ((ChallengeStageRule)stageRule).RemainTime;
+        public float RemainTimeRatio => ((ChallengeStageRule)stageRule).RemainTimeRatio;
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
@@ -49,7 +49,7 @@ namespace Base.Managers
 
         public int GetOrder() => 10;
         public List<Monster> GetStageMonsters() => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
-        
+
 
         /// <summary>스테이지 변경(도전 / 일반 / 잠김 스테이지 판별은 이 메서드에서 진행)</summary>
         /// <param name="selectedChapter"> 변경하려는 챕터</param>
@@ -74,7 +74,10 @@ namespace Base.Managers
             if (selectedChapter == stageProgress.nextChallengeChapter &&
                 selectedStage == stageProgress.nextChallengeStage)
             {
-                stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
+                //보스타입 먼저 찾고 아니면 도전스테이지
+                stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                if (stageSO == null)
+                    stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
             }
             else
             {
@@ -108,8 +111,9 @@ namespace Base.Managers
                 stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
                 ((ChallengeStageRule)stageRule).ChallengeSuccess += OnChallengeSucceeded;
             }
+
             stageRule.Init(stageSO);
-            
+
             stage.Enter();
             stageRule.Enter();
             if (BlockSpawning)
@@ -125,11 +129,7 @@ namespace Base.Managers
         /// <returns>해당 챕터 - 스테이지의 SO 및 타입(일반, 도전, 잠금)</returns>
         public StageEntry GetStageEntry(int selectedChapter, int selectedStage)
         {
-            StageEntry entry = new()
-            {
-                chapter = selectedChapter,
-                stage = selectedStage,
-            };
+            StageEntry entry = new() { chapter = selectedChapter, stage = selectedStage, };
             // 알고싶은 챕터가 현재 최고 스테이지보다 앞인지 뒤인지 확인
             int compare = CompareStage(selectedChapter, selectedStage,
                 stageProgress.nextChallengeChapter, stageProgress.nextChallengeStage);
@@ -142,9 +142,17 @@ namespace Base.Managers
             //도전 스테이지 판단
             else if (compare == 0)
             {
-                //도전 스테이지
-                entry.type = StageType.Challenge;
-                entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
+                entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                if (entry.stageSO != null)
+                {
+                    entry.type = StageType.Boss;
+                }
+                else
+                {
+                    //도전 스테이지
+                    entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
+                    entry.type = StageType.Challenge;
+                }
             }
             //잠긴 스테이지
             else
@@ -207,10 +215,12 @@ namespace Base.Managers
                 nextChallengeStage = Progress.stage.nextChallangeStage
             };
         }
+
         private void Start()
         {
             Debug.Log("F1 : 스테이지 진입 테스트 / F2 : 스테이지 엔트리 테스트 ");
         }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F1))

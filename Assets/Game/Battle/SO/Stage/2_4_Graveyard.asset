@@ -12,17 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
   m_Name: 2_4_Graveyard
   m_EditorClassIdentifier: 
-  stageName: Graveyard 4
-  stageKey: 5015
-  stage: 4
+  stageKey: 5026
+  stageName: '2-4
+
+    Graveyard 1'
   chapter: 2
-  dropTable: {fileID: 11400000, guid: d6299d918886a4544ae83e8a4d443a0c, type: 2}
+  stage: 4
+  dropTable: {fileID: 11400000, guid: 34a9b87686bca734ab6d031af1f4c807, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: 5f6a0948e4094244bb98697f15ee4f82, type: 2}
-    weights: 6
-  - monster: {fileID: 11400000, guid: 8be3dd7eded5e9d4ca364ae2211b1a2c, type: 2}
-    weights: 4
-  isChallengeStage: 0
-  isBossStage: 0
+  - monster: {fileID: 11400000, guid: bb242ba699de41d45beb4236fb5c9d0f, type: 2}
+    weights: 10
+  type: 0
   deadLine: 0
   targetKillScore: 0

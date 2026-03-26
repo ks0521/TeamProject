@@ -20,7 +20,7 @@ public class Hp_Set : MonoBehaviour
         {
             hpText.text = "0";
         }
-        else
+        else if(hpText != null)
         {
             hpText.text = currenthp.ToString("F0") + " /\n " + maxhp.ToString("F0");
         }

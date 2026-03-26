@@ -12,19 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
   m_Name: 2_3_Graveyard
   m_EditorClassIdentifier: 
-  stageName: Graveyard 3
-  stageKey: 5013
-  stage: 3
+  stageKey: 5024
+  stageName: '2-3
+
+    Graveyard 3'
   chapter: 2
-  dropTable: {fileID: 11400000, guid: 39a3df51670c4d74dbd6838bd913868f, type: 2}
+  stage: 3
+  dropTable: {fileID: 11400000, guid: 5b5c0918b1866174c9714cb36277550c, type: 2}
   preset:
-  - monster: {fileID: 11400000, guid: 819043d42a8a58046b150b54021d891f, type: 2}
-    weights: 5
-  - monster: {fileID: 11400000, guid: 5f6a0948e4094244bb98697f15ee4f82, type: 2}
-    weights: 3
-  - monster: {fileID: 11400000, guid: 8be3dd7eded5e9d4ca364ae2211b1a2c, type: 2}
-    weights: 2
-  isChallengeStage: 0
-  isBossStage: 0
+  - monster: {fileID: 11400000, guid: f45d67fe4d0d1554ba71911355f02c86, type: 2}
+    weights: 10
+  type: 0
   deadLine: 0
   targetKillScore: 0
