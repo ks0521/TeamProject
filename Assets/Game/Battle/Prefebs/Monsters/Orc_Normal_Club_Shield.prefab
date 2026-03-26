@@ -4797,7 +4797,7 @@ GameObject:
   - component: {fileID: -308819027512956069}
   - component: {fileID: -3724935276314716789}
   - component: {fileID: 2565574255648070208}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Orc_Normal_Club_Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}

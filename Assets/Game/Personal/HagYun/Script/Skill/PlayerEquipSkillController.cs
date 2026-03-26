@@ -232,13 +232,29 @@ namespace Personal.HagYun
         // auto skill use
         [SerializeField] int autoSkillUsePossibleCnt = 0;
         public int AutoSkillUsePossibleCnt => autoSkillUsePossibleCnt;
-        // auto 스킬 사용 시 우선순위 설정용
-        // [SerializeField] EquipSkillCheckerByPrioritySet eSkillCheckerSet;
-        // public EquipSkillCheckerByPrioritySet ESkillCheckerSet => eSkillCheckerSet;
-        // auto 스킬 사용 용 클래스
         [SerializeField] PlayerAutoSkillUseController autoSkillController;
-        void DecreaseUseSkillPossibleCnt(int temp) => autoSkillUsePossibleCnt--;
-        void EncreaseUseSkillPossibleCnt(int temp) => autoSkillUsePossibleCnt++;
+        /// <summary> EquipSkill의 쿨타임 시점에 실행될 함수, 
+        /// IsCooltime 이후에 실행될 것이기 때문에 해당 시점을 기준으로 AutoSkillCnt Update </summary>
+        /// <param name="index">스킬 index</param>
+        void AutoSkillUseCntUpdate(int index)
+        {
+            if (equipSkillArr == null) return;
+            EquipSkill tESkill = equipSkillArr[index];
+            if (tESkill == null) return;
+            else if (tESkill.isEquipped)
+            {
+                if (!tESkill.IsCooltime)
+                    autoSkillUsePossibleCnt++;
+                else
+                    autoSkillUsePossibleCnt--;
+            }
+            else
+            {
+                if (!tESkill.IsCooltime)
+                    autoSkillUsePossibleCnt--;
+            }
+        }
+
         void SetUseSkillPossibleCnt() => autoSkillUsePossibleCnt = skillCnt;
         private void OnDestroy()
         {
@@ -267,8 +283,6 @@ namespace Personal.HagYun
                 equipSkillArr[index] = new EquipSkill();
                 equipSkillArr[index].Init(owner, index);
             }
-            // test
-            TestUIPresenter.ins.Init();
 
             if (skillPool == null)
             {
@@ -281,29 +295,22 @@ namespace Personal.HagYun
                     index = i;
                     if (skillPool.TryGetSkill(index, out Skill skill))
                     {
-                        Debug.Log($"{index}번 스킬 장착 시도");
+                        // Debug.Log($"{index}번 스킬 장착 시도");
                         SkillEquip(index, skill, true);
-                        Debug.Log($"skillPool에서 {i}번 스킬 장착");
+                        // Debug.Log($"skillPool에서 {i}번 스킬 장착");
                     }
-                    else
-                    {
-                        Debug.LogWarning("스킬 없음");
-                        break;
-                    }
+                    // else
+                    // {
+                    //     Debug.LogWarning("스킬 없음");
+                    //     break;
+                    // }
                 }
             }
             SetUseSkillPossibleCnt();
-            // SkillRangeChange(owner.AttackRange);
             SkillRangeChange(2);
         }
-        // void EquipSkillPrioritySetInit()
-        // {
-        //     eSkillCheckerSet = new EquipSkillCheckerByPrioritySet();
-        //     eSkillCheckerSet.PrioritySkillNumSetInitAll(equipSkillArr);
-        // }
         public void AutoSkillUsePossibleCntInit()
         {
-            // EquipSkillPrioritySetInit();
             autoSkillController = new PlayerAutoSkillUseController(this);
             SubscribeUseSkillPossibleCntAll();
         }
@@ -384,19 +391,17 @@ namespace Personal.HagYun
         public override void SkillEquip(int index, Skill targetSkill, bool isInit = false)
         {
             base.SkillEquip(index, targetSkill, isInit);
-            SetUseSkillPossibleCnt();
-            DecreaseUseSkillPossibleCnt(index);
+            if(!isInit)AutoSkillUseCntUpdate(index);
         }
         public override void PriorityUpdate(int index, Priority pri)
         {
             equipSkillArr[index].priority = pri;
-            // eSkillCheckerSet.EquipSkillPriorityUpdate(index, pri);
-            autoSkillController.EQuipAndPriorityUpdate(index,pri);
+            autoSkillController.EQuipAndPriorityUpdate(index, pri);
         }
         public override void SkillUnequip(int index)
         {
             base.SkillUnequip(index);
-            SetUseSkillPossibleCnt();
+            AutoSkillUseCntUpdate(index);
             UnequipUpdateToEquipSkillChecker(index);
         }
         public void UnequipUpdateToEquipSkillChecker(int index) => autoSkillController.UnequipUpdate(index); //eSkillCheckerSet.SkillUnequipUpdate(index);
@@ -409,9 +414,6 @@ namespace Personal.HagYun
                 //Debug.LogWarning($"이벤트 구독할 {index}번 EquipSkill 없음");
                 return;
             }
-
-            eventHub.OnSkillUsed += DecreaseUseSkillPossibleCnt;
-            eventHub.OnSkillCoolEnd += EncreaseUseSkillPossibleCnt;
         }
         public void SubscribeUseSkillPossibleCntAll()
         {
@@ -420,6 +422,8 @@ namespace Personal.HagYun
                 int index = i;
                 SubscribeUseSkillPossibleCnt(index);
             }
+            eventHub.OnSkillUsed += AutoSkillUseCntUpdate;
+            eventHub.OnSkillCoolEnd += AutoSkillUseCntUpdate;
         }
         public void UnsubscribeUseSkillPossibleCnt(int index)
         {
@@ -429,9 +433,6 @@ namespace Personal.HagYun
                 //Debug.LogWarning($"이벤트 구독할 {index}번 EquipSkill 없음");
                 return;
             }
-
-            eventHub.OnSkillUsed -= DecreaseUseSkillPossibleCnt;
-            eventHub.OnSkillCoolEnd -= EncreaseUseSkillPossibleCnt;
         }
         public void UnsubscribeUseSkillPossibleCntAll()
         {
@@ -440,6 +441,8 @@ namespace Personal.HagYun
                 int index = i;
                 UnsubscribeUseSkillPossibleCnt(index);
             }
+            eventHub.OnSkillUsed -= AutoSkillUseCntUpdate;
+            eventHub.OnSkillCoolEnd -= AutoSkillUseCntUpdate;
         }
     }
 }

@@ -31,35 +31,35 @@ MonoBehaviour:
   - type: 3
     increasePerEnhance: 0.01
     unlockLevel: 150
-    enhanceCost: 0
+    enhanceCost: 250
     maxLevel: 200
   - type: 4
     increasePerEnhance: 1
     unlockLevel: 500
-    enhanceCost: 0
+    enhanceCost: 1000
     maxLevel: 50
   - type: 5
     increasePerEnhance: 0.1
     unlockLevel: 1000
-    enhanceCost: 0
+    enhanceCost: 200
     maxLevel: 1000
   - type: 6
     increasePerEnhance: 0.01
     unlockLevel: 1500
-    enhanceCost: 0
+    enhanceCost: 150
     maxLevel: 100
   - type: 7
     increasePerEnhance: 1
     unlockLevel: 2000
-    enhanceCost: 0
+    enhanceCost: 500
     maxLevel: 100
   - type: 8
     increasePerEnhance: 1
     unlockLevel: 2500
-    enhanceCost: 0
+    enhanceCost: 200
     maxLevel: 100
   - type: 9
     increasePerEnhance: 1
     unlockLevel: 3000
-    enhanceCost: 0
+    enhanceCost: 2000
     maxLevel: 50
