@@ -20,6 +20,12 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set autoButton;
         [SerializeField] Skill_Set skillIcons;
+
+        [Header("챌린지 모드")]
+        [SerializeField] GameObject challengePanel;
+        [SerializeField] Hp_Set timer;
+        [SerializeField] Hp_Set monsterKill;
+
         private PlayerProgressManager manager;
         private EventHub hub;
         
@@ -30,7 +36,7 @@ namespace UI.Scripts.UiPresenter
 
 
             RefreshAll();
-
+            challengePanel.SetActive(false);
             hub.OnHpChange += hp.SetHp;
             hub.OnCurrencyChange += ReFreshCurrency;
             //hub.OnExpChange += expBar.SetExp; <- 해당 부분을 바꾸시면 됩니다
@@ -87,6 +93,13 @@ namespace UI.Scripts.UiPresenter
                     ui.SetUI(currency);
                 }
             }
+        }
+        public void SetChallengeUI(bool isCheck)
+        {
+            StageManager manager = GameManager.Instance.GetGameSystem<StageManager>();
+
+            challengePanel.SetActive(isCheck);
+            
         }
     }
 }
