@@ -27,3 +27,4 @@ MonoBehaviour:
   effectArea: 5
   skillIcon: {fileID: -8713000328269187007, guid: 41f222f051a294bddab148ef0d1b6cd1,
     type: 3}
+  skillSound: {fileID: 8300000, guid: 321502380cfb2a649bd7a18ce5241d4b, type: 3}
