@@ -43,6 +43,10 @@ namespace Base.Data
         public void CurrencyChange(CurrencyType type, int amount) => OnCurrencyChange?.Invoke(type, amount);
         public event Action<int> OnLevelChange; //레벨업
         public void LevelChanged(int level) => OnLevelChange?.Invoke(level);
+        public event Action OnGetCurrency;
+        public void GetCurrency() => OnGetCurrency?.Invoke(); //사운드 연동용 이벤트
+        public event Action OnGetItems;
+        public void GetItems() => OnGetItems?.Invoke(); // 사운드 연동용 이벤트
 
 
         public int GetOrder() => 0;
