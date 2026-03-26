@@ -3,6 +3,7 @@ using Base.Managers;
 using Battle;
 using Growth.Skill;
 using Personal.HagYun;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -52,31 +53,26 @@ public class AudioManager : MonoBehaviour, IManager
 
             hub.OnMonsterHit -= _sfxPlayer.PlayHitSound;
             hub.OnMonsterHit += _sfxPlayer.PlayHitSound;
-            //hub.OnPlayerHit -= _sfxPlayer.PlayPlayerHitSound; 
-            //hub.OnPlayerHit += _sfxPlayer.PlayPlayerHitSound;
+            hub.OnPlayerHit -= _sfxPlayer.PlayBeAttackedSound; 
+            hub.OnPlayerHit += _sfxPlayer.PlayBeAttackedSound;
 
             hub.OnClearStage -= PlayWinSound;
             hub.OnClearStage += PlayWinSound;
             hub.OnFailStage -= PlayLoseSound;
             hub.OnFailStage += PlayLoseSound;
-            //hub.OnLevelChange += PlayLevelupSound;
+
+            hub.OnGetCurrency -= PlayGetGoldSound;
+            hub.OnGetCurrency += PlayGetGoldSound;
+            hub.OnGetItems -= PlayGetItemSound;
+            hub.OnGetItems += PlayGetItemSound;
+            hub.OnLevelChange -= PlayLevelupSound;
+            hub.OnLevelChange += PlayLevelupSound;
+
             Debug.Log("AudioManager: 모든 효과음 이벤트 연결 완료");
         }
     }
 
     public int GetOrder() => 300;
-
-
-    /*
-     * //이 코드는 SkillSO에 public AudioClip skillSound;가 존재함을 가정합니다
-    void OnSkillUsed(Skill skill)
-    {
-        if (skill.skillSound != null)
-        {
-            _skillPlayer.PlayOneShot(skill.skillSound);
-        }
-    }
-    */
 
     #region BGM
     public void ChangeMap(BGMChanger.MapType mapType)
@@ -86,6 +82,13 @@ public class AudioManager : MonoBehaviour, IManager
     #endregion
 
     #region Skill Sounds
+    void OnSkillUsed(SkillSO skillSO)
+    {
+        if (skillSO.skillSound != null)
+        {
+            _skillPlayer.skillSource?.PlayOneShot(skillSO.skillSound);
+        }
+    }
     public void PlaySkillCastSound() //스킬 캐스팅 사운드
     {
         _skillPlayer?.PlaySkillCastSound();

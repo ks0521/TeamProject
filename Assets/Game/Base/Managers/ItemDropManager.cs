@@ -45,6 +45,7 @@ public class ItemDropManager : MonoBehaviour, IManager
                   $"현재 소유 골드 : {progress.currency.gold}");
         hub.GetCurrency();
         hub.CurrencyChange(CurrencyType.GOLD,progress.currency.gold);
+        hub.GetCurrency();
     }
 
     void GetStatStone(int dropStatStone)
@@ -56,6 +57,7 @@ public class ItemDropManager : MonoBehaviour, IManager
             $"현재 소유 스탯강화석 : {progress.currency.statStone}");
         hub.GetCurrency();
         hub.CurrencyChange(CurrencyType.STATSTONE,progress.currency.statStone);
+        hub.GetCurrency();
     }
     //경험치는 드랍없이 바로 가서 일단 public으로 쓰긴 하는데 바꿔야함
     public void GetExp(int dropExp)
@@ -96,7 +98,7 @@ public class ItemDropManager : MonoBehaviour, IManager
             progress.itemInventory.ownedItemCounts.Add(itemKey, droppedItem.amount);
             Debug.Log($"{droppedItem.itemSO.name} 신규 획득");
         }
-        
+        hub.GetItems();
     }
 
     public void GetEquip(DropReward droppedItem)
