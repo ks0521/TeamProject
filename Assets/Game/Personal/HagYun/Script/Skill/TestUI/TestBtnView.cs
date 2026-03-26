@@ -10,6 +10,7 @@ namespace Personal.HagYun
     {
         Button btn;
         [SerializeField] Image cooltimeMask;
+        public bool IsCooltimeMaskActiveState => cooltimeMask.gameObject.activeSelf;
         [SerializeField] Image skillImg;
         // 0 : 기본, 1 : 선택됨
         [SerializeField] Sprite[] borderArr;
