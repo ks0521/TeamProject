@@ -34,9 +34,32 @@ using Random = UnityEngine.Random;
         public void Enter()
         {
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 시작");
-            spawnerToken = new CancellationTokenSource();
-            Spawning(spawnerToken.Token).Forget();
-            canSpawning = true;
+            if (stageSO.type == StageType.Boss)
+            {
+                SpawnBoss();
+                canSpawning = false;
+            }
+            else
+            {
+                spawnerToken = new CancellationTokenSource();
+                Spawning(spawnerToken.Token).Forget();
+                canSpawning = true;
+            }
+        }
+        /// <summary> MVP 보여주기용 임시 메서드, 나중에는 룰 자체를 변경할 것</summary>
+        void SpawnBoss()
+        {
+            float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
+            float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
+
+            GameObject monsterObj = monsterPool.UsePool(stageSO.preset[0].monster.key);
+            Monster monster = monsterObj.GetComponent<Monster>();
+            monster.SetUp(stageSO.preset[0].monster);
+            monster.Init();
+            ((Boss)monster).InitBoss();
+            monsterObj.transform.position = new Vector3(randx, randy, 0);
+            monsterObj.SetActive(true);
+            Register(monster);
         }
         /// <summary> 실제 몬스터 스폰 비동기 메서드</summary>
         /// <param name="token">종료 토큰</param>
