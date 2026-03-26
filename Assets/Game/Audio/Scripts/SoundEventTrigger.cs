@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//유저의 조작으로 발생하는 사운드 이벤트를 담당하는 파일
 public class SoundEventTrigger : MonoBehaviour
 {
     private Button btn;
