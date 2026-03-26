@@ -47,7 +47,7 @@ namespace Personal.HagYun
             MaxCooltime = skill.Data.coolDown;
 
             eventHub.SkillSet(eSkillIndex);
-            
+
             if (!isInit) CooltimeStart();
         }
         public void SkillUnset()
@@ -96,20 +96,15 @@ namespace Personal.HagYun
         async UniTaskVoid CooltimeStartTask()
         {
             IsCooltime = true;
-            // eventSet.RaiseCooltimeStart();
             eventHub.SkillUsed(eSkillIndex);
             CurCooltime = MaxCooltime;
             while (0 < CurCooltime)
             {
                 CurCooltime -= Time.deltaTime; // 쿨타임 감소 속도 증가 시, 해당 값 곱하기
-                // eventSet.RaiseCooltimeUpdate(1 - (CurCooltime / baseCooltime));
                 await UniTask.Yield(owner.GetCancellationTokenOnDestroy());
-                // if (Skill.PlOwner == null) return;
-                if (owner == null) return;
+                if (owner == null || !isEquipped) return;
             }
-            // eventSet.RaiseCooltimeUpdate(1);
             IsCooltime = false;
-            // eventSet.RaiseCooltimeEnd();
             eventHub.SkillCoolEnd(eSkillIndex);
         }
         public void CooltimeSet(float cooltime)
@@ -126,15 +121,5 @@ namespace Personal.HagYun
             CooltimeSet(skill.Data.coolDown);
             CooltimeStartTask().Forget();
         }
-
-        // event add/remove
-        // public void AddEventCooltimeStart(Action func) => eventSet.OnCooltimeStart += func;
-        // public void AddEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd += func;
-
-        // public void RemoveEventCooltimeStart(Action func) => eventSet.OnCooltimeStart -= func;
-        // public void RemoveEventCooltimeEnd(Action func) => eventSet.OnCooltimeEnd -= func;
-
-        // public void AddEventCooltimeUpdate(Action<float> func) => eventSet.OnCooltimeUpdate += func;
-        // public void RemoveEventCooltimeUpdate(Action<float> func) => eventSet.OnCooltimeUpdate -= func;
     }
 }

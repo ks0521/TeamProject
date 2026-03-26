@@ -11,8 +11,6 @@ namespace Base.Data
 {
     public class EventHub : MonoBehaviour, IGameSystem
     {
-        public event Action OnButtonClicked; //버튼 클릭
-        public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnPopupOpened; //팝업창 오픈
         public void PopupOpen() => OnPopupOpened?.Invoke();
 
@@ -38,7 +36,10 @@ namespace Base.Data
         public void SkillCoolEnd(int order) => OnSkillCoolEnd?.Invoke(order);
         public event Action OnCastingStart; //스킬 캐스팅 시작
         public void CastingStarted() => OnCastingStart?.Invoke();
-        
+        public event Action OnCastingEnd; //스킬 캐스팅 종료
+        public void CastingEnd() => OnCastingEnd?.Invoke();
+        public event Action OnButtonClicked; //버튼 클릭
+        public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
         public event Action OnPlayerHit; //플레이어 피격
