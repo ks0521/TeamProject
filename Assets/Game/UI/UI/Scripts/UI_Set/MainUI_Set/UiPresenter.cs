@@ -99,10 +99,10 @@ namespace UI.Scripts.UiPresenter
         {
 
             challengePanel.SetActive(isCheck);
+
             timer.SetHp(stageManager.RemainTime , stageManager.RemainTimeRatio);
 
-
-           // monsterKill.SetHp(현재 킬 스코어  , stageManager.CurStageSO.targetKillScore);
+            monsterKill.SetHp(stageManager.TargetKillScore, stageManager.CurStageSO.targetKillScore);
         }
     }
 }
