@@ -94,10 +94,7 @@ public class Boss : Monster
         if (atkRange1 != null) atkRange1.SetActive(false);
         if (chargeCollider != null) chargeCollider.enabled = true;
         //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
-        
 
-        float elapsed = 0f;
-        //bool hasDamaged = false;
 
         if (spumController != null)
         {

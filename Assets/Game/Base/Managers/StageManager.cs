@@ -123,6 +123,7 @@ namespace Base.Managers
                 stage.canSpawning = false;
                 Debug.Log("스테이지 적 스폰 비활성화됨");
             }
+            eventHub.StageChangeClear(stageSO);
         }
 
         /// <summary> 특정 챕터 - 스테이지의 상태를 확인</summary>
@@ -145,6 +146,7 @@ namespace Base.Managers
             else if (compare == 0)
             {
                 entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                Debug.Log(entry.stageSO);
                 if (entry.stageSO != null)
                 {
                     entry.type = StageType.Boss;

@@ -3,6 +3,7 @@ using Base.Managers;
 using Base.Save;
 using Battle;
 using Growth.StatUpgrade;
+using System;
 using System.Linq;
 using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
@@ -96,14 +97,24 @@ namespace UI.Scripts.UiPresenter
                 }
             }
         }
+
+        private void Update()
+        {
+            UpdateChallengeUI();
+        }
+
+        void UpdateChallengeUI()
+        {
+            if (!challengePanel.activeSelf) return;
+            
+            timer.SetHp(currenthp:stageManager.RemainTime , maxhp:stageManager.RemainTimeRatio);
+            monsterKill.SetHp(stageManager.TargetKillScore, stageManager.CurStageSO.targetKillScore);
+        }
+        //챌린지 전용 UI 활성화 / 비활성화
         public void SetChallengeUI(bool isCheck)
         {
-
+            if (isCheck == challengePanel.activeSelf) return; //동일한 현상(켜져있을때 키기 / 꺼져있을때 끄기)에서는 작동 X
             challengePanel.SetActive(isCheck);
-
-            timer.SetHp(stageManager.RemainTime , stageManager.RemainTimeRatio);
-
-            monsterKill.SetHp(stageManager.TargetKillScore, stageManager.CurStageSO.targetKillScore);
         }
     }
 }
