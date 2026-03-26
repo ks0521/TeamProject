@@ -28,9 +28,9 @@ namespace Base.Managers
         [Header("실사용")] private StageRule stageRule;
 
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
-        [SerializeField] private int curChapter = 0;
-        [SerializeField] private int curStage = 0;
-        [SerializeField] private MonsterPoolManager monsterPool; //몬스터 풀
+        private int curChapter = 0;
+        private int curStage = 0;
+        private MonsterPoolManager monsterPool; //몬스터 풀
         [SerializeField] private Stage stage; //스테이지 객체
         [SerializeField] private StageSO stageSO; //스테이지 정보
         public StageSO CurStageSO => stageSO;
