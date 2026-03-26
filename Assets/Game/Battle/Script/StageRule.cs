@@ -12,16 +12,16 @@ using Random = UnityEngine.Random;
 [Serializable]
 public abstract class StageRule
 {
-    [SerializeField] protected StageSO stage;
-    [SerializeField] protected int killScore;
+    protected StageSO stage;
+    protected int killScore;
     protected ItemDropManager dropManager;
     protected EventHub eventHub;
+    
 
     public virtual void Init(StageSO stage)
     {
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-        
         this.stage = stage;
     }
     public abstract void Enter();
@@ -37,7 +37,17 @@ public class ChallengeStageRule : StageRule
     public event Action<StageSO> ChallengeSuccess;
     public event Action<StageSO> ChallengeFail;
     private CancellationTokenSource token;
-    
+    public int KillScore => killScore;
+    public int TargetKillScore => stage.targetKillScore;
+    public float RemainTime => remainTime;
+    public float RemainTimeRatio
+    {
+        get
+        {
+            if (stage == null || stage.deadLine <= 0) return 0f;
+            return Mathf.Clamp01(remainTime / stage.deadLine);
+        }
+    }
     public override void Init(StageSO stage)
     {
         base.Init(stage);
@@ -79,6 +89,24 @@ public class ChallengeStageRule : StageRule
     {
         token.Cancel();
         token.Dispose();
+    }
+}
+
+[Serializable]
+public class BossStageRule : StageRule
+{
+    public override void Enter()
+    {
+        //throw new NotImplementedException();
+    }
+
+    public override void MonsterKilledInStage(Monster monster)
+    {
+    }
+
+    public override void Destroy()
+    {
+        //throw new NotImplementedException();
     }
 }
 [Serializable]
