@@ -1619,7 +1619,7 @@ GameObject:
   - component: {fileID: -50468200588490459}
   - component: {fileID: -6322826064886713673}
   m_Layer: 8
-  m_Name: Test Monster
+  m_Name: Skeleton_Normal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

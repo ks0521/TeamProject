@@ -57,6 +57,11 @@ public class Boss : Monster
     private float currentSkill2CoolTime = 0f;
     private float currentSkill3CoolTime = 0f;
 
+    public void InitBoss()
+    {
+        playerCollider = target.GetComponent<Collider2D>();
+    }
+    
     bool CanUseSkill(float currentCoolTime)
     {
         //Debug.Log($"CanUseSkill Check: {currentCoolTime} <= 0 ? {currentCoolTime <= 0f}");
@@ -100,7 +105,8 @@ public class Boss : Monster
         if (atkRange1 != null) atkRange1.SetActive(false);
 
         if (chargeCollider != null) chargeCollider.enabled = true;
-        sfx.PlayBossSkillSound();
+        //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
+        
 
         float elapsed = 0f;
         //bool hasDamaged = false;
@@ -128,7 +134,8 @@ public class Boss : Monster
             if (chargeCollider.IsTouching(playerCollider))
             {
                 Debug.Log("돌진으로 피격되었습니다.");
-                target.Hit(skill1Damage);
+                SkillAttack(target,1.2f);
+                //target.Hit(skill1Damage);
 
                 /*
                 // 플레이어 스크립트 가져오기 (character1을 player1로 캐스팅)
@@ -166,7 +173,7 @@ public class Boss : Monster
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 충돌한 오브젝트가 "Wall" 태그를 가지고 있는지 확인
-        if (isUsingSkill && isCharging && collision.gameObject.CompareTag("Wall"))
+        if (isUsingSkill && isCharging && collision.gameObject.layer == wallLayer)
         {
             Debug.Log("돌진 중 벽에 부딪혀 중단됨");
             isCharging = false;
@@ -197,7 +204,8 @@ public class Boss : Monster
             if (distance <= skill2Range)
             {
                 Debug.Log("화염 장막에 피격되었습니다.");
-                target.Hit(skill2Damage);
+                SkillAttack(target,1.5f);
+                //target.Hit(skill2Damage);
 
                 Player player = target as Player;
                 if (player != null)
@@ -206,7 +214,7 @@ public class Boss : Monster
                 }
             }
         }
-        sfx.PlayBossSkillSound();
+        //sfx.PlayBossSkillSound(); sfx 연결 제한으로 인한 주석처리
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -241,10 +249,11 @@ public class Boss : Monster
             if (distance <= skill3Range)
             {
                 Debug.Log("메테오 적중! 플레이어에게 데미지");
-                target.Hit(skill3Damage);
+                SkillAttack(target,2f);
+                //target.Hit(skill3Damage);
             }
         }
-        sfx.PlayBossSkillSound();
+        //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -278,17 +287,18 @@ public class Boss : Monster
         }, cancellationToken: token);
     }
 
-    protected override void OnDead()
+    /*protected override void OnDead()
     {
         if (isDead) //여러번 죽지 않게하기
             return;
         isDead = true;
+        
         Debug.Log("몬스터 사망");
         //rb.velocity = Vector2.zero;
-        Destroy(gameObject);
+        //Destroy(gameObject);
         //Killed();
-        sfx.PlayBossDeadSound();
-    }
+        //sfx.PlayBossDeadSound();
+    }*/
 
     void Killed()
     {
