@@ -22,4 +22,12 @@ public class SoundEventTrigger : MonoBehaviour
             hub.ButtonClicked(); //OnButtonClicked?.Invoke() 트리거용
         }
     }
+    public void SendPopupOpenSignal()
+    {
+        var hub = GameManager.Instance.GetGameSystem<EventHub>();
+        if (hub != null)
+        {
+            hub.PopupOpen();
+        }
+    }
 }
