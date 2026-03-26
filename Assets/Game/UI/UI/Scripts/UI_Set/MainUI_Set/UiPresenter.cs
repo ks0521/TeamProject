@@ -12,7 +12,7 @@ namespace UI.Scripts.UiPresenter
 
         [Header("UI 참조")]
         [SerializeField] Hp_Set hp;
-        [SerializeField] Power_Set powerText;
+        [SerializeField] Lv_Set LvText;
 
         [Header("골드 , 성장석 , 경험치 넣기")]
         [SerializeField] MainUItype_Set[] mainUItype;
@@ -28,16 +28,17 @@ namespace UI.Scripts.UiPresenter
 
         private PlayerProgressManager manager;
         private EventHub hub;
-        
+        private StageManager stageManager;
         public void Init()
         {
             manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
-
+            stageManager = GameManager.Instance.GetGameSystem<StageManager>();
 
             RefreshAll();
             challengePanel.SetActive(false);
             hub.OnHpChange += hp.SetHp;
+            hub.OnLevelChange += LvText.SetLv; 
             hub.OnCurrencyChange += ReFreshCurrency;
             //hub.OnExpChange += expBar.SetExp; <- 해당 부분을 바꾸시면 됩니다
             //hub.OnGoldChange += goldText.SetGold;
@@ -96,10 +97,12 @@ namespace UI.Scripts.UiPresenter
         }
         public void SetChallengeUI(bool isCheck)
         {
-            StageManager manager = GameManager.Instance.GetGameSystem<StageManager>();
 
             challengePanel.SetActive(isCheck);
-            
+            timer.SetHp(stageManager.RemainTime , stageManager.RemainTimeRatio);
+
+
+           // monsterKill.SetHp(현재 킬 스코어  , stageManager.CurStageSO.targetKillScore);
         }
     }
 }

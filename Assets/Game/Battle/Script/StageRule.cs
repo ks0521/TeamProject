@@ -14,6 +14,7 @@ public abstract class StageRule
 {
     protected StageSO stage;
     protected int killScore;
+    public int KillScore => killScore;
     protected ItemDropManager dropManager;
     protected EventHub eventHub;
     

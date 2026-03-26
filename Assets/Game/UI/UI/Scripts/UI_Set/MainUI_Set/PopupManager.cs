@@ -37,6 +37,9 @@ namespace Game_UI.Scripts.PopupManager
 
         private EventHub hub;
 
+        [Header("닫는 버튼")]
+        [SerializeField] private Button abilityCloseBtn;
+
         private void Awake()
         {
             if (instance == null)
@@ -205,6 +208,9 @@ namespace Game_UI.Scripts.PopupManager
             equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
             dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
 
+
+
+            abilityCloseBtn.onClick.AddListener(() => ClosePopup(abilityPop.gameObject));
 
         }//버튼에 함수 넣기
 
