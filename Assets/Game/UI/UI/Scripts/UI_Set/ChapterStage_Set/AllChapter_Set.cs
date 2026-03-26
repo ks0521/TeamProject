@@ -1,9 +1,11 @@
+using Base.Data;
 using Base.Managers;
 using Battle;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UI.Scripts.Stage;
+using UI.Scripts.UiPresenter;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,9 +35,9 @@ public class AllChapter_Set : MonoBehaviour
     [SerializeField] StageMonster_Set stageMon;
     [SerializeField] Reward_Set reward;
 
+    private EventHub hub;
     private void OnEnable()
     {
-        AllChapter();
         ShowChapter();
         enter.interactable = false;
     }
@@ -43,12 +45,16 @@ public class AllChapter_Set : MonoBehaviour
     public void Init()
     {
         stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+        hub = GameManager.Instance.GetGameSystem<EventHub>();
+
         currentChapter = 0;
         BindButton();
         AllChapter();
        
         gameObject.SetActive(false);
         enter.interactable = false;
+
+        hub.OnClearStage += EventChain;
     }
     public void EnterStage(int chatperNum, int stageNum, Stage_Set clickStage)
     {
@@ -65,7 +71,12 @@ public class AllChapter_Set : MonoBehaviour
 
         StageEntry stageEntry = stageManager.GetStageEntry(enterChapter, enterStage);
 
-        //여기 나중에 몬스터 이미지 , 보상 목록 이미지 변경 추가 할 예정
+        var presenter = GameManager.Instance.GetGameSystem<UiPresenter>();
+
+        if (presenter != null)
+        {
+            presenter.SetChallengeUI(stageEntry.stageSO.type == StageType.Challenge);
+        }
         if (reward != null)
         {
             reward.SetReward(stageEntry);
@@ -78,6 +89,10 @@ public class AllChapter_Set : MonoBehaviour
         {
             enter.interactable = true;
         }
+    }
+    void EventChain(StageSO stage)//이벤트 연결용
+    {
+        AllChapter();
     }
     void AllChapter()
     {

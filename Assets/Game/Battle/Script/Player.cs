@@ -240,8 +240,7 @@ namespace Battle
         }
         protected override void SendHitSignal()
         {
-            //나중에 EventHub에다가 PlayerHit 같은 이벤트 추가하셔야 합니다!
-            if(!isDead) eventHub?.MonsterHit();
+            if(!isDead) eventHub?.PlayerHit();
         }
     }
 }
