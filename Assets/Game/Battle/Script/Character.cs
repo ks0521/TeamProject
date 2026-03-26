@@ -174,6 +174,22 @@ namespace Battle
             }
             target.Hit(resultDmg);
         }
+
+        protected void SkillAttack(Character target, float multiplier)
+        {
+            if (target == null|| !canAtk || isDead || isAtkCooltime) return;
+
+            AtkCooltimeTask().Forget();
+            Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
+
+            float resultDmg = CurrentBattleStat.atk * multiplier;
+            if (IsCriticalChance())
+            {
+                resultDmg *= CurrentBattleStat.critDamage;
+                // Debug.Log("크리티컬!");
+            }
+            target.Hit(resultDmg);
+        }
         public float SkillResultDmg(float increasePower)
         {
             float resultDmg = CurrentBattleStat.atk;

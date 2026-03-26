@@ -57,6 +57,11 @@ public class Boss : Monster
     private float currentSkill2CoolTime = 0f;
     private float currentSkill3CoolTime = 0f;
 
+    public void InitBoss()
+    {
+        playerCollider = target.GetComponent<Collider2D>();
+    }
+    
     bool CanUseSkill(float currentCoolTime)
     {
         //Debug.Log($"CanUseSkill Check: {currentCoolTime} <= 0 ? {currentCoolTime <= 0f}");
@@ -65,17 +70,29 @@ public class Boss : Monster
 
     async UniTaskVoid UseMonsterSkill1Async()
     {
+        // 안전장치: 이 오브젝트가 파괴되면 비동기 작업도 취소하기 위한 토큰을 가져옵니다.
         var cts = this.GetCancellationTokenOnDestroy();
         if (target == null) return;
 
         currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
         isCharging = true;
+        Debug.Log("돌진 준비 중...");
+        if (atkRange1 != null) atkRange1.SetActive(true);
 
         Vector2 directionToTarget = (target.transform.position - transform.position).normalized;
         UpdateFacing(directionToTarget.x);
+        //RotateTowards(directionToTarget); //캐릭터까지 회전시키고 있음
         float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
         Quaternion skillRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+
+        // 타겟이 도중에 사라졌을 경우를 대비한 방어 코드
+        if (target == null)
+        {
+            isUsingSkill = false;
+            if (atkRange1 != null) atkRange1.SetActive(false);
+            return;
+        }
 
         if (atkRange1 != null)
         {
@@ -84,68 +101,43 @@ public class Boss : Monster
         }
         if (chargeCollider != null) chargeCollider.transform.rotation = skillRotation;
 
-        Debug.Log("돌진 준비 중...");
         await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
         if (atkRange1 != null) atkRange1.SetActive(false);
+
         if (chargeCollider != null) chargeCollider.enabled = true;
-        sfx.PlayBossSkillSound();
+        //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
+        
+
+        float elapsed = 0f;
+        //bool hasDamaged = false;
+
         if (spumController != null)
         {
             spumController.PlayAnimation(PlayerState.ATTACK, 1);
         }
-
-        /*
-        if (target == null)
-        {
-            isUsingSkill = false;
-            if (atkRange1 != null) atkRange1.SetActive(false);
-            return;
-        }
-        */
-
-        float elapsed = 0f;
-        bool hasDamaged = false;
-
         while (elapsed < chargeDuration && isCharging)
         {
             if (target == null || isDead) break;
-
+            // CharacterMove에 있는 방향 기반 이동 함수를 재활용합니다.
+            // 이렇게 하면 CharacterMove를 수정하지 않고도 물리 기반 이동이 가능합니다.
+            // 중요: 물리 이동이므로 WaitForFixedUpdate와 짝을 맞춰야 합니다.
+            // cm.ChaseMove(directionToTarget, chargeSpeed);
             float distance = Vector2.Distance(transform.position, target.transform.position);
-            RaycastHit2D wallHit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
-            if (wallHit.collider != null) //벽과 충돌한 경우
+            RaycastHit2D hit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
+            if (hit.collider != null) //벽과 충돌한 경우
             {
                 Debug.Log("벽과 충돌");
                 break;
             }
 
             cm.ChaseMove(directionToTarget, chargeSpeed);
-
-            if (!hasDamaged)
-            {
-                // 자식 콜라이더의 실제 월드 위치, 크기, 회전값을 직접 가져옵니다.
-                Vector2 boxWorldPos = chargeCollider.transform.position;
-                Vector2 boxSize = new Vector2(
-                    chargeCollider.size.x * chargeCollider.transform.lossyScale.x,
-                    chargeCollider.size.y * chargeCollider.transform.lossyScale.y
-                );
-                float boxAngle = chargeCollider.transform.eulerAngles.z;
-
-                // 해당 영역에 'targetLayer'를 가진 콜라이더가 있는지 '직접' 검사
-                Collider2D hitCheck = Physics2D.OverlapBox(boxWorldPos, boxSize, boxAngle, targetLayer);
-
-                if (hitCheck != null)
-                {
-                    Debug.Log($"돌진 적중! 감지된 대상: {hitCheck.name}");
-                    target.Hit(skill1Damage);
-                    hasDamaged = true;
-                }
-            }
-            /*
             if (chargeCollider.IsTouching(playerCollider))
             {
                 Debug.Log("돌진으로 피격되었습니다.");
-                target.Hit(skill1Damage);
+                SkillAttack(target,1.2f);
+                //target.Hit(skill1Damage);
 
+                /*
                 // 플레이어 스크립트 가져오기 (character1을 player1로 캐스팅)
                 player1 player = targetScript as player1;
                 if (player != null)
@@ -154,10 +146,10 @@ public class Boss : Monster
                     Vector2 knockbackDir = (target.position - transform.position).normalized;
                     player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
                 }
+                */
                 //hasDamaged = true;
                 //break; //충돌 후 몬스터는 이동 중단
             }
-            */
 
             elapsed += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate(cancellationToken: cts); //다음 프레임까지 대기
@@ -181,7 +173,7 @@ public class Boss : Monster
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 충돌한 오브젝트가 "Wall" 태그를 가지고 있는지 확인
-        if (isUsingSkill && isCharging && collision.gameObject.CompareTag("Wall"))
+        if (isUsingSkill && isCharging && collision.gameObject.layer == wallLayer)
         {
             Debug.Log("돌진 중 벽에 부딪혀 중단됨");
             isCharging = false;
@@ -212,7 +204,8 @@ public class Boss : Monster
             if (distance <= skill2Range)
             {
                 Debug.Log("화염 장막에 피격되었습니다.");
-                target.Hit(skill2Damage);
+                SkillAttack(target,1.5f);
+                //target.Hit(skill2Damage);
 
                 Player player = target as Player;
                 if (player != null)
@@ -221,7 +214,7 @@ public class Boss : Monster
                 }
             }
         }
-        sfx.PlayBossSkillSound();
+        //sfx.PlayBossSkillSound(); sfx 연결 제한으로 인한 주석처리
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -256,10 +249,11 @@ public class Boss : Monster
             if (distance <= skill3Range)
             {
                 Debug.Log("메테오 적중! 플레이어에게 데미지");
-                target.Hit(skill3Damage);
+                SkillAttack(target,2f);
+                //target.Hit(skill3Damage);
             }
         }
-        sfx.PlayBossSkillSound();
+        //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -293,17 +287,18 @@ public class Boss : Monster
         }, cancellationToken: token);
     }
 
-    protected override void OnDead()
+    /*protected override void OnDead()
     {
         if (isDead) //여러번 죽지 않게하기
             return;
         isDead = true;
+        
         Debug.Log("몬스터 사망");
         //rb.velocity = Vector2.zero;
-        Destroy(gameObject);
+        //Destroy(gameObject);
         //Killed();
-        sfx.PlayBossDeadSound();
-    }
+        //sfx.PlayBossDeadSound();
+    }*/
 
     void Killed()
     {
@@ -380,7 +375,7 @@ public class Boss : Monster
     {
         // 타겟이 없거나 이미 죽었다면 아무것도 하지 않음
         if (target == null || isDead || isUsingSkill) return;
-        if (cm == null) Debug.LogError("cm(CharacterMove)이 Null입니다! base.Init()을 확인하세요.");
+        if (cm == null) Debug.LogError("cm (CharacterMove)이 Null입니다! base.Init()을 확인하세요.");
         if (monsterSO == null) Debug.LogError("monsterSO가 Null입니다! 인스펙터를 확인하세요.");
         UpdateFacing(target.transform.position.x - transform.position.x);
 
