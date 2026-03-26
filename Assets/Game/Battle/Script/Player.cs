@@ -43,7 +43,7 @@ namespace Battle
         public override void Init()
         {
             base.Init();
-            //equipSkillController.Init(this);
+            equipSkillController.Init(this);
             //runtimeStatus = GetComponent<PlayerRuntimeStatus>(); 
             //SyncHpAfterManagersReady().Forget();
             //3.24(규성) : 해당 파트 Init순서의 문제는 PlayerManager를 추가하여 Player초기화 순서를 GameManager에 종속시켜 해결했습니다

@@ -8,13 +8,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 namespace Personal.HagYun
 {
-    public class EquipSkillControllerEvent
-    {
-        public event Action OnCastingStart;
-        public event Action OnCastingEnd;
-        public void RaiseCastingStart() => OnCastingStart?.Invoke();
-        public void RaiseCastingEnd() => OnCastingEnd?.Invoke();
-    }
     public struct SpriteShower
     {
         Vector2 spriteSize;
@@ -62,7 +55,6 @@ namespace Personal.HagYun
         public EquipSkill this[int index] => equipSkillArr[index];
         protected int skillCnt;
         // skill event
-        protected EquipSkillControllerEvent eventSet = new EquipSkillControllerEvent();
         protected EventHub eventHub;
 
         [Range(0f, 1f)] protected float skillFireTimeValue = 0.5f;
@@ -111,8 +103,9 @@ namespace Personal.HagYun
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
         {
-            eventSet.RaiseCastingStart();
             IsCasting = true;
+            // eventSet.RaiseCastingStart();
+            eventHub.CastingStarted();
             float alphaValue = 100f / 255f;
             if (sr != null) sr.color = new Color(0, 0, 1f, alphaValue);
 
@@ -141,8 +134,9 @@ namespace Personal.HagYun
 
             if (sr != null) sr.color = new Color(1f, 0, 0, alphaValue);
 
-            eventSet.RaiseCastingEnd();
             IsCasting = false;
+            // eventSet.RaiseCastingEnd();
+            eventHub.CastingEnd();
         }
         bool CheckSkillUsePossible(int index)
         {
@@ -207,11 +201,5 @@ namespace Personal.HagYun
         public void SkillUse4() => TryAtkSkillUseToMonster(3);
         public void SkillUse5() => TryAtkSkillUseToMonster(4);
         public void SkillUse6() => TryAtkSkillUseToMonster(5);
-
-        // event add/remove for external use
-        public void AddEventCastingStart(Action func) => eventSet.OnCastingStart += func;
-        public void AddEventCastingEnd(Action func) => eventSet.OnCastingEnd += func;
-        public void RemoveEventCastingStart(Action func) => eventSet.OnCastingStart -= func;
-        public void RemoveEventCastingEnd(Action func) => eventSet.OnCastingEnd -= func;
     }
 }
