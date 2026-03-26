@@ -76,8 +76,12 @@ public class Boss : Monster
         currentSkill1CoolTime = skill1CoolTime;
         isUsingSkill = true;
         isCharging = true;
-        
-        if (atkRange1 != null) atkRange1.SetActive(true);
+
+        if (spumController != null)
+        {
+            spumController.PlayAnimation(PlayerState.IDLE, 0);
+        }
+        cm.MoveStop();
 
         Vector2 directionToTarget = (target.transform.position - transform.position).normalized;
         UpdateFacing(directionToTarget.x);
@@ -111,8 +115,8 @@ public class Boss : Monster
             if (target == null || isDead) break;
             
             float distance = Vector2.Distance(transform.position, target.transform.position);
-            RaycastHit2D hit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
-            if (hit.collider != null) //벽과 충돌한 경우
+            RaycastHit2D wallHit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
+            if (wallHit.collider != null) //벽과 충돌한 경우
             {
                 Debug.Log("벽과 충돌");
                 break;
@@ -356,7 +360,6 @@ public class Boss : Monster
 
     protected override void FixedUpdateFeat()
     {
-        // 타겟이 없거나 이미 죽었다면 아무것도 하지 않음
         if (target == null || isDead || isUsingSkill) return;
         if (cm == null) Debug.LogError("cm (CharacterMove)이 Null입니다! base.Init()을 확인하세요.");
         if (monsterSO == null) Debug.LogError("monsterSO가 Null입니다! 인스펙터를 확인하세요.");
