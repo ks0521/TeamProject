@@ -16010,7 +16010,6 @@ MonoBehaviour:
   - {fileID: 7453076409144825539}
   - {fileID: 4744669009033646676}
   btnX: {fileID: 1585293123901819996}
-  closeBtn: {fileID: 0}
 --- !u!1 &3333331528887367079
 GameObject:
   m_ObjectHideFlags: 0
@@ -39286,7 +39285,6 @@ GameObject:
   - component: {fileID: 3360311717549671137}
   - component: {fileID: 8943760463784491938}
   - component: {fileID: 5142621003640731150}
-  - component: {fileID: 5771225860904968540}
   m_Layer: 5
   m_Name: Equipment_Popup
   m_TagString: Untagged
@@ -39354,36 +39352,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5771225860904968540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8043461963090677470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Content: {fileID: 193578501633250810}
-  m_Horizontal: 1
-  m_Vertical: 1
-  m_MovementType: 1
-  m_Elasticity: 0.1
-  m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 30
-  m_Viewport: {fileID: 7167453902343124842}
-  m_HorizontalScrollbar: {fileID: 744239187585163561}
-  m_VerticalScrollbar: {fileID: 1650905917939795977}
-  m_HorizontalScrollbarVisibility: 2
-  m_VerticalScrollbarVisibility: 2
-  m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &8078439722503135571
 GameObject:
   m_ObjectHideFlags: 0

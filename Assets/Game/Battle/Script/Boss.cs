@@ -96,7 +96,7 @@ public class Boss : Monster
         //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
         
 
-        float elapsed = 0f;
+        
         //bool hasDamaged = false;
 
         if (spumController != null)
