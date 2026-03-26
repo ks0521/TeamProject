@@ -40,6 +40,7 @@ namespace Base.Managers
         public float RemainTime => ((ChallengeStageRule)stageRule).RemainTime;
         public float RemainTimeRatio => ((ChallengeStageRule)stageRule).RemainTimeRatio;
         public int TargetKillScore => stageRule.KillScore;
+        
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
