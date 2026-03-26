@@ -11,6 +11,9 @@ namespace Base.Data
 {
     public class EventHub : MonoBehaviour, IGameSystem
     {
+        public event Action OnPopupOpened; //팝업창 오픈
+        public void PopupOpen() => OnPopupOpened?.Invoke();
+
         public event Action<StageSO> OnChangeStage; //스테이지 변경
         public void StageChanged(StageSO stage) => OnChangeStage?.Invoke(stage);
         public event Action<StageSO> OnClearStage; //스테이지 클리어
