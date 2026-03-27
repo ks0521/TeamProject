@@ -36,7 +36,6 @@ public class StatusCalculator : MonoBehaviour,IGameSystem
             runtimeStatus.finalBattleStatus.maxHp =
                 runtimeStatus.baseStat.baseBattle.maxHp +
                 runProgressState.statUpgrades.upgradeLevelsByType[StatusType.MaxHp] * stat.increasePerEnhance;
-            PlayerHpChange((int)(runProgressState.statUpgrades.upgradeLevelsByType[StatusType.MaxHp] * stat.increasePerEnhance));
             //플레이어 hp도 동일한 양 증가시켜주기
         }
         else{ Debug.LogWarning($"최대체력 SO 찾지 못함");}
@@ -107,15 +106,9 @@ public class StatusCalculator : MonoBehaviour,IGameSystem
         }
         else{ Debug.LogWarning($"아이템 드랍률 SO 찾지 못함");}
 
+        runtimeStatus.Level = runProgressState.currency.level;
         runtimeStatus.finalRange = runtimeStatus.baseStat.baseAttackRange; //공격 범위는 고정
     }
-    //최대체력 증가 시 동일량만큼 플레이어 HP 회복
-    void PlayerHpChange(int value)
-    {
-        if (GameManager.Instance.TryGetGameSystem<PlayerManager>(out var playerManager)) return;
-        if (playerManager == null) return;
-        Debug.Log("플레이어 최대체력 증가에 따른 회복");
-        playerManager.Player.RecoveryHP(value);
-    }
+
     public int GetOrder() => 0;
 }

@@ -77,6 +77,12 @@ public class Boss : Monster
         isUsingSkill = true;
         isCharging = true;
 
+        if (spumController != null)
+        {
+            spumController.PlayAnimation(PlayerState.IDLE, 0);
+        }
+        cm.MoveStop();
+
         Vector2 directionToTarget = (target.transform.position - transform.position).normalized;
         UpdateFacing(directionToTarget.x);
         float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
@@ -91,35 +97,24 @@ public class Boss : Monster
 
         Debug.Log("돌진 준비 중...");
         await UniTask.Delay(TimeSpan.FromSeconds(skill1WarningDuration), cancellationToken: cts);
+        
         if (atkRange1 != null) atkRange1.SetActive(false);
         if (chargeCollider != null) chargeCollider.enabled = true;
         //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
-        
 
-        float elapsed = 0f;
-        //bool hasDamaged = false;
 
         if (spumController != null)
         {
             spumController.PlayAnimation(PlayerState.ATTACK, 1);
         }
 
-        /*
-        if (target == null)
-        {
-            isUsingSkill = false;
-            if (atkRange1 != null) atkRange1.SetActive(false);
-            return;
-        }
-        */
-
-        elapsed = 0f;
+        float elapsed = 0f;
         bool hasDamaged = false;
 
         while (elapsed < chargeDuration && isCharging)
         {
             if (target == null || isDead) break;
-
+            
             float distance = Vector2.Distance(transform.position, target.transform.position);
             RaycastHit2D wallHit = Physics2D.BoxCast(transform.position + (Vector3)directionToTarget * chargeCollider.size.x / 2f, chargeCollider.size, 0f, directionToTarget, chargeSpeed * Time.fixedDeltaTime, wallLayer);
             if (wallHit.collider != null) //벽과 충돌한 경우
@@ -129,46 +124,20 @@ public class Boss : Monster
             }
 
             cm.ChaseMove(directionToTarget, chargeSpeed);
-
             if (!hasDamaged)
             {
-                // 자식 콜라이더의 실제 월드 위치, 크기, 회전값을 직접 가져옵니다.
                 Vector2 boxWorldPos = chargeCollider.transform.position;
-                Vector2 boxSize = new Vector2(
-                    chargeCollider.size.x * chargeCollider.transform.lossyScale.x,
-                    chargeCollider.size.y * chargeCollider.transform.lossyScale.y
-                );
+                Vector2 boxSize = chargeCollider.size * chargeCollider.transform.lossyScale;
                 float boxAngle = chargeCollider.transform.eulerAngles.z;
 
-                // 해당 영역에 'targetLayer'를 가진 콜라이더가 있는지 '직접' 검사
                 Collider2D hitCheck = Physics2D.OverlapBox(boxWorldPos, boxSize, boxAngle, targetLayer);
-
                 if (hitCheck != null)
                 {
-                    Debug.Log($"돌진 적중! 감지된 대상: {hitCheck.name}");
+                    Debug.Log($"돌진 적중: {hitCheck.name}");
                     target.Hit(skill1Damage);
                     hasDamaged = true;
                 }
             }
-            /*
-            if (chargeCollider.IsTouching(playerCollider))
-            {
-                Debug.Log("돌진으로 피격되었습니다.");
-                SkillAttack(target,1.2f);
-                //target.Hit(skill1Damage);
-
-                // 플레이어 스크립트 가져오기 (character1을 player1로 캐스팅)
-                player1 player = targetScript as player1;
-                if (player != null)
-                {
-                    // 넉백 방향 계산 (몬스터 -> 플레이어 방향)
-                    Vector2 knockbackDir = (target.position - transform.position).normalized;
-                    player.Knockback(knockbackDir, skill1KnockbackForce, skill1KnockbackDuration);
-                }
-                //hasDamaged = true;
-                //break; //충돌 후 몬스터는 이동 중단
-            }
-            */
 
             elapsed += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate(cancellationToken: cts); //다음 프레임까지 대기
@@ -233,7 +202,7 @@ public class Boss : Monster
                 }
             }
         }
-        //sfx.PlayBossSkillSound(); sfx 연결 제한으로 인한 주석처리
+        sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -251,7 +220,7 @@ public class Boss : Monster
 
         if (atkRange3 != null)
         {
-            // 예고 이펙트의 월드 좌표를 설정
+            //예고 이펙트의 월드 좌표를 설정
             atkRange3.transform.position = skillTargetPosition;
             atkRange3.SetActive(true);
         }
@@ -272,7 +241,7 @@ public class Boss : Monster
                 //target.Hit(skill3Damage);
             }
         }
-        //sfx.PlayBossSkillSound(); sfx 미연결로 인한 주석처리
+        sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -392,9 +361,8 @@ public class Boss : Monster
 
     protected override void FixedUpdateFeat()
     {
-        // 타겟이 없거나 이미 죽었다면 아무것도 하지 않음
         if (target == null || isDead || isUsingSkill) return;
-        if (cm == null) Debug.LogError("cm(CharacterMove)이 Null입니다! base.Init()을 확인하세요.");
+        if (cm == null) Debug.LogError("cm (CharacterMove)이 Null입니다! base.Init()을 확인하세요.");
         if (monsterSO == null) Debug.LogError("monsterSO가 Null입니다! 인스펙터를 확인하세요.");
         UpdateFacing(target.transform.position.x - transform.position.x);
 
