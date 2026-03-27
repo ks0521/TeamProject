@@ -41,6 +41,7 @@ namespace Personal.HagYun
         public EquipSkill[] EquipSkillArr => equipSkillArr;
         public EquipSkill this[int index] => equipSkillArr[index];
         protected int skillCnt;
+        public int SkillCnt => skillCnt;
         // skill event
         protected EventHub eventHub;
 
