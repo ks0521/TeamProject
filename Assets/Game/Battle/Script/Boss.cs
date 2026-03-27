@@ -113,7 +113,7 @@ public class Boss : Monster
         }
         */
 
-        float elapsed = 0f;
+        elapsed = 0f;
         bool hasDamaged = false;
 
         while (elapsed < chargeDuration && isCharging)
