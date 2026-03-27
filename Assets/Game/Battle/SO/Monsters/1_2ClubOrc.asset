@@ -15,9 +15,9 @@ MonoBehaviour:
   prefeb: {fileID: 8732892644051693381, guid: 0d466de65ea86f342bda7123aa12a5e2, type: 3}
   key: 9555
   battleStat:
-    maxHp: 30
-    atk: 7
-    def: 0
+    maxHp: 75
+    atk: 8
+    def: 2
     atkSpeed: 1
     moveSpeed: 1
     critChance: 0

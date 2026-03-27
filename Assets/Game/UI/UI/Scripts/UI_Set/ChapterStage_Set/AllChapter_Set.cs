@@ -35,6 +35,7 @@ public class AllChapter_Set : MonoBehaviour
     [SerializeField] StageMonster_Set stageMon;
     [SerializeField] Reward_Set reward;
 
+    [SerializeField] private StageEntry stageEntry;
     private EventHub hub;
     private void OnEnable()
     {
@@ -42,7 +43,7 @@ public class AllChapter_Set : MonoBehaviour
         ShowChapter();
         enter.interactable = false;
     }
-
+    //우선순위 201번 / UIpresenter 우선순위 210번
     public void Init()
     {
         stageManager = GameManager.Instance.GetGameSystem<StageManager>();
@@ -55,7 +56,9 @@ public class AllChapter_Set : MonoBehaviour
         enter.interactable = false;
 
         hub.OnClearStage += EventChain;
+        hub.OnStageChangeClear += UpdateStageChange;
     }
+    /// <summary> 특정 스테이지의 버튼을 눌렀을 때 스테이지(적 정보, 보상정보, 진입버튼 눌렀을 시 이동하는 스테이지) 정보 출력</summary>
     public void EnterStage(int chatperNum, int stageNum, Stage_Set clickStage)
     {
         if (lastSpotligh != null)
@@ -66,16 +69,17 @@ public class AllChapter_Set : MonoBehaviour
         clickStage.Spotlight(true);
         lastSpotligh = clickStage;
 
-        enterChapter = chatperNum;
-        enterStage = stageNum;
+        enterChapter = chatperNum; //진입버튼 누를 때 이동할 챕터 설정
+        enterStage = stageNum; //진입버튼 누를 때 이동할 스테이지 설정
 
-        StageEntry stageEntry = stageManager.GetStageEntry(enterChapter, enterStage);
+        stageEntry = stageManager.GetStageEntry(enterChapter, enterStage); //스테이지 엔트리 불러오기
 
-        var presenter = GameManager.Instance.GetGameSystem<UiPresenter>();
+        var presenter = GameManager.Instance.GetGameSystem<UiPresenter>(); //UIPresenter 스크립트 가져오기
 
         if (presenter != null)
         {
-            presenter.SetChallengeUI(stageEntry.stageSO.type == StageType.Challenge);
+            //도전 / 보스 스테이지면 ChallengeUI 켜기
+            
         }
         if (reward != null)
         {
@@ -131,6 +135,10 @@ public class AllChapter_Set : MonoBehaviour
 
     void BindButton()
     {
+        after.onClick.RemoveAllListeners();
+        before.onClick.RemoveAllListeners();
+        enter.onClick.RemoveAllListeners(); //리스너 중복구독 방지
+        
         after.onClick.AddListener(() => OnClickAfter());
         before.onClick.AddListener(() => OnClickBefore());
         enter.onClick.AddListener(() => OnClickChangeStage());
@@ -155,13 +163,26 @@ public class AllChapter_Set : MonoBehaviour
 
         currentChapter++;
         ShowChapter();
-
     }
+    /// <summary> 버튼 클릭시 스테이지 변경 명령을 보내는 메서드 </summary>
     void OnClickChangeStage()
     {
+        Debug.Log($"OnClickChangeStage 호출 / chapter:{enterChapter} stage:{enterStage} frame:{Time.frameCount}");
         stageManager.ChangeStage(enterChapter, enterStage);
-        
         gameObject.SetActive(false);
     }
-
+    /// <summary> 스테이지 매니저에서 변경 완료된 스테이지 정보 확인해서 챌린지용 UI 키고 끄기
+    /// 꼭 StageSO를 안받고 해당 코드의 StageEntry를 이용해도 괜찮을듯함</summary>
+    public void UpdateStageChange(StageSO stageSo)
+    {
+        if (stageSo.type == StageType.Normal)
+        {
+            GameManager.Instance.GetGameSystem<UiPresenter>().SetChallengeUI(false);
+            return;
+        }
+        GameManager.Instance.GetGameSystem<UiPresenter>().SetChallengeUI(true);
+    }
+    //챌린지 UI 활성 / 비활성화 경로
+    //1. OnClickChangeStage -> StageManager.ChangeStage -> StageManager.EventHub.StageChangeClear -> UpdateStageChange
+    // -> UIPresenter.SetChallengeUI
 }

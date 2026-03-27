@@ -11,8 +11,6 @@ namespace Base.Data
 {
     public class EventHub : MonoBehaviour, IGameSystem
     {
-        public event Action OnButtonClicked; //버튼 클릭
-        public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnPopupOpened; //팝업창 열기
         public void PopupOpened() => OnPopupOpened?.Invoke();
         public event Action OnPopupClosed; //팝업창 닫기
@@ -56,8 +54,8 @@ namespace Base.Data
         public void GetCurrency() => OnGetCurrency?.Invoke(); //사운드 연동용 이벤트
         public event Action OnGetItems;
         public void GetItems() => OnGetItems?.Invoke(); // 사운드 연동용 이벤트
-
-
+        public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
+        public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
         public int GetOrder() => 0;
     }
 }

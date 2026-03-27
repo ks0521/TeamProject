@@ -121,6 +121,14 @@ using Random = UnityEngine.Random;
             monster.OnMonsterKilled -= MonsterKilled;
         }
 
+        public void Clear()
+        {
+            for(int i= monstersList.Count - 1 ; i>=0 ; i--)
+            {
+                monsterPool.ReturnPool(monstersList[i].monsterSO.key,monstersList[i].gameObject);
+                UnRegister(monstersList[i]);
+            }
+        }
         /// <summary> 스테이지 변경으로 인한 기존 스테이지 종료시 실행</summary>
         public void Destroy()
         {
@@ -131,7 +139,7 @@ using Random = UnityEngine.Random;
             {
                 Monster monster = monstersList[i];
                 UnRegister(monster);
-                monster.ForcedReturn(); //모든 몬스터 제거, 초기화
+                monster.ForcedDelete(); //모든 몬스터 제거, 초기화
             }
 
             //player.Reset(); // 플레이어 상태(체력, 버프/디버프 등) 초기화

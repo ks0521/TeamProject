@@ -18,7 +18,7 @@ MonoBehaviour:
     Plane 1'
   chapter: 1
   stage: 1
-  dropTable: {fileID: 11400000, guid: 4d6965a50db67184b93a60495d7a713a, type: 2}
+  dropTable: {fileID: 11400000, guid: d87398cb40a6a4847bd0176edbbdc70b, type: 2}
   preset:
   - monster: {fileID: 11400000, guid: 815629df0fee5c54daa4408678a00052, type: 2}
     weights: 10

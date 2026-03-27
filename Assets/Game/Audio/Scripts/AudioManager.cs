@@ -2,11 +2,7 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
-using Personal.HagYun;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.UI;
 
 //BGMChanger, SkillSoundPlayer를 여기에서 참조
 public class AudioManager : MonoBehaviour, IManager

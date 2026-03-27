@@ -21,8 +21,6 @@ namespace Battle
         protected override float AttackRange => runtimeStatus.finalRange;
         [SerializeField] private StageManager stageManager;
         [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
-
-        public event Action<Player> OnPlayerKilled;
         public override float Hp
         {
             get => hp;
@@ -40,31 +38,19 @@ namespace Battle
                 }
             }
         }
+
+        public int Level => runtimeStatus.Level;
         public override void Init()
         {
             base.Init();
             equipSkillController.Init(this);
-            //runtimeStatus = GetComponent<PlayerRuntimeStatus>(); 
-            //SyncHpAfterManagersReady().Forget();
-            //3.24(규성) : 해당 파트 Init순서의 문제는 PlayerManager를 추가하여 Player초기화 순서를 GameManager에 종속시켜 해결했습니다
         }
 
-        /*async UniTaskVoid SyncHpAfterManagersReady()
+        void Rebirth()
         {
-            // GameManager의 Start()가 실행되고 매니저들의 Init()이 끝날 때까지 넉넉히 대기
-            // 보통 1~2프레임이면 충분합니다.
-            await UniTask.DelayFrame(2);
-
-            if (runtimeStatus != null)
-            {
-                float calculatedHp = CurrentBattleStat.maxHp;
-                if (calculatedHp > 0)
-                {
-                    hp = calculatedHp;
-                    Debug.Log($"매니저 계산 완료! 강화가 적용된 HP로 갱신되었습니다: {hp}");
-                }
-            }
-        }*/
+            isDead = false;
+            Hp = CurrentBattleStat.maxHp;
+        }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
         {
@@ -77,11 +63,11 @@ namespace Battle
 
             if (hub != null && stageManager != null)
             {
-                hub.StageFailed(stageManager.CurStageSO);
+                hub.PlayerDead(this);
             }
 
             DeadMotionAsync().Forget();
-            Debug.Log("스테이지 실패");
+            Debug.Log("플레이어 사망");
         }
 
         public void RecoveryHP(int value)
@@ -103,8 +89,7 @@ namespace Battle
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(1.0f), cancellationToken: cts);
             }
-
-            OnPlayerKilled?.Invoke(this);
+            Rebirth();
         }
 
         async UniTask WaitMotion(string stateName, CancellationToken token)
