@@ -50,6 +50,10 @@ public class AudioManager : MonoBehaviour, IManager
 
             hub.OnButtonClicked -= _sfxPlayer.PlayClickButtonSound;
             hub.OnButtonClicked += _sfxPlayer.PlayClickButtonSound;
+            hub.OnPopupOpened -= _sfxPlayer.PlayPopupOpenSound;
+            hub.OnPopupOpened += _sfxPlayer.PlayPopupOpenSound;
+            hub.OnPopupClosed -= _sfxPlayer.PlayPopupCloseSound;
+            hub.OnPopupClosed += _sfxPlayer.PlayPopupCloseSound;
 
             hub.OnMonsterHit -= _sfxPlayer.PlayHitSound;
             hub.OnMonsterHit += _sfxPlayer.PlayHitSound;
@@ -68,6 +72,10 @@ public class AudioManager : MonoBehaviour, IManager
             hub.OnLevelChange -= PlayLevelupSound;
             hub.OnLevelChange += PlayLevelupSound;
 
+            hub.OnSkillSet -= PlayAddSkillSound;
+            hub.OnSkillSet += PlayAddSkillSound;
+            hub.OnSkillUnset -= PlayUnaddSkillSound;
+            hub.OnSkillUnset += PlayUnaddSkillSound;
             Debug.Log("AudioManager: 모든 효과음 이벤트 연결 완료");
         }
     }
@@ -200,11 +208,11 @@ public class AudioManager : MonoBehaviour, IManager
 
 
     //스킬창 효과음(임시로 sfxPlayer 배정, 추후 바뀔 수 있음)
-    public void PlayAddSkillSound() //스킬 등록 및 교체
+    public void PlayAddSkillSound(int order) //스킬 등록 및 교체
     {
         _sfxPlayer?.PlayAddSkillSound();
     }
-    public void PlayUnaddSkillSound()
+    public void PlayUnaddSkillSound(int order)
     {
         _sfxPlayer?.PlayUnaddSkillSound();
     }
