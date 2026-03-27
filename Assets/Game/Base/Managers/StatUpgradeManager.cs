@@ -1,5 +1,6 @@
 using Base.Data;
 using Base.Save;
+using Battle;
 using Growth.StatUpgrade;
 using UnityEngine;
 
@@ -11,11 +12,13 @@ namespace Base.Managers
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
         private StatusCalculator calculator;
         private StatusSO statUpgradeConfig;
+        private EventHub eventHub;
 
         public void Init()
         {
             statUpgradeConfig = GameDataProvider.Instance.hub.statusTable;
             calculator = GameManager.Instance.GetGameSystem<StatusCalculator>();
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         }
 
         public int GetOrder()
@@ -75,10 +78,20 @@ namespace Base.Managers
 
             Progress.statUpgrades.upgradeLevelsByType[statType] += upgradeCount;
             Progress.currency.statStone -= requireCost;
-            
+            eventHub.CurrencyChange(CurrencyType.STATSTONE,Progress.currency.statStone);
             Debug.Log($"{statType}스탯 {upgradeCount}번 강화, {requireCost}강화석 사용, 남은 강화석 : {Progress.currency.statStone} " +
                       $"\n {statType}스탯 강화횟수 : {Progress.statUpgrades.upgradeLevelsByType[statType]}(+{upgradeCount})");
             calculator.Calculate(Progress);
+            
+            if (statType == StatusType.MaxHp)
+            {
+                int healAmount = (int)(upgradeCount * statEntry.increasePerEnhance);
+
+                if (GameManager.Instance.TryGetGameSystem<PlayerManager>(out var playerManager) && playerManager != null)
+                {
+                    playerManager.Player.RecoveryHP(healAmount);
+                }
+            }
             return true;
         }
     }

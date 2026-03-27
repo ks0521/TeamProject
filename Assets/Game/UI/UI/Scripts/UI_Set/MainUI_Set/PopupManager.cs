@@ -25,6 +25,7 @@ namespace Game_UI.Scripts.PopupManager
 
         [SerializeField] private GameObject clearPop;
         [SerializeField] private GameObject failPop;
+        [SerializeField] private GameObject deadPop;
 
         private Stack<GameObject> popupStack = new();
 
@@ -40,6 +41,7 @@ namespace Game_UI.Scripts.PopupManager
         [Header("닫는 버튼")]
         [SerializeField] private Button abilityCloseBtn;
 
+        private StageManager stagemanager;
         private void Awake()
         {
             if (instance == null)
@@ -71,7 +73,7 @@ namespace Game_UI.Scripts.PopupManager
         public void Init()
         {
             hub = GameManager.Instance.GetGameSystem<EventHub>();
-
+            stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
             if (equipmentPop != null) // 해당 코드들은 아직 스크립트가 아직 없어서 이렇게 해뒀습니다.
             {
                 equipmentPop.SetActive(false);
@@ -90,7 +92,6 @@ namespace Game_UI.Scripts.PopupManager
                 gameEndPop.SetActive(false);
             }
 
-
             BindAllButton();
             popupStack.Clear();
 
@@ -99,10 +100,19 @@ namespace Game_UI.Scripts.PopupManager
 
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
+            hub.OnDeadPlayer += PlayerDeadEventChain;
         }
 
         public int GetOrder() => 201;
 
+        void PlayerDeadEventChain(Character character)
+        {
+            if (stagemanager.CurStageSO == null) return;
+            if (stagemanager.CurStageSO.type != StageType.Normal) return;
+            OpenPopup(deadPop);
+
+            StartCoroutine(FadeOutPopup(deadPop, 3f));
+        }
         void ClearEventChain(StageSO stage)
         {
             OpenPopup(clearPop);
@@ -207,15 +217,9 @@ namespace Game_UI.Scripts.PopupManager
             skillBtn.onClick.AddListener(() => OpenPopup(skillPop.gameObject));
             equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
             dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
-
-
-
+            
             abilityCloseBtn.onClick.AddListener(() => ClosePopup(abilityPop.gameObject));
-
         }//버튼에 함수 넣기
-
-
-
     }
 
 }

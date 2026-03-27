@@ -2,10 +2,6 @@ using Base.Data;
 using Base.Managers;
 using Base.Save;
 using Battle;
-using Growth.StatUpgrade;
-using System;
-using System.Linq;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 namespace UI.Scripts.UiPresenter
 {
@@ -25,8 +21,8 @@ namespace UI.Scripts.UiPresenter
 
         [Header("챌린지 모드")]
         [SerializeField] GameObject challengePanel;
-        [SerializeField] Hp_Set timer;
-        [SerializeField] Hp_Set monsterKill;
+        [SerializeField] SetViewer timer;
+        [SerializeField] SetViewer monsterKill;
 
         private PlayerProgressManager manager;
         private EventHub hub;
@@ -61,6 +57,7 @@ namespace UI.Scripts.UiPresenter
             if (player != null)
             {
                 hp.SetHp(player.Hp, player.MaxHp);
+                LvText.SetLv(((Player)player).Level);
             }
 
             foreach (var ui in mainUItype)
@@ -100,15 +97,11 @@ namespace UI.Scripts.UiPresenter
 
         private void Update()
         {
-            UpdateChallengeUI();
-        }
-
-        void UpdateChallengeUI()
-        {
-            if (!challengePanel.activeSelf) return;
-            
-            timer.SetHp(currenthp:stageManager.RemainTime , maxhp:stageManager.RemainTimeRatio);
-            monsterKill.SetHp(stageManager.TargetKillScore, stageManager.CurStageSO.targetKillScore);
+            if (stageManager.TryGetChallengeData(out var data))
+            {
+                timer.SetTime(data.maxTime, data.currentTime);
+                monsterKill.UpdateKillText(target : data.targetKill,current: data.currentKill);
+            }
         }
         //챌린지 전용 UI 활성화 / 비활성화
         public void SetChallengeUI(bool isCheck)
