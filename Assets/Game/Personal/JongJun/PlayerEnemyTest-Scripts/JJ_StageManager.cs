@@ -132,7 +132,7 @@ namespace Personal_Jongjun
         {
             foreach (var monster in monstersList)
             {
-                monster.ForcedReturn(); //모든 몬스터 제거, 초기화
+                monster.ForcedDelete(); //모든 몬스터 제거, 초기화
             }
             //player.Reset(); // 플레이어 상태(체력, 버프/디버프 등) 초기화
             //AudioManager.StopBattle() //맵 관련 효과음(스킬 효과음 등..) 정지
