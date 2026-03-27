@@ -18,6 +18,7 @@ public class Test : MonoBehaviour
 
     void Update()
     {
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("저장 입력");
@@ -40,5 +41,6 @@ public class Test : MonoBehaviour
         {
             runProgressState = DataConverter.SaveToRuntime(saveData);
         }
+        #endif
     }
 }

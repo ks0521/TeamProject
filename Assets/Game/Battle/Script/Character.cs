@@ -160,7 +160,7 @@ namespace Battle
             if (target == null|| !canAtk || isDead || isAtkCooltime) return;
 
             AtkCooltimeTask().Forget();
-            Debug.Log($"{name} 이 {target.name}에게 일반공격!");
+            //Debug.Log($"{name} 이 {target.name}에게 일반공격!");
             if (spumController != null)
             {
                 spumController.PlayAnimation(PlayerState.ATTACK, 0);
@@ -180,7 +180,7 @@ namespace Battle
             if (target == null|| !canAtk || isDead || isAtkCooltime) return;
 
             AtkCooltimeTask().Forget();
-            Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
+            //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
 
             float resultDmg = CurrentBattleStat.atk * multiplier;
             if (IsCriticalChance())

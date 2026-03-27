@@ -2,16 +2,8 @@ using Base.Data;
 using Base.Managers;
 using Base.Save;
 using Growth.StatUpgrade;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Scripts.Ability
@@ -30,8 +22,7 @@ namespace UI.Scripts.Ability
         [Header("곱하기 버튼")]
         [SerializeField] private Button_Set btnX;
 
-        [Header("닫는 버튼")]
-        [SerializeField] private Button closeBtn;
+        
         private enum XState
         {
             X1, X10, X100

@@ -1,10 +1,7 @@
 ﻿using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace Personal.HagYun
 {

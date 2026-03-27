@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Base.Data;
 using Base.Save;
 using Battle;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 namespace Base.Managers
@@ -16,16 +18,21 @@ namespace Base.Managers
         public StageSO stageSO; //해당 챕터 - 스테이지의 SO
         public StageType type; //스테이지의 도전상태(일반, 도전, 잠금)
     }
-
+    
+    public struct ChallengeUIData
+    {
+        public float currentTime;
+        public float maxTime;
+        public int currentKill;
+        public int targetKill;
+    }
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
     public class StageManager : MonoBehaviour, IManager
     {
-        [Header("디버그용")] public int testChapter;
-        public int testStage;
-        public StageEntry testEntry;
+        [Header("디버그용")] 
         public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
-        [Header("실사용")] private StageRule stageRule;
-
+        [Header("실사용")] 
+        private StageRule stageRule;
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
         private int curChapter = 0;
         private int curStage = 0;
@@ -37,9 +44,7 @@ namespace Base.Managers
         [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         [SerializeField] private BoxCollider2D spawnArea;
         private EventHub eventHub;
-        public float RemainTime => ((ChallengeStageRule)stageRule).RemainTime;
-        public float RemainTimeRatio => ((ChallengeStageRule)stageRule).RemainTimeRatio;
-        public int TargetKillScore => stageRule.KillScore;
+        private bool isStageResultProcessing;
         
         public void Init()
         {
@@ -58,6 +63,8 @@ namespace Base.Managers
         /// <param name="selectedStage">변경하려는 스테이지</param>
         public void ChangeStage(int selectedChapter, int selectedStage)
         {
+            Debug.Log($"ChangeStage 호출 / {selectedChapter}-{selectedStage} / frame:{Time.frameCount}");
+
             //현재 도전 스테이지보다 더 나중 스테이지 진행시(잠겨있는 스테이지 입장 시도 시) 오류 처리
             if (selectedChapter > stageProgress.nextChallengeChapter ||
                 (selectedChapter == stageProgress.nextChallengeChapter &&
@@ -73,6 +80,14 @@ namespace Base.Managers
                 return;
             }
 
+            isStageResultProcessing = false;
+            eventHub.OnDeadPlayer -= OnPlayerDie;
+
+            if (stageRule is ChallengeStageRule oldChallengeRule)
+            {
+                oldChallengeRule.ChallengeSuccess -= OnChallengeSucceeded;
+                oldChallengeRule.ChallengeFail -= OnChallengeFailed;
+            }
             if (selectedChapter == stageProgress.nextChallengeChapter &&
                 selectedStage == stageProgress.nextChallengeStage)
             {
@@ -106,12 +121,15 @@ namespace Base.Managers
                 stageProgress = SelectNormalStage(stageSO.chapter, stageSO.stage);
                 stageRule = new NormalStageRule();
                 stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
+                eventHub.OnDeadPlayer += OnPlayerDie;
             }
             else if (stageSO.type == StageType.Challenge || stageSO.type == StageType.Boss)
             {
                 stageRule = new ChallengeStageRule();
                 stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
                 ((ChallengeStageRule)stageRule).ChallengeSuccess += OnChallengeSucceeded;
+                ((ChallengeStageRule)stageRule).ChallengeFail += OnChallengeFailed;
+                eventHub.OnDeadPlayer += OnPlayerDie;
             }
 
             stageRule.Init(stageSO);
@@ -123,6 +141,7 @@ namespace Base.Managers
                 stage.canSpawning = false;
                 Debug.Log("스테이지 적 스폰 비활성화됨");
             }
+            eventHub.StageChangeClear(stageSO);
         }
 
         /// <summary> 특정 챕터 - 스테이지의 상태를 확인</summary>
@@ -145,6 +164,7 @@ namespace Base.Managers
             else if (compare == 0)
             {
                 entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                Debug.Log(entry.stageSO);
                 if (entry.stageSO != null)
                 {
                     entry.type = StageType.Boss;
@@ -222,31 +242,90 @@ namespace Base.Managers
         {
             Debug.Log("F1 : 스테이지 진입 테스트 / F2 : 스테이지 엔트리 테스트 ");
         }
-
-        private void Update()
+        /// <summary> 스테이지 몬스터 스폰 멈추기</summary>
+        private void StopCurrentStage()
         {
-            if (Input.GetKeyDown(KeyCode.F1))
+            if (stage != null)
             {
-                Debug.Log($"스테이지 진입 테스트 : {testChapter}, {testStage}");
-                ChangeStage(testChapter, testStage);
+                stage.canSpawning = false;
+                stage.Clear();
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
-            {
-                testEntry = GetStageEntry(testChapter, testStage);
-                Debug.Log($"스테이지 엔트리 테스트");
-            }
+            stageRule?.Destroy();
+            stageRule = null;
         }
-
         private void OnChallengeSucceeded(StageSO clearStage)
+        {
+            Debug.Log("스테이지 클리어 시도");
+            if (isStageResultProcessing) return;
+            isStageResultProcessing = true;
+
+            StopCurrentStage();
+            DelayClear(clearStage, 3f, this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        async UniTaskVoid DelayClear(StageSO clearStage, float delay, CancellationToken token)
         {
             Debug.Log("스테이지 클리어, 클리어 기록이 저장됩니다. ");
             eventHub.StageCleared(clearStage);
             stageProgress = ProgressChallengeStage(clearStage); 
+            await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
             Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
+        
+        private void OnChallengeFailed(StageSO failedStage)
+        {
+            if (isStageResultProcessing) return;
+            isStageResultProcessing = true;
 
+            StopCurrentStage();
+            DelayFail(failedStage, 3f, this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        async UniTaskVoid DelayFail(StageSO failedStage, float delay, CancellationToken token)
+        {
+            Debug.Log("스테이지 실패, 이전 스테이지로 돌아갑니다. ");
+            eventHub.StageFailed(failedStage);
+            await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+            Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
+            ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
+        }
+        /// <summary> 일반 스테이지에서 플레이어 죽었을 때 부활과정 </summary>
+        /// <param name="character"></param>
+        void OnPlayerDie(Character character)
+        {
+            if (stageSO == null) return;
+
+            if (stageSO.type == StageType.Normal)
+            {
+                DelayRebirth(3f, this.GetCancellationTokenOnDestroy()).Forget();
+                return;
+            }
+
+            OnChallengeFailed(stageSO);
+        }
+        /// <summary> 일반스테이지 부활 딜레이</summary>
+        async UniTaskVoid DelayRebirth(float delay, CancellationToken token)
+        {
+            Debug.Log($"스테이지 초기화, {delay}초 후 몬스터가 다시 생성됩니다. ");
+            stage.canSpawning = false;
+            stage.Clear();
+            await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+            stage.canSpawning = true;
+        }
+        public bool TryGetChallengeData(out ChallengeUIData data)
+        {
+            data = default;
+            if (stageRule is not ChallengeStageRule challengeStageRule)
+            {
+                return false;
+            }
+
+            data.currentKill = challengeStageRule.KillScore;
+            data.targetKill = stageSO.targetKillScore;
+            data.currentTime = challengeStageRule.RemainTime;
+            data.maxTime = stageSO.deadLine;
+            return true;
+        }
 
         /// <summary> input chapter - stage 가 base chapter - stage보다 빠른지 느린지 판별</summary>
         /// <returns>input chapter - stage가 base chapter - stage보다 뒤라면 양수, 같다면 0 , 앞이라면 음수</returns>
@@ -256,5 +335,7 @@ namespace Base.Managers
                 return inputChapter.CompareTo(baseChapter);
             return inputStage.CompareTo(baseStage);
         }
+
+        
     }
 }
