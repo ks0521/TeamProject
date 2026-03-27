@@ -15,6 +15,7 @@ public class SkillSoundPlayer : MonoBehaviour
     }
     void Update()
     {
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             PlayNormalAttackSound();
@@ -31,6 +32,7 @@ public class SkillSoundPlayer : MonoBehaviour
         {
             PlaySkillHitSound();
         }
+        #endif
     }
 
 

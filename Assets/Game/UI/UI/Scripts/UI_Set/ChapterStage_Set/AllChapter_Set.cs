@@ -135,6 +135,10 @@ public class AllChapter_Set : MonoBehaviour
 
     void BindButton()
     {
+        after.onClick.RemoveAllListeners();
+        before.onClick.RemoveAllListeners();
+        enter.onClick.RemoveAllListeners(); //리스너 중복구독 방지
+        
         after.onClick.AddListener(() => OnClickAfter());
         before.onClick.AddListener(() => OnClickBefore());
         enter.onClick.AddListener(() => OnClickChangeStage());
@@ -163,6 +167,7 @@ public class AllChapter_Set : MonoBehaviour
     /// <summary> 버튼 클릭시 스테이지 변경 명령을 보내는 메서드 </summary>
     void OnClickChangeStage()
     {
+        Debug.Log($"OnClickChangeStage 호출 / chapter:{enterChapter} stage:{enterStage} frame:{Time.frameCount}");
         stageManager.ChangeStage(enterChapter, enterStage);
         gameObject.SetActive(false);
     }

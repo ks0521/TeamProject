@@ -2,16 +2,8 @@ using Base.Data;
 using Base.Managers;
 using Base.Save;
 using Growth.StatUpgrade;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Scripts.Ability

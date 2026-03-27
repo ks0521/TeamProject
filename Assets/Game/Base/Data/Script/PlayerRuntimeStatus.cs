@@ -8,6 +8,7 @@ public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
     public PlayerBaseStatusSO baseStat;
     public BattleStat finalBattleStatus;
     public RewardStat finalRewardStatus;
+    public int Level;
     public float finalRange;
     public float finalAttackSpeed;
     // Start is called before the first frame update

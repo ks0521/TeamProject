@@ -28,8 +28,8 @@ MonoBehaviour:
     currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
     chance: 0.9
     itemSO: {fileID: 0}
-    minAmount: 50
-    maxAmount: 55
+    minAmount: 100
+    maxAmount: 120
   - rewardType: 0
     currencyType: 2
     currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}

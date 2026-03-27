@@ -55,12 +55,11 @@ namespace Battle
             targetTransform = playerRef.transform;
         }
         /// <summary>스테이지 변경등의 이유로 사라질 때 실행</summary>
-        public void ForcedReturn()
+        public void ForcedDelete()
         {
             Debug.Log("오브젝트 강제 정리");
             Destroy(gameObject);
         }
-
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
         {
@@ -75,7 +74,6 @@ namespace Battle
         {
             //var cts = this.GetCancellationTokenOnDestroy();
             //3.24(규성) : 몬스터는 사망할때 Destroy가 아닌 비활성화이기 때문에 해당 토큰은 사용이 제한됩니다
-            Debug.Log("몬스터 처치됨");
             state = CharacterState.Dead;
             if (spumController != null)
             {
