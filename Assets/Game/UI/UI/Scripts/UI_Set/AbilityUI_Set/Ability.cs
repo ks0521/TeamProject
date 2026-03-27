@@ -22,8 +22,7 @@ namespace UI.Scripts.Ability
         [Header("곱하기 버튼")]
         [SerializeField] private Button_Set btnX;
 
-        [Header("닫는 버튼")]
-        [SerializeField] private Button closeBtn;
+        
         private enum XState
         {
             X1, X10, X100

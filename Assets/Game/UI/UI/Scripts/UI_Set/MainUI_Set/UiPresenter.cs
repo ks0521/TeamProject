@@ -46,6 +46,7 @@ namespace UI.Scripts.UiPresenter
             //자동전투 버튼 미구현
         }
 
+      
         public int GetOrder() => 210;
 
         void RefreshAll()
