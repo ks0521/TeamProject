@@ -34,16 +34,16 @@ public class Reward_Set : MonoBehaviour
             SetSlot(ref currentSlot , exp);
         }
         
-        foreach (var item in dropTable.dropList)
+        foreach (var reward in dropTable.dropList)
         {
-            switch (item.rewardType)
+            switch (reward.rewardType)
             {
                 case DropRewardType.Currency:
-                    SetSlot(ref currentSlot, item.currencySO.img);
+                    SetSlot(ref currentSlot, reward.currencySO.img);
                     break;
                
                 case DropRewardType.Item:
-                    SetSlot(ref currentSlot, item.itemSO.icon);
+                    SetSlot(ref currentSlot, reward.itemSO.icon);
                     break;
             }
         }

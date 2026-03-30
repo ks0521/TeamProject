@@ -146,7 +146,7 @@ namespace Battle
                 if (stageManager == null) return false;
             }
 
-            stageMonsters = stageManager.GetStageMonsters();
+            stageMonsters = stageManager.Monsters;
             float minDist = Single.MaxValue;
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)

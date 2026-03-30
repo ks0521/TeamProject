@@ -4,18 +4,18 @@ using Growth.StatUpgrade;
 
 namespace Base.Save
 {
-    /// <summary> GameSaveData와의 차이는 리스트 -> 딕셔너리 변환 </summary>
+    /// <summary> 게임 내에서 사용하는 진행도, GameSaveData와의 차이는 리스트 -> 딕셔너리 변환 </summary>
     [Serializable]
     public class RuntimeProgressState 
     {
-        public StageProgressState stage = new();
-        public PlayerCurrencyState currency = new();
-        public ItemInventoryState itemInventory = new();
-        //public RuntimeEquipmentInventoryData equipmentInventory = new(); mvp에선 미구현
-        //public PlayerEquipmentData equipment = new(); mvp에선 미구현
-        public RuntimeStatUpgradeData statUpgrades = new();
-        public RuntimeSkillData skillProgress = new();
-        public LastSessionTime lastSession = new();
+        public StageProgressState stage = new(); //플레이어 스테이지 진행 정보
+        public PlayerCurrencyState currency = new(); //플레이어 재화 획득 정보
+        public ItemInventoryState itemInventory = new(); //플레이어 인벤토리 정보
+        public RuntimeEquipmentInventoryState equipmentInventory = new(); //플레이어 장비창 정보
+        public PlayerEquipmentState equipment = new(); //플레이어 장착 장비 정보
+        public RuntimeStatUpgradeData statUpgrades = new(); //플레이어 스탯 업그레이드 정보
+        public RuntimeSkillData skillProgress = new(); // 플레이어 스킬 획득정보
+        public LastSessionTime lastSession = new(); //플레이어 마지막 접속시간 정보
     }
     //인벤토리 내 아이템 정보
     [Serializable]public class ItemInventoryState
@@ -24,7 +24,7 @@ namespace Base.Save
         public Dictionary<int, int> ownedItemCounts;
     }
     //장비 정보
-    [Serializable]public class EquipmentInventoryState
+    [Serializable]public class RuntimeEquipmentInventoryState
     {
         //key : 장비 키, value : 장비 상세(개수 + 강화 + 해금여부)
         public Dictionary<int, EquipmentEntryState> equipmentEntries;
@@ -42,11 +42,11 @@ namespace Base.Save
         //key : 스킬 키, value : 스킬 레벨
         public Dictionary<int, int> skillProgressState; 
     }
-    //장비 상세정보
+    /// <summary> 특정 장비의 상세 정보(개수, 해금여부, 강화수치)</summary>
     [Serializable]public class EquipmentEntryState
     {
-        public int enhancementLevel; //강화 수치
         public int ownedCount; //개수
         public bool isDiscovered; //해금 여부
+        public int enhancementLevel; //강화 수치
     }
 }

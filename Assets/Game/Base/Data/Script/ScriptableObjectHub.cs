@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Base.Data;
 using Battle;
+using Growth.Equipment;
 using Growth.StatUpgrade;
 using Reward;
 using Unity.VisualScripting;
@@ -16,4 +17,6 @@ public class ScriptableObjectHub : ScriptableObject
     public StatusSO statusTable;
     public SkillDictionarySO SkillTable;
     public CurrencyDataBaseSO currencyTable;
+    public EquipmentDictionarySO equipmentTable;
+    public ItemDictionarySO itemTable;
 }
