@@ -17,15 +17,16 @@ namespace Game_UI.Scripts.PopupManager
         [Header("팝업")]
         [SerializeField] private Ability abilityPop;
         [SerializeField] private AllChapter_Set chapterPop;
-
         [SerializeField] private GameObject skillPop;
         [SerializeField] private GameObject equipmentPop;
         [SerializeField] private GameObject dungeonPop;
-        [SerializeField] private GameObject gameEndPop;
 
         [SerializeField] private GameObject clearPop;
         [SerializeField] private GameObject failPop;
         [SerializeField] private GameObject deadPop;
+
+        [SerializeField] private GameObject settingPop;
+        [SerializeField] private GameObject gameEndPop;
 
         private Stack<GameObject> popupStack = new();
 
@@ -35,6 +36,7 @@ namespace Game_UI.Scripts.PopupManager
         [SerializeField] private Button skillBtn;
         [SerializeField] private Button equipmentBtn;
         [SerializeField] private Button dungeonBtn;
+        [SerializeField] private Button settingBtn;
 
         private EventHub hub;
 
@@ -147,7 +149,7 @@ namespace Game_UI.Scripts.PopupManager
                 yield return null;
             }
             popup.SetActive(false);
-        }//팝업 점점 사라지게 하는 코루틴
+        }//클리어 , 실패 팝업 점점 사라지게 하는 코루틴
         void OpenPopup(GameObject pop)
         {
             if (pop == null)
@@ -217,7 +219,8 @@ namespace Game_UI.Scripts.PopupManager
             skillBtn.onClick.AddListener(() => OpenPopup(skillPop.gameObject));
             equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
             dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
-            
+            settingBtn.onClick.AddListener(() => OpenPopup(settingPop.gameObject));
+
             abilityCloseBtn.onClick.AddListener(() => ClosePopup(abilityPop.gameObject));
         }//버튼에 함수 넣기
     }
