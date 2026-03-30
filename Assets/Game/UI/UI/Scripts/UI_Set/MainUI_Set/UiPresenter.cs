@@ -24,11 +24,12 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] SetViewer timer;
         [SerializeField] SetViewer monsterKill;
 
-        private PlayerProgressManager manager;
-        private EventHub hub;
-        private StageManager stageManager;
+        [SerializeField] private PlayerProgressManager manager;
+        [SerializeField] private EventHub hub;
+        [SerializeField ]private StageManager stageManager;
         public void Init()
         {
+            Debug.Log("버그 확인");
             manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
@@ -102,9 +103,6 @@ namespace UI.Scripts.UiPresenter
             {
                 timer.SetTime(data.maxTime, data.currentTime);
                 monsterKill.UpdateKillText(target : data.targetKill,current: data.currentKill);
-
-                Debug.Log(timer);
-                Debug.Log(monsterKill);
             }
         }
         //챌린지 전용 UI 활성화 / 비활성화
