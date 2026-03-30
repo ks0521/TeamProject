@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9d57c92d5904649a7945a47bc6f41a, type: 3}
   m_Name: StatStone
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: db486facc31c54bbb9622839a0aaed77, type: 3}
+  icon: {fileID: 21300000, guid: 1c3ae6ba06ea4445091992cababf1c05, type: 3}
   currencyName: 
   explain: "\uC2A4\uD0EF\uC744 \uAC15\uD654\uD558\uB294\uB370 \uC0AC\uC6A9\uD560
     \uC218 \uC788\uB2E4"

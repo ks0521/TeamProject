@@ -12,7 +12,7 @@ namespace UI.Scripts.Ability
     {
         private StatUpgradeManager manager;
         private EventHub hub;
-
+        private GameDataProvider gameDB;
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
 
@@ -48,6 +48,7 @@ namespace UI.Scripts.Ability
         {
             manager = GameManager.Instance.GetGameSystem<StatUpgradeManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
+            gameDB = GameManager.Instance.GetGameSystem<GameDataProvider>();
             //ReFreshAllUI(1); //3.23(규성) : 처음에 팝업 열려있는게 아니라 refresh할 필요가 없을것 같아 닫아두었습니다
             BindAllButtons();
             ChangeState(XState.X1);
@@ -68,7 +69,7 @@ namespace UI.Scripts.Ability
             foreach (var stat in statItemViews)
             {
                 StatusType type = stat.statusType;
-                GameData.StatusDB.TryGetStatEntry(type, out var entry);
+                gameDB.statusTable.TryGetStatEntry(type, out var entry);
                 stat.BindLevelUp(() => OnClickLevelUp(type , entry));
             }
             btnX.Xbtn[0].onClick.AddListener(() => ChangeState(XState.X1));
@@ -88,7 +89,7 @@ namespace UI.Scripts.Ability
         }//모든 UI 새로고침
         void ReFreshStatUI(StatusType type)
         {
-            if (!GameData.StatusDB.TryGetStatEntry(type, out var statEntry))
+            if (!gameDB.statusTable.TryGetStatEntry(type, out var statEntry))
             {
                 Debug.Log($"{type} : statEntry를 찾지 못함");
                 return;

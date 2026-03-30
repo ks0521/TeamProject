@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4784891572618876065}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 170.61415, y: 23.929474, z: -137.29437}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -44,4 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33b5f3281bded6846bb7805b37280f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hub: {fileID: 11400000, guid: 3759ba4c313c0c143aa6d5a9fd4a6212, type: 2}
+  dropTable: {fileID: 11400000, guid: 39798bc83fa5b324ba917f17ab406b07, type: 2}
+  stageTable: {fileID: 11400000, guid: abc9528dc68756b4e91ba7d63c12cc68, type: 2}
+  statusTable: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
+  SkillTable: {fileID: 11400000, guid: cfca264f92d1a5942a73aeec219d2f5d, type: 2}
+  currencyTable: {fileID: 11400000, guid: 5c6df047895f0bd4f9f11fe255a93a7f, type: 2}
+  equipmentTable: {fileID: 11400000, guid: f9e60244b7a94fe4ab8bb01c1a36ee55, type: 2}
+  itemTable: {fileID: 11400000, guid: 902e7e3a61a7b154fb882bb78026e76f, type: 2}

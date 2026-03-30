@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base.Data;
 using Base.Managers;
 using Battle;
+using Growth.Equipment;
 using Growth.StatUpgrade;
 using Reward;
 using UnityEngine;
@@ -14,7 +15,13 @@ namespace Base.Data
     public class GameDataProvider : MonoBehaviour, IGameSystem
     {
         public static GameDataProvider Instance; //MVP 완료 후 제거
-        public ScriptableObjectHub hub;
+        public DropTableDictionarySO dropTable;
+        public StageDictionarySO stageTable;
+        public StatusSO statusTable;
+        public SkillDictionarySO SkillTable;
+        public CurrencyDataBaseSO currencyTable;
+        public EquipmentDictionarySO equipmentTable;
+        public ItemDictionarySO itemTable;
 
         void Awake()
         {
@@ -27,14 +34,5 @@ namespace Base.Data
         }
 
         public int GetOrder() => 0; //다른 매니저에서 참고하기 때문에 가장 우선 활성화
-
-    }
-    /// <summary> GameDataProvider내 허브의 값들을 편하게 사용할 수 있게 만들어놓은 클래스</summary>
-    public static class GameData
-    {
-        public static DropTableDictionarySO DropDB => GameDataProvider.Instance.hub.dropTable;
-        public static StageDictionarySO StageDB => GameDataProvider.Instance.hub.stageTable;
-        public static StatusSO StatusDB => GameDataProvider.Instance.hub.statusTable;
-        public static SkillDictionarySO SkillDB => GameDataProvider.Instance.hub.SkillTable;
     }
 }
