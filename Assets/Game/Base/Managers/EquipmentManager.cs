@@ -3,11 +3,8 @@ using Base.Managers;
 using Base.Save;
 using Growth.Equipment;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Base.Manager
 {
@@ -30,7 +27,7 @@ namespace Base.Manager
     /// <summary> 플레이어가 가지고 있는 장비를 관리하고 장비 강화, 장착 시 스탯 변화등을 관리한다. </summary>
     public class EquipmentManager : MonoBehaviour, IManager
     {
-        [SerializeField] private Growth.Equipment.EquipmentSO equipItem;
+        [SerializeField] private EquipmentSO equipItem;
         private ScriptableObjectHub dictionarys;
         private RuntimeProgressState runtimeState;
         private EventHub eventHub;
@@ -41,14 +38,24 @@ namespace Base.Manager
         public List<EquipmentCatalog> AllEquipmentCatalogs()
         {
             List<EquipmentCatalog> catalogs = new();
-            foreach (var equipment in runtimeState.equipmentInventory.equipmentEntries)
+            //장비 딕셔너리에 있는 모든 아이템 순회
+            foreach (var equipment in dictionarys.equipmentTable.allEquipments)
             {
+                //장비 딕셔너리에 있는 장비를 플레이어가 가지고 있을 때
+                if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
+                {
+                    catalogs.Add(new EquipmentCatalog(
+                        equipment.key,
+                        equipment,
+                        value));
+                    continue;
+                }
                 catalogs.Add(new EquipmentCatalog(
-                    equipment.Key,
-                    dictionarys.equipmentTable.GetSO(equipment.Key),
-                    equipment.Value));
+                    equipment.key,
+                    equipment,
+                    GetDefaultEquipmentEntryState()));
             }
-            return new List<EquipmentCatalog>();
+            return catalogs;
         }
         /// <summary> 찾으려 하는 특정 키의 장비 정보를 확인함</summary>
         /// <returns>있으면 true, 없으면 false (catalog = null)</returns>
@@ -64,7 +71,12 @@ namespace Base.Manager
             catalog = new(key, equip, state);
             return true;
         }
-        
+        /// <summary> 기본 상태(미획득) 장비의 EquipmentEntryState 획득용 </summary>
+        /// <returns></returns>
+        EquipmentEntryState GetDefaultEquipmentEntryState()
+        {
+            return new EquipmentEntryState() { ownedCount = 0, enhancementLevel = 0, isDiscovered = false };
+        }
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();

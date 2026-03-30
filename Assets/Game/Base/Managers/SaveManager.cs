@@ -67,8 +67,8 @@ namespace Base.Managers
                     gold = 0,
                     statStone = 0
                 },
-                //equipmentInventory = new PlayerEquipmentInventoryData(),
-                //equipment = new PlayerEquipmentData(),
+                equipmentInventory = new EquipmentInventoryState(),
+                equipment = new PlayerEquipmentState(),
                 itemInventory = new PlayerItemInventoryState()
                 {
                     owneditemCounts = new()
