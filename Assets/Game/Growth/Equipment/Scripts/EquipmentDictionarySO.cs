@@ -1,31 +1,32 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Growth.Equipment
 {
     [CreateAssetMenu(menuName = ("Game/Growth/EquipmentDictionary"))]
     public class EquipmentDictionarySO : ScriptableObject
     {
-        [Header("아이템 전체")] public List<EquipmentSO> allItems = new();
-        Dictionary<int, EquipmentSO> itemDic;
+        [FormerlySerializedAs("allItems")] [Header("아이템 전체")] public List<EquipmentSO> allEquipments = new();
+        Dictionary<int, EquipmentSO> equipmentsDic;
 
         void MakeDictionary()
         {
-            itemDic = new Dictionary<int, EquipmentSO>();
-            foreach (var item in allItems)
+            equipmentsDic = new Dictionary<int, EquipmentSO>();
+            foreach (var euqipment in allEquipments)
             {
-                itemDic.Add(item.key, item);
+                equipmentsDic.Add(euqipment.key, euqipment);
             }
         }
 
-        public ItemSO GetSO(int key)
+        public EquipmentSO GetSO(int key)
         {
-            if (itemDic == null)
+            if (equipmentsDic == null)
             {
                 MakeDictionary();
                 Debug.Log("딕셔너리를 생성했습니다. ");
             }
-            if (!itemDic.TryGetValue(key, out var item))
+            if (!equipmentsDic.TryGetValue(key, out var item))
             {
                 Debug.LogWarning("키에 해당하는 아이템이 없습니다. ");
                 return null;

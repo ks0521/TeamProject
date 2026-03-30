@@ -42,7 +42,7 @@ namespace Growth.Currency
             switch (reward.rewardType)
             {
                 case DropRewardType.Currency:
-                    img.sprite = reward.currencySO.img;
+                    img.sprite = reward.currencySO.icon;
                     break;
                 case DropRewardType.Item:
                     img.sprite = reward.itemSO.icon;
@@ -50,15 +50,17 @@ namespace Growth.Currency
             }
 
             cts = new CancellationTokenSource();
-            DropDelay(cts.Token);
+            DropDelay(cts.Token).Forget();
         }
+        
         //필드에 떨어진 후 1초후 드랍가능
         async UniTaskVoid DropDelay(CancellationToken cts)
         {
             await Task.Delay(TimeSpan.FromSeconds(1),cancellationToken: cts);
             dropDelay = false;
         }
-        private void Update()
+ 
+        private void FixedUpdate()
         {
             if (target == null || dropDelay) return;
             transform.position = Vector3.MoveTowards(transform.position, target.position, 10f * Time.deltaTime);
@@ -66,7 +68,7 @@ namespace Growth.Currency
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.gameObject.layer != LayerMask.NameToLayer("Player") || dropDelay || isDropped) return;
+            if (other.gameObject.layer != 7 || dropDelay || isDropped) return;
             isDropped = true;
             dropManager.GetReward(reward);
             itemPool.ReturnPool(gameObject);

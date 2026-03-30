@@ -38,7 +38,6 @@ namespace Growth.Skill
         public int key; //고유 키
         public string skillName; //스킬 이름
         public Type type; //스킬타입
-        public Priority priority; //스킬 우선순위
         public ScopeOfEffect SoE; //적용 범위
         public TargetingMode Targeting; //스킬 시전 위치 기준
         public float castingTime; //스킬 시전 시간
