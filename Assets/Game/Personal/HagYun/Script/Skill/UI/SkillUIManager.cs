@@ -11,6 +11,11 @@ namespace Personal.HagYun
         public void Init()
         {
             skillBtnPresenter = GetComponent<SkillButtonPresenter>();
+            skillBtnPresenter.Init();
+        }
+        void OnDestroy()
+        {
+            skillBtnPresenter.OnDestroyFeat();
         }
         public int GetOrder() => 100;
     }
