@@ -67,9 +67,13 @@ namespace Personal.HagYun
         {
             while (true)
             {
-                if (pl.IsDead) continue;
+                if (pl.IsDead)
+                {
+                    await UniTask.WaitUntil(() => !pl.IsDead, PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy());
+                }
                 CooltimeUpdate(index);
                 await UniTask.DelayFrame(10, PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy());
+                
             }
         }
         void CooltimeUpdate(int index)
