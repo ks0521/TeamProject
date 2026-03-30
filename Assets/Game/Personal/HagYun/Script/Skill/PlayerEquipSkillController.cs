@@ -195,23 +195,23 @@ namespace Personal.HagYun
             // 자동 스킬 사용 상태가 아닐 때 or 사용 가능한 스킬이 없을 때 or 캐스팅 중일 때 return
             if (!IsAutoSkillUse)
             {
-                Debug.LogWarning("자동 스킬 사용 상태 아님");
+                //Debug.LogWarning("자동 스킬 사용 상태 아님");
                 return false;
             }
             else if (pesc.AutoSkillUsePossibleCnt <= 0)
             {
-                Debug.LogWarning("사용 가능한 스킬 없음");
+                //Debug.LogWarning("사용 가능한 스킬 없음");
                 return false;
             }
             else if (pesc.IsCasting)
             {
-                Debug.LogWarning("스킬 캐스팅 중");
+                //Debug.LogWarning("스킬 캐스팅 중");
                 return false;
             }
             // 우선순위에 스킬이 없을 때 return
             else if (!CheckAutoSkillUsePossibleNumByAllPriority())
             {
-                Debug.LogWarning("자동 사용 가능한 스킬 없음");
+                //Debug.LogWarning("자동 사용 가능한 스킬 없음");
                 return false;
             }
             pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.Data.range);
@@ -219,8 +219,8 @@ namespace Personal.HagYun
             {
                 // 몬스터가 있을 시 스킬 사용 + auto skill 순서를 다음 번호로 변경
                 //pesc.AtkSkillUse(autoSkillUseOrderNum++, mon);
-                if (pesc.TryAtkSkillUseToMonster(autoSkillUseOrderNum))
-                    Debug.Log("자동 스킬 사용");
+                if (pesc.TryAtkSkillUseToMonster(autoSkillUseOrderNum)){}
+                    //Debug.Log("자동 스킬 사용");
                 OrderNumUpdate();
                 // Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 성공");
                 if (CheckAutoSkillUsePossibleNumByAllPriority())

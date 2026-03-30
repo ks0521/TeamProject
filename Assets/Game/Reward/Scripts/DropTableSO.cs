@@ -38,14 +38,14 @@ public struct DropReward
     public DropRewardType rewardType;
     public CurrencyType currencyType;
     public CurrencySO currencySO;
-    public ItemSO equipmentSo;
+    public ItemSO itemSO;
     public int amount;
     public DropReward(DropRewardPreset preset, int resultAmount)
     {
         rewardType = preset.rewardType;
         currencyType = preset.currencyType;
         currencySO = preset.currencySO;
-        equipmentSo = preset.itemSO;
+        itemSO = preset.itemSO;
         amount = resultAmount;
     }
 }
