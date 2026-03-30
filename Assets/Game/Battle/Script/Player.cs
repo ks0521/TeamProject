@@ -15,8 +15,6 @@ namespace Battle
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
         public PlayerEquipSkillController ESController => equipSkillController;
-
-        //StatusCalculator statCal;
         public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
         [SerializeField] private StageManager stageManager;
