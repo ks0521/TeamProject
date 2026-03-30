@@ -10,7 +10,7 @@ namespace Base.Data
     [CreateAssetMenu(menuName = "Game/Growth/Currency")]
     public class CurrencySO : ScriptableObject
     {
-        public Sprite img;
+        public Sprite icon;
         public string currencyName;
         public string explain;
         public CurrencyType type;

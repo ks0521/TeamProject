@@ -23,7 +23,9 @@ namespace Personal.HagYun
 
             float spriteWidth = MathF.Max(0.1f, spriteSize.x);
             radius *= 2f;
+            if (spriteWidth == 0) spriteWidth = 1;
             float scale = radius / spriteWidth;
+            
             sr.transform.localScale = new Vector3(scale,scale,1f);
         }
     }

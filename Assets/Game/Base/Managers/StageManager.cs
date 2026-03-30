@@ -190,8 +190,8 @@ namespace Base.Managers
             {
                 selectedNormalChapter = Progress.stage.selectedNormalChapter,
                 selectedNormalStage = Progress.stage.selectedNormalStage,
-                nextChallengeChapter = Progress.stage.nextChallangeChapter,
-                nextChallengeStage = Progress.stage.nextChallangeStage
+                nextChallengeChapter = Progress.stage.nextChallangeChapter, //현재 도전 챕터(최대 진행 챕터)
+                nextChallengeStage = Progress.stage.nextChallangeStage//현재 도전 스테이지(최대 진행 스테이지)
             };
         }
 
