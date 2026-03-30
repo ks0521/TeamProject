@@ -102,6 +102,9 @@ namespace UI.Scripts.UiPresenter
             {
                 timer.SetTime(data.maxTime, data.currentTime);
                 monsterKill.UpdateKillText(target : data.targetKill,current: data.currentKill);
+
+                Debug.Log(timer);
+                Debug.Log(monsterKill);
             }
         }
         //챌린지 전용 UI 활성화 / 비활성화
