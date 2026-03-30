@@ -35,4 +35,4 @@ namespace Growth.Equipment
         [Header("Utility")] public float incSpeed; //이동속도 증가 (배율)
         public float atkSpeed; //공속 증가 (배율)
     }
-}
+}  
