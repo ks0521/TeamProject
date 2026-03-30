@@ -9,8 +9,8 @@ namespace Base.Managers
 {
     public class ItemPoolManager : MonoBehaviour, IGameSystem
     {
-        public GameObject prefeb;
-        public int count = 30;
+        [SerializeField] private GameObject prefab;
+        [SerializeField] private int count = 30;
         private Queue<GameObject> pool = new(); //키 : 몬스터 키, 밸류 : 몬스터 프리팹
 
         private void Awake()
@@ -23,7 +23,7 @@ namespace Base.Managers
             for (int i = 0; i < addCount; i++)
             {
                 //각 so마다 몬스터 so 불러오기 <- key + 프리팹
-                GameObject obj = Instantiate(prefeb,gameObject.transform);
+                GameObject obj = Instantiate(prefab,gameObject.transform);
                 obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 obj.SetActive(false);
                 pool.Enqueue(obj);

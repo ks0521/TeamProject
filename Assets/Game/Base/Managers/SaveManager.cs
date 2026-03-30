@@ -12,11 +12,11 @@ namespace Base.Managers
     {
         //안드로이드용, 테스트 후 휴대폰 테스트시 해당 설정 사용
         private static string SavePath => Path.Combine(Application.persistentDataPath, "SaveData.json");
+        
         /// <summary> 데이터 저장하기 </summary>
         public static void Save(GameSaveData data)
         {
             data.lastAccess.lastConnectTime = DateTime.Now.ToBinary(); //최종 접속시간 저장
-            
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(SavePath,json);
             Debug.Log($"파일 저장 완료 , 경로 : {Application.persistentDataPath}");

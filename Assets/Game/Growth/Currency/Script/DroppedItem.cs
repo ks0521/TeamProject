@@ -45,13 +45,14 @@ namespace Growth.Currency
                     img.sprite = reward.currencySO.img;
                     break;
                 case DropRewardType.Item:
-                    img.sprite = reward.itemSO.icon;
+                    img.sprite = reward.equipmentSo.icon;
                     break;
             }
 
             cts = new CancellationTokenSource();
-            DropDelay(cts.Token);
+            DropDelay(cts.Token).Forget();
         }
+        
         //필드에 떨어진 후 1초후 드랍가능
         async UniTaskVoid DropDelay(CancellationToken cts)
         {

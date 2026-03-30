@@ -23,7 +23,7 @@ namespace Base.Managers
 
         public int GetOrder()
         {
-            return 99;
+            return 99; 
         }
 
         /// <summary> 현재 재화로 스탯 강화가 가능한지 확인하는 함수</summary>
@@ -75,14 +75,16 @@ namespace Base.Managers
             {
                 requireCost += (Progress.statUpgrades.upgradeLevelsByType[statType] + i) * statEntry.enhanceCost;
             }
-
+            //업그레이드 횟수 늘리고 재화 차감
             Progress.statUpgrades.upgradeLevelsByType[statType] += upgradeCount;
             Progress.currency.statStone -= requireCost;
             eventHub.CurrencyChange(CurrencyType.STATSTONE,Progress.currency.statStone);
+            
             Debug.Log($"{statType}스탯 {upgradeCount}번 강화, {requireCost}강화석 사용, 남은 강화석 : {Progress.currency.statStone} " +
                       $"\n {statType}스탯 강화횟수 : {Progress.statUpgrades.upgradeLevelsByType[statType]}(+{upgradeCount})");
+            //강화결과 실제 스탯에 반영
             calculator.Calculate(Progress);
-            
+            //최대체력 증가 스탯일 경우에는 증가한 최대체력만큼 HP 회복
             if (statType == StatusType.MaxHp)
             {
                 int healAmount = (int)(upgradeCount * statEntry.increasePerEnhance);
