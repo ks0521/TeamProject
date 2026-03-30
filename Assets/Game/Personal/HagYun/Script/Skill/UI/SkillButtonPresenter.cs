@@ -12,15 +12,15 @@ using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class TestUIPresenter : MonoBehaviour, IManager
+    public class SkillButtonPresenter : MonoBehaviour
     {
-        [SerializeField] TestBtnView[] btnViewArr;
+        [SerializeField] private SkillButtonView[] btnViewArr;
         // public EquipSkillController es;
 
-        EventHub eventHub;
-        EquipSkillController plEquipSkillController;
-        EquipSkill[] plEquipSkill;
-        Player pl;
+        private EventHub eventHub;
+        private EquipSkillController plEquipSkillController;
+        private EquipSkill[] plEquipSkill;
+        private Player pl;
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
@@ -45,7 +45,7 @@ namespace Personal.HagYun
                     continue;
                 }
                 int index = i;
-                TestBtnView tBtnView = btnViewArr[index];
+                SkillButtonView tBtnView = btnViewArr[index];
                 if (btnViewArr[index] == null)
                 {
                     Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
@@ -71,7 +71,7 @@ namespace Personal.HagYun
         void CooltimeUpdate(int index)
         {
             EquipSkill tESkill = plEquipSkill[index];
-            TestBtnView tbv = btnViewArr[index];
+            SkillButtonView tbv = btnViewArr[index];
             if (tESkill == null || tbv == null) return;
             else if (!tESkill.IsCooltime)
             {
