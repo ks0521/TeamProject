@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +20,7 @@ namespace Personal.HagYun
             public int maxLv;
             public int curLv;
         }
+        [SerializeField] private TextMeshProUGUI skillPointTxt;
         [SerializeField] private SkillTreeUISetView[] skillTreeUIArr;
         [SerializeField] private SkillLvSet[] skillLvSetArr;
         [SerializeField] private int curPlLv;
@@ -91,7 +92,7 @@ namespace Personal.HagYun
             if (lv < 0 || lvSet.maxLv < lv) return;
             lvSet.curLv = lv;
         }
-
+        public void SkillPointUpdate(int curPoint, int maxPoint) => skillPointTxt.text = $"{curPoint} / {maxPoint}";
 
 
     }
