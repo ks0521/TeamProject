@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Personal.HagYun
 {
-    public class SkillButtonView : MonoBehaviour
+    [Serializable]
+    public class SkillButtonView
     {
-        private Button btn;
+        [SerializeField] private Button btn;
         [SerializeField] private Image cooltimeMask;
         [SerializeField] private Image skillImg;
         // 0 : 기본, 1 : 선택됨
-        [SerializeField] private Sprite[] borderArr;
+        // [SerializeField] private Sprite[] borderArr;
         public bool IsCooltimeMaskActiveState => cooltimeMask.gameObject.activeSelf;
-        public bool IsCooltimeCheck { get; private set; }
-        private void OnEnable()
-        {
-            btn = GetComponent<Button>();
-        }
-        private void OnDestroy()
+        // public void BorderSpriteSet(Sprite[] borderArr) => this.borderArr = borderArr;
+        public void OnDestroyFeat()
         {
             btn.onClick.RemoveAllListeners();
         }
@@ -31,20 +26,24 @@ namespace Personal.HagYun
         }
         public void CooltimeStart()
         {
-            IsCooltimeCheck = true;
             cooltimeMask.fillAmount = 1;
             cooltimeMask.gameObject.SetActive(true);
         }
         public void CooltimeEnd()
         {
-            IsCooltimeCheck = false;
             cooltimeMask.fillAmount = 0;
             cooltimeMask.gameObject.SetActive(false);
         }
-        public void BorderChange(bool isSelected)
+        public bool IsSelected{get;private set;}
+        public void SkillSelect(Sprite borderImg)
         {
-            if (isSelected) btn.image.sprite = borderArr[1];
-            else btn.image.sprite = borderArr[0];
+            IsSelected = true;
+            btn.image.sprite = borderImg;
+        }
+        public void SkillUnset(Sprite borderImg)
+        {
+            IsSelected = false;
+            btn.image.sprite = borderImg;
         }
         public void ButtonEventSet(Action func) => btn.onClick.AddListener(() => func());
         // public void BtnImageUpdate(float value) => btn.image.fillAmount = value;
