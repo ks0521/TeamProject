@@ -11,13 +11,6 @@ namespace Battle
     {
         Idle, Move, Attack, Dead
     }
-    public class CharacterCommonEvent
-    {
-        public event Action<Character> OnDead;
-        public event Action<float, float> OnHPValueChange;
-        public void RaiseDead(Character cha) => OnDead?.Invoke(cha);
-        public void RaiseHPValueChange(float curHp, float maxHp) => OnHPValueChange?.Invoke(curHp, maxHp);
-    }
     public abstract class Character : MonoBehaviour
     {
         // stat
@@ -43,7 +36,6 @@ namespace Battle
             }
         }
         public float MaxHp => CurrentBattleStat.maxHp;
-        // protected Rigidbody2D rb;
         // battle element
         // action split class (component X)
         protected CharacterMove cm;
@@ -56,7 +48,6 @@ namespace Battle
         protected abstract float AttackRange { get; } //공격 거리
         protected float TargetSqrMagnitudeRange => AttackRange * AttackRange;
         // event
-        protected CharacterCommonEvent cEvent;
         protected EventHub eventHub;
         // test
         public bool canMove;
@@ -98,7 +89,6 @@ namespace Battle
             // rb = GetComponent<Rigidbody2D>();
             hp = CurrentBattleStat.maxHp;
             
-            cEvent = new CharacterCommonEvent();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         }
         protected void TargetSet(Character target)
@@ -228,10 +218,5 @@ namespace Battle
             //Debug.Log("공격 쿨타임 종료");
             isAtkCooltime = false;
         }
-
-        public void AddEventDead(Action<Character> func) => cEvent.OnDead += func;
-        public void RemoveEventDead(Action<Character> func) => cEvent.OnDead -= func;
-        public void AddEventHPValueChange(Action<float, float> func) => cEvent.OnHPValueChange += func;
-        public void RemoveEventHPValueChange(Action<float, float> func) => cEvent.OnHPValueChange -= func;
     }
 }
