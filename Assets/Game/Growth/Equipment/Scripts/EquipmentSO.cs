@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 namespace Growth.Equipment
 {
     public enum EquipType

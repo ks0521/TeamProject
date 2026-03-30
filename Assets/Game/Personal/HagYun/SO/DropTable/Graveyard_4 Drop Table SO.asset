@@ -14,14 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapter: 2
   stage: 4
-  rewardStatStone: 8
   rewardExp: 8
   dropList:
-  - item: {fileID: 11400000, guid: cc25790c42721d046be231b98dfc9256, type: 2}
-    chance: 0.3
-    minAmount: 1
-    maxAmount: 2
-  - item: {fileID: 11400000, guid: cdb5a48d470a7b04290cbf5fb1b949ef, type: 2}
-    chance: 0.1
-    minAmount: 1
-    maxAmount: 1
+  - rewardType: 0
+    currencyType: 1
+    currencySO: {fileID: 11400000, guid: a33d451e9ce1def40bf67ed25b3f98a8, type: 2}
+    chance: 1
+    itemSO: {fileID: 0}
+    minAmount: 150
+    maxAmount: 170
+  - rewardType: 0
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 1
+    itemSO: {fileID: 0}
+    minAmount: 120
+    maxAmount: 130
+  - rewardType: 0
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 1
+    itemSO: {fileID: 11400000, guid: 33a152f5a74523340ae16a52c384f028, type: 2}
+    minAmount: 120
+    maxAmount: 130
