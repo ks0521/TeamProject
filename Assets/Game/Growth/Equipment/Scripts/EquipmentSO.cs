@@ -23,6 +23,9 @@ namespace Growth.Equipment
         [Header("Quality")] 
         public EquipRarity rarity;
         public EquipQuality quality;
+        [Header("Manage")] 
+        public int combineNeedAmount;//합성하는데 필요한 장비 개수
+        public int enhanceCost;//강화 비용
         [Header("Attack")] public int incAtk; //공격력 증가(상수)
         public float multipleAtk; //공격력% 증가(배율)
         [Header("Defence")] public int incHp; //hp증가(상수)

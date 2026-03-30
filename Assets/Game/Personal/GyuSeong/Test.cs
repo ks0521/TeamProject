@@ -61,7 +61,7 @@ public class Test : MonoBehaviour, IManager
     {
         equip = GameManager.Instance.GetGameSystem<EquipmentManager>();
         runProgressState = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
-        dic = GameManager.Instance.GetGameSystem<GameDataProvider>().hub.equipmentTable;
+        dic = GameManager.Instance.GetGameSystem<GameDataProvider>().equipmentTable;
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
     }
 }

@@ -42,6 +42,7 @@ namespace Base.Managers
         private bool isStageResultProcessing; //현재 스테이지 진행여부 플래그
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress; //축약용 프로퍼티
         private MonsterPoolManager monsterPool; //몬스터 풀
+        private GameDataProvider datahub;
         private EventHub eventHub; //이벤트 허브
         private Stage stage; //스테이지 객체
         private StageSO stageSO; // 현재 진행중인 스테이지 정보
@@ -53,6 +54,7 @@ namespace Base.Managers
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             monsterPool = GameManager.Instance.GetGameSystem<MonsterPoolManager>();
+            datahub = GameManager.Instance.GetGameSystem<GameDataProvider>();
             stageProgress = GetStageProgress();
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
@@ -92,13 +94,13 @@ namespace Base.Managers
             if (selectedChapter == stageProgress.nextChallengeChapter &&
                 selectedStage == stageProgress.nextChallengeStage)
             {
-                stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Boss);
                 if (stageSO == null)
-                    stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
+                    stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Challenge);
             }
             else
             {
-                stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Normal);
+                stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
 
             if (stageSO is null)
@@ -158,12 +160,12 @@ namespace Base.Managers
             if (compare < 0)
             {
                 entry.type = StageType.Normal;
-                entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Normal);
+                entry.stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
             //도전 / 보스 스테이지
             else if (compare == 0)
             {
-                entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                entry.stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Boss);
                 Debug.Log(entry.stageSO);
                 if (entry.stageSO != null)
                 {
@@ -171,7 +173,7 @@ namespace Base.Managers
                 }
                 else
                 {
-                    entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
+                    entry.stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Challenge);
                     entry.type = StageType.Challenge;
                 }
             }
@@ -179,7 +181,7 @@ namespace Base.Managers
             else
             {
                 entry.type = StageType.Locked;
-                entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Normal);
+                entry.stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
             return entry;
         }
