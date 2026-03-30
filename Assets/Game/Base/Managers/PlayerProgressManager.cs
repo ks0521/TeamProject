@@ -18,9 +18,9 @@ namespace Base.Save
     public class PlayerProgressManager : MonoBehaviour, IManager
     {
         public static PlayerProgressManager Instance;
+        [SerializeField] private StatusCalculator playerStatCalculator;
         public RuntimeProgressState progress; //현재 플레이어의 정보를 전부 저장하고 있는 데이터
         public RuntimeProgressState Progress => progress;
-        [SerializeField] private StatusCalculator playerStatCalculator;
 
         private void Awake()
         {
@@ -35,7 +35,6 @@ namespace Base.Save
         public void Init()
         {
             LoadProgress();
-            Debug.Log($"상태 계산중 {playerStatCalculator == null}");
             playerStatCalculator?.Calculate(progress);
             AutoSave(this.GetCancellationTokenOnDestroy(), 3f).Forget();
         }

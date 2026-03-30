@@ -47,8 +47,6 @@ namespace Base.Data
         public int GetOrder() => 0;
     }
 
-
-    #region BlackBox
     [Serializable]
     public struct PoolData
     {
@@ -118,5 +116,4 @@ namespace Base.Data
             }
         }
     }
-    #endregion
 }

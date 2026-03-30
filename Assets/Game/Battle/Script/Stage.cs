@@ -5,7 +5,6 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
-using Personal.GyuSeong;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

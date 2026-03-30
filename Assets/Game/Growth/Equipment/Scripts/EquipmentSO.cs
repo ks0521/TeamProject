@@ -8,10 +8,22 @@ namespace Growth.Equipment
         Weapon
     }
 
+    public enum EquipRarity
+    {
+        Common, UnCommon, Rare, Unique
+    }
+
+    public enum EquipQuality
+    {
+        Low, Middle, High
+    }
     [CreateAssetMenu(menuName = "Game/Reward/Equipment")]
     public class EquipmentSO : ItemSO
     {
         public EquipType equipType;
+        [Header("Quality")] 
+        public EquipRarity rarity;
+        public EquipQuality quality;
         [Header("Attack")] public int incAtk; //공격력 증가(상수)
         public float multipleAtk; //공격력% 증가(배율)
         [Header("Defence")] public int incHp; //hp증가(상수)

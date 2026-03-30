@@ -17,3 +17,5 @@ MonoBehaviour:
   statusTable: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
   SkillTable: {fileID: 11400000, guid: cfca264f92d1a5942a73aeec219d2f5d, type: 2}
   currencyTable: {fileID: 11400000, guid: 5c6df047895f0bd4f9f11fe255a93a7f, type: 2}
+  equipmentTable: {fileID: 11400000, guid: f9e60244b7a94fe4ab8bb01c1a36ee55, type: 2}
+  itemTable: {fileID: 0}

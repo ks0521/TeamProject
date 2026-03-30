@@ -1,14 +1,16 @@
 using Base.Data;
 using Base.Save;
+using Growth.Equipment;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [Serializable]
 public class DropEntry
 {
-    public ItemSO item; //아이템 so
+    [FormerlySerializedAs("item")] public EquipmentSO equipment; //아이템 so
     [Range(0, 1)] public float chance; // 드랍 확률
     public int minAmount = 1; //최소 드랍 갯수
     public int maxAmount = 1; //최대 드랍 갯수
@@ -36,14 +38,14 @@ public struct DropReward
     public DropRewardType rewardType;
     public CurrencyType currencyType;
     public CurrencySO currencySO;
-    public ItemSO itemSO;
+    public ItemSO equipmentSo;
     public int amount;
     public DropReward(DropRewardPreset preset, int resultAmount)
     {
         rewardType = preset.rewardType;
         currencyType = preset.currencyType;
         currencySO = preset.currencySO;
-        itemSO = preset.itemSO;
+        equipmentSo = preset.itemSO;
         amount = resultAmount;
     }
 }
