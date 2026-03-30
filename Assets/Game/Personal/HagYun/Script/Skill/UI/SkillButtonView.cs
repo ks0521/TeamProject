@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 namespace Personal.HagYun
 {
-    public class TestBtnView : MonoBehaviour
+    public class SkillButtonView : MonoBehaviour
     {
-        Button btn;
-        [SerializeField] Image cooltimeMask;
-        public bool IsCooltimeMaskActiveState => cooltimeMask.gameObject.activeSelf;
-        [SerializeField] Image skillImg;
+        private Button btn;
+        [SerializeField] private Image cooltimeMask;
+        [SerializeField] private Image skillImg;
         // 0 : 기본, 1 : 선택됨
-        [SerializeField] Sprite[] borderArr;
+        [SerializeField] private Sprite[] borderArr;
+        public bool IsCooltimeMaskActiveState => cooltimeMask.gameObject.activeSelf;
         public bool IsCooltimeCheck { get; private set; }
         private void OnEnable()
         {
