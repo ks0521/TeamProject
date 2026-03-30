@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Equipment2
   m_EditorClassIdentifier: 
   key: 3002
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 69ad4388800f84d0fa6ba781eb29b83f, type: 3}
   itemName: Staff
   context: Staff2
   equipType: 0

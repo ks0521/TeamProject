@@ -39,7 +39,7 @@ public class Reward_Set : MonoBehaviour
             switch (reward.rewardType)
             {
                 case DropRewardType.Currency:
-                    SetSlot(ref currentSlot, reward.currencySO.img);
+                    SetSlot(ref currentSlot, reward.currencySO.icon);
                     break;
                
                 case DropRewardType.Item:

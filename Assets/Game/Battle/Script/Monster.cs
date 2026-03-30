@@ -63,10 +63,10 @@ namespace Battle
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
         {
+            //Debug.Log($"isDead : {isDead}");
             if (isDead) //여러번 죽지 않게하기
                 return;
             isDead = true;
-            Debug.Log($"isDead : {isDead}");
             DeadMotionAsync(monsterCts.Token).Forget();
         }
 
