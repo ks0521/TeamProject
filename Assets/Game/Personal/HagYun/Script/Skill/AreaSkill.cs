@@ -9,23 +9,12 @@ namespace Personal.HagYun
     {
         [SerializeField] protected Vector2 targetPos;
         protected override Vector2 TargetPos => targetPos;
-
-        // [SerializeField] SpriteRenderer[] sprites;
         [SerializeField] Animator[] addEffectAnim;
-        //Vector2 effectArea = new Vector2(2.5f, 2f);
-        // [SerializeField] Vector2 effectArea = new Vector2(2.5f, 2f);
-        // [SerializeField] CapsuleDirection2D effectDir = CapsuleDirection2D.Horizontal;
-        // // area check
-        // [SerializeField] Vector2 spriteSize = new Vector2(1f, 1f);
         [SerializeField] CapsuleCollider2D effectAreaCollider;
         // sprite check
         [SerializeField] bool isSpriteYPosUp = false;
         // targeting test
         [SerializeField] Transform targetTrans;
-        // private void Start()
-        // {
-        //     Init();
-        // }
         public override void Init(Character owner)
         {
             base.Init(owner);
