@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour, IManager
     [SerializeField] private SkillSoundPlayer _skillPlayer;
     [SerializeField] private SFXPlayer _sfxPlayer;
     //[SerializeField] private PopupManager _popupManager;
-    [SerializeField] private QuestManager _questManager;
+    //[SerializeField] private QuestManager _questManager;
 
     private EventHub eventHub;
 
@@ -192,14 +192,14 @@ public class AudioManager : MonoBehaviour, IManager
         _sfxPlayer?.PlaySynthesizeItemSound();
     }
 
-
+    //이제 퀘스트 완료는 EventHub가 감지함
     public void PlayQuestAcceptSound()
     {
-        _questManager?.PlayQuestAcceptSound();
+        _sfxPlayer?.PlayQuestAcceptSound();
     }
     public void PlayQuestClearSound()
     {
-        _questManager?.PlayQuestClearSound();
+        _sfxPlayer?.PlayQuestClearSound();
     }
 
 
