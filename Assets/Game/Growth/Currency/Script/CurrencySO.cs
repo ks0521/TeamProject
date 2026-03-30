@@ -2,6 +2,7 @@ using Base.Save;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Base.Data
@@ -10,7 +11,7 @@ namespace Base.Data
     public class CurrencySO : ScriptableObject
     {
         public Sprite img;
-        public string name;
+        public string currencyName;
         public string explain;
         public CurrencyType type;
     }

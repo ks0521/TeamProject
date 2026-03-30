@@ -1,4 +1,4 @@
-﻿using Base.Data;
+using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
@@ -21,20 +21,7 @@ namespace Personal.HagYun
         {
             if (sr == null || sr.sprite == null) return;
 
-            // // 1. 스프라이트 자체의 순수 크기 (Local Bounds)
-            // // import 설정에서 PPU(Pixels Per Unit)에 의해 결정된 월드 크기입니다.
-            // Vector2 spriteSize = sr.sprite.bounds.size;
-
-            // // 2. 타겟 크기 대비 비율 계산
-            // float ratioX = SpriteSize.x / spriteSize.x;
-            // float ratioY = SpriteSize.y / spriteSize.y;
-
-            // // 3. 비율 유지 (전체 영역에 맞추기 위해 더 작은 비율 선택)
-            // float minRatio = Mathf.Min(ratioX, ratioY);
-
-            // // 4. Transform의 스케일을 직접 수정
-            // sr.transform.localScale = new Vector3(minRatio, minRatio, 1f);
-            float spriteWidth = spriteSize.x;
+            float spriteWidth = MathF.Max(0.1f, spriteSize.x);
             radius *= 2f;
             float scale = radius / spriteWidth;
             sr.transform.localScale = new Vector3(scale,scale,1f);
@@ -54,6 +41,7 @@ namespace Personal.HagYun
         public EquipSkill[] EquipSkillArr => equipSkillArr;
         public EquipSkill this[int index] => equipSkillArr[index];
         protected int skillCnt;
+        public int SkillCnt => skillCnt;
         // skill event
         protected EventHub eventHub;
 

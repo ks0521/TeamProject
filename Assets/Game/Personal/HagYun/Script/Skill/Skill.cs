@@ -113,7 +113,7 @@ namespace Personal.HagYun
             float resultDmg = owner.SkillResultDmg(data.baseDamage);
             for (int i = 0; i < inAreaTargetCnt; i++)
             {
-                if (OverlapChecker.GetTargetCol(i).GetComponent<Monster>() is Monster mon)
+                if (OverlapChecker.GetTargetCol(i).GetComponent<Monster>() is Monster mon && !mon.IsDead)
                     mon.Hit(resultDmg);
             }
         }

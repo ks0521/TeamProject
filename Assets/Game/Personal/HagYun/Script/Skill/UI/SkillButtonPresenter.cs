@@ -63,9 +63,9 @@ namespace Personal.HagYun
         {
             while (true)
             {
+                if (pl.IsDead) continue;
                 CooltimeUpdate(index);
                 await UniTask.DelayFrame(10);
-                if (pl.IsDead) break;
             }
         }
         void CooltimeUpdate(int index)
