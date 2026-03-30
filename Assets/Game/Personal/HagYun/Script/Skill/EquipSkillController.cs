@@ -1,4 +1,4 @@
-﻿using Base.Data;
+using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
@@ -34,9 +34,12 @@ namespace Personal.HagYun
 
             // // 4. Transform의 스케일을 직접 수정
             // sr.transform.localScale = new Vector3(minRatio, minRatio, 1f);
-            float spriteWidth = spriteSize.x;
+            //float spriteWidth = spriteSize.x;
+            float spriteWidth = MathF.Max(0.1f, spriteSize.x);
             radius *= 2f;
+            if (spriteWidth == 0) spriteWidth = 1;
             float scale = radius / spriteWidth;
+            
             sr.transform.localScale = new Vector3(scale,scale,1f);
         }
     }
