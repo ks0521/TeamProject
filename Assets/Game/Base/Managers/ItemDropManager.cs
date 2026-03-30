@@ -79,24 +79,24 @@ public class ItemDropManager : MonoBehaviour, IManager
     public void GetItem(DropReward droppedItem)
     {
         hub.GetItems();
-        if (droppedItem.equipmentSo is Growth.Equipment.EquipmentSO)
+        if (droppedItem.itemSO is Growth.Equipment.EquipmentSO)
         {
             GetEquip(droppedItem);
             return;
         }
 
-        int itemKey = droppedItem.equipmentSo.key;
+        int itemKey = droppedItem.itemSO.key;
         //이미 아이템이 있으면 획득수량만 추가
         if (progress.itemInventory.ownedItemCounts.ContainsKey(itemKey))
         {
             progress.itemInventory.ownedItemCounts[itemKey] += droppedItem.amount;
-            Debug.Log($"{droppedItem.equipmentSo.name} 추가 획득");
+            Debug.Log($"{droppedItem.itemSO.name} 추가 획득");
         }
         //없으면 개수까지 추가
         else
         {
             progress.itemInventory.ownedItemCounts.Add(itemKey, droppedItem.amount);
-            Debug.Log($"{droppedItem.equipmentSo.name} 신규 획득");
+            Debug.Log($"{droppedItem.itemSO.name} 신규 획득");
         }
         hub.GetItems();
     }
@@ -104,6 +104,15 @@ public class ItemDropManager : MonoBehaviour, IManager
     public void GetEquip(DropReward droppedItem)
     {
         Debug.Log($"{droppedItem} 장비 획득");
+        if (progress.equipmentInventory.equipmentEntries.ContainsKey(droppedItem.itemSO.key))
+        {
+            progress.equipmentInventory.equipmentEntries[droppedItem.itemSO.key].ownedCount += droppedItem.amount;
+            Debug.Log($"{droppedItem.itemSO.name} 추가 획득");
+            return;
+        }
+        progress.equipmentInventory.equipmentEntries.Add(droppedItem.itemSO.key,
+            new EquipmentEntryState(){enhancementLevel = 0, isDiscovered = true, ownedCount = droppedItem.amount});
+        Debug.Log($"{droppedItem.itemSO.name} 신규 획득");
         //MVP 이후 개발
     }
 

@@ -24,7 +24,6 @@ namespace Base.Managers
             {
                 //각 so마다 몬스터 so 불러오기 <- key + 프리팹
                 GameObject obj = Instantiate(prefab,gameObject.transform);
-                obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 obj.SetActive(false);
                 pool.Enqueue(obj);
             }

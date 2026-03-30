@@ -1,46 +1,67 @@
+using Base.Data;
+using Base.Manager;
 using Base.Managers;
 using Base.Save;
-using Growth.StatUpgrade;
+using Growth.Equipment;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class Test : MonoBehaviour
+public class Test : MonoBehaviour, IManager
 {
     // Update is called once per frame
     [SerializeField]private GameSaveData saveData;
-    [FormerlySerializedAs("runData")] [SerializeField] private RuntimeProgressState runProgressState;
+    [SerializeField] private RuntimeProgressState runProgressState;
     [SerializeField] private PlayerRuntimeStatus runStat;
     [SerializeField] private StatusCalculator calc;
+    [SerializeField] private EquipmentManager equip;
+    [SerializeField] private EquipmentDictionarySO dic;
+    [SerializeField] private ItemDropManager dropManager;
     private void Start()
     {
-        Debug.Log("1. 저장 / 2. 불러오기 / 3. 저장파일 삭제 / 4 . 저장데이터 런타임 데이터로 변환");
+        Debug.Log("1. 모든 아이템 획득 / 2. 현재 가지고 있는 아이템 출력 / 3. 현재 가지고 있는 모든 아이템 제거");
     }
 
     void Update()
     {
         #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
-            Debug.Log("저장 입력");
-            PlayerProgressManager.Instance.SaveProgress();
+            Debug.Log("모든 장비 확인");
+            PrintAllItems();
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.F2))
         {
-            Debug.Log("불러오기 실행");
-            PlayerProgressManager.Instance.LoadProgress();
+            Debug.Log("모든 아이템 획득");
+            foreach (var VARIABLE in dic.allEquipments)
+            {
+                dropManager.GetEquip(new DropReward(){amount = 1, itemSO = VARIABLE, rewardType = DropRewardType.Item});
+            }
+            PrintAllItems();
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.F3))
         {
-            Debug.Log("저장파일 삭제");
-            SaveManager.DeleteSaveFile();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            runProgressState = DataConverter.SaveToRuntime(saveData);
+            Debug.Log("모든 아이템 제거");
+            runProgressState.equipmentInventory.equipmentEntries = new Dictionary<int, EquipmentEntryState>() ;
+            PrintAllItems();
         }
         #endif
+    }
+
+    void PrintAllItems()
+    {
+        List<EquipmentCatalog> catalogs = equip.AllEquipmentCatalogs();
+        foreach (var catalog in catalogs)
+        {
+            Debug.Log($"{catalog.key}, {catalog.equipment.name}, {catalog.state.ownedCount}, {catalog.state.isDiscovered}");
+        }
+    }
+    public int GetOrder() => 999;
+
+    public void Init()
+    {
+        equip = GameManager.Instance.GetGameSystem<EquipmentManager>();
+        runProgressState = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
+        dic = GameManager.Instance.GetGameSystem<GameDataProvider>().hub.equipmentTable;
+        dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
     }
 }
