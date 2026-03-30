@@ -35,7 +35,7 @@ namespace Base.Data
                 return null;
             }
 
-            Debug.Log($"{currency.name}");
+            Debug.Log($"{currency.currencyName}");
             return currency;
         }
     }

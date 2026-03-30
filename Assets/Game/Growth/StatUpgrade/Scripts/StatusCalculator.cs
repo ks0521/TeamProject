@@ -110,5 +110,9 @@ public class StatusCalculator : MonoBehaviour,IGameSystem
         runtimeStatus.finalRange = runtimeStatus.baseStat.baseAttackRange; //공격 범위는 고정
     }
 
+    public void CalculateEquipment()
+    {
+        
+    }
     public int GetOrder() => 0;
 }
