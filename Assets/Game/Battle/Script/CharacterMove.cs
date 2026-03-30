@@ -85,7 +85,7 @@ namespace Battle
         }
         public void FixedMove()
         {
-            if(canMove)return;
+            if(!canMove)return;
             if (IsInputMoving)
                 rb.MovePosition(rb.position + moveVelocity * Time.deltaTime);
         }

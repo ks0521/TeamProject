@@ -32,6 +32,8 @@ namespace Base.Save
                     level = runProgressState.currency.level,
                     statStone = runProgressState.currency.statStone
                 },
+                equipmentInventory = {equipmentEntries = new List<EquipmentEntry>()},
+                equipment = runProgressState.equipment,
                 itemInventory = { owneditemCounts = new List<ItemEntry>() },
                 statUpgrades = { upgradeLevelsByType = new List<StatusEntry>() },
                 skillProgress =
@@ -51,6 +53,17 @@ namespace Base.Save
                 saveData.itemInventory.owneditemCounts.Add(entry);
             }
 
+            foreach (var equipment in runProgressState.equipmentInventory.equipmentEntries)
+            {
+                EquipmentEntry entry = new EquipmentEntry()
+                {
+                    key = equipment.Key,
+                    enhancementLevel = equipment.Value.enhancementLevel,
+                    ownedCount = equipment.Value.ownedCount,
+                    isDiscovered = equipment.Value.isDiscovered
+                };
+                saveData.equipmentInventory.equipmentEntries.Add(entry);
+            }
             foreach (var stat in runProgressState.statUpgrades.upgradeLevelsByType)
             {
                 StatusEntry entry = new StatusEntry { statType = stat.Key, enhancementLevel = stat.Value };
@@ -86,6 +99,8 @@ namespace Base.Save
                     level = saveData.currency.level,
                     statStone = saveData.currency.statStone
                 },
+                equipmentInventory = {equipmentEntries = new Dictionary<int, EquipmentEntryState>()},
+                equipment = saveData.equipment,
                 itemInventory = { ownedItemCounts = new Dictionary<int, int>() },
                 statUpgrades = { upgradeLevelsByType = new Dictionary<StatusType, int>() },
                 skillProgress =
@@ -100,12 +115,24 @@ namespace Base.Save
             };
             //saveData의 리스트를 runtimeData의 딕셔너리로 변환
 
-            /*장비 부분은 mvp 이후 구현
-             foreach (var item in saveData.itemInventory.items)
+            //장비 부분은 mvp 이후 구현
+             foreach (var item in saveData.itemInventory.owneditemCounts)
             {
-                runData.itemInventory.items.TryAdd(item.key, item.count);
-                Debug.Log($"{item.key}키값을 가진 장비 추가 : {runData.itemInventory.items[item.key]}개 ");
-            }*/
+                runProgressState.itemInventory.ownedItemCounts.TryAdd(item.key, item.ownedCount);
+                Debug.Log($"{item.key}키값을 가진 장비 추가 : {runProgressState.itemInventory.ownedItemCounts[item.key]}개 ");
+            }
+
+            foreach (var equipment in saveData.equipmentInventory.equipmentEntries)
+            {
+                runProgressState.equipmentInventory.equipmentEntries.TryAdd(
+                    equipment.key,
+                    new EquipmentEntryState()
+                    {
+                        enhancementLevel = equipment.enhancementLevel,
+                        isDiscovered = equipment.isDiscovered,
+                        ownedCount = equipment.ownedCount
+                    });
+            }
             foreach (var stat in saveData.statUpgrades.upgradeLevelsByType)
             {
                 runProgressState.statUpgrades.upgradeLevelsByType.TryAdd(stat.statType, stat.enhancementLevel);

@@ -29,22 +29,25 @@ namespace Base.Managers
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
     public class StageManager : MonoBehaviour, IManager
     {
-        [Header("디버그용")] 
+        #if UNITY_EDITOR
         public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
-        [Header("실사용")] 
-        private StageRule stageRule;
-        private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
-        private int curChapter = 0;
-        private int curStage = 0;
-        [SerializeField] private MonsterPoolManager monsterPool; //몬스터 풀
-        [SerializeField] private Stage stage; //스테이지 객체
-        [SerializeField] private StageSO stageSO; //스테이지 정보
+        #endif
+        
         public StageSO CurStageSO => stageSO;
-        [SerializeField] private StageProgress stageProgress; //저장된 스테이지 해금 , 현재 스테이지 상태
-        [SerializeField] private StageType type; //스테이지의 종류(일반, 도전, 잠김)
-        [SerializeField] private BoxCollider2D spawnArea;
-        private EventHub eventHub;
-        private bool isStageResultProcessing;
+        public List<Monster> Monsters => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
+        [SerializeField] private BoxCollider2D spawnArea; //몬스터 스폰 공간
+        
+        private int curChapter = 0; //현재 진행중인 챕터
+        private int curStage = 0; //현재 진행중인 스테이지
+        private bool isStageResultProcessing; //현재 스테이지 진행여부 플래그
+        private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress; //축약용 프로퍼티
+        private MonsterPoolManager monsterPool; //몬스터 풀
+        private EventHub eventHub; //이벤트 허브
+        private Stage stage; //스테이지 객체
+        private StageSO stageSO; // 현재 진행중인 스테이지 정보
+        private StageRule stageRule; // 현재 진행중인 스테이지 규약
+        private StageProgress stageProgress; //현재 진행중인 스테이지와 최대 도달 스테이지 묶음
+        private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         
         public void Init()
         {
@@ -55,9 +58,6 @@ namespace Base.Managers
         }
 
         public int GetOrder() => 10;
-        public List<Monster> GetStageMonsters() => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
-
-
         /// <summary>스테이지 변경(도전 / 일반 / 잠김 스테이지 판별은 이 메서드에서 진행)</summary>
         /// <param name="selectedChapter"> 변경하려는 챕터</param>
         /// <param name="selectedStage">변경하려는 스테이지</param>
@@ -73,7 +73,7 @@ namespace Base.Managers
                 Debug.LogWarning("잠겨있는 스테이지에 접근중입니다");
                 return;
             }
-
+            //이미 진행중인 스테이지 진입시도 거절
             if (curChapter == selectedChapter && curStage == selectedStage)
             {
                 Debug.LogWarning($"{selectedChapter} - {selectedStage}는 이미 진행중인 스테이지입니다. ");
@@ -81,17 +81,17 @@ namespace Base.Managers
             }
 
             isStageResultProcessing = false;
-            eventHub.OnDeadPlayer -= OnPlayerDie;
-
+            //기존 스테이지에서 연결한 이벤트 제거
+            eventHub.OnDeadPlayer -= OnPlayerDie; 
             if (stageRule is ChallengeStageRule oldChallengeRule)
             {
                 oldChallengeRule.ChallengeSuccess -= OnChallengeSucceeded;
                 oldChallengeRule.ChallengeFail -= OnChallengeFailed;
             }
+            //입장하려는 스테이지가 도전 스테이지
             if (selectedChapter == stageProgress.nextChallengeChapter &&
                 selectedStage == stageProgress.nextChallengeStage)
             {
-                //보스타입 먼저 찾고 아니면 도전스테이지
                 stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
                 if (stageSO == null)
                     stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
@@ -107,12 +107,12 @@ namespace Base.Managers
                 return;
             }
 
+            
+            //기존 스테이지 정리 + 새 스테이지 & 스테이지 룰 생성
+            stage?.Destroy(); //기존 스테이지 있으면 정리
             curChapter = selectedChapter;
             curStage = selectedStage;
-            //Debug.Log($"Stage Changed to {selectedChapter} - {selectedStage}");
-            stage?.Destroy(); //기존 스테이지 있으면 정리
             stageRule?.Destroy();
-
             eventHub.StageChanged(stageSO); // 바뀐 챕터 - 스테이지 정보 전달
             monsterPool.ChangeStage(stageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
             stage = new Stage(stageSO, monsterPool, spawnArea); // 신규 스테이지 생성
@@ -131,9 +131,9 @@ namespace Base.Managers
                 ((ChallengeStageRule)stageRule).ChallengeFail += OnChallengeFailed;
                 eventHub.OnDeadPlayer += OnPlayerDie;
             }
-
             stageRule.Init(stageSO);
 
+            //스테이지와 스테이지 룰 다 초기화된 이후 시작
             stage.Enter();
             stageRule.Enter();
             if (BlockSpawning)
@@ -160,7 +160,7 @@ namespace Base.Managers
                 entry.type = StageType.Normal;
                 entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
-            //도전 스테이지 판단
+            //도전 / 보스 스테이지
             else if (compare == 0)
             {
                 entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Boss);
@@ -171,7 +171,6 @@ namespace Base.Managers
                 }
                 else
                 {
-                    //도전 스테이지
                     entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Challenge);
                     entry.type = StageType.Challenge;
                 }
@@ -179,11 +178,9 @@ namespace Base.Managers
             //잠긴 스테이지
             else
             {
-                //잠긴 스테이지
                 entry.type = StageType.Locked;
                 entry.stageSO = GameData.StageDB.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
-
             return entry;
         }
 
@@ -193,8 +190,8 @@ namespace Base.Managers
             {
                 selectedNormalChapter = Progress.stage.selectedNormalChapter,
                 selectedNormalStage = Progress.stage.selectedNormalStage,
-                nextChallengeChapter = Progress.stage.nextChallangeChapter,
-                nextChallengeStage = Progress.stage.nextChallangeStage
+                nextChallengeChapter = Progress.stage.nextChallangeChapter, //현재 도전 챕터(최대 진행 챕터)
+                nextChallengeStage = Progress.stage.nextChallangeStage//현재 도전 스테이지(최대 진행 스테이지)
             };
         }
 
@@ -335,7 +332,5 @@ namespace Base.Managers
                 return inputChapter.CompareTo(baseChapter);
             return inputStage.CompareTo(baseStage);
         }
-
-        
     }
 }

@@ -8,12 +8,12 @@ using UnityEngine;
 public class ItemDropManager : MonoBehaviour, IManager
 {
     [SerializeField] private RuntimeProgressState progress;
+    [SerializeField] private EventHub hub;
     private PlayerRuntimeStatus stat => PlayerRuntimeStatus.Instance;
-    [SerializeField]private EventHub hub;
 
     public void Init()
     {
-        progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
+        progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
         hub = GameManager.Instance.GetGameSystem<EventHub>();
     }
 
@@ -79,7 +79,7 @@ public class ItemDropManager : MonoBehaviour, IManager
     public void GetItem(DropReward droppedItem)
     {
         hub.GetItems();
-        if (droppedItem.itemSO is EquipmentSO)
+        if (droppedItem.itemSO is Growth.Equipment.EquipmentSO)
         {
             GetEquip(droppedItem);
             return;
@@ -104,6 +104,15 @@ public class ItemDropManager : MonoBehaviour, IManager
     public void GetEquip(DropReward droppedItem)
     {
         Debug.Log($"{droppedItem} 장비 획득");
+        if (progress.equipmentInventory.equipmentEntries.ContainsKey(droppedItem.itemSO.key))
+        {
+            progress.equipmentInventory.equipmentEntries[droppedItem.itemSO.key].ownedCount += droppedItem.amount;
+            Debug.Log($"{droppedItem.itemSO.name} 추가 획득");
+            return;
+        }
+        progress.equipmentInventory.equipmentEntries.Add(droppedItem.itemSO.key,
+            new EquipmentEntryState(){enhancementLevel = 0, isDiscovered = true, ownedCount = droppedItem.amount});
+        Debug.Log($"{droppedItem.itemSO.name} 신규 획득");
         //MVP 이후 개발
     }
 
