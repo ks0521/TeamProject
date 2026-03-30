@@ -18,7 +18,7 @@ namespace Growth.Equipment
             }
         }
 
-        public ItemSO GetSO(int key)
+        public EquipmentSO GetSO(int key)
         {
             if (itemDic == null)
             {

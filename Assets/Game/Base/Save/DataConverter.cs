@@ -100,12 +100,12 @@ namespace Base.Save
             };
             //saveData의 리스트를 runtimeData의 딕셔너리로 변환
 
-            /*장비 부분은 mvp 이후 구현
-             foreach (var item in saveData.itemInventory.items)
+            //장비 부분은 mvp 이후 구현
+             foreach (var item in saveData.itemInventory.owneditemCounts)
             {
-                runData.itemInventory.items.TryAdd(item.key, item.count);
-                Debug.Log($"{item.key}키값을 가진 장비 추가 : {runData.itemInventory.items[item.key]}개 ");
-            }*/
+                runProgressState.itemInventory.ownedItemCounts.TryAdd(item.key, item.ownedCount);
+                Debug.Log($"{item.key}키값을 가진 장비 추가 : {runProgressState.itemInventory.ownedItemCounts[item.key]}개 ");
+            }
             foreach (var stat in saveData.statUpgrades.upgradeLevelsByType)
             {
                 runProgressState.statUpgrades.upgradeLevelsByType.TryAdd(stat.statType, stat.enhancementLevel);
