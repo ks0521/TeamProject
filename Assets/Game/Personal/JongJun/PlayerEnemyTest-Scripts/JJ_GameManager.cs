@@ -1,3 +1,4 @@
+using Base.Managers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ namespace Personal_Jongjun
     public class JJ_GameManager : MonoBehaviour
     {
         public static JJ_GameManager Instance;
-        [SerializeField] private JJ_StageManager stageManager;
         [SerializeField] private StatusCalculator calculator;
         private void Awake()
         {
@@ -25,7 +25,6 @@ namespace Personal_Jongjun
         private void Start()
         {
             JJ_GameDataManager.Instance.Init();
-            stageManager.Init();
         }
 
         // Update is called once per frame

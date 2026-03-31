@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,16 +8,34 @@ namespace Growth.Equipment
     [CreateAssetMenu(menuName = ("Game/Growth/EquipmentDictionary"))]
     public class EquipmentDictionarySO : ScriptableObject
     {
-        [FormerlySerializedAs("allItems")] [Header("아이템 전체")] public List<EquipmentSO> allEquipments = new();
+        [Header("아이템 전체")] public List<EquipmentSO> allEquipments = new();
         Dictionary<int, EquipmentSO> equipmentsDic;
+        private Dictionary<EquipType, List<EquipmentSO>> equipmentsTypeDic;
 
         void MakeDictionary()
         {
             equipmentsDic = new Dictionary<int, EquipmentSO>();
-            foreach (var euqipment in allEquipments)
+            equipmentsTypeDic = new Dictionary<EquipType, List<EquipmentSO>>();
+            foreach (EquipType type in Enum.GetValues(typeof(EquipType)))
             {
-                equipmentsDic.Add(euqipment.key, euqipment);
+                equipmentsTypeDic.Add(type, new List<EquipmentSO>());
             }
+            foreach (var equipment in allEquipments)
+            {
+                equipmentsDic.Add(equipment.key, equipment);
+                equipmentsTypeDic[equipment.equipType].Add(equipment);
+            }
+        }
+        public IReadOnlyList<EquipmentSO> GetEquipListByType(EquipType type)
+        {
+            if(equipmentsTypeDic == null) MakeDictionary();
+            Debug.Log($"{type} 형식의 장비 개수 : {equipmentsTypeDic[type].Count}");
+            return equipmentsTypeDic[type];
+        }
+
+        public IReadOnlyList<EquipmentSO> GetEquipList()
+        {
+            return allEquipments;
         }
 
         public EquipmentSO GetSO(int key)
