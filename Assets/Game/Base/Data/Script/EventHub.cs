@@ -11,7 +11,19 @@ namespace Base.Data
 {
     public class EventHub : MonoBehaviour, IGameSystem
     {
-        //UI 파트
+        public static EventHub Instance { get; private set; }
+        protected virtual void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                //DontDestroyOnLoad(gameObject); //필요하다면 추가
+            }
+            else Destroy(gameObject);
+        }
+
+        public event Action OnButtonClicked; //버튼 클릭
+        public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnPopupOpened; //팝업창 열기
         public void PopupOpened() => OnPopupOpened?.Invoke();
         public event Action OnPopupClosed; //팝업창 닫기
@@ -53,6 +65,10 @@ namespace Base.Data
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
         //재화 파트
+        public event Action OnMonsterHit; //몬스터 피격
+        public void MonsterHit() => OnMonsterHit?.Invoke();
+        public event Action OnPlayerHit; //플레이어 피격
+        public void PlayerHit() => OnPlayerHit?.Invoke();
         public event Action<CurrencyType, int> OnCurrencyChange; //재화 변경
         public void CurrencyChange(CurrencyType type, int amount) => OnCurrencyChange?.Invoke(type, amount);
         public event Action<int> OnLevelChange; //레벨업
@@ -63,6 +79,27 @@ namespace Base.Data
         public void GetItems() => OnGetItems?.Invoke(); // 사운드 연동용 이벤트
         public event Action OnGetEquipments;
         public void GetEquipments() => OnGetEquipments?.Invoke(); // 사운드 연동용 이벤트
+        public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
+        public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
+
+        //새로 추가된 이벤트(Action 뒤의 수식어는 고려 안 함)
+        //나중에 이벤트 목록 정리 부탁드립니다
+        public event Action OnAutoHuntActivate;
+        public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
+        public event Action OnBasicItemEquip;
+        public void EquipBasicItem() => OnBasicItemEquip.Invoke();
+        public event Action OnNormalMonsterKilled;
+        public void KillNormalMonster() => OnNormalMonsterKilled?.Invoke();
+        public event Action OnBossMonsterKilled;
+        public void KillBossMonster() => OnBossMonsterKilled?.Invoke();
+        public event Action OnAtkEnhance;
+        public void EnhanceAtk() => OnAtkEnhance?.Invoke();
+        public event Action OnHpEnhance;
+        public void EnhanceHp() => OnHpEnhance?.Invoke();
+        public event Action OnSkillEnhance;
+        public void EnhanceSkill() => OnSkillEnhance?.Invoke();
+        public event Action OnSkillInit;
+        public void InitSkill() => OnSkillInit?.Invoke();
 
         public int GetOrder() => 0;
     }
