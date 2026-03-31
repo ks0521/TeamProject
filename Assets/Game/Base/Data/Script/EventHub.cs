@@ -11,18 +11,7 @@ namespace Base.Data
 {
     public class EventHub : MonoBehaviour, IGameSystem
     {
-        public static EventHub Instance { get; private set; }
-        protected virtual void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-                //DontDestroyOnLoad(gameObject); //필요하다면 추가
-            }
-            else Destroy(gameObject);
-        }
-
-        #region  UI파트
+        #region UI파트
         public event Action OnButtonClicked; //버튼 클릭
         public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnPopupOpened; //팝업창 열기
@@ -104,6 +93,8 @@ namespace Base.Data
         public void EnhanceSkill() => OnSkillEnhance?.Invoke();
         public event Action OnSkillInit;
         public void InitSkill() => OnSkillInit?.Invoke();
+        public event Action<QuestData> OnQuestCompleted;
+        public void QuestCompleted(QuestData data) => OnQuestCompleted?.Invoke(data);
 
         public int GetOrder() => 0;
     }

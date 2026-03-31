@@ -7,15 +7,18 @@ namespace Personal.HagYun
 {
     public class SkillUIManager : MonoBehaviour, IManager
     {
-        private SkillButtonPresenter skillBtnPresenter;
+        [SerializeField] private SkillPopupPresenter skillTreePopupPresenter;
+        void Start()
+        {
+            Init();
+        }
         public void Init()
         {
-            skillBtnPresenter = GetComponent<SkillButtonPresenter>();
-            skillBtnPresenter.Init();
+            if (skillTreePopupPresenter != null) skillTreePopupPresenter.Init();
         }
         void OnDestroy()
         {
-            skillBtnPresenter.OnDestroyFeat();
+            if (skillTreePopupPresenter != null) skillTreePopupPresenter.OnDestroyFeat();
         }
         public int GetOrder() => 100;
     }

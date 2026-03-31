@@ -69,11 +69,11 @@ namespace Personal.HagYun
     public abstract class Skill : MonoBehaviour
     {
         // skill data
-        [SerializeField] protected SkillSO data;
+        [SerializeField] protected ActiveSkillSO data;
         // target 설정
         [SerializeField] protected LayerMask targetMask = 1 << 8;
         // property
-        public SkillSO Data => data;
+        public ActiveSkillSO Data => data;
         public LayerMask TargetMask => targetMask;
         // [field: SerializeField] public static Character PlOwner { get; protected set; }
         [SerializeField]protected Character owner;
@@ -105,12 +105,12 @@ namespace Personal.HagYun
         {
             //cha.Hit(PlSkillDmg());
             // cha.Hit(PlOwner.SkillResultDmg(data.baseDamage));
-            cha.Hit(owner.SkillResultDmg(data.baseDamage));
+            cha.Hit(owner.SkillResultDmg(data.baseValue));
         }
         public void PlAreaAtk(int inAreaTargetCnt)
         {
             if (inAreaTargetCnt <= 0) return;
-            float resultDmg = owner.SkillResultDmg(data.baseDamage);
+            float resultDmg = owner.SkillResultDmg(data.baseValue);
             for (int i = 0; i < inAreaTargetCnt; i++)
             {
                 if (OverlapChecker.GetTargetCol(i).GetComponent<Monster>() is Monster mon && !mon.IsDead)
