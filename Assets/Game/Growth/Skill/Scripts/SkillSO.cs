@@ -35,20 +35,13 @@ namespace Growth.Skill
     [CreateAssetMenu(menuName = "Game/Growth/Skill")]
     public class SkillSO : ScriptableObject
     {
+        [Header("Passive/Active 공용")]
         public int key; //고유 키
         public string skillName; //스킬 이름
-        public Type type; //스킬타입
-        public ScopeOfEffect SoE; //적용 범위
-        public TargetingMode Targeting; //스킬 시전 위치 기준
-        public float castingTime; //스킬 시전 시간
-        public int range; //스킬 사거리
-        public float baseDamage; //기본 데미지 배율
-        public float incDamagePerLevel; //레벨당 데미지 증가율
-        public float coolDown; //스킬 쿨다운
-        [Header("투사체 전용")] 
-        public float speed; //투사체 속도
-        [Header("범위 전용")] 
-        public float effectArea; //효과 범위
+        public virtual Type SkillType => Type.Passive; //스킬타입
+        public float baseValue; //기본 스킬 효과 배율
+        public float incValuePerLevel; //레벨당 스킬 효과 증가율
+        public string description;
         [Header("스킬 아이콘")] 
         public Sprite skillIcon;
         [Header("사운드")] 

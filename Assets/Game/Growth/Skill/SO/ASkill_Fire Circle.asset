@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24819714ea2d64447bbe5e75f3955385, type: 3}
+  m_Name: ASkill_Fire Circle
+  m_EditorClassIdentifier: 
+  key: 1004
+  skillName: Fire Circle
+  baseValue: 4
+  incValuePerLevel: 0.8
+  description: "\uC801 \uC704\uCE58\uB97C \uC911\uC2EC\uC73C\uB85C (\uBD88 \uC18D\uC131)
+    \uBC94\uC704 \uACF5\uACA9"
+  skillIcon: {fileID: 4543038839386311801, guid: 9245ba1a77707483fa1c66a62c7a69a6,
+    type: 3}
+  skillSound: {fileID: 8300000, guid: 67584b033518c38449f28f085557bd49, type: 3}
+  SoE: 1
+  Targeting: 2
+  castingTime: 1
+  range: 5
+  coolDown: 5
+  speed: 0
+  effectArea: 3

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24819714ea2d64447bbe5e75f3955385, type: 3}
+  m_Name: ASkill_Water Ball
+  m_EditorClassIdentifier: 
+  key: 1002
+  skillName: Water Ball
+  baseValue: 1.5
+  incValuePerLevel: 0.3
+  description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC (\uBB3C \uC18D\uC131) \uB2E8\uC77C
+    \uACF5\uACA9"
+  skillIcon: {fileID: 7215105689423546514, guid: 7f0334fbcb82d4dea9084d6f5a2ab8d3,
+    type: 3}
+  skillSound: {fileID: 8300000, guid: 273c7e018f039b7469d238fbb46d1751, type: 3}
+  SoE: 0
+  Targeting: 1
+  castingTime: 0.25
+  range: 3
+  coolDown: 2
+  speed: 3
+  effectArea: 0

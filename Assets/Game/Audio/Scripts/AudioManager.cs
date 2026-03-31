@@ -2,6 +2,7 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
+using QuestSystem;
 using UnityEngine;
 
 //BGMChanger, SkillSoundPlayer를 여기에서 참조
@@ -16,9 +17,11 @@ public class AudioManager : MonoBehaviour, IManager
     [SerializeField] private BGMChanger _bgmChanger;
     [SerializeField] private SkillSoundPlayer _skillPlayer;
     [SerializeField] private SFXPlayer _sfxPlayer;
+    [SerializeField] private QuestManager _questManager;
     //[SerializeField] private PopupManager _popupManager;
     //[SerializeField] private QuestManager _questManager;
-    
+
+
     private EventHub eventHub;
 
     void Awake()
@@ -72,6 +75,10 @@ public class AudioManager : MonoBehaviour, IManager
             hub.OnSkillSet += PlayAddSkillSound;
             hub.OnSkillUnset -= PlayUnaddSkillSound;
             hub.OnSkillUnset += PlayUnaddSkillSound;
+
+            hub.OnQuestCompleted -= PlayQuestClearSound;
+            hub.OnQuestCompleted += PlayQuestClearSound;
+
             Debug.Log("AudioManager: 모든 효과음 이벤트 연결 완료");
         }
     }
@@ -193,11 +200,7 @@ public class AudioManager : MonoBehaviour, IManager
     }
 
     //이제 퀘스트 완료는 EventHub가 감지함
-    public void PlayQuestAcceptSound()
-    {
-        _sfxPlayer?.PlayQuestAcceptSound();
-    }
-    public void PlayQuestClearSound()
+    public void PlayQuestClearSound(QuestData questData)
     {
         _sfxPlayer?.PlayQuestClearSound();
     }

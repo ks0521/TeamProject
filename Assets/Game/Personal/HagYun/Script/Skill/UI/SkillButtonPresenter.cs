@@ -3,6 +3,7 @@ using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
+using System.Threading;
 using UnityEngine;
 
 namespace Personal.HagYun
@@ -22,13 +23,13 @@ namespace Personal.HagYun
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             if (eventHub == null)
             {
-                Debug.LogWarning("TestUIPresenter에서 eventHub 찾지 못함");
+                // Debug.LogWarning("SkillButtonPresenter에서 eventHub 찾지 못함");
                 return;
             }
             pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
             if (pl == null)
             {
-                Debug.LogWarning("TestUIPresenter에서 Player 찾지 못함");
+                // Debug.LogWarning("SkillButtonPresenter에서 Player 찾지 못함");
                 return;
             }
             plEquipSkillController = pl.ESController;
@@ -37,19 +38,19 @@ namespace Personal.HagYun
             {
                 if (plEquipSkill[i] == null)
                 {
-                    Debug.LogWarning($"{i}번째 EquipSkill 없음");
+                    // Debug.LogWarning($"{i}번째 EquipSkill 없음");
                     continue;
                 }
                 int index = i;
                 SkillButtonView tBtnView = btnViewArr[index];
                 if (btnViewArr[index] == null)
                 {
-                    Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
+                    // Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
                     continue;
                 }
-                tBtnView.ButtonEventSet(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
+                tBtnView.ButtonEventSubscribe(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
                 CooltimeCheckTask(index).Forget();
-                SkillSO skillData = plEquipSkill[index].Skill.Data;
+                ActiveSkillSO skillData = plEquipSkill[index].Skill.Data;
                 tBtnView.SkillIconImageChange(skillData.skillIcon, skillData.Targeting == TargetingMode.Homing);
             }
             EquipSkillEventRemove();
@@ -65,14 +66,15 @@ namespace Personal.HagYun
         }
         async UniTaskVoid CooltimeCheckTask(int index)
         {
+            CancellationToken ct = this.GetCancellationTokenOnDestroy();
             while (true)
             {
                 if (pl.IsDead)
                 {
-                    await UniTask.WaitUntil(() => !pl.IsDead, PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy());
+                    await UniTask.WaitUntil(() => !pl.IsDead, PlayerLoopTiming.Update, ct);
                 }
                 CooltimeUpdate(index);
-                await UniTask.DelayFrame(10, PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy());
+                await UniTask.DelayFrame(10, PlayerLoopTiming.Update, ct);
                 
             }
         }
@@ -95,7 +97,7 @@ namespace Personal.HagYun
         void BtnCooltimeEndEvent(int index) => btnViewArr[index].CooltimeEnd();
         void SkillIconSet(int index)
         {
-            SkillSO tSkillData = plEquipSkill[index].Skill.Data;
+            ActiveSkillSO tSkillData = plEquipSkill[index].Skill.Data;
             btnViewArr[index].SkillIconImageChange(tSkillData.skillIcon, tSkillData.Targeting == TargetingMode.Homing);
         }
         void SkillIconUnset(int index) => btnViewArr[index].SkillIconImageChange(null, false);

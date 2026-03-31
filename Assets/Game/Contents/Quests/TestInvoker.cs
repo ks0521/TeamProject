@@ -6,6 +6,7 @@ using UnityEngine;
 public class TestInvoker : MonoBehaviour
 {
     private int _currentLevel = 1;
+    public EventHub eventHub;
 
     void Update()
     {
@@ -14,7 +15,7 @@ public class TestInvoker : MonoBehaviour
         {
             _currentLevel++;
             Debug.Log($"[테스트] 레벨업 버튼 클릭! 새 레벨: {_currentLevel}");
-            EventHub.Instance.LevelChanged(_currentLevel);
+            eventHub.LevelChanged(_currentLevel);
         }
 
         // End키를 누르면 스킬 사용 이벤트 발생 (1~6번 중 랜덤)
@@ -22,7 +23,7 @@ public class TestInvoker : MonoBehaviour
         {
             int randomSkill = Random.Range(1, 7);
             Debug.Log($"[테스트] 스킬 {randomSkill}번 버튼 클릭!");
-            EventHub.Instance.SkillUsed(randomSkill);
+            eventHub.SkillUsed(randomSkill);
         }
     }
 }

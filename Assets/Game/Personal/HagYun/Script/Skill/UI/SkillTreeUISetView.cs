@@ -4,26 +4,34 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using Growth.Skill;
 
 namespace Personal.HagYun
 {
     public class SkillTreeUISetView : MonoBehaviour
     {
-        [SerializeField] private Button lvUpBtn;
-        [SerializeField] private Button lvDownBtn;
+        [SerializeField] private Button skillDetailsPopupBtn;
         [SerializeField] private TextMeshProUGUI lvTxt;
-        public void LvUpUIBtnUpdate(bool isOn) => lvUpBtn.interactable = isOn;
-        public void LvDownUIBtnUpdate(bool isOn) => lvDownBtn.interactable = isOn;
-        public void LvTextSet(int curLv, int maxLv) => lvTxt.text = $"{curLv} / {maxLv}";
-        public void BtnEventSubscribe(Action lvUpFunc, Action lvDownFunc)
+        [SerializeField] private Image skillImg;
+        [SerializeField] private int skillNum;
+        public int SkillNum => skillNum;
+        public void SetSkillDetailsBtn(SkillSO skillData, int skillNum)
         {
-            lvUpBtn.onClick.AddListener(() => lvUpFunc());
-            lvDownBtn.onClick.AddListener(() => lvDownFunc());
+            skillImg.sprite = skillData.skillIcon;
+            if (skillData is ActiveSkillSO aSkillData && aSkillData.Targeting == TargetingMode.Homing)
+                skillImg.rectTransform.localEulerAngles = new Vector3(0, 0, 135f);
+            else
+                skillImg.rectTransform.localEulerAngles = Vector3.zero;
+            this.skillNum = skillNum;
+        }
+        public void SetLvText(int curLv, int maxLv) => lvTxt.text = $"{curLv} / {maxLv}";
+        public void BtnEventSubscribe(Action func)
+        {
+            skillDetailsPopupBtn.onClick.AddListener(() => func?.Invoke());
         }
         public void BtnEventUnsubscribe()
         {
-            lvUpBtn.onClick.RemoveAllListeners();
-            lvDownBtn.onClick.RemoveAllListeners();
+            skillDetailsPopupBtn.onClick.RemoveAllListeners();
         }
     }
 }
