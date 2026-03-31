@@ -5,7 +5,7 @@ using QuestSystem;
 
 public class NormalQuest : MonoBehaviour
 {
-    [SerializeField] private List<RecurringQuestData> questTemplates; //순환할 퀘스트 목록
+    [SerializeField] private List<QuestData> questTemplates; //순환할 퀘스트 목록
 
     private int playerLevel;
 
@@ -35,9 +35,11 @@ public class NormalQuest : MonoBehaviour
             currentStep.OnStartQuest();
             await currentStep.ExecuteStepAsync();
 
+            /*
             //여기서는 플레이어의 레벨 * 10만큼 골드가 지급되는 것을 가정함
             int questReward = data.GetScaledReward(playerLevel);
             GiveReward(questReward);
+            */
 
             currentStep.OnCompleteQuest();
             //나눗셈의 나머지에 해당하는 순서대로 퀘스트가 등장
@@ -48,11 +50,11 @@ public class NormalQuest : MonoBehaviour
         }
     }
 
-    IQuestStep CreateStepFromData(RecurringQuestData data)
+    IQuestStep CreateStepFromData(QuestData data)
     {
         switch (data.type)
         {
-            case RecurringQuestData.QuestType.Click:
+            case QuestData.GoalType.Hunt:
                 return null;
                 /* 예시
                 return new Tutorial_HuntStep(
