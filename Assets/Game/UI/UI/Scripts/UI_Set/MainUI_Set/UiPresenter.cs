@@ -54,7 +54,6 @@ namespace UI.Scripts.UiPresenter
         {
             StageManager stageManager = GameManager.Instance.GetGameSystem<StageManager>();
             Character player = FindAnyObjectByType<Character>();
-            
 
             if (player != null)
             {

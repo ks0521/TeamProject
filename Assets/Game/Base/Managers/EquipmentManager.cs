@@ -34,15 +34,17 @@ namespace Base.Manager
         private RuntimeProgressState runtimeState;
         private ItemDropManager dropManager;
         private EventHub eventHub;
-        private RuntimeEquipmentInventoryState EquipmentInventory => runtimeState.equipmentInventory;
+        private Dictionary<int, EquipmentEntryState> EquipmentInventory => runtimeState.equipmentInventory.equipmentEntries;
 
-        /// <summary> 현재 보유중인 모든 장비를 조회 </summary>
-        /// <returns>EquipmentCatalog 리스트</returns>
-        public List<EquipmentCatalog> AllEquipmentCatalogs()
+        #region 탐색
+        /// <summary> 특정 타입의 장비 관리 상태 가져오기 </summary>
+        /// <param name="type"> 찾고자하는 장비 타입</param>
+        /// <returns>type의 모든 아이템 카탈로그</returns>
+        public List<EquipmentCatalog> GetEquipmentCatalogs(EquipType type)
         {
             List<EquipmentCatalog> catalogs = new();
-            //장비 딕셔너리에 있는 모든 아이템 순회
-            foreach (var equipment in dictionarys.equipmentTable.allEquipments)
+            //type 장비를 모두 가져오기
+            foreach (var equipment in dictionarys.equipmentTable.GetEquipListByType(type))
             {
                 //장비 딕셔너리에 있는 장비를 플레이어가 가지고 있을 때
                 if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
@@ -60,21 +62,53 @@ namespace Base.Manager
             }
             return catalogs;
         }
-        
+        /// <summary> 현재 도감에 있는 모든 장비를 조회 </summary>
+        /// <returns>EquipmentCatalog 리스트</returns>
+        public List<EquipmentCatalog> GetAllEquipmentCatalogs()
+        {
+            List<EquipmentCatalog> catalogs = new();
+            //type 장비를 모두 가져오기
+            foreach (var equipment in dictionarys.equipmentTable.GetEquipList())
+            {
+                //장비 딕셔너리에 있는 장비를 플레이어가 가지고 있을 때
+                if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
+                {
+                    catalogs.Add(new EquipmentCatalog(
+                        equipment.key,
+                        equipment,
+                        value));
+                    continue;
+                }
+                catalogs.Add(new EquipmentCatalog(
+                    equipment.key,
+                    equipment,
+                    GetDefaultEquipmentEntryState()));
+            }
+            return catalogs;
+        }
         /// <summary> 찾으려 하는 특정 키의 장비 정보를 확인함</summary>
-        /// <returns>있으면 true, 없으면 false (catalog = null)</returns>
+        /// <returns>있으면 true, 없으면 false (catalog = default)</returns>
         public bool TryGetEquipmentCatalog(int key, out EquipmentCatalog catalog)
         {
             EquipmentSO equip = dictionarys.equipmentTable.GetSO(key);
-            EquipmentEntryState state = runtimeState.equipmentInventory.equipmentEntries[key];
-            catalog = null;
-            if (equip == null || state == null)
+            if (equip == null)
             {
+                Debug.LogWarning("EquipMentManager : 찾으려는 키의 장비가 없습니다. ");
+                catalog = null;
                 return false;
             }
-            catalog = new(key, equip, state);
+            //장비 획득정보가 있으면 해당 정보를 카탈로그화시켜서 반환
+            if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(key, out EquipmentEntryState state))
+            {
+                catalog = new EquipmentCatalog(inputKey: equip.key, inputEquipment: equip, inputState: state);
+                return true;
+            }
+            //장비 획득정보가 없으면 기본값을 카탈로그화시켜서 반환
+            catalog = new EquipmentCatalog(inputKey: equip.key, inputEquipment: equip,
+                inputState: GetDefaultEquipmentEntryState());
             return true;
         }
+        #endregion
         
         /// <summary> 장비 장착 </summary>
         /// <param name="equipment"></param>
@@ -88,24 +122,30 @@ namespace Base.Manager
             runtimeState.equipment.equippedWeponKey = equipment.key;
             //장작후 스탯 계산 필요
         }
+
+        #region 합성
+
         
+
+        /// <summary> 장비 합성이 가능한지 확인</summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool CanEquipmentCombine(int key)
         {
             //장비가 없으면 합성불가
-            if (!EquipmentInventory.equipmentEntries.ContainsKey(key)) return false;
-            //장비 개수가 조합개수보다 낮으면 합성불가
-            if (EquipmentInventory.equipmentEntries[key].ownedCount < 
-                dictionarys.equipmentTable.GetSO(key).combineNeedAmount) return false;
+            if (!EquipmentInventory.ContainsKey(key)) return false;
             //장비도감에 다음 장비가 없으면(합성 결과의 장비가 없으면) 합성불가 
-            if (!EquipmentInventory.equipmentEntries.ContainsKey(key + 1)) return false;
+            if (!EquipmentInventory.ContainsKey(key + 1)) return false;
+            //장비 개수가 조합개수보다 낮으면 합성불가
+            if (EquipmentInventory[key].ownedCount < 
+                dictionarys.equipmentTable.GetSO(key).combineNeedAmount) return false;
             return true;
         }
-
         public bool TryEquipmentCombine(int key)
         {
             if (!CanEquipmentCombine(key)) return false;
-            EquipmentInventory.equipmentEntries[key].ownedCount -=
-                dictionarys.equipmentTable.GetSO(key).combineNeedAmount;
+            //EquipmentInventory.equipmentEntries[key].ownedCount -=
+                //dictionarys.equipmentTable.GetSO(key).combineNeedAmount;
             //해당 장비보다 +1 키 높은 아이템 획득
             dropManager.GetEquip(new DropReward()
             {
@@ -116,6 +156,29 @@ namespace Base.Manager
             Debug.Log("장비 합성 완료");
             return true;
         }
+        #endregion
+
+        #region 강화
+        /// <summary> 해당 장비 강화가 가능한지 확인하는 메서드</summary>
+        /// <returns></returns>
+        public bool CanEnhanceEquipment(EquipmentSO equipmentSo)
+        {
+            if (!EquipmentInventory.ContainsKey(equipmentSo.key)) return false;
+            int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
+            Debug.Log($"CanEnhance : {equipmentSo.itemName}, {cost}, {runtimeState.currency.gold}");
+            if (cost > runtimeState.currency.gold) return false;
+            return true;
+        }
+        
+        public bool TryEnhanceEquipment(EquipmentSO equipmentSo)
+        {
+            if (!CanEnhanceEquipment(equipmentSo)) return false;
+            Debug.Log("강화 성공");
+            return true;
+        }
+        #endregion
+        
+        
         /// <summary> 기본 상태(미획득) 장비의 EquipmentEntryState 획득용 </summary>
         EquipmentEntryState GetDefaultEquipmentEntryState()
         {

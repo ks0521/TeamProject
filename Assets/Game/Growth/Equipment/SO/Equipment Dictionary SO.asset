@@ -12,10 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5582d753903d01742ad1af4fe72dc5eb, type: 3}
   m_Name: Equipment Dictionary SO
   m_EditorClassIdentifier: 
-  allItems:
-  - {fileID: 11400000, guid: 56dbbec104ef1474d91373bd2d76a9e4, type: 2}
-  - {fileID: 11400000, guid: ab0d5ad1a4b923f4285b160a5823522c, type: 2}
-  - {fileID: 11400000, guid: cafe546198825cb4ea55ff5be8949f9e, type: 2}
-  - {fileID: 11400000, guid: c203df7984fff7843b584b21dc61a52b, type: 2}
-  - {fileID: 11400000, guid: 0e77776ac9322a64abe8304ece76cb84, type: 2}
-  - {fileID: 11400000, guid: 33a152f5a74523340ae16a52c384f028, type: 2}
+  allEquipments:
+  - {fileID: 11400000, guid: 1615734851d7cd447b453968a9e5877b, type: 2}
+  - {fileID: 11400000, guid: e69950c322d92d44490ce86f6b19b961, type: 2}
+  - {fileID: 11400000, guid: 00851e9d586358d468fb85a9fd8c4743, type: 2}
+  - {fileID: 11400000, guid: d1f8823033b3c854b914eb1fc2746f89, type: 2}
+  - {fileID: 11400000, guid: 567e0988b8709144d9905728aef88768, type: 2}
+  - {fileID: 11400000, guid: 532712ec5d54c2140a9d134479575295, type: 2}
+  - {fileID: 11400000, guid: 1d2bdb155df00c3439bd346cd2aed98d, type: 2}
+  - {fileID: 11400000, guid: f3a79261ed87c424a8ae72087b3d3a6a, type: 2}
+  - {fileID: 11400000, guid: dda9cf2e0fed00f46a87f62eeec197d3, type: 2}
+  - {fileID: 11400000, guid: bc37f93d49a9f91458dd98f7ec01f7e8, type: 2}
+  - {fileID: 11400000, guid: a5117026fd65cef41a7f6a9c0c9d1d27, type: 2}
+  - {fileID: 11400000, guid: 8ad746beadfbd3f4193540c7bda190fc, type: 2}
+  - {fileID: 11400000, guid: 83da057c8ede10f43930366b9e9434f0, type: 2}
+  - {fileID: 11400000, guid: 9abcc2c5ef11eef4da31b134e2bca4ae, type: 2}
+  - {fileID: 11400000, guid: 45856600c46ac9d4db3ec5fd76d881b8, type: 2}
+  - {fileID: 11400000, guid: cccab427b4dac464c87de2d0c64965dc, type: 2}
