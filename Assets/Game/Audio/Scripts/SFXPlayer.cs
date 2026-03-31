@@ -38,7 +38,6 @@ public class SFXPlayer : MonoBehaviour
     [SerializeField] private AudioClip initSP;
 
     [Header("퀘스트")]
-    [SerializeField] private AudioClip acceptQuest;
     [SerializeField] private AudioClip clearQuest;
 
     [Header("기타")]
@@ -217,13 +216,6 @@ public class SFXPlayer : MonoBehaviour
 
 
     //퀘스트
-    public void PlayQuestAcceptSound()
-    {
-        sfxSource.clip = acceptQuest;
-
-        if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
-        else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
-    }
     public void PlayQuestClearSound()
     {
         sfxSource.clip = clearQuest;
