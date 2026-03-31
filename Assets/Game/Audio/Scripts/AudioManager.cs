@@ -19,6 +19,8 @@ public class AudioManager : MonoBehaviour, IManager
     [SerializeField] private SFXPlayer _sfxPlayer;
     [SerializeField] private QuestManager _questManager;
     //[SerializeField] private PopupManager _popupManager;
+    //[SerializeField] private QuestManager _questManager;
+
 
     private EventHub eventHub;
 

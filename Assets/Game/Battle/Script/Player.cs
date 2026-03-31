@@ -18,6 +18,7 @@ namespace Battle
         public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
         protected override float AttackRange => runtimeStatus.finalRange;
         [SerializeField] private StageManager stageManager;
+        [SerializeField] private EventHub hub;
         [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
         public override float Hp
         {
@@ -42,6 +43,8 @@ namespace Battle
         {
             base.Init();
             equipSkillController.Init(this);
+            hub = GameManager.Instance.GetGameSystem<EventHub>();
+            stageManager = GameManager.Instance.GetGameSystem<StageManager>();
         }
 
         void Rebirth()
@@ -54,10 +57,6 @@ namespace Battle
         {
             if (isDead) return;
             isDead = true;
-
-            var hub = GameManager.Instance.GetGameSystem<EventHub>();
-            if (stageManager == null)
-                stageManager = GameManager.Instance.GetGameSystem<StageManager>();
 
             if (hub != null && stageManager != null)
             {

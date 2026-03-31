@@ -112,7 +112,7 @@ namespace Game_UI.Scripts.PopupManager
             if (stagemanager.CurStageSO == null) return;
             if (stagemanager.CurStageSO.type != StageType.Normal) return;
             OpenPopup(deadPop);
-
+            Debug.Log("플레이어 사망. 페이드 아웃 시작");
             StartCoroutine(FadeOutPopup(deadPop, 3f));
         }
         void ClearEventChain(StageSO stage)
@@ -141,7 +141,7 @@ namespace Game_UI.Scripts.PopupManager
             popupCan.alpha = 1f;
 
             float endTime = 0f;
-
+            Debug.Log("팝업 사라지기 시작");
             while (endTime < time)
             {
                 endTime += Time.deltaTime;

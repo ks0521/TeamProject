@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9d57c92d5904649a7945a47bc6f41a, type: 3}
   m_Name: Gold
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: f90931864524c4d51845c8d771dfb44b, type: 3}
+  icon: {fileID: 21300000, guid: a8346eae3097347d996fac751c81108f, type: 3}
   currencyName: 
   explain: "\uC7A5\uBE44 \uAC15\uD654\uC5D0 \uC0AC\uC6A9\uD560 \uC218 \uC788\uB2E4"
   type: 1
