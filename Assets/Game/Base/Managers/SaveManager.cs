@@ -69,7 +69,7 @@ namespace Base.Managers
                 },
                 equipmentInventory = new EquipmentInventoryState()
                 {
-                  equipmentEntries  = new ()
+                    equipmentEntries = new()
                 },
                 equipment = new PlayerEquipmentState(),
                 itemInventory = new PlayerItemInventoryState()
