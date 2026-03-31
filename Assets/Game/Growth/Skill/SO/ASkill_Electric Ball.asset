@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24819714ea2d64447bbe5e75f3955385, type: 3}
+  m_Name: ASkill_Electric Ball
+  m_EditorClassIdentifier: 
+  key: 1003
+  skillName: Electric Ball
+  baseValue: 2.5
+  incValuePerLevel: 0.5
+  description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC (\uC804\uAE30 \uC18D\uC131)
+    \uB2E8\uC77C \uACF5\uACA9"
+  skillIcon: {fileID: -2895734620076278133, guid: a4ce094c050bd4387bb4ca527872a97e,
+    type: 3}
+  skillSound: {fileID: 8300000, guid: 5a6cf313af01d5b48a9351abe17b9416, type: 3}
+  SoE: 0
+  Targeting: 1
+  castingTime: 0.5
+  range: 3
+  coolDown: 4
+  speed: 7
+  effectArea: 0
