@@ -50330,6 +50330,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7941743337931087538}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8727151566373145065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1669620919831582555, guid: 4d460e4b64bf47e42bb2031e199817a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 7941743337931087538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8a72ae5c6bcfa243a557db579db8345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8806494950962437526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50438,6 +50450,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7573032193280317661, guid: a4f792cc93c729144877f6c7ca0df3ef,
+        type: 3}
+      propertyPath: skillTreePopupPresenter
+      value: 
+      objectReference: {fileID: 8727151566373145065}
     - target: {fileID: 8028623331276622995, guid: a4f792cc93c729144877f6c7ca0df3ef,
         type: 3}
       propertyPath: m_Name

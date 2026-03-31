@@ -16,7 +16,7 @@ namespace Personal.HagYun
         // public void BorderSpriteSet(Sprite[] borderArr) => this.borderArr = borderArr;
         public void OnDestroyFeat()
         {
-            btn.onClick.RemoveAllListeners();
+            ButtonEventUnsubscribe();
         }
         public void SkillIconImageChange(Sprite sp, bool isHomingSkill)
         {
@@ -45,7 +45,8 @@ namespace Personal.HagYun
             IsSelected = false;
             btn.image.sprite = borderImg;
         }
-        public void ButtonEventSet(Action func) => btn.onClick.AddListener(() => func());
+        public void ButtonEventSubscribe(Action func) => btn.onClick.AddListener(() => func());
+        public void ButtonEventUnsubscribe() => btn.onClick.RemoveAllListeners();
         // public void BtnImageUpdate(float value) => btn.image.fillAmount = value;
         public void CooltimeShowUpdate(float value) => cooltimeMask.fillAmount = value;
     }
