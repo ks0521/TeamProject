@@ -40,6 +40,7 @@ namespace Base.Managers
         private int curChapter = 0; //현재 진행중인 챕터
         private int curStage = 0; //현재 진행중인 스테이지
         private bool isStageResultProcessing; //현재 스테이지 진행여부 플래그
+        private bool isRebirthProcessing; //일반 스테이지 사망 후 부활 처리 중복 방지
         private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress; //축약용 프로퍼티
         private MonsterPoolManager monsterPool; //몬스터 풀
         private GameDataProvider datahub;
@@ -293,7 +294,7 @@ namespace Base.Managers
         void OnPlayerDie(Character character)
         {
             if (stageSO == null) return;
-
+            Debug.Log("StageMaanger : 플레이어 사망");
             if (stageSO.type == StageType.Normal)
             {
                 DelayRebirth(3f, this.GetCancellationTokenOnDestroy()).Forget();

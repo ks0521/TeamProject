@@ -14,19 +14,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 3003
   icon: {fileID: 21300000, guid: 50926d2b8d6be441c82b4896647d4004, type: 3}
-  itemName: Staff
+  itemName: Staff3
   context: Staff3
   equipType: 0
   rarity: 0
   quality: 2
-  incAtk: 15
-  multipleAtk: 0
-  incHp: 0
-  multipleHp: 0
-  dmgReduce: 0
-  itemDropRateBonus: 0
-  incGold: 0
-  incExp: 0
-  incStat: 0
-  incSpeed: 0
-  atkSpeed: 0
+  equipBaseIncrease:
+    flatAttack: 15
+    attackRate: 0
+    flatMaxHp: 0
+    maxHpRate: 0
+    damageReductionRate: 0
+    itemDropRateBonus: 0
+    goldGainRate: 0
+    expGainRate: 0
+    statStoneGainRate: 0
+    moveSpeedRate: 0
+    attackSpeedRate: 0
+  equipPerLevelIncrease:
+    flatAttack: 15
+    attackRate: 0
+    flatMaxHp: 0
+    maxHpRate: 0
+    damageReductionRate: 0
+    itemDropRateBonus: 0
+    goldGainRate: 0
+    expGainRate: 0
+    statStoneGainRate: 0
+    moveSpeedRate: 0
+    attackSpeedRate: 0
+  ownedBaseIncrease:
+    flatAttack: 15
+    attackRate: 0
+    flatMaxHp: 0
+    maxHpRate: 0
+    damageReductionRate: 0
+    itemDropRateBonus: 0
+    goldGainRate: 0
+    expGainRate: 0
+    statStoneGainRate: 0
+    moveSpeedRate: 0
+    attackSpeedRate: 0
+  ownedPerLevelIncrease:
+    flatAttack: 15
+    attackRate: 0
+    flatMaxHp: 0
+    maxHpRate: 0
+    damageReductionRate: 0
+    itemDropRateBonus: 0
+    goldGainRate: 0
+    expGainRate: 0
+    statStoneGainRate: 0
+    moveSpeedRate: 0
+    attackSpeedRate: 0

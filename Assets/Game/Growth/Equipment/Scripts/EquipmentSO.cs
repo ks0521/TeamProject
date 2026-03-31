@@ -1,10 +1,12 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Growth.Equipment
 {
     public enum EquipType
     {
-        Weapon
+        Weapon, Armor, Accessory
     }
 
     public enum EquipRarity
@@ -13,8 +15,28 @@ namespace Growth.Equipment
     }
 
     public enum EquipQuality
+    {//하, 중, 상, 최상
+        Low, Middle, High, Best
+    }
+    /// <summary> 장비의 증가효과(공통)</summary>
+    [Serializable]
+    public struct StatIncrease
     {
-        Low, Middle, High
+        [Header("Attack")]
+        public int flatAttack;              // 공격력 증가(상수)
+        public float attackRate;            // 공격력 % 증가
+        [Header("Defence")]
+        public int flatMaxHp;               // HP 증가(상수)
+        public float maxHpRate;             // HP % 증가
+        public float damageReductionRate;   // 받는 피해 비율 감소
+        [Header("Reward")]
+        public float itemDropRateBonus;     // 아이템 드랍률 증가
+        public float goldGainRate;          // 골드 획득량 증가
+        public float expGainRate;           // 경험치 획득량 증가
+        public float statStoneGainRate;     // 스탯 강화석 획득량 증가
+        [Header("Utility")]
+        public float moveSpeedRate;         // 이동속도 증가
+        public float attackSpeedRate;       // 공격속도 증가
     }
     [CreateAssetMenu(menuName = "Game/Reward/Equipment")]
     public class EquipmentSO : ItemSO
@@ -23,19 +45,12 @@ namespace Growth.Equipment
         [Header("Quality")] 
         public EquipRarity rarity;
         public EquipQuality quality;
-        [Header("Manage")] 
-        public int combineNeedAmount;//합성하는데 필요한 장비 개수
-        public int enhanceCost;//강화 비용
-        [Header("Attack")] public int incAtk; //공격력 증가(상수)
-        public float multipleAtk; //공격력% 증가(배율)
-        [Header("Defence")] public int incHp; //hp증가(상수)
-        public float multipleHp; //hp% 증가(배율)
-        public float dmgReduce; //받는 피해 비율 감소(배율)
-        [Header("Reward")] public float itemDropRateBonus; //아이템 드랍률(배율)
-        public float incGold; //골드 획득량 증가(배율)
-        public float incExp; //경험치 획득량 증가(배율)
-        public float incStat; //스탯 강화석 획득량 증가(배율)
-        [Header("Utility")] public float incSpeed; //이동속도 증가 (배율)
-        public float atkSpeed; //공속 증가 (배율)
+
+        public int combineNeedAmount;
+        public int UpgradeNeedCost;
+        public StatIncrease equipBaseIncrease;       // 장착 시 증가 스탯
+        public StatIncrease equipPerLevelIncrease; // 레벨당 장착 시 증가 스탯
+        public StatIncrease ownedBaseIncrease;     // 보유 시 증가 스탯
+        public StatIncrease ownedPerLevelIncrease;    // 레벨당 보유 시 증가 스탯
     }
 }  

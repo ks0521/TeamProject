@@ -147,8 +147,8 @@ namespace Battle
         }
         protected void NormalAttack(Character target)
         {
-            if (target == null|| !canAtk || isDead || isAtkCooltime) return;
-
+            if (target == null || !canAtk || isDead || isAtkCooltime) return;
+            
             AtkCooltimeTask().Forget();
             //Debug.Log($"{name} 이 {target.name}에게 일반공격!");
             if (spumController != null)

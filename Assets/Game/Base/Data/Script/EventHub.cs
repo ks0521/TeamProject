@@ -22,16 +22,16 @@ namespace Base.Data
             else Destroy(gameObject);
         }
 
+        #region  UI파트
         public event Action OnButtonClicked; //버튼 클릭
         public void ButtonClicked() => OnButtonClicked?.Invoke();
         public event Action OnPopupOpened; //팝업창 열기
         public void PopupOpened() => OnPopupOpened?.Invoke();
         public event Action OnPopupClosed; //팝업창 닫기
         public void PopupClosed() => OnPopupClosed?.Invoke();       
-        public event Action OnButtonClicked; //버튼 클릭
-        public void ButtonClicked() => OnButtonClicked?.Invoke();
+        #endregion
 
-        //스테이지 파트
+        #region 스테이지 파트
         public event Action<StageSO> OnChangeStage; //스테이지 변경
         public void StageChanged(StageSO stage) => OnChangeStage?.Invoke(stage);
         public event Action<StageSO> OnClearStage; //스테이지 클리어
@@ -40,7 +40,9 @@ namespace Base.Data
         public void StageFailed(StageSO stage) => OnFailStage?.Invoke(stage);        
         public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
         public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
-        // 공격 / 피격 관련 파트
+        #endregion
+
+        #region 전투 파트
         public event Action<Character> OnDeadPlayer; //플레이어 사망
         public void PlayerDead(Character character) => OnDeadPlayer?.Invoke(character);
         public event Action<float, float> OnHpChange; //HP변경
@@ -48,7 +50,12 @@ namespace Base.Data
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
         public event Action OnPlayerHit; //플레이어 피격
-        //스킬 관련 파트
+        public event Action<MonsterSO> OnMonsterKill; //몬스터 피격
+        public void MonsterKill(MonsterSO monsterSO) => OnMonsterKill?.Invoke(monsterSO);
+        
+        #endregion
+
+        #region 스킬 파트
         public event Action<int> OnSkillSet; 
         public void SkillSet(int order) => OnSkillSet?.Invoke(order);
         public event Action<int> OnSkillUnset;
@@ -64,11 +71,9 @@ namespace Base.Data
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
-        //재화 파트
-        public event Action OnMonsterHit; //몬스터 피격
-        public void MonsterHit() => OnMonsterHit?.Invoke();
-        public event Action OnPlayerHit; //플레이어 피격
-        public void PlayerHit() => OnPlayerHit?.Invoke();
+        #endregion
+
+        #region 재화 파트
         public event Action<CurrencyType, int> OnCurrencyChange; //재화 변경
         public void CurrencyChange(CurrencyType type, int amount) => OnCurrencyChange?.Invoke(type, amount);
         public event Action<int> OnLevelChange; //레벨업
@@ -79,8 +84,7 @@ namespace Base.Data
         public void GetItems() => OnGetItems?.Invoke(); // 사운드 연동용 이벤트
         public event Action OnGetEquipments;
         public void GetEquipments() => OnGetEquipments?.Invoke(); // 사운드 연동용 이벤트
-        public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
-        public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
+        #endregion
 
         //새로 추가된 이벤트(Action 뒤의 수식어는 고려 안 함)
         //나중에 이벤트 목록 정리 부탁드립니다
