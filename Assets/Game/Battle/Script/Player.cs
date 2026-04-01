@@ -1,5 +1,6 @@
 using Base.Data;
 using Base.Managers;
+using Base.Save;
 using Cysharp.Threading.Tasks;
 using Personal.HagYun;
 using System;
@@ -12,14 +13,6 @@ namespace Battle
     public class Player : Character
     {
         // outside component
-        [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
-        [SerializeField] protected PlayerEquipSkillController equipSkillController;
-        public PlayerEquipSkillController ESController => equipSkillController;
-        public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
-        protected override float AttackRange => runtimeStatus.finalRange;
-        [SerializeField] private StageManager stageManager;
-        [SerializeField] private EventHub hub;
-        [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
         public override float Hp
         {
             get => hp;
@@ -37,14 +30,24 @@ namespace Battle
                 }
             }
         }
+        public PlayerEquipSkillController ESController => equipSkillController;
+        public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
+        protected override float AttackRange => runtimeStatus.finalRange;
+        [SerializeField] private RuntimeProgressState runtimeProgress;
+        [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
+        [SerializeField] protected PlayerEquipSkillController equipSkillController;
+        [SerializeField] private StageManager stageManager;
+        [SerializeField] private EventHub hub;
+        [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
 
-        public int Level => runtimeStatus.Level;
+        public int Level => runtimeProgress.currency.level;
         public override void Init()
         {
             base.Init();
             equipSkillController.Init(this);
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+            runtimeProgress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
         }
 
         void Rebirth()
@@ -64,7 +67,6 @@ namespace Battle
             }
 
             DeadMotionAsync().Forget();
-            Debug.Log("플레이어 사망");
         }
 
         public void RecoveryHP(int value)
@@ -75,7 +77,6 @@ namespace Battle
         {
             var cts = this.GetCancellationTokenOnDestroy();
 
-            Debug.Log("플레이어 사망...");
             state = CharacterState.Dead;
             if (spumController != null)
             {
@@ -121,7 +122,6 @@ namespace Battle
             if (target == null || target.IsDead || !target.isActiveAndEnabled)
             {
                 if (!FindTarget()) return;
-                //Debug.Log("새로운 타겟 지정완료");
             }
 
             FixedUpdateMoveFeat();
@@ -150,7 +150,6 @@ namespace Battle
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)
             {
-                //Debug.LogWarning("현재 스테이지에 나와있는 몬스터가 없습니다. ");
                 return false;
             }
 
@@ -158,8 +157,6 @@ namespace Battle
             foreach (var monster in stageMonsters)
             {
                 if (monster.IsDead) continue;
-                //3.23(규성) : 몬스터가 사망모션이 생겨서 죽어도 타겟에 남아있어서 이를 해결하려고 합니다.
-                //이 방식은 비효율적인것 같아서 이후 바꾸려고 합니다
                 dist = Vector2.Distance(transform.position, monster.transform.position);
                 if (dist < minDist)
                 {
@@ -178,9 +175,6 @@ namespace Battle
             cm.FixedMove();
             UpdateFacing(target.transform.position.x - transform.position.x);
             //if (!CheckAtkRangeCollision(ref monColArr))
-            //3.24(규성) : 조건문이 살짝 이상하게 걸려있는것 같아서 수정합니다. 
-            //isAtkCooltime은 명칭만 보면 공격에만 영향을 줘야하지만 현재는 이동에도 영향을 주고 있습니다
-            //따라서 isAtkCooltime 조건문을 공격부분에만 지정했습니다
             if (!CheckTargetIsClose())
             {
                 state = CharacterState.Move;
@@ -193,24 +187,13 @@ namespace Battle
             }
             else
             {
-                //Debug.Log(Vector2.Distance(target.transform.position, transform.position));
                 if (isAtkCooltime) return; 
-                //3.24(규성) : state 변화때문에 isAtkCooltime 조건을 걸어놓았습니다. 
-                //원래는 Character.NormalAtk에 isAtkCooltime 조건이 걸려있어 불필요한 조건입니다
                 state = CharacterState.Attack;
                 AtkFeat();
                 //cm.VChaseMove(DirFromPosToTarget());
             }
         }
 
-        // void TestMoveTargetSet()
-        // {
-        //     if (target == null && MonsterSetComponent.ins.TryGetMonster(out GameObject obj))
-        //     {
-        //         target = obj.GetComponent<Monster>();
-        //         targetTransform = obj.transform;
-        //     }
-        // }
         void AtkFeat()
         {
             if (target == null)

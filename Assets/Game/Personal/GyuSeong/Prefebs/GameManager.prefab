@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a94006e5af37774b91d6f7d080a1594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerStatCalculator: {fileID: 0}
   progress:
     stage:
       selectedNormalStage: 0
@@ -102,11 +103,14 @@ MonoBehaviour:
       exp: 0
       gold: 0
       statStone: 0
+    equipment:
+      equippedWeponKey: 0
+      equippedArmorKey: 0
+      equippedAccessoryKey: 0
     skillProgress:
       skillSlots: 0
     lastSession:
       lastConnectTime: 0
-  playerStatCalculator: {fileID: 0}
 --- !u!1 &8219014861411383797
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +122,7 @@ GameObject:
   - component: {fileID: 1680869713527538935}
   - component: {fileID: 4680927838447828395}
   - component: {fileID: 1117561631283408730}
+  - component: {fileID: 4994273503000915237}
   m_Layer: 0
   m_Name: GrowthManager
   m_TagString: Untagged
@@ -175,10 +180,29 @@ MonoBehaviour:
       exp: 0
       gold: 0
       statStone: 0
+    equipment:
+      equippedWeponKey: 0
+      equippedArmorKey: 0
+      equippedAccessoryKey: 0
     skillProgress:
       skillSlots: 0
     lastSession:
       lastConnectTime: 0
+  hub: {fileID: 0}
+--- !u!114 &4994273503000915237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8219014861411383797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e83967ece47da40a1a484faf5b6d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NEED_COMBINE: 5
+  equipItem: {fileID: 0}
 --- !u!1 &9049779580080515874
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,25 +247,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed200e9fa2e7cb4883e694787f3297b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testChapter: 0
-  testStage: 0
-  testEntry:
-    chapter: 0
-    stage: 0
-    stageSO: {fileID: 0}
-    type: 0
-  BlockSpawning: 0
-  stage:
-    monsterPool: {fileID: 0}
-    stageSO: {fileID: 0}
-    monstersList: []
-    canSpawning: 0
-    spawnDelay: 0
-  stageSO: {fileID: 0}
-  stageProgress:
-    selectedNormalChapter: 0
-    selectedNormalStage: 0
-    nextChallengeChapter: 0
-    nextChallengeStage: 0
-  type: 0
+  BlockSpawning: 1
   spawnArea: {fileID: 0}

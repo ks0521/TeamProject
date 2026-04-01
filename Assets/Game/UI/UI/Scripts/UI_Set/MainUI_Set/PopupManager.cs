@@ -109,8 +109,8 @@ namespace Game_UI.Scripts.PopupManager
 
         void PlayerDeadEventChain(Character character)
         {
-            if (stagemanager.CurStageSO == null) return;
-            if (stagemanager.CurStageSO.type != StageType.Normal) return;
+            if (stagemanager.CurCurrentStageSo == null) return;
+            if (stagemanager.CurCurrentStageSo.type != StageType.Normal) return;
             OpenPopup(deadPop);
             Debug.Log("플레이어 사망. 페이드 아웃 시작");
             StartCoroutine(FadeOutPopup(deadPop, 3f));
