@@ -62,8 +62,6 @@ namespace Base.Data
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
-        public event Action OnSkillInit; //스킬 초기화
-        public void InitSkill() => OnSkillInit?.Invoke();
         #endregion
 
         #region 재화 파트
@@ -102,7 +100,7 @@ namespace Base.Data
         
         public event Action<QuestDataReader, bool> OnQuestCompleted;
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
-
+        #endregion
         public int GetOrder() => 0;
     }
 }
