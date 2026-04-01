@@ -122,11 +122,11 @@ namespace UI.Equipment
                 return;
             }
 
-            ownedCountText.text = $"{state.ownedCount} / {equipment.combineNeedAmount}";
-            ownedCountFill.value = Mathf.Clamp01((float)state.ownedCount / equipment.combineNeedAmount);
-            enhanceText.text = $"LV {state.enhancementLevel.ToString()}";
-            
             lockIcon.SetActive(false);
+            ownedCountFill.value = Mathf.Clamp01((float)state.ownedCount / equipment.combineNeedAmount);
+            ownedCountText.text = $"{state.ownedCount} / {equipment.combineNeedAmount}";
+            enhanceText.text = $"LV {state.enhancementLevel}";
+            
         }
     }
 }

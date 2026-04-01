@@ -34,8 +34,6 @@ namespace UI.Equipment
         [SerializeField] private Button enhanceButton;
         [SerializeField] private Button combineButton;
 
-
-
         public void SetActive(bool isActive)
         {
             gameObject.SetActive(isActive);
@@ -54,16 +52,18 @@ namespace UI.Equipment
             slotImages.frame.color = inputSlotImages.frame.color;
             slotImages.backGround.color = inputSlotImages.backGround.color;
 
+            RefreshCatalog(catalog);
+        }
+        public void RefreshCatalog(EquipmentCatalog catalog)
+        {
             nameText.text = catalog.equipment.itemName;
             levelText.text = $"Lv : {catalog.state.enhancementLevel}";
 
-            //장비 보유효과 , 장착 효과 표시
             ownedEffectText.text = BuildOwnedEffectText(catalog.equipment, catalog.state.enhancementLevel);
             equipEffectText.text = BuildEquipEffectText(catalog.equipment);
 
             this.currentCatalog = catalog;
         }
-        
         /// <summary>
         /// Presenter가 계산한 버튼 상태 플래그를 받아
         /// 장착 / 강화 / 합성 버튼의 interactable 값을 적용한다.
