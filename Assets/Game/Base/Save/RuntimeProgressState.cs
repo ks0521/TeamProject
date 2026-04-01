@@ -6,7 +6,7 @@ namespace Base.Save
 {
     /// <summary> 게임 내에서 사용하는 진행도, GameSaveData와의 차이는 리스트 -> 딕셔너리 변환 </summary>
     [Serializable]
-    public class RuntimeProgressState 
+    public class RuntimeProgressState
     {
         public StageProgressState stage = new(); //플레이어 스테이지 진행 정보
         public PlayerCurrencyState currency = new(); //플레이어 재화 획득 정보
@@ -38,9 +38,9 @@ namespace Base.Save
     //플레이어 스킬 획득 상황
     [Serializable]public class RuntimeSkillData
     {
-        public int skillSlots; //나중에 스킬슬롯 객체 만들면 수정
+        public List<int> skillSlots; //스킬슬롯에 저장된 스킬리스트
         //key : 스킬 키, value : 스킬 레벨
-        public Dictionary<int, int> skillProgressState; 
+        public Dictionary<int, int> skillProgressState; //찍힌 스킬
     }
     /// <summary> 특정 장비의 상세 정보(개수, 해금여부, 강화수치)</summary>
     [Serializable]public class EquipmentEntryState
