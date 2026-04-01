@@ -4,6 +4,7 @@ using Battle;
 using Cysharp.Threading.Tasks.Triggers;
 using System.Collections;
 using System.Collections.Generic;
+using UI.Equipment;
 using UI.Scripts.Ability;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,21 +15,22 @@ namespace Game_UI.Scripts.PopupManager
     {
         private static PopupManager instance;
 
-        [Header("팝업")]
-        [SerializeField] private Ability abilityPop;
-        [SerializeField] private AllChapter_Set chapterPop;
-        [SerializeField] private GameObject skillPop;
-        [SerializeField] private GameObject equipmentPop;
-        [SerializeField] private GameObject dungeonPop;
+        [Header("프래핍 생성 위치")]
+        [SerializeField] private Transform canvas;
 
-        [SerializeField] private GameObject clearPop;
-        [SerializeField] private GameObject failPop;
-        [SerializeField] private GameObject deadPop;
+        [Header("팝업 프리팹")]
+        [SerializeField] private GameObject abilityPrefab;
+        [SerializeField] private GameObject chapterPrefab;
+        [SerializeField] private GameObject equipmentPrefab;
 
-        [SerializeField] private GameObject settingPop;
-        [SerializeField] private GameObject gameEndPop;
+        [SerializeField] private GameObject skillPrefab;
+        [SerializeField] private GameObject dungeonPrefab;
+        [SerializeField] private GameObject settingPrefab;
+        [SerializeField] private GameObject gameEndPrefab;
 
-        private Stack<GameObject> popupStack = new();
+        [SerializeField] private GameObject clearPrefab;
+        [SerializeField] private GameObject failPrefab;
+        [SerializeField] private GameObject deadPrefab;
 
         [Header("팝업 버튼")]
         [SerializeField] private Button abilityBtn;
@@ -38,19 +40,30 @@ namespace Game_UI.Scripts.PopupManager
         [SerializeField] private Button dungeonBtn;
         [SerializeField] private Button settingBtn;
 
-        private EventHub hub;
-
         [Header("닫는 버튼")]
         [SerializeField] private Button abilityCloseBtn;
 
+
+        private EventHub hub;
+        private Stack<GameObject> popupStack = new();
         private StageManager stagemanager;
+
+        private Ability abilityInstance;
+        private AllChapter_Set chapterInstance;
+        private EquipmentPresenter equipmentInstance;
+        private GameObject skillInstance;
+        private GameObject dungeonInstance;
+        private GameObject settingInstance;
+        private GameObject gameEndInstance;
+
+        private GameObject clearInstance;
+        private GameObject failInstance;
+        private GameObject deadInstance;
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                //DontDestroyOnLoad(gameObject);
-                //3.23(규성) : PopUpManager스크립트가 있는 오브젝트가 루트 오브젝트가 아니라서 오류가 발생합니다 
             }
             else
             {
@@ -63,7 +76,7 @@ namespace Game_UI.Scripts.PopupManager
             {
                 if (popupStack.Count == 0)
                 {
-                    OpenPopup(gameEndPop);
+                    OpenGameEndPopup();
                 }
                 else
                 {
@@ -76,29 +89,13 @@ namespace Game_UI.Scripts.PopupManager
         {
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
-            if (equipmentPop != null) // 해당 코드들은 아직 스크립트가 아직 없어서 이렇게 해뒀습니다.
-            {
-                equipmentPop.SetActive(false);
-            }
-            if (skillPop != null)
-            {
-                skillPop.SetActive(false);
-            }
 
-            if (dungeonPop != null)
-            {
-                dungeonPop.SetActive(false);
-            }
-            if (gameEndPop != null)
-            {
-                gameEndPop.SetActive(false);
-            }
+            clearPrefab.SetActive(false);
+            failPrefab.SetActive(false);
+            deadPrefab.SetActive(false);
 
             BindAllButton();
             popupStack.Clear();
-
-            abilityPop.Init();
-            chapterPop.Init();
 
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
@@ -107,28 +104,46 @@ namespace Game_UI.Scripts.PopupManager
 
         public int GetOrder() => 201;
 
+        void BindAllButton()
+        {
+            abilityBtn.onClick.RemoveAllListeners();
+            chapterBtn.onClick.RemoveAllListeners();
+            skillBtn.onClick.RemoveAllListeners();
+            equipmentBtn.onClick.RemoveAllListeners();
+            dungeonBtn.onClick.RemoveAllListeners();
+            settingBtn.onClick.RemoveAllListeners();
+
+            abilityBtn.onClick.AddListener(OpenAbilityPopup);
+            chapterBtn.onClick.AddListener(OpenChapterPopup);
+            skillBtn.onClick.AddListener(OpenSkillPopup);
+            equipmentBtn.onClick.AddListener(OpenEquipmentPopup);
+            dungeonBtn.onClick.AddListener(OpenDungeonPopup);
+            settingBtn.onClick.AddListener(OpenSettingPopup);
+        }//버튼에 함수 넣기
+
+
+
         void PlayerDeadEventChain(Character character)
         {
-            if (stagemanager.CurCurrentStageSo == null) return;
-            if (stagemanager.CurCurrentStageSo.type != StageType.Normal) return;
-            OpenPopup(deadPop);
+            if (stagemanager.CurStageSO == null) return;
+            if (stagemanager.CurStageSO.type != StageType.Normal) return;
+
+            OpenDeadPopup();
+
             Debug.Log("플레이어 사망. 페이드 아웃 시작");
-            StartCoroutine(FadeOutPopup(deadPop, 3f));
-        }
+            StartCoroutine(FadeOutPopup(deadPrefab, 3f));
+        }//이벤트 연결용
         void ClearEventChain(StageSO stage)
         {
-            OpenPopup(clearPop);
-
-            StartCoroutine(FadeOutPopup(clearPop , 4f));
-        }//이벤트 연결용
+            OpenClearPopup();
+            StartCoroutine(FadeOutPopup(clearPrefab, 4f));
+        }
         void FailEventChain(StageSO stage)
         {
-            OpenPopup(failPop);
-
-            StartCoroutine(FadeOutPopup(failPop , 4f));
+            OpenFailPopup();
+            StartCoroutine(FadeOutPopup(failPrefab, 4f));
         }
-
-        IEnumerator FadeOutPopup(GameObject popup , float time)
+        IEnumerator FadeOutPopup(GameObject popup, float time)
         {
             CanvasGroup popupCan = popup.GetComponent<CanvasGroup>();
             if (popupCan == null)
@@ -145,59 +160,16 @@ namespace Game_UI.Scripts.PopupManager
             while (endTime < time)
             {
                 endTime += Time.deltaTime;
-                popupCan.alpha = Mathf.Lerp(1f, 0f ,endTime / time);
+                popupCan.alpha = Mathf.Lerp(1f, 0f, endTime / time);
                 yield return null;
             }
-            popup.SetActive(false);
+            if (popup == clearInstance) clearInstance = null;
+            if (popup == failInstance) failInstance = null;
+            if (popup == deadInstance) deadInstance = null;
+
+            Destroy(popup);
         }//클리어 , 실패 팝업 점점 사라지게 하는 코루틴
-        void OpenPopup(GameObject pop)
-        {
-            if (pop == null)
-            {
-                return;
-            }
-            if (pop.activeSelf)
-            {
-                return;
-            }
-            pop.transform.SetAsLastSibling(); //팝업 제일 앞으로 옮겨주는 코드
-            pop.SetActive(true);
-            popupStack.Push(pop);
-        }//팝업 열기
-        void ClosePopup(GameObject pop)
-        {
-            if (pop == null)
-            {
-                return;
-            }
-            if (!pop.activeSelf)
-            {
-                return;
-            }
-            pop.SetActive(false);
-            RemoveFromStack(pop);
-        }//팝업 닫기(나중에 팝업에 닫기 버튼 구현 예정)
-        private void RemoveFromStack(GameObject target)
-        {
-            Stack<GameObject> tempStack = new Stack<GameObject>();
 
-            while (popupStack.Count > 0)
-            {
-                GameObject current = popupStack.Pop();
-
-                if (current == target)
-                {
-                    break;
-                }
-
-                tempStack.Push(current);
-            }
-
-            while (tempStack.Count > 0)
-            {
-                popupStack.Push(tempStack.Pop());
-            }
-        }//중간 팝업 삭제
         void CloseLastPopup()
         {
             if (popupStack.Count == 0)
@@ -207,22 +179,165 @@ namespace Game_UI.Scripts.PopupManager
 
             GameObject lastPop = popupStack.Pop();
 
-            if (lastPop != null)
+            if (abilityInstance != null && lastPop == abilityInstance.gameObject)
             {
-                lastPop.SetActive(false);
+                Destroy(abilityInstance.gameObject);
+                abilityInstance = null;
+                return;
             }
-        }//제일 마지막 팝업 닫기
-        void BindAllButton()
-        {
-            abilityBtn.onClick.AddListener(() => OpenPopup(abilityPop.gameObject));
-            chapterBtn.onClick.AddListener(() => OpenPopup(chapterPop.gameObject));
-            skillBtn.onClick.AddListener(() => OpenPopup(skillPop.gameObject));
-            equipmentBtn.onClick.AddListener(() => OpenPopup(equipmentPop.gameObject));
-            dungeonBtn.onClick.AddListener(() => OpenPopup(dungeonPop.gameObject));
-            settingBtn.onClick.AddListener(() => OpenPopup(settingPop.gameObject));
+            if (chapterInstance != null && lastPop == chapterInstance.gameObject)
+            {
+                Destroy(chapterInstance.gameObject);
+                chapterInstance = null;
+                return;
+            }
+            if (equipmentInstance != null && lastPop == equipmentInstance.gameObject)
+            {
+                Destroy(equipmentInstance.gameObject);
+                equipmentInstance = null;
+                return;
+            }
+            if (skillInstance != null && lastPop == skillInstance)
+            {
+                Destroy(skillInstance);
+                skillInstance = null;
+                return;
+            }
+            if (dungeonInstance != null && lastPop == dungeonInstance)
+            {
+                Destroy(dungeonInstance);
+                dungeonInstance = null;
+                return;
+            }
+            if (settingInstance != null && lastPop == settingInstance)
+            {
+                Destroy(settingInstance);
+                settingInstance = null;
+                return;
+            }
+            if (gameEndInstance != null && lastPop == gameEndInstance)
+            {
+                Destroy(gameEndInstance);
+                gameEndInstance = null;
+                return;
+            }
+            Destroy(lastPop);
 
-            abilityCloseBtn.onClick.AddListener(() => ClosePopup(abilityPop.gameObject));
-        }//버튼에 함수 넣기
+        }
+        private void PushPopup(GameObject prefab)
+        {
+            prefab.SetActive(true);
+            prefab.transform.SetAsLastSibling();
+            popupStack.Push(prefab);
+        }
+        private void OpenAbilityPopup()
+        {
+            if (abilityInstance != null) return;
+            if (abilityPrefab == null) return;
+
+            GameObject prefab = Instantiate(abilityPrefab, canvas);
+            abilityInstance = prefab.GetComponent<Ability>();
+
+            if (abilityInstance == null)
+            {
+                Debug.Log("abilityPrefab 에 Ability 컴포넌트가 없음");
+                Destroy(prefab);
+                return;
+            }
+
+            abilityInstance.Init();
+            PushPopup(prefab);
+        }
+        private void OpenChapterPopup()
+        {
+            if (chapterInstance != null) return;
+            if (chapterPrefab == null) return;
+
+            GameObject prefab = Instantiate(chapterPrefab, canvas);
+            chapterInstance = prefab.GetComponent<AllChapter_Set>();
+
+            if (chapterInstance == null)
+            {
+                Debug.Log("chapterPrefab 에 AllChapter_Set 컴포넌트가 없음");
+                Destroy(prefab);
+                return;
+            }
+
+            chapterInstance.Init();
+            PushPopup(prefab);
+        }
+        private void OpenEquipmentPopup()
+        {
+            if (equipmentInstance != null) return;
+            if (equipmentPrefab == null) return;
+
+            GameObject prefab = Instantiate(equipmentPrefab, canvas);
+            equipmentInstance = prefab.GetComponent<EquipmentPresenter>();
+
+            if (equipmentInstance == null)
+            {
+                Debug.LogError("equipmentPrefab 에 EquipmentPresenter 컴포넌트가 없음");
+                Destroy(prefab);
+                return;
+            }
+
+            equipmentInstance.Init();
+            PushPopup(prefab);
+        }
+        private void OpenSkillPopup()
+        {
+            if (skillInstance != null) return;
+            if (skillPrefab == null) return;
+
+            skillInstance = Instantiate(skillPrefab, canvas);
+            PushPopup(skillInstance);
+        }
+        private void OpenDungeonPopup()
+        {
+            if (dungeonInstance != null) return;
+            if (dungeonPrefab == null) return;
+
+            dungeonInstance = Instantiate(dungeonPrefab, canvas);
+            PushPopup(dungeonInstance);
+        }
+        private void OpenSettingPopup()
+        {
+            if (settingInstance != null) return;
+            if (settingPrefab == null) return;
+
+            settingInstance = Instantiate(settingPrefab, canvas);
+            PushPopup(settingInstance);
+        }
+        private void OpenGameEndPopup()
+        {
+            if (gameEndInstance != null) return;
+            if (gameEndPrefab == null) return;
+
+            gameEndInstance = Instantiate(gameEndPrefab, canvas);
+            PushPopup(gameEndInstance);
+        }
+
+        private void OpenClearPopup()
+        {
+            if (clearInstance != null) return;
+            if (clearPrefab == null) return;
+
+            clearInstance = Instantiate(clearPrefab, canvas);
+        }
+        private void OpenFailPopup()
+        {
+            if (failInstance != null) return;
+            if (failPrefab == null) return;
+
+            failInstance = Instantiate(failPrefab, canvas); 
+        }
+        private void OpenDeadPopup()
+        {
+            if (deadInstance != null) return;
+            if (deadPrefab == null) return;
+
+            deadInstance = Instantiate(deadPrefab, canvas);
+        }
     }
 
 }

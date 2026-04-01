@@ -62,6 +62,8 @@ namespace Base.Data
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
+        public event Action OnSkillInit; //스킬 초기화
+        public void InitSkill() => OnSkillInit?.Invoke();
         #endregion
 
         #region 재화 파트
@@ -94,13 +96,13 @@ namespace Base.Data
         public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
         public event Action OnBasicItemEquip;
-        public void EquipBasicItem() => OnBasicItemEquip?.Invoke();
-        #endregion
-        //새로 추가된 이벤트(Action 뒤의 수식어는 고려 안 함)
-        //나중에 이벤트 목록 정리 부탁드립니다
-        public event Action<QuestData> OnQuestCompleted;
-        public void QuestCompleted(QuestData data) => OnQuestCompleted?.Invoke(data);
+        public void EquipBasicItem() => OnBasicItemEquip.Invoke();
+        public event Action OnSkillEnhance;
+        public void EnhanceSkill() => OnSkillEnhance?.Invoke();
         
+        public event Action<QuestDataReader, bool> OnQuestCompleted;
+        public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
+
         public int GetOrder() => 0;
     }
 }
