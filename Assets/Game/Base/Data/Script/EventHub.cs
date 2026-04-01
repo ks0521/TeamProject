@@ -60,6 +60,8 @@ namespace Base.Data
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
+        public event Action OnSkillInit; //스킬 초기화
+        public void InitSkill() => OnSkillInit?.Invoke();
         #endregion
 
         #region 재화 파트
@@ -81,20 +83,11 @@ namespace Base.Data
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
         public event Action OnBasicItemEquip;
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
-        public event Action OnNormalMonsterKilled;
-        public void KillNormalMonster() => OnNormalMonsterKilled?.Invoke();
-        public event Action OnBossMonsterKilled;
-        public void KillBossMonster() => OnBossMonsterKilled?.Invoke();
-        public event Action OnAtkEnhance;
-        public void EnhanceAtk() => OnAtkEnhance?.Invoke();
-        public event Action OnHpEnhance;
-        public void EnhanceHp() => OnHpEnhance?.Invoke();
         public event Action OnSkillEnhance;
         public void EnhanceSkill() => OnSkillEnhance?.Invoke();
-        public event Action OnSkillInit;
-        public void InitSkill() => OnSkillInit?.Invoke();
-        public event Action<QuestData> OnQuestCompleted;
-        public void QuestCompleted(QuestData data) => OnQuestCompleted?.Invoke(data);
+        
+        public event Action<QuestDataReader, bool> OnQuestCompleted;
+        public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
 
         public int GetOrder() => 0;
     }
