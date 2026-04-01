@@ -40,7 +40,11 @@ namespace Battle
         [SerializeField] private EventHub hub;
         [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
 
-        public int Level => runtimeProgress.currency.level;
+        public int Level { 
+            get => runtimeProgress.currency.level;
+            set => runtimeProgress.currency.level = value;
+        }
+
         public override void Init()
         {
             base.Init();

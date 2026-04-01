@@ -81,7 +81,7 @@ namespace UI.Scripts.UiPresenter
             
             if (stageManager != null)
             {
-                stageText.SetStage(stageManager.CurCurrentStageSo);
+                stageText.SetStage(stageManager.CurrentStageSo);
             }
 
         }//초기값 세팅

@@ -1,5 +1,6 @@
 using Base.Data;
 using Base.Managers;
+using Battle;
 using QuestSystem.TutorialSteps;
 using System;
 using System.Collections;
@@ -30,6 +31,7 @@ namespace QuestSystem
     public class QuestManager : MonoBehaviour, IManager
     {
         public static QuestManager Instance { get; private set; }
+        private Player player;
         private EventHub eventHub;
         private QuestSO questSO;
         private List<ActiveQuest> activeQuests = new List<ActiveQuest>(); //진행 중
@@ -80,6 +82,7 @@ namespace QuestSystem
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            player = GameManager.Instance.GetGameSystem<PlayerManager>().GetComponent<Player>();
         }
 
         public int GetOrder() => 300;
@@ -190,7 +193,8 @@ namespace QuestSystem
                     //레벨 n 달성 퀘스트는 현재 레벨을 받아옴
                     if (data.isAbsoluteGoal && data.GoalTypeEnum == GoalType.LevelUp)
                     {
-                        newQuest.CurrentValue = PlayerRuntimeStatus.Instance.Level;
+                        //4.1(규성) : 레벨을 플레이어에서 관리하기때문에 해당 코드를 바꿔놓았습니다.
+                        newQuest.CurrentValue = player.Level;
                     }
 
                     activeQuests.Add(newQuest);
@@ -265,7 +269,7 @@ namespace QuestSystem
         //Pull Request하기 전에 PlayerRuntimeStatus를 Player로 바꿀 것
         int GetCurrentPlayerLevel() //삭제 예정인 인스턴스에 의존하고 있음
         {
-            if (PlayerRuntimeStatus.Instance != null) return PlayerRuntimeStatus.Instance.Level;
+            if (PlayerRuntimeStatus.Instance != null) return player.Level;
             return 1; //인스턴스가 없다면 나오는 기본값
         }
         private void Update()
@@ -275,7 +279,7 @@ namespace QuestSystem
                 _debugLevel++;
                 Debug.Log($"<color=orange>[Test] 레벨업 조작! 현재 레벨: {_debugLevel}</color>");
                 if (PlayerRuntimeStatus.Instance != null)
-                    PlayerRuntimeStatus.Instance.Level = _debugLevel;
+                    player.Level = _debugLevel;
                 eventHub.LevelChanged(_debugLevel);
             }
             if (Input.GetKeyDown(KeyCode.End))

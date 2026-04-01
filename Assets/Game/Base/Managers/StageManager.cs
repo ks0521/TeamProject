@@ -33,7 +33,7 @@ namespace Base.Managers
         public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
         #endif
         
-        public StageSO CurCurrentStageSo => currentStageSO;
+        public StageSO CurrentStageSo => currentStageSO;
         public List<Monster> Monsters => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
         [SerializeField] private BoxCollider2D spawnArea; //몬스터 스폰 공간
         
