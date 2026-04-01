@@ -1,0 +1,64 @@
+{
+    "quests": [
+        {
+            "questID": 1,
+            "category": "Lineal",
+            "description": "Achieve Lv 4",
+            "goalType": "LevelUp",
+            "targetValue": 4,
+            "prevQuestID": 0,
+            "rewardGroupID": 1,
+            "isAbsoluteGoal": true
+        },
+        {
+            "questID": 2,
+            "category": "Lineal",
+            "description": "Achieve Lv 7",
+            "goalType": "LevelUp",
+            "targetValue": 7,
+            "prevQuestID": 1,
+            "rewardGroupID": 2,
+            "isAbsoluteGoal": true
+        },
+        {
+            "questID": 3,
+            "category": "Lineal",
+            "description": "Achieve Lv 10",
+            "goalType": "LevelUp",
+            "targetValue": 10,
+            "prevQuestID": 2,
+            "rewardGroupID": 3,
+            "isAbsoluteGoal": true
+        },
+        {
+            "questID": 101,
+            "category": "Recurring",
+            "description": "LevelUP 1 time",
+            "goalType": "LevelUp",
+            "targetValue": 1,
+            "prevQuestID": 0,
+            "rewardGroupID": 101,
+            "isAbsoluteGoal": false
+        },
+        {
+            "questID": 102,
+            "category": "Recurring",
+            "description": "Use Skill 5 times",
+            "goalType": "SkillUse",
+            "targetValue": 5,
+            "prevQuestID": 101,
+            "rewardGroupID": 102,
+            "isAbsoluteGoal": false
+        },
+        {
+            "questID": 901,
+            "category": "Daily",
+            "description": "Hunt 300 Monsters",
+            "goalType": "Hunt",
+            "targetValue": 300,
+            "prevQuestID": 0,
+            "rewardGroupID": 901,
+            "isAbsoluteGoal": false
+        }
+    ]
+}
