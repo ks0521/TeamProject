@@ -36,8 +36,8 @@ public class ChallengeStageRule : StageRule
 {
     [SerializeField] private float remainTime;
     public bool isCleared;
-    public event Action<StageSO> ChallengeSuccess;
-    public event Action<StageSO> ChallengeFail;
+    public event Action ChallengeSuccess;
+    public event Action ChallengeFail;
     private CancellationTokenSource token;
     public float RemainTime => remainTime;
     public override void Init(StageSO stage)
@@ -62,7 +62,7 @@ public class ChallengeStageRule : StageRule
             remainTime -= Time.deltaTime;
             await UniTask.Yield(cancellationToken: token);
         }
-        ChallengeFail?.Invoke(stage);
+        ChallengeFail?.Invoke();
     }
 
     public override void MonsterKilledInStage(Monster monster)
@@ -71,7 +71,7 @@ public class ChallengeStageRule : StageRule
         {
             isCleared = true;
             Debug.Log("목표처치 달성");
-            ChallengeSuccess?.Invoke(stage);
+            ChallengeSuccess?.Invoke();
             return;
         }
         Debug.Log($"현재 적 {killScore} 처치 / 목표 처치 : {stage.targetKillScore}");
