@@ -109,7 +109,8 @@ namespace Base.Manager
             return true;
         }
         #endregion
-        
+
+        #region 장착
         /// <summary> 장비 장착 </summary>
         /// <param name="equipment"></param>
         public void Equip(EquipmentSO equipment)
@@ -122,11 +123,9 @@ namespace Base.Manager
             runtimeState.equipment.equippedWeponKey = equipment.key;
             //장작후 스탯 계산 필요
         }
+        #endregion
 
         #region 합성
-
-        
-
         /// <summary> 장비 합성이 가능한지 확인</summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -144,8 +143,8 @@ namespace Base.Manager
         public bool TryEquipmentCombine(int key)
         {
             if (!CanEquipmentCombine(key)) return false;
-            //EquipmentInventory.equipmentEntries[key].ownedCount -=
-                //dictionarys.equipmentTable.GetSO(key).combineNeedAmount;
+            EquipmentInventory[key].ownedCount -=
+                dictionarys.equipmentTable.GetSO(key).combineNeedAmount;
             //해당 장비보다 +1 키 높은 아이템 획득
             dropManager.GetEquip(new DropReward()
             {
@@ -163,6 +162,7 @@ namespace Base.Manager
         /// <returns></returns>
         public bool CanEnhanceEquipment(EquipmentSO equipmentSo)
         {
+            //최대레벨 제한 처리 추가필요
             if (!EquipmentInventory.ContainsKey(equipmentSo.key)) return false;
             int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
             Debug.Log($"CanEnhance : {equipmentSo.itemName}, {cost}, {runtimeState.currency.gold}");
@@ -173,6 +173,10 @@ namespace Base.Manager
         public bool TryEnhanceEquipment(EquipmentSO equipmentSo)
         {
             if (!CanEnhanceEquipment(equipmentSo)) return false;
+            EquipmentInventory[equipmentSo.key].enhancementLevel += 1;
+            int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
+            runtimeState.currency.gold -= cost;
+            eventHub.CurrencyChange(CurrencyType.GOLD, runtimeState.currency.gold);
             Debug.Log("강화 성공");
             return true;
         }

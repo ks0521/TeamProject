@@ -2,13 +2,13 @@ using Base.Data;
 using Base.Managers;
 using UnityEngine;
 
+/// <summary> 게임 플레이시 사용되는 플레이어 최종스탯 </summary>
 public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
 {
     public static PlayerRuntimeStatus Instance; //MVP종료후 제거
     public PlayerBaseStatusSO baseStat;
     public BattleStat finalBattleStatus;
     public RewardStat finalRewardStatus;
-    public int Level;
     public float finalRange;
     public float finalAttackSpeed;
     // Start is called before the first frame update

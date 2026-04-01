@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Boss : Monster
 {
-    public SFXPlayer sfx;
+    //public SFXPlayer sfx;
     //public MonsterSO monsterSO;
     //public const float MonsterAttackRange = 0.6f;
 
@@ -26,7 +26,7 @@ public class Boss : Monster
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private float skill1CoolTime = 10f;
     [SerializeField] private float skill1WarningDuration = 1.2f;
-    [SerializeField] private float skill1Damage = 15f;
+    //[SerializeField] private float skill1Damage = 15f;
     [SerializeField] private float chargeDuration = 0.6f;
     [SerializeField] private float chargeSpeed = 9f;
     //[SerializeField] private float chargeCollisionDistance = 0.75f;
@@ -37,17 +37,17 @@ public class Boss : Monster
     [SerializeField] private GameObject atkRange2;
     [SerializeField] private float skill2CoolTime = 15f;
     [SerializeField] private float skill2WarningDuration = 1.5f;
-    [SerializeField] private float skill2Damage = 10f;
+    //[SerializeField] private float skill2Damage = 10f;
     [SerializeField] private float skill2Range = 2.0f;
-    [SerializeField] private float skill2TotalDotDamage = 10f;
-    [SerializeField] private float skill2DotDuration = 5f;
-    [SerializeField] private float skill2DotInterval = 0.5f;
+    //[SerializeField] private float skill2TotalDotDamage = 10f;
+    //[SerializeField] private float skill2DotDuration = 5f;
+    //[SerializeField] private float skill2DotInterval = 0.5f;
 
     [Header("Skill3(메테오)")]
     [SerializeField] private GameObject atkRange3;
     [SerializeField] private float skill3CoolTime = 12f;
     [SerializeField] private float skill3WarningDuration = 1.5f;
-    [SerializeField] private float skill3Damage = 33f;
+    //[SerializeField] private float skill3Damage = 33f;
     [SerializeField] private float skill3Range = 4.0f;
 
     private Vector3 skillTargetPosition; //시전 시점의 플레이어 위치
@@ -133,7 +133,7 @@ public class Boss : Monster
                 if (hitCheck != null)
                 {
                     Debug.Log($"돌진 적중: {hitCheck.name}");
-                    target.Hit(skill1Damage);
+                    target.Hit(CurrentBattleStat.atk);
                     hasDamaged = true;
                 }
             }
@@ -201,7 +201,7 @@ public class Boss : Monster
                 }
             }
         }
-        sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
+        //sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }
@@ -240,7 +240,7 @@ public class Boss : Monster
                 //target.Hit(skill3Damage);
             }
         }
-        sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
+        //sfx.PlayBossSkillSound(); //sfx 연결 안 되면 주석 처리하세요
         await WaitMotion("ATTACK", cts);
         isUsingSkill = false;
     }

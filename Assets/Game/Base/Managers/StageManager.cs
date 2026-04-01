@@ -33,7 +33,7 @@ namespace Base.Managers
         public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
         #endif
         
-        public StageSO CurStageSO => stageSO;
+        public StageSO CurrentStageSo => currentStageSO;
         public List<Monster> Monsters => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
         [SerializeField] private BoxCollider2D spawnArea; //몬스터 스폰 공간
         
@@ -46,8 +46,8 @@ namespace Base.Managers
         private GameDataProvider datahub;
         private EventHub eventHub; //이벤트 허브
         private Stage stage; //스테이지 객체
-        private StageSO stageSO; // 현재 진행중인 스테이지 정보
         private StageRule stageRule; // 현재 진행중인 스테이지 규약
+        private StageSO currentStageSO; // 현재 진행중인 스테이지 정보
         private StageProgress stageProgress; //현재 진행중인 스테이지와 최대 도달 스테이지 묶음
         private StageType type; //스테이지의 종류(일반, 도전, 잠김)
         
@@ -95,16 +95,16 @@ namespace Base.Managers
             if (selectedChapter == stageProgress.nextChallengeChapter &&
                 selectedStage == stageProgress.nextChallengeStage)
             {
-                stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Boss);
-                if (stageSO == null)
-                    stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Challenge);
+                currentStageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Boss);
+                if (currentStageSO == null)
+                    currentStageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Challenge);
             }
             else
             {
-                stageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Normal);
+                currentStageSO = datahub.stageTable.GetSO(selectedChapter, selectedStage, StageType.Normal);
             }
 
-            if (stageSO is null)
+            if (currentStageSO is null)
             {
                 Debug.LogWarning($"{selectedChapter}-{selectedStage}SO를 불러오지 못해 스테이지를 바꿀 수 없습니다. ");
                 return;
@@ -116,17 +116,17 @@ namespace Base.Managers
             curChapter = selectedChapter;
             curStage = selectedStage;
             stageRule?.Destroy();
-            eventHub.StageChanged(stageSO); // 바뀐 챕터 - 스테이지 정보 전달
-            monsterPool.ChangeStage(stageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
-            stage = new Stage(stageSO, monsterPool, spawnArea); // 신규 스테이지 생성
-            if (stageSO.type == StageType.Normal)
+            eventHub.StageChanged(currentStageSO); // 바뀐 챕터 - 스테이지 정보 전달
+            monsterPool.ChangeStage(currentStageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
+            stage = new Stage(currentStageSO, monsterPool, spawnArea); // 신규 스테이지 생성
+            if (currentStageSO.type == StageType.Normal)
             {
-                stageProgress = SelectNormalStage(stageSO.chapter, stageSO.stage);
+                stageProgress = SelectNormalStage(currentStageSO.chapter, currentStageSO.stage);
                 stageRule = new NormalStageRule();
                 stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
                 eventHub.OnDeadPlayer += OnPlayerDie;
             }
-            else if (stageSO.type == StageType.Challenge || stageSO.type == StageType.Boss)
+            else if (currentStageSO.type == StageType.Challenge || currentStageSO.type == StageType.Boss)
             {
                 stageRule = new ChallengeStageRule();
                 stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
@@ -134,7 +134,7 @@ namespace Base.Managers
                 ((ChallengeStageRule)stageRule).ChallengeFail += OnChallengeFailed;
                 eventHub.OnDeadPlayer += OnPlayerDie;
             }
-            stageRule.Init(stageSO);
+            stageRule.Init(currentStageSO);
 
             //스테이지와 스테이지 룰 다 초기화된 이후 시작
             stage.Enter();
@@ -144,7 +144,7 @@ namespace Base.Managers
                 stage.canSpawning = false;
                 Debug.Log("스테이지 적 스폰 비활성화됨");
             }
-            eventHub.StageChangeClear(stageSO);
+            eventHub.StageChangeClear(currentStageSO);
         }
 
         /// <summary> 특정 챕터 - 스테이지의 상태를 확인</summary>
@@ -254,37 +254,37 @@ namespace Base.Managers
             stageRule?.Destroy();
             stageRule = null;
         }
-        private void OnChallengeSucceeded(StageSO clearStage)
+        private void OnChallengeSucceeded()
         {
             Debug.Log("스테이지 클리어 시도");
             if (isStageResultProcessing) return;
             isStageResultProcessing = true;
 
             StopCurrentStage();
-            DelayClear(clearStage, 3f, this.GetCancellationTokenOnDestroy()).Forget();
+            DelayClear(3f, this.GetCancellationTokenOnDestroy()).Forget();
         }
-        async UniTaskVoid DelayClear(StageSO clearStage, float delay, CancellationToken token)
+        async UniTaskVoid DelayClear(float delay, CancellationToken token)
         {
             Debug.Log("스테이지 클리어, 클리어 기록이 저장됩니다. ");
-            eventHub.StageCleared(clearStage);
-            stageProgress = ProgressChallengeStage(clearStage); 
+            eventHub.StageCleared(currentStageSO);
+            stageProgress = ProgressChallengeStage(currentStageSO); 
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
             Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
         
-        private void OnChallengeFailed(StageSO failedStage)
+        private void OnChallengeFailed()
         {
             if (isStageResultProcessing) return;
             isStageResultProcessing = true;
 
             StopCurrentStage();
-            DelayFail(failedStage, 3f, this.GetCancellationTokenOnDestroy()).Forget();
+            DelayFail(3f, this.GetCancellationTokenOnDestroy()).Forget();
         }
-        async UniTaskVoid DelayFail(StageSO failedStage, float delay, CancellationToken token)
+        async UniTaskVoid DelayFail(float delay, CancellationToken token)
         {
             Debug.Log("스테이지 실패, 이전 스테이지로 돌아갑니다. ");
-            eventHub.StageFailed(failedStage);
+            eventHub.StageFailed(currentStageSO);
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
             Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
@@ -293,15 +293,15 @@ namespace Base.Managers
         /// <param name="character"></param>
         void OnPlayerDie(Character character)
         {
-            if (stageSO == null) return;
+            if (currentStageSO == null) return;
             Debug.Log("StageMaanger : 플레이어 사망");
-            if (stageSO.type == StageType.Normal)
+            if (currentStageSO.type == StageType.Normal)
             {
                 DelayRebirth(3f, this.GetCancellationTokenOnDestroy()).Forget();
                 return;
             }
 
-            OnChallengeFailed(stageSO);
+            OnChallengeFailed();
         }
         /// <summary> 일반스테이지 부활 딜레이</summary>
         async UniTaskVoid DelayRebirth(float delay, CancellationToken token)
@@ -321,9 +321,9 @@ namespace Base.Managers
             }
 
             data.currentKill = challengeStageRule.KillScore;
-            data.targetKill = stageSO.targetKillScore;
+            data.targetKill = currentStageSO.targetKillScore;
             data.currentTime = challengeStageRule.RemainTime;
-            data.maxTime = stageSO.deadLine;
+            data.maxTime = currentStageSO.deadLine;
             return true;
         }
 
