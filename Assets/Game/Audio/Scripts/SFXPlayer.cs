@@ -39,11 +39,13 @@ public class SFXPlayer : MonoBehaviour
 
     [Header("퀘스트")]
     [SerializeField] private AudioClip clearQuest;
+    [SerializeField] private AudioClip clearAllQuest;
 
     [Header("기타")]
     [SerializeField] private AudioClip getIdleReward;
 
     //공통 사운드들
+    #region
     public void PlayClickSound()
     {
 
@@ -77,9 +79,10 @@ public class SFXPlayer : MonoBehaviour
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
-
+    #endregion
 
     //전투 관련 효과음들
+    #region
     public void PlayGetGoldSound()
     {
         sfxSource.clip = getGold;
@@ -151,9 +154,10 @@ public class SFXPlayer : MonoBehaviour
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
-
+    #endregion
 
     //장비창 효과음
+    #region
     public void PlayEquipItemSound()
     {
         sfxSource.clip = equipItem;
@@ -182,9 +186,10 @@ public class SFXPlayer : MonoBehaviour
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
-
+    #endregion
 
     //스킬창 효과음(임시로 sfxPlayer 배정, 추후 바뀔 수 있음)
+    #region
     public void PlayAddSkillSound() //스킬 등록 및 교체
     {
         sfxSource.clip = addSkill;
@@ -213,14 +218,18 @@ public class SFXPlayer : MonoBehaviour
         if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
-
+    #endregion
 
     //퀘스트
-    public void PlayQuestClearSound()
+    public void PlayQuestClearSound(bool isAllClear)
     {
-        sfxSource.clip = clearQuest;
+        AudioClip clipToPlay = isAllClear ? clearAllQuest : clearQuest;
 
-        if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
+        if (clipToPlay != null)
+        {
+            sfxSource.PlayOneShot(clipToPlay);
+            if (isAllClear) Debug.Log("<color=gold>★★★ 모든 퀘스트 완료! ★★★</color>");
+        }
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
 

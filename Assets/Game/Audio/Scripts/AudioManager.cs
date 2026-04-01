@@ -200,9 +200,9 @@ public class AudioManager : MonoBehaviour, IManager
     }
 
     //이제 퀘스트 완료는 EventHub가 감지함
-    public void PlayQuestClearSound(QuestData questData)
+    public void PlayQuestClearSound(QuestDataReader questData, bool isAllCleared)
     {
-        _sfxPlayer?.PlayQuestClearSound();
+        _sfxPlayer?.PlayQuestClearSound(isAllCleared);
     }
 
 
