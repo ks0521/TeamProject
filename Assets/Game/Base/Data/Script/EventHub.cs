@@ -1,10 +1,12 @@
 using Base.Managers;
 using Base.Save;
 using Battle;
+using Growth.Equipment;
+using Growth.Skill;
 using Growth.StatUpgrade;
-using JetBrains.Annotations;
 using Personal.HagYun;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Base.Data
@@ -75,27 +77,30 @@ namespace Base.Data
         public void GetEquipments() => OnGetEquipments?.Invoke(); // 사운드 연동용 이벤트
         #endregion
 
-        //새로 추가된 이벤트(Action 뒤의 수식어는 고려 안 함)
-        //나중에 이벤트 목록 정리 부탁드립니다
-        public event Action OnAutoHuntActivate;
+        #region 성장 파트
+        public event Action<StatusSO> OnStatusEnhanced; //스탯 강화
+        public void EquipEnhanced(StatusSO statusSo) => OnStatusEnhanced?.Invoke(statusSo);
+        public event Action<EquipmentSO> OnEquipEnhanced; //장비 강화
+        public void EquipEnhanced(EquipmentSO equipmentSo) => OnEquipEnhanced?.Invoke(equipmentSo);
+        public event Action<SkillSO> OnSkillEnhanced; //스킬 강화
+        public void SkillEnhanced(SkillSO skillSo) => OnSkillEnhanced?.Invoke(skillSo);
+        public event Action OnSkillInit; //스킬 초기화
+        public void InitSkill() => OnSkillInit?.Invoke();
+        public event Action<int[]> OnSkillEquipped;
+        public void SkillEquipped(int[] skillSlot) => OnSkillEquipped?.Invoke(skillSlot);
+        #endregion
+
+        #region 퀘스트
+        public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
         public event Action OnBasicItemEquip;
-        public void EquipBasicItem() => OnBasicItemEquip.Invoke();
-        public event Action OnNormalMonsterKilled;
-        public void KillNormalMonster() => OnNormalMonsterKilled?.Invoke();
-        public event Action OnBossMonsterKilled;
-        public void KillBossMonster() => OnBossMonsterKilled?.Invoke();
-        public event Action OnAtkEnhance;
-        public void EnhanceAtk() => OnAtkEnhance?.Invoke();
-        public event Action OnHpEnhance;
-        public void EnhanceHp() => OnHpEnhance?.Invoke();
-        public event Action OnSkillEnhance;
-        public void EnhanceSkill() => OnSkillEnhance?.Invoke();
-        public event Action OnSkillInit;
-        public void InitSkill() => OnSkillInit?.Invoke();
+        public void EquipBasicItem() => OnBasicItemEquip?.Invoke();
+        #endregion
+        //새로 추가된 이벤트(Action 뒤의 수식어는 고려 안 함)
+        //나중에 이벤트 목록 정리 부탁드립니다
         public event Action<QuestData> OnQuestCompleted;
         public void QuestCompleted(QuestData data) => OnQuestCompleted?.Invoke(data);
-
+        
         public int GetOrder() => 0;
     }
 }

@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fdb45c3b537bf545a8e0804db79e6bc, type: 3}
   m_Name: Skill Dictionary SO
   m_EditorClassIdentifier: 
-  allSkills: []
+  allSkills:
+  - {fileID: 11400000, guid: cb97b7bfc04eeb349b1e38bcfa3c1936, type: 2}
+  - {fileID: 11400000, guid: b43a36bedacfcee4c84b2e18d8783b49, type: 2}
+  - {fileID: 11400000, guid: 1b837dd5eec53524391157ff64c02261, type: 2}
+  - {fileID: 11400000, guid: 5c989d3d349bf0a409116907035c20c4, type: 2}
+  - {fileID: 11400000, guid: 5fd3daa513a73444aa4c440e7ae38d73, type: 2}
+  - {fileID: 11400000, guid: 13da98c23de50414ebd09483377fc8fc, type: 2}

@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Manager;
 using Base.Managers;
+using Base.Save;
 using Growth.Equipment;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace UI.Equipment
             if (equipmentManager == null || eventHub == null) return;
             eventHub.OnGetEquipments += RefreshCurrentTab;
             eventHub.OnGetEquipments += RefreshDetailViewButtonState; //장비 획득은 합성 / 장착버튼
-            eventHub.OnGetCurrency += RefreshDetailViewButtonState; //재화 획득은 강화버튼 활성화 판정에 필요
+            eventHub.OnCurrencyChange += RefreshCurrency; //재화 획득은 강화버튼 활성화 판정에 필요
             ShowPopup(currentTabType);
         }
 
@@ -74,7 +75,7 @@ namespace UI.Equipment
             if (eventHub == null) return;
             eventHub.OnGetEquipments -= RefreshCurrentTab;
             eventHub.OnGetEquipments -= RefreshDetailViewButtonState;
-            eventHub.OnGetCurrency -= RefreshDetailViewButtonState;
+            eventHub.OnCurrencyChange -= RefreshCurrency;
         }
 
         public void Init()
@@ -184,7 +185,12 @@ namespace UI.Equipment
                 });
             }
         }
-
+        /// <summary> OnGetCurrency 이벤트와 RefreshDetailViewButtonState 연결용 메서드 </summary>
+        void RefreshCurrency(CurrencyType type, int amount)
+        {
+            if (type != CurrencyType.GOLD) return;
+            RefreshDetailViewButtonState();
+        }
         /// <summary>
         /// 현재 DetailView에 떠 있는 장비를 기준으로 버튼 활성화 상태를 다시 계산한다.
         /// 
