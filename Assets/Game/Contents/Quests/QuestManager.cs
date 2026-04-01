@@ -1,38 +1,44 @@
 using Base.Data;
 using Base.Managers;
 using QuestSystem.TutorialSteps;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
-using static QuestData;
 using static QuestSystem.TutorialSteps.Tutorial_Click;
 
 namespace QuestSystem
 {
     public class ActiveQuest
     {
-        public QuestData Data; //연결된 원본 데이터
+        public QuestDataReader Data { get; private set; } //연결된 원본 데이터
         public int CurrentValue; //현재 진행 수치
-        public bool IsCompleted;
+        public bool isCompleted;
 
-        public ActiveQuest(QuestData data)
+        public ActiveQuest(QuestDataReader data)
         {
-            this.Data = data;
-            this.CurrentValue = 0;
-            this.IsCompleted = false;
+            Data = data;
+            CurrentValue = 0;
+            isCompleted = false;
         }
     }
     public class QuestManager : MonoBehaviour, IManager
     {
         public static QuestManager Instance { get; private set; }
         private EventHub eventHub;
-        private Dictionary<int, QuestData> questDatabase = new Dictionary<int, QuestData>();
+        private QuestSO questSO;
         private List<ActiveQuest> activeQuests = new List<ActiveQuest>(); //진행 중
         private HashSet<int> completedQuestIds = new HashSet<int>(); //완료
+        //private Dictionary<int, QuestData> questDatabase = new Dictionary<int, QuestData>();
+
+        [Header("퀘스트 데이터")]
+        [SerializeField] private QuestDatabaseSO questDatabase;
+        [SerializeField] private TextAsset questJsonFile;
 
         [Header("튜토리얼용 오브젝트들")]
         public Button autoHuntButton;
@@ -68,7 +74,7 @@ namespace QuestSystem
             else Destroy(gameObject);
 
             if (recurringQuestPanel != null) recurringQuestPanel.SetActive(false);
-            LoadQuestDatabase(); //실제로는 JSON 등을 파싱
+            if (questJsonFile != null) questDatabase.LoadFromJson(questJsonFile.text);
         }
 
         public void Init()
@@ -105,57 +111,62 @@ namespace QuestSystem
             for (int i = activeQuests.Count - 1; i >= 0; i--)
             {
                 var quest = activeQuests[i];
-                if (quest.IsCompleted) continue;
-
-                if (quest.Data.type == type && (quest.Data.targetID == 0 || quest.Data.targetID == targetID))
+                if (quest.isCompleted) continue;
+                
+                if (quest.Data.GoalTypeEnum == type && (quest.Data.targetID == 0 || quest.Data.targetID == targetID))
                 {
                     if (type == GoalType.LevelUp) quest.CurrentValue = amount;
                     else if (type == GoalType.Hunt) quest.CurrentValue += amount;
-                    else if (type == GoalType.SkillUse) quest.CurrentValue += amount; // Hunt, SkillUse 등 누적형 처리
+                    else if (type == GoalType.SkillUse) quest.CurrentValue += amount;
                     else if (type == GoalType.StageClear) quest.CurrentValue += amount;
 
                     RefreshUI();
 
                     if (quest.CurrentValue >= quest.Data.targetValue)
                     {
-                        quest.IsCompleted = true;
+                        quest.isCompleted = true;
                         Debug.Log($"퀘스트 [{quest.Data.description}] 완료 가능");
 
-                        // 여기서 Remove나 Add가 일어나도 for문 인덱스에는 영향이 없습니다.
                         TryCompleteQuest(quest);
                     }
                 }
             }
         }
-        public void TryCompleteQuest(ActiveQuest quest) //MVP: 3 퀘스트 순환
+        public void TryCompleteQuest(ActiveQuest quest)
         {
             //GiveReward(quest.Data.RewardGroupID);
+            QuestCategory currentCategory = quest.Data.CategoryEnum;
             completedQuestIds.Add(quest.Data.questID);
             activeQuests.Remove(quest);
-            eventHub.QuestCompleted(quest.Data); //퀘 완료 이벤트 발생
 
-            switch (quest.Data.category)
+            RefreshQuests();
+            bool isAllCleared = false;
+            //선형or데일리 퀘스트 목록이 비었다면 올클리어로 인식
+            if (currentCategory == QuestCategory.Lineal || currentCategory == QuestCategory.Daily)
             {
-                case QuestCategory.Daily:
-                    completedQuestIds.Add(quest.Data.questID);
-                    Debug.Log($"일일 퀘스트 {quest.Data.questID} 완료");
-                    break;
+                isAllCleared = !activeQuests.Any(q => q.Data.CategoryEnum == currentCategory);
+            }
+            if (eventHub != null) eventHub.QuestCompleted(quest.Data, isAllCleared); //퀘 완료 이벤트
+
+            switch (currentCategory)
+            {
                 case QuestCategory.Lineal:
-                    completedQuestIds.Add(quest.Data.questID);
                     Debug.Log($"선형 퀘스트 {quest.Data.questID} 완료");
                     break;
-
                 case QuestCategory.Recurring:
                     //여기서는 퀘스트 완료를 바로 초기화하지만 고민 필요
                     completedQuestIds.Add(quest.Data.questID);
-                    if (quest.Data.questID == 2)
+                    if (quest.Data.questID == 102)
                     {
-                        completedQuestIds.Remove(1);
-                        completedQuestIds.Remove(2);
-                        Debug.Log("순환 사이클이 초기화되었습니다. 이 사이클의 처음으로 돌아갑니다.");
+                        completedQuestIds.Remove(101);
+                        completedQuestIds.Remove(102);
+                        Debug.Log("<color=cyan>순환 사이클이 초기화되었습니다. 사이클의 처음으로 돌아갑니다.</color>");
+                        RefreshQuests();
                     }
                     break;
-
+                case QuestCategory.Daily:
+                    Debug.Log($"일일 퀘스트 {quest.Data.questID} 완료");
+                    break;
                 case QuestCategory.Achievement:
                     // 업적은 보통 다음 단계 업적이 바로 나오도록 설계
                     // 예: 몬스터 100마리 -> 완료 -> 몬스터 500마리 업적 등장
@@ -163,33 +174,55 @@ namespace QuestSystem
             }
 
             RefreshUI();
-            RefreshQuests();
         }
         void RefreshQuests()
         {
             bool isChanged = false;
-            foreach (var data in questDatabase.Values)
+            foreach (var data in questDatabase.allQuests)
             {
                 if (completedQuestIds.Contains(data.questID)) continue;
                 if (activeQuests.Any(q => q.Data.questID == data.questID)) continue;
 
-                if (data.PrevQuestID == 0 || completedQuestIds.Contains(data.PrevQuestID))
+                if (data.prevQuestID == 0 || completedQuestIds.Contains(data.prevQuestID))
                 {
-                    activeQuests.Add(new ActiveQuest(data));
+                    ActiveQuest newQuest = new ActiveQuest(data);
+
+                    //레벨 n 달성 퀘스트는 현재 레벨을 받아옴
+                    if (data.isAbsoluteGoal && data.GoalTypeEnum == GoalType.LevelUp)
+                    {
+                        newQuest.CurrentValue = PlayerRuntimeStatus.Instance.Level;
+                    }
+
+                    activeQuests.Add(newQuest);
                     isChanged = true;
                 }
             }
+            // 수락하자마자 완료 조건인지 체크 (이미 레벨이 높은 경우 등)
+            CheckCompleteCondition();
             if (isChanged) RefreshUI();
+        }
+        void CheckCompleteCondition()
+        {
+
+            for (int i = activeQuests.Count - 1; i >= 0; i--)
+            {
+                var quest = activeQuests[i];
+                if (quest.CurrentValue >= quest.Data.targetValue)
+                {
+                    quest.isCompleted = true;
+                    TryCompleteQuest(quest);
+                }
+            }
         }
         public void RefreshUI()
         {
-            var linealQuest = activeQuests.FirstOrDefault(q => q.Data.category == QuestCategory.Lineal);
+            var linealQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == QuestCategory.Lineal);
             UpdateSlot(linealQuest, linealQuestPanel, linealQuestTitle, linealQuestProgress);
 
-            var recurringQuest = activeQuests.FirstOrDefault(q => q.Data.category == QuestCategory.Recurring);
+            var recurringQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == QuestCategory.Recurring);
             UpdateSlot(recurringQuest, recurringQuestPanel, recurringQuestTitle, recurringQuestProgress);
 
-            var dailyQuest = activeQuests.FirstOrDefault(q => q.Data.category == QuestCategory.Daily);
+            var dailyQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == QuestCategory.Daily);
             UpdateSlot(dailyQuest, dailyQuestPanel, dailyQuestTitle, dailyQuestProgress);
         }
         void UpdateSlot(ActiveQuest quest, GameObject panel, TextMeshProUGUI title, TextMeshProUGUI progress)
@@ -204,7 +237,7 @@ namespace QuestSystem
         }
         public void ResetDailyQuests()
         {
-            activeQuests.RemoveAll(q => q.Data.category == QuestCategory.Daily);
+            activeQuests.RemoveAll(q => q.Data.CategoryEnum == QuestCategory.Daily);
             //ID 900~999번은 일일 퀘스트라고 가정
             completedQuestIds.RemoveWhere(id => id >= 900 && id < 999);
             RefreshQuests();
@@ -215,16 +248,6 @@ namespace QuestSystem
             // 멘토님 조언대로 RewardData와 연동하는 로직이 들어갈 자리
             Debug.Log($"보상 그룹 {rewardGroupID}번 지급됨.");
         }
-        void LoadQuestDatabase()
-        {
-            //MVP 테스트용 데이터를 임의로 삽입(나중엔 JSON 등으로 로드?)
-            questDatabase.Add(1, new QuestData { questID = 1, category = QuestCategory.Recurring, description = "LevelUP 1 time", type = GoalType.LevelUp, targetValue = 1, RewardGroupID = 101, PrevQuestID = 0 });
-            questDatabase.Add(2, new QuestData { questID = 2, category = QuestCategory.Recurring, description = "Use Skill 5 times", type = GoalType.SkillUse, targetValue = 5, RewardGroupID = 102, PrevQuestID = 1 });
-
-            questDatabase.Add(101, new QuestData { questID = 101, category = QuestCategory.Lineal, description = "Stage 1-1 Clear", type = GoalType.StageClear, targetValue = 1, RewardGroupID = 1101, PrevQuestID = 0 });
-
-            questDatabase.Add(901, new QuestData { questID = 901, category = QuestCategory.Daily, description = "Hunt 300 monsters", type = GoalType.Hunt, targetValue = 300, RewardGroupID = 901, PrevQuestID = 0 });
-        }
         public void UpdateQuestUI(string description)
         {
             if (linealQuestPanel != null) linealQuestPanel.SetActive(true);
@@ -233,29 +256,41 @@ namespace QuestSystem
             if (recurringQuestPanel != null) recurringQuestPanel.SetActive(true);
             if (recurringQuestTitle != null) recurringQuestTitle.text = description;
 
-            if (dailyQuestPanel != null) linealQuestPanel.SetActive(true);
-            if (dailyQuestTitle != null) linealQuestTitle.text = description;
+            if (dailyQuestPanel != null) dailyQuestPanel.SetActive(true);
+            if (dailyQuestTitle != null) dailyQuestTitle.text = description;
         }
 
+#if UNITY_EDITOR
         private int _debugLevel = 1;
+        //Pull Request하기 전에 PlayerRuntimeStatus를 Player로 바꿀 것
+        int GetCurrentPlayerLevel() //삭제 예정인 인스턴스에 의존하고 있음
+        {
+            if (PlayerRuntimeStatus.Instance != null) return PlayerRuntimeStatus.Instance.Level;
+            return 1; //인스턴스가 없다면 나오는 기본값
+        }
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Delete))
             {
                 _debugLevel++;
-                Debug.Log($"[Test] 레벨업 버튼 클릭! 현재 레벨: {_debugLevel}");
-
-                // EventHub에 알림 -> QuestManager가 이를 수신하여 UpdateQuest 실행
+                Debug.Log($"<color=orange>[Test] 레벨업 조작! 현재 레벨: {_debugLevel}</color>");
+                if (PlayerRuntimeStatus.Instance != null)
+                    PlayerRuntimeStatus.Instance.Level = _debugLevel;
                 eventHub.LevelChanged(_debugLevel);
             }
             if (Input.GetKeyDown(KeyCode.End))
             {
-                Debug.Log("[Test] 스킬 사용 버튼 클릭!");
-
+                Debug.Log("<color=orange>[Test] 스킬 사용!</color>");
                 // EventHub에 알림 -> QuestManager가 이를 수신하여 UpdateQuest 실행
                 eventHub.SkillUsed(1);
             }
+            if (Input.GetKeyDown(KeyCode.PageDown))
+            {
+                Debug.Log("<color=orange>[Test] 몬스터 100마리 사냥 조작</color>");
+                UpdateQuest(GoalType.Hunt, 901, 100);
+            }
         }
+#endif
 
         /*
         void InitializeQuestList() //모두 임시로 구현해놓은 것들입니다!
