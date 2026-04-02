@@ -206,7 +206,7 @@ namespace Battle
             hitTarget.Hit(resultDmg, type);
         }
 
-        protected void SkillAttack(Character hitTarget, float multiplier)
+        public void SkillAttack(Character hitTarget, float multiplier)
         {
             if (hitTarget == null || target.isDead || !canAtk || isDead) return;
             HitType type = HitType.Normal;
