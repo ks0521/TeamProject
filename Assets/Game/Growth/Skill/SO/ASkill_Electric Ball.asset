@@ -14,17 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 1003
   skillName: Electric Ball
-  baseValue: 2.5
-  incValuePerLevel: 0.5
+  maxLv: 5
   description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC (\uC804\uAE30 \uC18D\uC131)
     \uB2E8\uC77C \uACF5\uACA9"
   skillIcon: {fileID: -2895734620076278133, guid: a4ce094c050bd4387bb4ca527872a97e,
     type: 3}
-  skillSound: {fileID: 8300000, guid: 5a6cf313af01d5b48a9351abe17b9416, type: 3}
   SoE: 0
   Targeting: 1
+  baseDamage: 2.5
+  incDamagePerLevel: 0.5
   castingTime: 0.5
   range: 3
   coolDown: 4
   speed: 7
   effectArea: 0
+  skillSound: {fileID: 8300000, guid: 5a6cf313af01d5b48a9351abe17b9416, type: 3}
