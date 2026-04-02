@@ -3,7 +3,7 @@ using Base.Managers;
 using Base.Save;
 using Battle;
 using UnityEngine;
-namespace UI.Scripts.UiPresenter
+namespace UI.Scripts
 {
     public class UiPresenter : MonoBehaviour, IManager
     {
@@ -19,35 +19,42 @@ namespace UI.Scripts.UiPresenter
         [SerializeField] Auto_Set autoButton;
         [SerializeField] Skill_Set skillIcons;
 
-        [Header("챌린지 모드")]
-        [SerializeField] GameObject challengePanel;
-        [SerializeField] SetViewer timer;
-        [SerializeField] SetViewer monsterKill;
 
         [SerializeField] private PlayerProgressManager manager;
         [SerializeField] private EventHub hub;
         [SerializeField ]private StageManager stageManager;
+
+        private void Update()
+        {
+            PopupManager popup = GameManager.Instance.GetGameSystem<PopupManager>();
+            if (popup == null) return;
+
+            if (stageManager.TryGetChallengeData(out var data))
+            {
+                if (popup.TryGetChallengeUI(out var timer, out var kill))
+                {
+                    timer.SetTime(data.maxTime, data.currentTime);
+                    kill.UpdateKillText(target: data.targetKill, current: data.currentKill);
+                }
+            }
+        }
         public void Init()
         {
-            Debug.Log("버그 확인");
             manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
 
             RefreshAll();
-            challengePanel.SetActive(false);
+            
             hub.OnHpChange += hp.SetHp;
             hub.OnLevelChange += LvText.SetLv; 
             hub.OnCurrencyChange += ReFreshCurrency;
-            //hub.OnExpChange += expBar.SetExp; <- 해당 부분을 바꾸시면 됩니다
-            //hub.OnGoldChange += goldText.SetGold;
-            //hub.OnStatStoneChange += stoneText.SetGrowthStone; 
+
             hub.OnChangeStage += stageText.SetStage;
             //스킬 부분 미구현
             //자동전투 버튼 미구현
         }
 
-      
         public int GetOrder() => 210;
 
         void RefreshAll()
@@ -94,21 +101,6 @@ namespace UI.Scripts.UiPresenter
                     ui.SetUI(currency);
                 }
             }
-        }
-
-        private void Update()
-        {
-            if (stageManager.TryGetChallengeData(out var data))
-            {
-                timer.SetTime(data.maxTime, data.currentTime);
-                monsterKill.UpdateKillText(target : data.targetKill,current: data.currentKill);
-            }
-        }
-        //챌린지 전용 UI 활성화 / 비활성화
-        public void SetChallengeUI(bool isCheck)
-        {
-            if (isCheck == challengePanel.activeSelf) return; //동일한 현상(켜져있을때 키기 / 꺼져있을때 끄기)에서는 작동 X
-            challengePanel.SetActive(isCheck);
         }
     }
 }
