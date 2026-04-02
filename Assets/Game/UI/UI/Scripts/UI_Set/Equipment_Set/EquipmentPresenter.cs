@@ -58,9 +58,23 @@ namespace UI.Equipment
         private EquipmentSlotView[] armorSlots; //방어구 아이콘 슬롯배열
         private EquipmentSlotView[] accSlots; //장신구 아이콘 슬롯배역
 
+        private void Awake()
+        {
+            openWeaponTabButton.onClick.AddListener(() => ShowPopup(EquipType.Weapon));
+            openArmorTabButton.onClick.AddListener(() => ShowPopup(EquipType.Armor));
+            openAccessoryTabButton.onClick.AddListener(() => ShowPopup(EquipType.Accessory));
+            
+        }
         private void OnEnable()
         {
+            equipmentManager = GameManager.Instance.GetGameSystem<EquipmentManager>();
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            weaponSlots = weaponPopup.GetComponentsInChildren<EquipmentSlotView>(true);
+            //armorSlots = armorPop.GetComponentsInChildren<EquipmentSlotView>(true);
+            //accSlots = accPop.GetComponentsInChildren<EquipmentSlotView>(true);
+
             detailView.SetActive(false);
+            currentPopUp = weaponPopup; //맨 처음은 무기 인벤토리를 열기
             //GameManager의 Start전 Enable때는 매니저들이 초기화되어있지 않기 때문에 실행하지 많음
             if (equipmentManager == null || eventHub == null) return;
             eventHub.OnGetEquipments += RefreshCurrentTab;
@@ -75,22 +89,6 @@ namespace UI.Equipment
             eventHub.OnGetEquipments -= RefreshCurrentTab;
             eventHub.OnGetEquipments -= RefreshDetailViewButtonState;
             eventHub.OnGetCurrency -= RefreshDetailViewButtonState;
-        }
-
-        public void Init()
-        {
-            equipmentManager = GameManager.Instance.GetGameSystem<EquipmentManager>();
-            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-            weaponSlots = weaponPopup.GetComponentsInChildren<EquipmentSlotView>(true);
-            //armorSlots = armorPop.GetComponentsInChildren<EquipmentSlotView>(true);
-            //accSlots = accPop.GetComponentsInChildren<EquipmentSlotView>(true);
-
-            openWeaponTabButton.onClick.AddListener(() => ShowPopup(EquipType.Weapon));
-            openArmorTabButton.onClick.AddListener(() => ShowPopup(EquipType.Armor));
-            openAccessoryTabButton.onClick.AddListener(() => ShowPopup(EquipType.Accessory));
-            currentPopUp = weaponPopup; //맨 처음은 무기 인벤토리를 열기
-
-            gameObject.SetActive(false);
         }
 
         /// <summary> 장비 타입에 해당하는 팝업창 열기</summary>
