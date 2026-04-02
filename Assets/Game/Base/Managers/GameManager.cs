@@ -35,16 +35,18 @@ namespace Base.Managers
             }
 
             Instance = this;
+            //초기화 및 도감추가만 우선적으로 시행
+            gameSystems = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None).OfType<IGameSystem>().ToList();
+            foreach (IGameSystem gameSystem in gameSystems)
+                dic.Add(gameSystem.GetType(), gameSystem);
         }
 
         private void Start()
         {
             //시작시 IManager붙은 컴포넌트 전부 찾고 GetOrder순 정렬
-            gameSystems = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None).OfType<IGameSystem>().ToList();
             gameSystems.Sort((x, y) => x.GetOrder().CompareTo(y.GetOrder()));
             foreach (IGameSystem gameSystem in gameSystems)
             {
-                dic.Add(gameSystem.GetType(), gameSystem);
                 if (gameSystem is not IManager manager)
                 {
                     Debug.Log($"{gameSystem} 시스템 추가");

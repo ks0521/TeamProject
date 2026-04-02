@@ -43,6 +43,9 @@ namespace Base.Data
         public event Action OnPlayerHit; //플레이어 피격
         public event Action<MonsterSO> OnMonsterKill; //몬스터 피격
         public void MonsterKill(MonsterSO monsterSO) => OnMonsterKill?.Invoke(monsterSO);
+        public event Action<Vector3, int, HitType, bool> OnRequestDamageText;
+        public void RequestDamageText(Vector3 position, int damage, HitType type, bool isMonster = true) => OnRequestDamageText?.Invoke(position, damage, type, isMonster);
+        
         
         #endregion
 
@@ -78,10 +81,14 @@ namespace Base.Data
         #endregion
 
         #region 성장 파트
-        public event Action<StatusSO> OnStatusEnhanced; //스탯 강화
-        public void EquipEnhanced(StatusSO statusSo) => OnStatusEnhanced?.Invoke(statusSo);
+        public event Action<StatusType> OnStatusEnhanced; //스탯 강화
+        public void StatusEnhanced(StatusType type) => OnStatusEnhanced?.Invoke(type);
         public event Action<EquipmentSO> OnEquipEnhanced; //장비 강화
         public void EquipEnhanced(EquipmentSO equipmentSo) => OnEquipEnhanced?.Invoke(equipmentSo);
+        public event Action<EquipmentSO> OnEquipChanged; //장착 장비 변경
+        public void EquipChenged(EquipmentSO equipmentSo) => OnEquipChanged?.Invoke(equipmentSo);
+        public event Action OnGetNewEquipment; //새 장비 획득
+        public void GetNewEquipment() => OnGetNewEquipment?.Invoke();
         public event Action<SkillSO> OnSkillEnhanced; //스킬 강화
         public void SkillEnhanced(SkillSO skillSo) => OnSkillEnhanced?.Invoke(skillSo);
         public event Action OnSkillInit; //스킬 초기화

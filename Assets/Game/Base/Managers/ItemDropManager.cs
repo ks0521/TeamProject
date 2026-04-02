@@ -74,10 +74,10 @@ public class ItemDropManager : MonoBehaviour, IManager
             progress.currency.level++;
             progress.currency.exp -= 100;
             Debug.Log($"레벨 상승, 경험치 -100, 남은 경험치 : {progress.currency.exp}");
+            hub.LevelChanged(progress.currency.level);
         }
 
         hub.CurrencyChange(CurrencyType.EXP, progress.currency.exp);
-        hub.LevelChanged(progress.currency.level);
     }
 
     public void GetItem(DropReward droppedItem)
@@ -121,6 +121,7 @@ public class ItemDropManager : MonoBehaviour, IManager
                 {
                     enhancementLevel = 0, isDiscovered = true, ownedCount = droppedItem.amount
                 });
+            hub.GetNewEquipment(); //신규장비 장착 -> 계산기 돌리기
             Debug.Log($"{droppedItem.itemSO.name} 신규 획득");
         }
         hub.GetEquipments();

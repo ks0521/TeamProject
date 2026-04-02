@@ -18,7 +18,7 @@ MonoBehaviour:
     def: 2
     atkSpeed: 1
     moveSpeed: 1
-    critChance: 0.3
+    critChance: 0.5
     critDamage: 1.5
   baseReward:
     goldRate: 0
