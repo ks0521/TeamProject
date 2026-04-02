@@ -100,8 +100,6 @@ namespace Base.Data
         #region 퀘스트
         public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
-        public event Action<StatusType> OnStatusEnhanced; //스탯 강화
-        public void StatusEnhanced(StatusType type) => OnStatusEnhanced?.Invoke(type);
         public event Action OnBasicItemEquip;
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
         public event Action OnSkillEnhance;

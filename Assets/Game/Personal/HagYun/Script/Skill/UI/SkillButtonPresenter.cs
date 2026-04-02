@@ -18,7 +18,7 @@ namespace Personal.HagYun
         private Player pl;
         // 0 : 기본, 1 : 선택됨
         [SerializeField] private Sprite[] borderArr;
-        public int GetOrder() => 100;
+        public int GetOrder() => 99; //UIPresnter와 겹쳐서 99로 조정했습니다
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
@@ -138,6 +138,5 @@ namespace Personal.HagYun
             eventHub.OnSkillUnset -= SkillIconUnset;
         }
 
-        public int GetOrder() => 77;
     }
 }
