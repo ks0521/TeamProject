@@ -1886,6 +1886,50 @@ Transform:
   - {fileID: 5771884588369604077}
   m_Father: {fileID: 7538420951269529468}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3207642903485386575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2451288529175256575}
+  - component: {fileID: 3853728020673934880}
+  m_Layer: 0
+  m_Name: DamageAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2451288529175256575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3207642903485386575}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.008726557, z: -0, w: 0.9999619}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3699243063620493872}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3853728020673934880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3207642903485386575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a963aeb2a33934db628e5dc836da71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3286743006836932664
 GameObject:
   m_ObjectHideFlags: 0
@@ -3396,6 +3440,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2451288529175256575}
   - {fileID: 9126643893619379007}
   - {fileID: 6008413817017027189}
   m_Father: {fileID: 0}
@@ -7956,6 +8001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac04515384c2f94e852af1e300b5b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageAnchor: {fileID: 0}
   hp: 0
   targetLayer:
     serializedVersion: 2

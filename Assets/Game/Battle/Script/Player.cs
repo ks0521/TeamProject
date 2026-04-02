@@ -207,9 +207,11 @@ namespace Battle
 
             NormalAttack(target);
         }
-        protected override void SendHitSignal()
+        protected override void SendHitSignal(float resultDamage, HitType type)
         {
-            if(!isDead) eventHub?.PlayerHit();
+            if (isDead) return;
+            eventHub?.PlayerHit();
+            eventHub?.RequestDamageText(damageAnchor.position, (int)resultDamage, type, isMonster: false);
         }
     }
 }

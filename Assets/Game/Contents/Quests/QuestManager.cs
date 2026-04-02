@@ -214,7 +214,7 @@ namespace QuestSystem
         void RefreshQuests()
         {
             bool isChanged = false;
-            int currentLevel = PlayerRuntimeStatus.Instance.Level;
+            int currentLevel = player.Level;
             //저장된 일퀘 ID 호출(없다면 0으로)
             currentDailyID = PlayerPrefs.GetInt(SelectedDailyKey, 0);
             foreach (var data in questDatabase.allQuests)
