@@ -18,14 +18,26 @@ namespace QuestSystem
     public class ActiveQuest
     {
         public QuestDataReader Data { get; private set; } //연결된 원본 데이터
+        public int StartValue; //퀘스트 시작 시점의 값
         public int CurrentValue; //현재 진행 수치
         public bool isCompleted;
 
-        public ActiveQuest(QuestDataReader data)
+        //현재는 1회성 목표 달성이 n레벨 달성뿐임을 전제로 함
+        public ActiveQuest(QuestDataReader data, int curLevel)
         {
             Data = data;
-            CurrentValue = 0;
             isCompleted = false;
+
+            if (data.isAbsoluteGoal) //1회성 목표
+            {
+                this.CurrentValue = curLevel;
+                this.StartValue = 0;
+            }
+            else //반복 가능한 목표
+            {
+                this.CurrentValue = 0;
+                this.StartValue = curLevel;
+            }
         }
     }
     public class QuestManager : MonoBehaviour, IManager
@@ -54,21 +66,26 @@ namespace QuestSystem
         [SerializeField] private GameObject linealQuestPanel;
         [SerializeField] private TextMeshProUGUI linealQuestTitle;
         [SerializeField] private TextMeshProUGUI linealQuestProgress;
+        [SerializeField] private Button linealCompleteButton;
 
         [Header("순환 퀘스트")]
         [SerializeField] private GameObject recurringQuestPanel;
         [SerializeField] private TextMeshProUGUI recurringQuestTitle;
         [SerializeField] private TextMeshProUGUI recurringQuestProgress;
+        [SerializeField] private Button recurringCompleteButton;
 
         [Header("일일 퀘스트")]
         [SerializeField] private GameObject dailyQuestPanel;
         [SerializeField] private TextMeshProUGUI dailyQuestTitle;
         [SerializeField] private TextMeshProUGUI dailyQuestProgress;
+        [SerializeField] private Button dailyCompleteButton;
 
         //private Queue<IQuestStep> questQueue = new Queue<IQuestStep>(); //튜토
         //private List<IQuestStep> activeQuests = new List<IQuestStep>(); //순환
         private int currentIndex = 0;
         private bool doingQuest = false;
+        private const string SelectedDailyKey = "SelectedDailyQuestID";
+        private int currentDailyID = 0; //0이면 아직 선택 안 됨
 
         void Awake()
         {
@@ -104,7 +121,7 @@ namespace QuestSystem
             eventHub.OnLevelChange += (level) => UpdateQuest(GoalType.LevelUp, 0, level);
             eventHub.OnSkillUsed += (skillID) => UpdateQuest(GoalType.SkillUse, skillID, 1);
             eventHub.OnClearStage += (stageSO) => UpdateQuest(GoalType.StageClear, stageSO.stageKey, 1);
-
+            EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
             RefreshQuests(); //초기 퀘스트
             RefreshUI();
         }
@@ -118,22 +135,38 @@ namespace QuestSystem
                 
                 if (quest.Data.GoalTypeEnum == type && (quest.Data.targetID == 0 || quest.Data.targetID == targetID))
                 {
-                    if (type == GoalType.LevelUp) quest.CurrentValue = amount;
+                    if (type == GoalType.LevelUp)
+                    {
+                        if (quest.Data.isAbsoluteGoal)
+                        {
+                            quest.CurrentValue = amount;
+                        }
+                        else
+                        {
+                            //1번 레벨업 : (현재 레벨 - 시작 레벨)
+                            quest.CurrentValue = amount - quest.StartValue;
+                        }
+                    }
                     else if (type == GoalType.Hunt) quest.CurrentValue += amount;
                     else if (type == GoalType.SkillUse) quest.CurrentValue += amount;
                     else if (type == GoalType.StageClear) quest.CurrentValue += amount;
 
-                    RefreshUI();
-
+                    //(4.2.)이제 퀘스트는 완료 버튼을 눌러서 처리, 자동완료 x
                     if (quest.CurrentValue >= quest.Data.targetValue)
                     {
                         quest.isCompleted = true;
                         Debug.Log($"퀘스트 [{quest.Data.description}] 완료 가능");
-
-                        TryCompleteQuest(quest);
                     }
+                    RefreshUI();
                 }
             }
+        }
+        public void OnClickComplete(string categoryString)
+        {
+            QuestCategory category = (QuestCategory)System.Enum.Parse(typeof(QuestCategory), categoryString);
+            //카테고리 내의 퀘스트 중 완료 가능한 것 탐색
+            var targetQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == category && q.isCompleted);
+            if (targetQuest != null) TryCompleteQuest(targetQuest);
         }
         public void TryCompleteQuest(ActiveQuest quest)
         {
@@ -181,22 +214,27 @@ namespace QuestSystem
         void RefreshQuests()
         {
             bool isChanged = false;
+            int currentLevel = PlayerRuntimeStatus.Instance.Level;
+            //저장된 일퀘 ID 호출(없다면 0으로)
+            currentDailyID = PlayerPrefs.GetInt(SelectedDailyKey, 0);
             foreach (var data in questDatabase.allQuests)
             {
                 if (completedQuestIds.Contains(data.questID)) continue;
                 if (activeQuests.Any(q => q.Data.questID == data.questID)) continue;
 
+                if (data.CategoryEnum == QuestCategory.Daily)
+                {
+                    if (currentDailyID == 0)
+                    {
+                        PickRandomDailyQuest();
+                        //뽑은 직후 다시 루프를 돌거나 현재 data와 비교?
+                    }
+                    //뽑히지 않은 퀘스트는 무시
+                    if (data.questID != currentDailyID) continue;
+                }
                 if (data.prevQuestID == 0 || completedQuestIds.Contains(data.prevQuestID))
                 {
-                    ActiveQuest newQuest = new ActiveQuest(data);
-
-                    //레벨 n 달성 퀘스트는 현재 레벨을 받아옴
-                    if (data.isAbsoluteGoal && data.GoalTypeEnum == GoalType.LevelUp)
-                    {
-                        //4.1(규성) : 레벨을 플레이어에서 관리하기때문에 해당 코드를 바꿔놓았습니다.
-                        newQuest.CurrentValue = player.Level;
-                    }
-
+                    ActiveQuest newQuest = new ActiveQuest(data, currentLevel);
                     activeQuests.Add(newQuest);
                     isChanged = true;
                 }
@@ -214,28 +252,31 @@ namespace QuestSystem
                 if (quest.CurrentValue >= quest.Data.targetValue)
                 {
                     quest.isCompleted = true;
-                    TryCompleteQuest(quest);
                 }
             }
         }
         public void RefreshUI()
         {
             var linealQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == QuestCategory.Lineal);
-            UpdateSlot(linealQuest, linealQuestPanel, linealQuestTitle, linealQuestProgress);
+            UpdateSlot(linealQuest, linealQuestPanel, linealQuestTitle, linealQuestProgress, linealCompleteButton);
 
             var recurringQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == QuestCategory.Recurring);
-            UpdateSlot(recurringQuest, recurringQuestPanel, recurringQuestTitle, recurringQuestProgress);
+            UpdateSlot(recurringQuest, recurringQuestPanel, recurringQuestTitle, recurringQuestProgress, recurringCompleteButton);
 
             var dailyQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == QuestCategory.Daily);
-            UpdateSlot(dailyQuest, dailyQuestPanel, dailyQuestTitle, dailyQuestProgress);
+            UpdateSlot(dailyQuest, dailyQuestPanel, dailyQuestTitle, dailyQuestProgress, dailyCompleteButton);
         }
-        void UpdateSlot(ActiveQuest quest, GameObject panel, TextMeshProUGUI title, TextMeshProUGUI progress)
+        void UpdateSlot(ActiveQuest quest, GameObject panel, TextMeshProUGUI title, TextMeshProUGUI progress, Button completeBtn)
         {
             if (quest != null)
             {
                 panel.SetActive(true);
                 if (title != null) title.text = quest.Data.description;
                 if (progress != null) progress.text = $"{quest.CurrentValue}/{quest.Data.targetValue}";
+                if (completeBtn != null)
+                {
+                    completeBtn.interactable = quest.isCompleted;
+                }
             }
             else panel.SetActive(false);
         }
@@ -243,7 +284,12 @@ namespace QuestSystem
         {
             activeQuests.RemoveAll(q => q.Data.CategoryEnum == QuestCategory.Daily);
             //ID 900~999번은 일일 퀘스트라고 가정
-            completedQuestIds.RemoveWhere(id => id >= 900 && id < 999);
+            completedQuestIds.RemoveWhere(id => id >= 900 && id <= 999);
+            
+            //저장된 일퀘 초기화
+            PlayerPrefs.DeleteKey(SelectedDailyKey);
+            currentDailyID = 0;
+            PickRandomDailyQuest();
             RefreshQuests();
             RefreshUI();
         }
@@ -263,6 +309,25 @@ namespace QuestSystem
             if (dailyQuestPanel != null) dailyQuestPanel.SetActive(true);
             if (dailyQuestTitle != null) dailyQuestTitle.text = description;
         }
+        void PickRandomDailyQuest()
+        {
+            //Daily 퀘스트만 필터링
+            var dailyPool = questDatabase.allQuests
+                .Where(q => q.CategoryEnum == QuestCategory.Daily)
+                .ToList();
+
+            if(dailyPool.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, dailyPool.Count);
+                currentDailyID = dailyPool[randomIndex].questID;
+
+                //자정까지 선택된 퀘스트ID 저장
+                PlayerPrefs.SetInt(SelectedDailyKey, currentDailyID);
+                PlayerPrefs.Save();
+                Debug.Log($"[QuestManager] 오늘의 일일 퀘스트: {currentDailyID}");
+            }
+        }
+
 
 #if UNITY_EDITOR
         private int _debugLevel = 1;
