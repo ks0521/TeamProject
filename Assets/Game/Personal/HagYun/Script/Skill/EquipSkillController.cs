@@ -25,8 +25,8 @@ namespace Personal.HagYun
             radius *= 2f;
             if (spriteWidth == 0) spriteWidth = 1;
             float scale = radius / spriteWidth;
-            
-            sr.transform.localScale = new Vector3(scale,scale,1f);
+
+            sr.transform.localScale = new Vector3(scale, scale, 1f);
         }
     }
     public abstract class EquipSkillController : MonoBehaviour
@@ -71,25 +71,44 @@ namespace Personal.HagYun
             SpriteShower tss = new SpriteShower(testAreaOffset, range);
             tss.FitSpriteToSize(sr);
         }
-        public virtual void SkillEquip(int index, Skill targetSkill, bool isInit = false)
+        public virtual void SkillEquip(int slotIndex, ActiveSkill targetSkill, bool isInit = false)
         {
             if (targetSkill == null)
             {
-                Debug.Log($"{index}번에 장착할 스킬 없음");
+                Debug.Log($"{slotIndex}번에 장착할 스킬 없음");
                 return;
             }
-            PriorityUpdate(index, Priority.Low);
-            equipSkillArr[index].SkillSet(targetSkill, isInit);
-            if (equipSkillArr[index].isEquipped) return;
-            equipSkillArr[index].isEquipped = true;
+            int targetSkillEquipNum = targetSkill.EquipSlotIndex;
+            if (slotIndex == targetSkillEquipNum)
+            {
+                Debug.Log($"{slotIndex}번에 이미 같은 스킬 장착됨");
+                return;
+            }
+            else if (targetSkillEquipNum != -1)
+            {
+                SkillUnequip(targetSkillEquipNum);
+            }
+
+            EquipSkill eSkill = equipSkillArr[slotIndex];
+            eSkill.SkillEquip(targetSkill, isInit);
+            eSkill.Skill.EquipSkillSlotIndexUpdate(slotIndex);
+            PriorityUpdate(slotIndex, Priority.Low);
+            eventHub.SkillSet(slotIndex);
+            if (eSkill.isEquipped) return;
+            eSkill.isEquipped = true;
             skillCnt++;
+
         }
         public virtual void SkillUnequip(int index)
         {
-            equipSkillArr[index].SkillUnset();
-            if (!equipSkillArr[index].isEquipped) return;
-            equipSkillArr[index].isEquipped = false;
+            EquipSkill eSkill = equipSkillArr[index];
+            if (!eSkill.isEquipped) return;
+            eSkill.Skill.EquipSkillSlotIndexUpdate(-1);
+            eSkill.SkillUnequip();
+            eventHub.SkillUnset(index);
+            eSkill.isEquipped = false;
             skillCnt--;
+
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
         {
@@ -99,7 +118,7 @@ namespace Personal.HagYun
             float alphaValue = 100f / 255f;
             if (sr != null) sr.color = new Color(0, 0, 1f, alphaValue);
 
-            float baseCastingTime = equipSkillArr[index].Skill.Data.castingTime;
+            float baseCastingTime = equipSkillArr[index].Skill.ActiveSkillData.castingTime;
             float curCastingTime = baseCastingTime;
             float castingTimeValue = 1f;
 
@@ -145,9 +164,9 @@ namespace Personal.HagYun
         }
         public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            Skill tSkill = equipSkillArr[skillIndex].Skill;
+            ActiveSkill tSkill = equipSkillArr[skillIndex].Skill;
             Vector2 plPos = tSkill.OwnerPos;
-            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, tSkill.Data.range, tSkill.TargetMask);
+            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, tSkill.ActiveSkillData.range, tSkill.TargetMask);
             if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
             {
                 mon = targetCol.GetComponent<Monster>();
@@ -165,7 +184,7 @@ namespace Personal.HagYun
             if (!CheckSkillUsePossible(index)) return false;
             else if (TryGetMonsterTargetToAtk(index, out Monster mon))
             {
-                SkillRangeChange(equipSkillArr[index].Skill.Data.range);
+                SkillRangeChange(equipSkillArr[index].Skill.ActiveSkillData.range);
                 AtkSkillUse(index, mon);
                 return true;
             }
@@ -173,12 +192,12 @@ namespace Personal.HagYun
         }
 
         // event subscription Func for external use  
-        public void SkillEquip1(Skill skill) => SkillEquip(0, skill);
-        public void SkillEquip2(Skill skill) => SkillEquip(1, skill);
-        public void SkillEquip3(Skill skill) => SkillEquip(2, skill);
-        public void SkillEquip4(Skill skill) => SkillEquip(3, skill);
-        public void SkillEquip5(Skill skill) => SkillEquip(4, skill);
-        public void SkillEquip6(Skill skill) => SkillEquip(5, skill);
+        public void SkillEquip1(ActiveSkill skill) => SkillEquip(0, skill);
+        public void SkillEquip2(ActiveSkill skill) => SkillEquip(1, skill);
+        public void SkillEquip3(ActiveSkill skill) => SkillEquip(2, skill);
+        public void SkillEquip4(ActiveSkill skill) => SkillEquip(3, skill);
+        public void SkillEquip5(ActiveSkill skill) => SkillEquip(4, skill);
+        public void SkillEquip6(ActiveSkill skill) => SkillEquip(5, skill);
         public void SkillUnequip1() => SkillUnequip(0);
         public void SkillUnequip2() => SkillUnequip(1);
         public void SkillUnequip3() => SkillUnequip(2);

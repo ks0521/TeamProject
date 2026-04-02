@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class ProjectileSkill : Skill
+    public class ProjectileSkill : ActiveSkill
     {
         [SerializeField] protected Character target;
         protected override Vector2 TargetPos => target.transform.position;
@@ -28,7 +28,7 @@ namespace Personal.HagYun
                 gameObject.SetActive(false);
                 return;
             }
-            transform.MoveToTarget(TargetPos, Data.speed);
+            transform.MoveToTarget(TargetPos, ActiveSkillData.speed);
             transform.LookToTarget(TargetPos);
             if (!transform.CheckDirZeroToTarget(TargetPos))
             {

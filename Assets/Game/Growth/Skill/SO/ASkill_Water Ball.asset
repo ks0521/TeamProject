@@ -14,17 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 1002
   skillName: Water Ball
-  baseValue: 1.5
-  incValuePerLevel: 0.3
+  maxLv: 5
   description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC (\uBB3C \uC18D\uC131) \uB2E8\uC77C
     \uACF5\uACA9"
   skillIcon: {fileID: 7215105689423546514, guid: 7f0334fbcb82d4dea9084d6f5a2ab8d3,
     type: 3}
-  skillSound: {fileID: 8300000, guid: 273c7e018f039b7469d238fbb46d1751, type: 3}
   SoE: 0
   Targeting: 1
+  baseDamage: 1.5
+  incDamagePerLevel: 0.3
   castingTime: 0.25
   range: 3
   coolDown: 2
   speed: 3
   effectArea: 0
+  skillSound: {fileID: 8300000, guid: 273c7e018f039b7469d238fbb46d1751, type: 3}
