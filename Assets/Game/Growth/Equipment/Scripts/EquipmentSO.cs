@@ -53,4 +53,4 @@ namespace Growth.Equipment
         public StatIncrease ownedBaseIncrease;     // 보유 시 증가 스탯
         public StatIncrease ownedPerLevelIncrease;    // 레벨당 보유 시 증가 스탯
     }
-}  
+}

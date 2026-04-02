@@ -1,22 +1,26 @@
 using Base.Data;
+using Base.Managers;
+using Base.Save;
+using Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class imsiQuestController : MonoBehaviour
+public class imsiQuestController : MonoBehaviour, IManager
 {
     private EventHub eventHub;
+    private  RuntimeProgressState progress;
     void Update()
     {
         // 1. Delete 키를 누르면 레벨을 강제로 1 올리고 이벤트를 쏩니다.
         if (Input.GetKeyDown(KeyCode.Delete))
         {
-            if (PlayerRuntimeStatus.Instance != null)
+            
+            if (progress != null)
             {
                 // 데이터 조작: PlayerRuntimeStatus의 레벨을 강제로 올림
-                PlayerRuntimeStatus.Instance.Level++;
-
-                int currentLevel = PlayerRuntimeStatus.Instance.Level;
+                
+                int currentLevel = ++progress.currency.level;
                 Debug.Log($"<color=orange>[TEST] 레벨 강제 조작: {currentLevel}</color>");
 
                 // 이벤트 발생: QuestManager가 이 소식을 듣고 퀘스트를 업데이트함
@@ -40,5 +44,11 @@ public class imsiQuestController : MonoBehaviour
             // 여기서는 간단히 직접 호출 예시:
             // QuestManager.Instance.UpdateQuest(GoalType.StageClear, 101, 1);
         }
+    }
+
+    public int GetOrder() => 998;
+    public void Init()
+    {
+        progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
     }
 }

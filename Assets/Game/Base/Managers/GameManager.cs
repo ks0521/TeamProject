@@ -40,7 +40,7 @@ namespace Base.Managers
         private void Start()
         {
             //시작시 IManager붙은 컴포넌트 전부 찾고 GetOrder순 정렬
-            gameSystems = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IGameSystem>().ToList();
+            gameSystems = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None).OfType<IGameSystem>().ToList();
             gameSystems.Sort((x, y) => x.GetOrder().CompareTo(y.GetOrder()));
             foreach (IGameSystem gameSystem in gameSystems)
             {

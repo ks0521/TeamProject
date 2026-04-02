@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Manager;
 using Base.Managers;
+using Base.Save;
 using Growth.Equipment;
 using System;
 using System.Collections.Generic;
@@ -33,16 +34,16 @@ namespace UI.Equipment
     /// 
     /// 결과적으로 실제 상태 판단과 매니저 연결을 맡음
     /// </summary>
-    public class EquipmentPresenter : MonoBehaviour, IManager
+    public class EquipmentPresenter : MonoBehaviour
     {
         //관규님이 만들어주신 메서드 기반으로 최대한 구현하고자 했고, 추가되어야 할 것 같은 부분들은 임의로 추가했습니다. 
-        [Header("상세창")] [SerializeField] private EquipmentDetailView detailView; //장비 아이콘 클릭 시 열리는 상세페이지
+        [Header("상세창")][SerializeField] private EquipmentDetailView detailView; //장비 아이콘 클릭 시 열리는 상세페이지
 
-        [Header("장비 버튼")] [SerializeField] private Button openWeaponTabButton; //무기 인벤토리 여는 버튼
+        [Header("장비 버튼")][SerializeField] private Button openWeaponTabButton; //무기 인벤토리 여는 버튼
         [SerializeField] private Button openArmorTabButton; //방어구 인벤토리 여는 버튼
         [SerializeField] private Button openAccessoryTabButton; //악세서리 인벤토리 여는 버튼
 
-        [Header("장비 팝업")] 
+        [Header("장비 팝업")]
         [SerializeField] private GameObject weaponPopup;
         [SerializeField] private GameObject armorPopup;
         [SerializeField] private GameObject accessoryPopup;
@@ -65,7 +66,7 @@ namespace UI.Equipment
             if (equipmentManager == null || eventHub == null) return;
             eventHub.OnGetEquipments += RefreshCurrentTab;
             eventHub.OnGetEquipments += RefreshDetailViewButtonState; //장비 획득은 합성 / 장착버튼
-            eventHub.OnGetCurrency += RefreshDetailViewButtonState; //재화 획득은 강화버튼 활성화 판정에 필요
+            eventHub.OnCurrencyChange += RefreshCurrency; //재화 획득은 강화버튼 활성화 판정에 필요
             ShowPopup(currentTabType);
         }
 
@@ -74,7 +75,7 @@ namespace UI.Equipment
             if (eventHub == null) return;
             eventHub.OnGetEquipments -= RefreshCurrentTab;
             eventHub.OnGetEquipments -= RefreshDetailViewButtonState;
-            eventHub.OnGetCurrency -= RefreshDetailViewButtonState;
+            eventHub.OnCurrencyChange -= RefreshCurrency;
         }
 
         public void Init()
@@ -93,8 +94,6 @@ namespace UI.Equipment
             gameObject.SetActive(false);
         }
 
-        public int GetOrder() => 230;
-
         /// <summary> 장비 타입에 해당하는 팝업창 열기</summary>
         /// <param name="type">열고싶은 장비창 종류(무기 / 방어구 / 악세서리)</param>
         void ShowPopup(EquipType type)
@@ -108,12 +107,12 @@ namespace UI.Equipment
                 case EquipType.Weapon:
                     currentPopUp = weaponPopup;
                     break;
-                /*case EquipType.Armor:
-                    curPopUp = armorPopUp;
-                    break;
-                case EquipType.Accessory:
-                    curPopUp = accessoryPopUp;
-                    break;*/
+                    /*case EquipType.Armor:
+                        curPopUp = armorPopUp;
+                        break;
+                    case EquipType.Accessory:
+                        curPopUp = accessoryPopUp;
+                        break;*/
             }
 
             detailView.SetActive(false);
@@ -134,12 +133,12 @@ namespace UI.Equipment
                 case EquipType.Weapon:
                     BindSlotViews(EquipType.Weapon, weaponSlots);
                     break;
-                /*case 1:
-                    BindSlots(EquipType.Armor, armorSlots);
-                    break;
-                case 2:
-                    BindSlots(EquipType.Accessory, accSlots);
-                    break;*/
+                    /*case 1:
+                        BindSlots(EquipType.Armor, armorSlots);
+                        break;
+                    case 2:
+                        BindSlots(EquipType.Accessory, accSlots);
+                        break;*/
             }
         }
 
@@ -159,7 +158,7 @@ namespace UI.Equipment
         {
             //지금은 일단 이렇게 고정된 크기로 만들어놓았지만 차후에는 무한스크롤 구현을 위해 slots을 동적으로 만들고
             //bind할때만 canvasGroup? 같은걸로 실시간 정렬해가면서 만드는 방식도 생각해보면 좋을 것 같습니다. 
-            
+
             Debug.Log("bindslot 실행");
             equipmentCatalogs = equipmentManager.GetEquipmentCatalogs(equipType);
             if (equipmentCatalogs.Count != slots.Length) //도감 내 장비와 실제 장비가 다를경우 실행하지 않음
@@ -179,12 +178,17 @@ namespace UI.Equipment
                     selectedCatalog = curCatalog;
                     detailView.SetActive(true);
                     detailView.ShowCatalog(curCatalog, curSlot.SlotImages);
-                    RefreshDetailViewButtonState();
                     detailView.BindButtons(OnEquip: OnEquipClicked, OnCombine: OnCombineClicked, OnEnhance: OnEnhanceClicked);
+                    RefreshDetailViewButtonState();
                 });
             }
         }
-
+        /// <summary> OnGetCurrency 이벤트와 RefreshDetailViewButtonState 연결용 메서드 </summary>
+        void RefreshCurrency(CurrencyType type, int amount)
+        {
+            if (type != CurrencyType.GOLD) return;
+            RefreshDetailViewButtonState();
+        }
         /// <summary>
         /// 현재 DetailView에 떠 있는 장비를 기준으로 버튼 활성화 상태를 다시 계산한다.
         /// 
@@ -203,11 +207,15 @@ namespace UI.Equipment
             //제대로 연산이 안됩니다.(장비 최초획득시 상세창 장착버튼 활성화가 바로 안됐었음)
             //재연하고 싶으시면 lastCatalog -> detailView.Catalog로 바꾸신 후 미획득한 장비 클릭 -> test에서 장비 획득하시면
             //재연가능합니다. 재연 안되면 말씀해주세용 
-            
+
             if (!detailView.isActiveAndEnabled || detailView.CurrentCatalog == null) return;
             EquipmentButtonState state = EquipmentButtonState.None;
             equipmentManager.TryGetEquipmentCatalog(detailView.CurrentCatalog.key, out var lastCatalog);
             if (lastCatalog == null) return;
+
+            selectedCatalog = lastCatalog;
+            detailView.RefreshCatalog(lastCatalog);
+
             //장착가능은 1<<0, 강화가능은 1<<1, 합성가능은 1<<2이며, 이 값든은 state에 OR연산되어 비트연산자로 작동합니다. 
             if (lastCatalog.state.isDiscovered)
                 state |= EquipmentButtonState.Equip;
@@ -236,7 +244,11 @@ namespace UI.Equipment
         /// <summary> 현재 선택된 장비 강화시도</summary>
         void OnEnhanceClicked()
         {
-            equipmentManager.TryEnhanceEquipment(selectedCatalog.equipment);
+            bool result = equipmentManager.TryEnhanceEquipment(selectedCatalog.equipment);
+
+            if (!result) return;
+            RefreshCurrentTab();
+            RefreshDetailViewButtonState();
         }
     }
 }

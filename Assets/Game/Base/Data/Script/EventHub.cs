@@ -1,10 +1,12 @@
 using Base.Managers;
 using Base.Save;
 using Battle;
+using Growth.Equipment;
+using Growth.Skill;
 using Growth.StatUpgrade;
-using JetBrains.Annotations;
 using Personal.HagYun;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Base.Data
@@ -60,8 +62,6 @@ namespace Base.Data
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
-        public event Action OnSkillInit; //스킬 초기화
-        public void InitSkill() => OnSkillInit?.Invoke();
         #endregion
 
         #region 재화 파트
@@ -77,9 +77,21 @@ namespace Base.Data
         public void GetEquipments() => OnGetEquipments?.Invoke(); // 사운드 연동용 이벤트
         #endregion
 
-        //새로 추가된 이벤트(Action 뒤의 수식어는 고려 안 함)
-        //나중에 이벤트 목록 정리 부탁드립니다
-        public event Action OnAutoHuntActivate;
+        #region 성장 파트
+        public event Action<StatusSO> OnStatusEnhanced; //스탯 강화
+        public void EquipEnhanced(StatusSO statusSo) => OnStatusEnhanced?.Invoke(statusSo);
+        public event Action<EquipmentSO> OnEquipEnhanced; //장비 강화
+        public void EquipEnhanced(EquipmentSO equipmentSo) => OnEquipEnhanced?.Invoke(equipmentSo);
+        public event Action<SkillSO> OnSkillEnhanced; //스킬 강화
+        public void SkillEnhanced(SkillSO skillSo) => OnSkillEnhanced?.Invoke(skillSo);
+        public event Action OnSkillInit; //스킬 초기화
+        public void InitSkill() => OnSkillInit?.Invoke();
+        public event Action<int[]> OnSkillEquipped;
+        public void SkillEquipped(int[] skillSlot) => OnSkillEquipped?.Invoke(skillSlot);
+        #endregion
+
+        #region 퀘스트
+        public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
         public event Action OnBasicItemEquip;
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
@@ -91,6 +103,7 @@ namespace Base.Data
         public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
         public static void NewDayStarted(string dateStr) => OnNewDayStarted?.Invoke(dateStr);
 
+        #endregion
         public int GetOrder() => 0;
     }
 }
