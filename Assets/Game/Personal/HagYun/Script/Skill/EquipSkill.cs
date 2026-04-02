@@ -18,8 +18,8 @@ namespace Personal.HagYun
         // EquipSkill index
         int eSkillIndex;
         // Equiped Skill
-        [SerializeField] Skill skill;
-        public Skill Skill => skill;
+        [SerializeField] ActiveSkill skill;
+        public ActiveSkill Skill => skill;
 
         // Cooltime Check
         public float CurCooltime { get; private set; }
@@ -40,27 +40,18 @@ namespace Personal.HagYun
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             eSkillIndex = index;
         }
-        public void SkillSet(Skill skill, bool isInit = false)
+        public void SkillEquip(ActiveSkill skill, bool isInit = false)
         {
             this.skill = skill;
             skill.Init(owner);
-            MaxCooltime = skill.Data.coolDown;
-
-            eventHub.SkillSet(eSkillIndex);
+            MaxCooltime = skill.ActiveSkillData.coolDown;
 
             if (!isInit) CooltimeStart();
         }
-        public void SkillUnset()
+        public void SkillUnequip()
         {
             skill = null;
             IsCooltime = false;
-
-            eventHub.SkillUnset(eSkillIndex);
-        }
-        public void SkillChange(Skill skill)
-        {
-            SkillUnset();
-            SkillSet(skill);
         }
         public void SkillUse(Character target)
         {
@@ -79,7 +70,7 @@ namespace Personal.HagYun
                 Debug.LogWarning("타겟 없음");
                 return;
             }
-            switch (skill.Data.Targeting)
+            switch (skill.ActiveSkillData.Targeting)
             {
                 case TargetingMode.Self:
                     skill.SkillUseTargeting(new TargetChecker(skill.OwnerPos));
@@ -118,7 +109,7 @@ namespace Personal.HagYun
         }
         public void CooltimeStart()
         {
-            CooltimeSet(skill.Data.coolDown);
+            CooltimeSet(skill.ActiveSkillData.coolDown);
             CooltimeStartTask().Forget();
         }
     }

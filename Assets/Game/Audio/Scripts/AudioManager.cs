@@ -93,7 +93,7 @@ public class AudioManager : MonoBehaviour, IManager
     #endregion
 
     #region Skill Sounds
-    void OnSkillUsed(SkillSO skillSO)
+    void OnSkillUsed(ActiveSkillSO skillSO)
     {
         if (skillSO.skillSound != null)
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class AreaSkill : Skill
+    public class AreaSkill : ActiveSkill
     {
         [SerializeField] protected Vector2 targetPos;
         protected override Vector2 TargetPos => targetPos;
@@ -22,7 +22,7 @@ namespace Personal.HagYun
         }
         protected void AreaInit()
         {
-            float areaSize = Data.effectArea;
+            float areaSize = ActiveSkillData.effectArea;
             Vector2 effectSize = effectAnim.transform.localScale;
             effectAnim.transform.localScale = effectSize * areaSize;
             if (isSpriteYPosUp)
@@ -48,7 +48,7 @@ namespace Personal.HagYun
         protected void AreaShowColliderInit()
         {
             effectAreaCollider = GetComponent<CapsuleCollider2D>();
-            effectAreaCollider.size *= Data.effectArea;
+            effectAreaCollider.size *= ActiveSkillData.effectArea;
         }
         public override void SkillUseTargeting(TargetChecker target)
         {
@@ -89,7 +89,9 @@ namespace Personal.HagYun
                     addEffectAnim[i].Rebind();
                 }
             }
-            SkillEffectTask().Forget();
+            // SkillEffectTask().Forget();
+            SkillEffect();
+            ObjDisableTimerTask().Forget();
         }
     }
 }

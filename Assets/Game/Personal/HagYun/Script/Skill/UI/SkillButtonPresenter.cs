@@ -18,6 +18,7 @@ namespace Personal.HagYun
         private Player pl;
         // 0 : 기본, 1 : 선택됨
         [SerializeField] private Sprite[] borderArr;
+        public int GetOrder() => 100;
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
@@ -50,7 +51,7 @@ namespace Personal.HagYun
                 }
                 tBtnView.ButtonEventSubscribe(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
                 CooltimeCheckTask(index).Forget();
-                ActiveSkillSO skillData = plEquipSkill[index].Skill.Data;
+                ActiveSkillSO skillData = plEquipSkill[index].Skill.ActiveSkillData;
                 tBtnView.SkillIconImageChange(skillData.skillIcon, skillData.Targeting == TargetingMode.Homing);
             }
             EquipSkillEventRemove();
@@ -97,7 +98,7 @@ namespace Personal.HagYun
         void BtnCooltimeEndEvent(int index) => btnViewArr[index].CooltimeEnd();
         void SkillIconSet(int index)
         {
-            ActiveSkillSO tSkillData = plEquipSkill[index].Skill.Data;
+            ActiveSkillSO tSkillData = plEquipSkill[index].Skill.ActiveSkillData;
             btnViewArr[index].SkillIconImageChange(tSkillData.skillIcon, tSkillData.Targeting == TargetingMode.Homing);
         }
         void SkillIconUnset(int index) => btnViewArr[index].SkillIconImageChange(null, false);

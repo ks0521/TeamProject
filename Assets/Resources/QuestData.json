@@ -59,6 +59,26 @@
             "prevQuestID": 0,
             "rewardGroupID": 901,
             "isAbsoluteGoal": false
+        },
+        {
+            "questID": 902,
+            "category": "Daily",
+            "description": "Use Skill 10 times",
+            "goalType": "SkillUse",
+            "targetValue": 10,
+            "prevQuestID": 0,
+            "rewardGroupID": 902,
+            "isAbsoluteGoal": false
+        },
+        {
+            "questID": 903,
+            "category": "Daily",
+            "description": "LevelUP 2 time",
+            "goalType": "LevelUp",
+            "targetValue": 2,
+            "prevQuestID": 0,
+            "rewardGroupID": 903,
+            "isAbsoluteGoal": false
         }
     ]
 }
