@@ -15,7 +15,6 @@ namespace Base.Data
     public class GameDataProvider : MonoBehaviour, IGameSystem
     {
         public static GameDataProvider Instance; //MVP 완료 후 제거
-        public DropTableDictionarySO dropTable;
         public StageDictionarySO stageTable;
         public StatusSO statusTable;
         public SkillDictionarySO SkillTable;

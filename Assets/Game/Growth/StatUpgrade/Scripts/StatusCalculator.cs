@@ -106,7 +106,6 @@ public class StatusCalculator : MonoBehaviour,IGameSystem
         }
         else{ Debug.LogWarning($"아이템 드랍률 SO 찾지 못함");}
 
-        runtimeStatus.Level = runProgressState.currency.level;
         runtimeStatus.finalRange = runtimeStatus.baseStat.baseAttackRange; //공격 범위는 고정
     }
 

@@ -31,7 +31,7 @@ namespace Growth.Skill
         Passive,
         Active
     }
-
+    
     [CreateAssetMenu(menuName = "Game/Growth/Skill")]
     public class SkillSO : ScriptableObject
     {
