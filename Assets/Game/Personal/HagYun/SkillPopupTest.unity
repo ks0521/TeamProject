@@ -308,6 +308,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &404399687
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 404399688}
+  m_Layer: 0
+  m_Name: EmptyTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &404399688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404399687}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 897.60834, y: 610.5264, z: -6.1404343}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &431328822
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,6 +351,50 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Skill_PopupSet
+      objectReference: {fileID: 0}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: skillEmptyTransform
+      value: 
+      objectReference: {fileID: 404399688}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: saveSkill.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: saveSkill.Array.data[0]
+      value: 
+      objectReference: {fileID: 3182465722278937716, guid: d21c617f1de926e49b1efec4b682a617,
+        type: 3}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: saveSkill.Array.data[1]
+      value: 
+      objectReference: {fileID: 525696042632702537, guid: 04b0b561fd319414fb92d3c26a38a335,
+        type: 3}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: skillLvSetArr.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: skillLvSetArr.Array.data[0].skill
+      value: 
+      objectReference: {fileID: 3182465722278937716, guid: d21c617f1de926e49b1efec4b682a617,
+        type: 3}
+    - target: {fileID: 929899221638423815, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: skillLvSetArr.Array.data[1].skill
+      value: 
+      objectReference: {fileID: 525696042632702537, guid: 04b0b561fd319414fb92d3c26a38a335,
+        type: 3}
+    - target: {fileID: 2023038235396549500, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2600005343640912348, guid: cd36d5e6184204941a7277465aa2fc91,
         type: 3}
@@ -719,3 +794,4 @@ SceneRoots:
   - {fileID: 300311769}
   - {fileID: 1090305652}
   - {fileID: 316773796}
+  - {fileID: 404399688}

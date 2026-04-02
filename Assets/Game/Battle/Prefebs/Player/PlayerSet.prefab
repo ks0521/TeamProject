@@ -51,7 +51,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9048040692735085718
 Transform:
   m_ObjectHideFlags: 0
@@ -118,26 +118,16 @@ MonoBehaviour:
   skillPool: {fileID: 6906448153477792504}
   equipSkillArr: []
   <IsCasting>k__BackingField: 0
+  testAreaOffset: {x: 0, y: 0}
   autoSkillUsePossibleCnt: 0
-  eSkillCheckerSet:
-    equipSkillChecker:
-    - isEquipBoolArr: 000000000000
-      cnt: 0
-    - isEquipBoolArr: 000000000000
-      cnt: 0
-    - isEquipBoolArr: 000000000000
-      cnt: 0
   autoSkillController:
     autoSkillUseOrderNum: 0
     pesc: {fileID: 2560318886816647469}
     eSkillCheckerSet:
       equipSkillChecker:
       - isEquipBoolArr: 000000000000
-        cnt: 0
       - isEquipBoolArr: 000000000000
-        cnt: 0
       - isEquipBoolArr: 000000000000
-        cnt: 0
   td: {fileID: 7611638699218220954}
 --- !u!114 &7611638699218220954
 MonoBehaviour:
@@ -1019,9 +1009,30 @@ MonoBehaviour:
   canAtk: 0
   spumController: {fileID: 0}
   uniRoot: {fileID: 0}
+  runtimeProgress:
+    stage:
+      selectedNormalStage: 0
+      selectedNormalChapter: 0
+      nextChallangeStage: 0
+      nextChallangeChapter: 0
+    currency:
+      level: 0
+      skillPoint: 0
+      exp: 0
+      gold: 0
+      statStone: 0
+    equipment:
+      equippedWeponKey: 0
+      equippedArmorKey: 0
+      equippedAccessoryKey: 0
+    skillProgress:
+      skillSlots: 
+    lastSession:
+      lastConnectTime: 0
   runtimeStatus: {fileID: 3133453849342583988}
   equipSkillController: {fileID: 2560318886816647469}
   stageManager: {fileID: 0}
+  hub: {fileID: 0}
   stageMonsters: []
 --- !u!114 &4530392472248507200
 MonoBehaviour:

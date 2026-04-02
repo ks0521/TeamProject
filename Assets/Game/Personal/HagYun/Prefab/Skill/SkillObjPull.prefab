@@ -50,13 +50,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0044df921c16f4981fbeadedd27143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillArr:
+  allSkillObjPool:
   - {fileID: 6131617395281586671}
   - {fileID: 7790081247025580875}
   - {fileID: 6942431544550574975}
   - {fileID: 1642327847707756629}
   - {fileID: 1503887300913263361}
   - {fileID: 7982081666878736347}
+  activeSkillList:
+  - {fileID: 6131617395281586671}
+  - {fileID: 7790081247025580875}
+  - {fileID: 6942431544550574975}
+  - {fileID: 1642327847707756629}
+  - {fileID: 1503887300913263361}
+  - {fileID: 7982081666878736347}
+  passiveSkillList: []
 --- !u!1001 &3011442100729428180
 PrefabInstance:
   m_ObjectHideFlags: 0

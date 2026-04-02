@@ -2,6 +2,7 @@ using Growth.Skill;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,54 +25,141 @@ namespace Personal.HagYun
         [SerializeField, Tooltip("스킬 장착 버튼")] private Button equipBtn;
         [SerializeField, Tooltip("장착 스킬 우선순위 변경 버튼")] private Button priorityChangeBtn;
 
-        public void SkillDataShow(SkillSO skillData, int curLv, int maxLv)
+        public void SkillDataShow(Skill skill)
         {
-            if (skillData == null) return;
-            SkillNameShow(skillData.skillName);
-            SkillLevelShow(curLv, maxLv);
-            if (skillData.SkillType == Growth.Skill.Type.Passive)
+            if (skill == null) return;
+            var data = skill.SkillData;
+            SkillNameChange(data.skillName);
+            if (data.Type == Growth.Skill.SkillType.Passive)
             {
                 skillCooltimeText.gameObject.SetActive(false);
-                SkillImgShow(skillData.skillIcon, false);
+                equipBtn.gameObject.SetActive(false);
+                priorityChangeBtn.gameObject.SetActive(false);
+                SkillImgChange(data.skillIcon, false);
+                PassiveSkill passiveSkill = (PassiveSkill)skill;
+                SkillValueChange(passiveSkill);
             }
             else
             {
-                ActiveSkillSO aSkillData = (ActiveSkillSO)skillData;
-                SkillCooltimeShow(aSkillData.coolDown);
+                var activeSkill = (ActiveSkill)skill;
+                var activeData = activeSkill.ActiveSkillData;
+                SkillCooltimeChange(activeData.coolDown);
+                SkillImgChange(data.skillIcon, activeSkill.IsHomingSkill);
+                SkillValueChange(activeSkill);
                 skillCooltimeText.gameObject.SetActive(true);
-                SkillImgShow(skillData.skillIcon, aSkillData.Targeting == TargetingMode.Homing);
+                equipBtn.gameObject.SetActive(true);
+                priorityChangeBtn.gameObject.SetActive(true);
             }
-            SkillValueShow(skillData.baseValue);
-            SkillDescriptionShow(skillData.description);
+            SkillDescriptionChange(data.description);
         }
-        public void SkillImgShow(Sprite sp, bool isHoming)
+        public void SkillImgChange(Sprite sp, bool isHoming)
         {
             skillImg.sprite = sp;
-            if(isHoming) skillImg.rectTransform.localEulerAngles = new Vector3(0, 0, 135f);
-            else  skillImg.rectTransform.localEulerAngles = Vector3.zero;
+            if (isHoming) skillImg.rectTransform.localEulerAngles = new Vector3(0, 0, 135f);
+            else skillImg.rectTransform.localEulerAngles = Vector3.zero;
         }
-        public void SkillNameShow(string skillName) => nameText.text = skillName;
-        public void SkillLevelShow(int curLv, int maxLv) => levelText.text = $"Lv : {curLv} / {maxLv}";
-        public void SkillValueShow(float value) => skillValueText.text = $"배율 : {value * 100}%";
-        public void SkillCooltimeShow(float cooltime) => skillCooltimeText.text = $"쿨타임 : {cooltime}초";
-        public void SkillDescriptionShow(string skillDescription) => skillDescriptionText.text = skillDescription;
+        public void SkillNameChange(string skillName) => nameText.text = skillName;
+        public void SkillLevelChange(int curLv, int maxLv) => levelText.text = $"Lv : {curLv} / {maxLv}";
+        public void SkillValueChange(Skill skill)
+        {
+            SkillLevelChange(skill.CurLv, skill.MaxLv);
+            if(skill.SkillData.Type == Growth.Skill.SkillType.Passive)
+            {
+                SkillValueChange((PassiveSkill)skill);
+            }
+            else
+            {
+                SkillValueChange((ActiveSkill)skill);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        public void SkillValueChange(ActiveSkill activeSkill)
+        {
+            skillValueText.text = $"배율 : {activeSkill.ResultDamage * 100}%";
+        }
+        public void SkillValueChange(PassiveSkill passiveSkill)
+        {
+            sb.Clear();
+            sb.AppendLine("증가 스탯");
+            foreach (var extractor in passiveSkill.Extractors)
+            {
+                var statData = passiveSkill.ResultSkillData;
+                if (extractor.IsEffective(statData))
+                {
+                    extractor.GetValue(statData, PassiveValueStringSet);
+                }
+            }
+            skillValueText.text = sb.ToString();
+        }
+        void PassiveValueStringSet(string name, string value)
+        {
+            switch (name)
+            {
+                // 공격력 증가(상수)
+                case "flatAttack":
+                    sb.AppendLine($"공격력 + {value}");
+                    break;
+                    // 공격력 % 증가
+                case "attackRate":
+                    sb.AppendLine($"공격력 + {value}%");
+                    break;
+                    // HP 증가(상수)
+                case "flatMaxHp":
+                    sb.AppendLine($"HP + {value}");
+                    break;
+                    // HP % 증가
+                case "maxHpRate":
+                    sb.AppendLine($"HP + {value}%");
+                    break;
+                    // 받는 피해 비율 감소
+                case "damageReductionRate":
+                    sb.AppendLine($"받는 피해 감소 + {value}%");
+                    break;
+                    // 아이템 드랍률 증가
+                case "itemDropRateBonus":
+                    sb.AppendLine($"아이템 드랍률 + {value}%");
+                    break;
+                    // 골드 획득량 증가
+                case "goldGainRate":
+                    sb.AppendLine($"골드 획득량 + {value}");
+                    break;
+                    // 경험치 획득량 증가
+                case "expGainRate":
+                    sb.AppendLine($"경험치 획득량 + {value}");
+                    break;
+                    // 스탯 강화석 획득량 증가
+                case "statStoneGainRate":
+                    sb.AppendLine($"스탯 강화석 + {value}");
+                    break;
+                    // 이동속도 증가
+                case "moveSpeedRate":
+                    sb.AppendLine($"이동속도 + {value}");
+                    break;
+                    // 공격속도 증가
+                case "attackSpeedRate":
+                    sb.AppendLine($"공격속도 + {value}");
+                    break;
+            }
+        }
+        public void SkillCooltimeChange(float cooltime) => skillCooltimeText.text = $"쿨타임 : {cooltime}초";
+        public void SkillDescriptionChange(string skillDescription) => skillDescriptionText.text = skillDescription;
         public void SkillLevelUpBtnInteractable(bool isInteractable)
         {
             lvUpBtn.interactable = isInteractable;
             lvUpMaxBtn.interactable = isInteractable;
         }
-        public void BtnEventSubscribe(Action lvUpFunc, Action maxLvUpFunc)
+        public void BtnEventSubscribe(Action lvUpFunc, Action maxLvUpFunc, Action equipFunc)
         {
             lvUpBtn.onClick.AddListener(() => lvUpFunc());
             lvUpMaxBtn.onClick.AddListener(() => maxLvUpFunc());
-            // equipBtn.onClick.AddListner(() => ());
-            // priorityChangeBtn.onClick.AddListner(() => ());
+            equipBtn.onClick.AddListener(() => equipFunc());
+            // priorityChangeBtn.onClick.AddListener(() => ());
         }
         public void BtnEventUnsubscribe()
         {
             lvUpBtn.onClick.RemoveAllListeners();
             lvUpMaxBtn.onClick.RemoveAllListeners();
-            // equipBtn.onClick.RemoveAllListeners();
+            equipBtn.onClick.RemoveAllListeners();
             // priorityChangeBtn.onClick.RemoveAllListeners();
         }
     }

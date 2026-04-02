@@ -26,25 +26,21 @@ namespace Growth.Skill
     }
 
     /// <summary> 스킬의 타입(MVP에서는 액티브만)</summary>
-    public enum Type
+    public enum SkillType
     {
         Passive,
         Active
     }
-    
-    [CreateAssetMenu(menuName = "Game/Growth/Skill")]
-    public class SkillSO : ScriptableObject
+
+    public abstract class SkillSO : ScriptableObject
     {
         [Header("Passive/Active 공용")]
         public int key; //고유 키
         public string skillName; //스킬 이름
-        public virtual Type SkillType => Type.Passive; //스킬타입
-        public float baseValue; //기본 스킬 효과 배율
-        public float incValuePerLevel; //레벨당 스킬 효과 증가율
+        public virtual SkillType Type { get; } //스킬타입
+        public int maxLv; // 스킬 최대 레벨
         public string description;
-        [Header("스킬 아이콘")] 
+        [Header("스킬 아이콘")]
         public Sprite skillIcon;
-        [Header("사운드")] 
-        public AudioClip skillSound;
     }
 }

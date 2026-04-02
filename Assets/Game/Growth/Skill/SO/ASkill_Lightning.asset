@@ -14,18 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 1006
   skillName: Lightning
-  baseValue: 7.5
-  incValuePerLevel: 1.5
+  maxLv: 5
   description: "\uC801 \uC704\uCE58\uB97C \uC911\uC2EC\uC73C\uB85C \uC881\uC740 \uBC94\uC704\uC5D0
     (\uC804\uAE30 \uC18D\uC131) Lightning\uC744 \uC18C\uD658\uD558\uC5EC \uD574\uB2F9
     \uBC94\uC704\uC5D0 \uB370\uBBF8\uC9C0\uB97C \uC8FC\uB294 \uC2A4\uD0AC"
   skillIcon: {fileID: -1511790319890473737, guid: 8bf14e6af91d54791b61eb34c0680926,
     type: 3}
-  skillSound: {fileID: 8300000, guid: 57bc02ff94f08b0458bf51ad67c66a0d, type: 3}
   SoE: 1
   Targeting: 2
+  baseDamage: 7.5
+  incDamagePerLevel: 1.5
   castingTime: 2
   range: 5
   coolDown: 8
   speed: 0
   effectArea: 1
+  skillSound: {fileID: 8300000, guid: 57bc02ff94f08b0458bf51ad67c66a0d, type: 3}

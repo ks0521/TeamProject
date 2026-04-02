@@ -1,30 +1,54 @@
+using Base.Data;
+using Base.Managers;
+using Battle;
+using Cysharp.Threading.Tasks;
 using Growth.Skill;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Personal.HagYun
 {
+    public class FindChildObject
+    {
+        readonly Transform parentTransform;
+        public FindChildObject(Transform parentTransform)
+        {
+            this.parentTransform = parentTransform;
+        }
+        public bool TryFindChild<T>(out T[] childs)
+        {
+            childs = parentTransform.GetComponentsInChildren<T>();
+            if (childs == null)
+            {
+                Debug.LogWarning($"{typeof(T)} 컴포넌트를 가진 자식 오브젝트 없음");
+                return false;
+            }
+            return true;
+        }
+    }
     public enum PassiveSkillType { Attack, Range, MultipleNormalAttack }
     public enum ActiveSkillType { FireBall, WaterBall, ElectricBall, FireCircle, IceFall, Lightning, }
     public class SkillPopupPresenter : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI skillPointTxt;
         [SerializeField] private SkillTreeUISetView[] skillTreeUISetArr;
+        [SerializeField] private Transform skillTreeUISetParentTransform;
         [SerializeField] private SkillDetailView skillDetailView;
+        [SerializeField] private SkillEquipChangePopupView skillEquipChangePopupView;
         [SerializeField] private Button resetPointBtn;
         // test
         [Serializable]
         public struct SkillLvSet
         {
-            public SkillSO data;
+            public Skill skill;
+            public SkillSO Data => skill.SkillData;
             public int openLv;
             public int openPointCnt;
-            public int maxLv;
-            public int curLv;
         }
         [Serializable]
         public struct SkillPointSet
@@ -37,16 +61,64 @@ namespace Personal.HagYun
         public SkillPointSet skillPoint;
         public int curPlLv;
         [SerializeField] private int selectSkillUINum;
-        public event Action<int> OnSkillLevelChange;
-        public event Action<int, int> OnSkillLevelChangeUpdate;
+        private Player pl;
+        private EventHub eventHub;
+
+        public Skill[] saveSkill;
+        public Transform skillEmptyTransform;
+        // test
+        // slot index, skill
+        public event Action<int, ActiveSkill> OnSkillEquip;
+        public event Action<int> OnSkillSlotUnequip;
+        public static SkillPopupPresenter instanse;
+        public ActiveSkill[] activeSkillArr = new ActiveSkill[6];
+        void SkillEquip(int slotIndex)
+        {
+            int slotIndexInSkill = equipTargetSkill.EquipSlotIndex;
+            if (slotIndexInSkill == slotIndex) return;
+            else if (slotIndexInSkill != -1) SkillUnequip(slotIndexInSkill);
+            activeSkillArr[slotIndex] = equipTargetSkill;
+            equipTargetSkill.EquipSkillSlotIndexUpdate(slotIndex);
+            OnSkillEquip?.Invoke(slotIndex, equipTargetSkill);
+            SkillEquipPopupClose();
+        }
+        void SkillUnequip(int slotIndex)
+        {
+            if (activeSkillArr == null) return;
+            if (activeSkillArr[slotIndex] == null) return;
+            activeSkillArr[slotIndex].EquipSkillSlotIndexUpdate(-1);
+            activeSkillArr[slotIndex] = null;
+        }
         public void Init()
         {
+            instanse = this;
+            // pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
+            // eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+
+            FindChildObject findChild = new FindChildObject(skillTreeUISetParentTransform);
+            findChild.TryFindChild(out skillTreeUISetArr);
+
+
+            int lvSetCnt = saveSkill.Length;
+            skillLvSetArr = new SkillLvSet[lvSetCnt];
             for (int i = 0; i < skillTreeUISetArr.Length; i++)
             {
+                if (lvSetCnt <= i)
+                {
+                    Debug.Log($"{i}번까지 버튼 셋팅 완료");
+                    break;
+                }
                 int index = i;
                 var skillTreeUI = skillTreeUISetArr[index];
-                ref var skillLvSet = ref skillLvSetArr[index];
-                skillTreeUI.SetSkillDetailsBtn(skillLvSet.data, index);
+                //test
+                if (skillEmptyTransform != null)
+                {
+                    ref var skill = ref skillLvSetArr[index].skill;
+                    skill = Instantiate(saveSkill[index], skillEmptyTransform);
+                    skill.Init(null);
+                }
+                //
+                skillTreeUI.SetSkillDetailsBtn(skillLvSetArr[index].skill, index);
                 skillTreeUI.BtnEventSubscribe(() => SkillDetailsPopupShow(index));
             }
             InitSkillLevelUpdate();
@@ -54,8 +126,15 @@ namespace Personal.HagYun
         }
         void EventSubscribe()
         {
-            skillDetailView.BtnEventSubscribe(SkillLevelUp, SkillLevelUpMax);
+            skillDetailView.BtnEventSubscribe(SkillLevelUp, SkillLevelUpMax, SkillEquipPopupShow);
             resetPointBtn.onClick.AddListener(() => SkillLevelResetAll());
+            for (int i = 0; i < 6; i++)
+            {
+                int index = i;
+                skillEquipChangePopupView.BtnEventSubscribe(index, () => SkillEquip(index));
+
+            }
+
         }
         public void OnDestroyFeat()
         {
@@ -68,6 +147,7 @@ namespace Personal.HagYun
                 skillTreeUI.BtnEventUnsubscribe();
             }
             resetPointBtn.onClick.RemoveAllListeners();
+            skillEquipChangePopupView.BtnEventUnsubscribe();
         }
         #region SkillPopupPresenter 내부 UI 기능
         public void SkillLevelResetAll()
@@ -90,8 +170,11 @@ namespace Personal.HagYun
             {
                 skillDetailViewObject.SetActive(true);
             }
-            ref var skillLvSet = ref skillLvSetArr[value];
-            skillDetailView.SkillDataShow(skillLvSet.data, skillLvSet.curLv, skillLvSet.maxLv);
+            ref var skill = ref skillLvSetArr[value].skill;
+            skillDetailView.SkillDataShow(skill);
+            if (skill is ActiveSkill aSkill)
+                equipTargetSkill = aSkill;
+
         }
         #endregion
         #region SkillDetailView 내부 UI 기능
@@ -101,58 +184,56 @@ namespace Personal.HagYun
         }
         public void SkillLevelChangeUpdate(bool isInit = false)
         {
-            ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
-            int curLv = lvSet.curLv;
-            int maxLv = lvSet.maxLv;
+            // ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
+            var skill = skillLvSetArr[selectSkillUINum].skill;
             if (skillTreeUISetArr[selectSkillUINum] is SkillTreeUISetView stSet)
-                stSet.SetLvText(curLv, maxLv);
+            {
+                stSet.SetLvText(skill.CurLv, skill.MaxLv);
+            }
             SetSkillPointText();
-            if (!isInit && skillDetailView != null)
-                skillDetailView.SkillLevelShow(curLv, maxLv);
+            if (!isInit && skillDetailView != null && skillDetailView.gameObject.activeSelf)
+            {
+                skillDetailView.SkillValueChange(skill);
+            }
         }
         void InitSkillLevelUpdate()
         {
             for (int i = 0; i < skillTreeUISetArr.Length; i++)
             {
                 selectSkillUINum = i;
-                SkillLevelChangeUpdate(true);
+                SkillLevelChangeUpdate(false);
             }
             selectSkillUINum = 0;
         }
         public void SkillLevelUp()
         {
             if (skillPoint.curPoint <= 0) return;
-            ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
-            if (lvSet.maxLv <= lvSet.curLv) return;
-            lvSet.curLv++;
-            skillPoint.curPoint--;
-            skillPoint.usePoint++;
-            SkillLevelChangeUpdate();
+            else if (skillLvSetArr[selectSkillUINum].skill.TryLevelOneUp())
+            {
+                skillPoint.curPoint--;
+                skillPoint.usePoint++;
+                SkillLevelChangeUpdate();
+            }
         }
         public void SkillLevelUpMax()
         {
             if (skillPoint.curPoint <= 0) return;
-            ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
-            if (lvSet.maxLv <= lvSet.curLv) return;
-            int maxLvCnt = lvSet.maxLv - lvSet.curLv;
-            if (skillPoint.curPoint < maxLvCnt) maxLvCnt = skillPoint.curPoint;
-            lvSet.curLv += maxLvCnt;
-            skillPoint.curPoint -= maxLvCnt;
-            skillPoint.usePoint += maxLvCnt;
-            SkillLevelChangeUpdate();
+            else if (skillLvSetArr[selectSkillUINum].skill.TryLevelMaxUp(out int lvUpCnt))
+            {
+                skillPoint.curPoint -= lvUpCnt;
+                skillPoint.usePoint += lvUpCnt;
+                SkillLevelChangeUpdate();
+            }
         }
         public void SetSkillLevel(int lv)
         {
             if (skillPoint.curPoint <= 0) return;
-            ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
-            if (lv < 0 || lvSet.maxLv < lv) return;
-
-            else if (skillPoint.curPoint < lv)
-                lv = skillPoint.curPoint;
-            lvSet.curLv = lv;
-            skillPoint.curPoint -= lv;
-            skillPoint.usePoint += lv;
-            SkillLevelChangeUpdate();
+            else if (skillLvSetArr[selectSkillUINum].skill.TryLevelSet(lv, out int lvChangeCnt))
+            {
+                skillPoint.curPoint -= lvChangeCnt;
+                skillPoint.usePoint += lvChangeCnt;
+                SkillLevelChangeUpdate();
+            }
         }
         public void SkillLevelReset(int index)
         {
@@ -160,22 +241,36 @@ namespace Personal.HagYun
             {
                 return;
             }
-            ref SkillLvSet lvSet = ref skillLvSetArr[index];
-            if (lvSet.curLv <= 0) return;
-            skillPoint.curPoint += lvSet.curLv;
-            skillPoint.usePoint -= lvSet.curLv;
-            lvSet.curLv = 0;
-            if (skillPoint.maxPoint < skillPoint.curPoint)
+            else if (skillLvSetArr[index].skill.TryLevelReset(out int lvResetCnt))
             {
-                Debug.LogWarning($"스킬 포인트가 최대치를 {skillPoint.curPoint - skillPoint.maxPoint} 만큼 넘김, 최대치로 맞춤");
-                skillPoint.curPoint = skillPoint.maxPoint;
-                skillPoint.usePoint = 0;
+                skillPoint.curPoint += lvResetCnt;
+                skillPoint.usePoint -= lvResetCnt;
+                if (skillPoint.maxPoint < skillPoint.curPoint)
+                {
+                    Debug.LogWarning($"스킬 포인트가 최대치를 {skillPoint.curPoint - skillPoint.maxPoint} 만큼 넘김, 최대치로 맞춤");
+                    skillPoint.curPoint = skillPoint.maxPoint;
+                    skillPoint.usePoint = 0;
+                }
+                SkillLevelChangeUpdate();
             }
-            SkillLevelChangeUpdate();
         }
         public void SkillLevelReset() => SkillLevelReset(selectSkillUINum);
 
 
+        public void SkillEquipPopupShow()
+        {
+            skillEquipChangePopupView.EquipSkillShow(equipTargetSkill, activeSkillArr);
+            skillEquipChangePopupView.gameObject.SetActive(true);
+        }
+        #endregion
+        #region Skill Equip State
+        ActiveSkill equipTargetSkill;
+        bool isPopupClose;
+        void PopupCloseTrigger() => isPopupClose = true;
+        public void SkillEquipPopupClose()
+        {
+            skillEquipChangePopupView.gameObject.SetActive(false);
+        }
         #endregion
     }
 }

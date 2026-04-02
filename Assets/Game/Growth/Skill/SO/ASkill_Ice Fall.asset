@@ -14,17 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 1005
   skillName: Ice Fall
-  baseValue: 3
-  incValuePerLevel: 0.6
+  maxLv: 5
   description: "\uC790\uC2E0\uC758 \uC704\uCE58\uB97C \uC911\uC2EC\uC73C\uB85C (\uBB3C
     \uC18D\uC131) \uBC94\uC704 \uACF5\uACA9"
   skillIcon: {fileID: -8713000328269187007, guid: 41f222f051a294bddab148ef0d1b6cd1,
     type: 3}
-  skillSound: {fileID: 8300000, guid: 321502380cfb2a649bd7a18ce5241d4b, type: 3}
   SoE: 1
   Targeting: 0
+  baseDamage: 3
+  incDamagePerLevel: 0.6
   castingTime: 1
   range: 4
   coolDown: 5
   speed: 0
   effectArea: 5
+  skillSound: {fileID: 8300000, guid: 321502380cfb2a649bd7a18ce5241d4b, type: 3}

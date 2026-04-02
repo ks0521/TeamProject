@@ -34,7 +34,7 @@ namespace Personal.HagYun
             cooltimeMask.fillAmount = 0;
             cooltimeMask.gameObject.SetActive(false);
         }
-        public bool IsSelected{get;private set;}
+        public bool IsSelected { get; private set; }
         public void SkillSelect(Sprite borderImg)
         {
             IsSelected = true;
