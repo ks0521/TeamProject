@@ -100,6 +100,9 @@ namespace Base.Data
         
         public event Action<QuestDataReader, bool> OnQuestCompleted;
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
+        public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
+        public static void NewDayStarted(string dateStr) => OnNewDayStarted?.Invoke(dateStr);
+
         #endregion
         public int GetOrder() => 0;
     }
