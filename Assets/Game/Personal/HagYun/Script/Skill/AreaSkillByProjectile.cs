@@ -16,18 +16,17 @@ namespace Personal.HagYun
         }
         protected void ProjectileAndAreaInit()
         {
-            float areaSize = Data.effectArea;
-            Vector2 projectileSize = projectileAnim.transform.localScale;
-            Vector2 projectilePos = projectileAnim.transform.position;
-            projectileAnim.transform.localScale = projectileSize * areaSize;
-            projectileAnim.transform.position = projectilePos * areaSize;
+            float areaSize = data.effectArea;
+            Transform effectTransform = effectAnim.transform;
+            effectTransform.localScale *= areaSize;
+            effectTransform.position *= areaSize;
         }
         public override void SkillEffect()
         {
             DisableProjectile();
             EnableEffect();
             SkillAtk(target);
-            if (Data.effectArea == 0)
+            if (data.effectArea == 0)
             {
                 Debug.LogWarning($"{gameObject.name}의 range 값이 0입니다.");
                 SkillAtk(target);

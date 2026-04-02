@@ -208,12 +208,13 @@ namespace Battle
 
         protected void SkillAttack(Character hitTarget, float multiplier)
         {
-            if (hitTarget == null || !canAtk || isDead) return;
+            if (hitTarget == null || target.isDead || !canAtk || isDead) return;
             HitType type = HitType.Normal;
             AtkCooltimeTask().Forget();
             //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
 
-            float resultDmg = CurrentBattleStat.atk * (1 + multiplier);
+            //float resultDmg = CurrentBattleStat.atk * (1 + multiplier);
+            float resultDmg = CurrentBattleStat.atk * multiplier;
             if (IsCriticalChance())
             {
                 type = HitType.Critical;
@@ -223,19 +224,6 @@ namespace Battle
 
             hitTarget.Hit(resultDmg, type);
         }
-
-        public float SkillResultDmg(float increasePower)
-        {
-            float resultDmg = CurrentBattleStat.atk;
-            resultDmg *= increasePower;
-            if (IsCriticalChance())
-            {
-                resultDmg *= CurrentBattleStat.critDamage;
-            }
-
-            return resultDmg;
-        }
-
         protected void UpdateFacing(float horizontalDir)
         {
             if (uniRoot == null) return;

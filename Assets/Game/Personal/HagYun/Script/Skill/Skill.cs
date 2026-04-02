@@ -1,166 +1,84 @@
 using Battle;
-using Cysharp.Threading.Tasks;
 using Growth.Skill;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Personal.HagYun
 {
-    public static class TransformMoveExtensionsClass
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 ToV2(this in Vector3 v) => new Vector2(v.x, v.y);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 DirThisToTarget(this in Vector3 thisPos, in Vector3 targetPos, float speed)
-        {
-            return Vector2.MoveTowards(thisPos.ToV2(), targetPos.ToV2(), speed * Time.deltaTime);
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Angle(this in Vector3 v) => (Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg) - 90f;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Quaternion LookTarget(this in Vector3 thisPos, in Vector3 targetPos)
-        {
-            Vector3 dir = targetPos - thisPos;
-            dir.z = 0;
-            // return Quaternion.LookRotation(Vector3.forward, targetPos.ToV2() - thisPos.ToV2());
-            return Quaternion.LookRotation(Vector3.forward, dir);
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void LookTarget(this Transform thisTrans, in Vector3 targetPos)
-        {
-            Vector3 dir = targetPos - thisTrans.position;
-            thisTrans.rotation = Quaternion.Euler(0, 0, dir.Angle());
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool CheckDirZeroToTarget(this Transform thisTrans, in Vector3 targetPos)
-        {
-            return thisTrans.position.ToV2() != targetPos.ToV2();
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void MoveToTarget(this Transform thisTrans, in Vector3 targetPos, float speed)
-        {
-            thisTrans.position = DirThisToTarget(thisTrans.position, targetPos, speed);
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void LookToTarget(this Transform thisTrans, in Vector3 targetPos)
-        {
-            thisTrans.rotation = LookTarget(thisTrans.position, targetPos);
-        }
-    }
-    public struct TargetChecker
-    {
-        // Projectile Skill Target
-        public Character targetCha;
-        // Area Skill Target
-        public Vector2 targetPos;
-        public TargetChecker(Character cha)
-        {
-            targetCha = cha;
-            targetPos = Vector2.zero;
-        }
-        public TargetChecker(Vector2 pos)
-        {
-            targetCha = null;
-            targetPos = pos;
-        }
-    }
     public abstract class Skill : MonoBehaviour
     {
-        // skill data
-        [SerializeField] protected ActiveSkillSO data;
-        // target 설정
-        [SerializeField] protected LayerMask targetMask = 1 << 8;
-        // property
-        public ActiveSkillSO Data => data;
-        public LayerMask TargetMask => targetMask;
-        // [field: SerializeField] public static Character PlOwner { get; protected set; }
-        [SerializeField]protected Character owner;
-        protected Vector2 ThisPos
-        {
-            get => transform.position;
-            set => transform.position = value;
-        }
-        protected abstract Vector2 TargetPos { get; }
-        public Vector2 OwnerPos => owner.transform.position;
-        // effect
-        [SerializeField] protected Animator effectAnim;
-        // etc
-        //protected CancellationTokenSource cts;
-
+        public abstract SkillSO SkillData { get; }
+        [SerializeField] protected Character owner;
+        [SerializeField] protected int curLv;
+        public int CurLv => curLv;
+        public int MaxLv => SkillData.maxLv;
         public virtual void Init(Character owner)
         {
-            if (this.owner == null) this.owner = owner;
-            // else if (this.Owner != Owner)
-            // {
-            //     Debug.LogWarning($"{name} skill은 owner 설정된 skill");
-            // }
-
+            if (owner != null && this.owner == null) this.owner = owner;
+            StatUpdate();
         }
-        //public void TargetSet(Character target) => this.target = target;
-        public abstract void SkillUseTargeting(TargetChecker target);
-        public abstract void SkillEffect();
-        public void SkillAtk(Character cha)
+        public abstract void StatUpdate();
+        public bool TryLevelSet(int setLv, out int lvChangeCnt)
         {
-            //cha.Hit(PlSkillDmg());
-            // cha.Hit(PlOwner.SkillResultDmg(data.baseDamage));
-            cha.Hit(owner.SkillResultDmg(data.baseValue),HitType.Normal);
-        }
-        public void PlAreaAtk(int inAreaTargetCnt)
-        {
-            if (inAreaTargetCnt <= 0) return;
-            float resultDmg = owner.SkillResultDmg(data.baseValue);
-            for (int i = 0; i < inAreaTargetCnt; i++)
+            int maxLv = MaxLv;
+            if (setLv < 0 || maxLv <= curLv || setLv == curLv)
             {
-                if (OverlapChecker.GetTargetCol(i).GetComponent<Monster>() is Monster mon && !mon.IsDead)
-                    mon.Hit(resultDmg,HitType.Normal);
+                lvChangeCnt = 0;
+                return false;
             }
-        }
-        public void PlSkillCircleAreaAtk(Vector2 targetPos)
-        {
-            int cnt = OverlapChecker.GetCircleTargetsCount(targetPos, Data.effectArea, targetMask);
-            PlAreaAtk(cnt);
-        }
-        public void PlSkillCapsuleAreaAtk(Vector2 targetPos, Vector2 overlapCapsuleSize, CapsuleDirection2D capsuleDir)
-        {
-            int cnt = OverlapChecker.GetCapsuleTargetsCount(targetPos, overlapCapsuleSize, capsuleDir, targetMask);
-            PlAreaAtk(cnt);
-        }
-        protected virtual void EnableSkill()
-        {
-            gameObject.SetActive(true);
-        }
-        protected virtual void DisableSkill()
-        {
-            gameObject.SetActive(false);
-        }
-        protected virtual void EnableEffect()
-        {
-            ThisPos = TargetPos;
-            effectAnim.gameObject.SetActive(true);
-            effectAnim.Rebind();
-        }
-        protected virtual void DisableEffect()
-        {
-            effectAnim.gameObject.SetActive(false);
-        }
-        protected async UniTask CurAnimTimerTask(float timerValue)
-        {
-            float curAnimStateTimeValue = effectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            while (curAnimStateTimeValue < timerValue)
+            else if (maxLv < setLv)
             {
-                await UniTask.Yield(this.GetCancellationTokenOnDestroy());
-                curAnimStateTimeValue = effectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                if (this == null) return;
+                Debug.LogWarning("시도하려는 Setting Lv이 MaxLv보다 높습니다. Setting Lv을 MaxLv로 조정합니다.");
+                setLv = maxLv;
             }
+            lvChangeCnt = setLv - curLv;
+            curLv = setLv;
+            StatUpdate();
+            return true;
         }
-        protected async UniTaskVoid ObjDisableTimerTask()
+        public virtual void SkillImgSet(Image img)
         {
-            await CurAnimTimerTask(1f);
-            if (this == null) return;
-            DisableEffect();
-            DisableSkill();
+            img.sprite = SkillData.skillIcon;
+        }
+        public static void SkillImgUnset(Image img)
+        {
+            img.sprite = null;
+            img.rectTransform.localEulerAngles = Vector3.zero;
+        }
+        public bool TryLevelOneUp()
+        {
+            if (MaxLv <= curLv) return false;
+            curLv++;
+            StatUpdate();
+            return true;
+        }
+        public bool TryLevelMaxUp(out int lvUpCnt)
+        {
+            int maxLv = MaxLv;
+            if (maxLv <= curLv)
+            {
+                lvUpCnt = 0;
+                return false;
+            }
+            lvUpCnt = maxLv - curLv;
+            curLv += lvUpCnt;
+            StatUpdate();
+            return true;
+        }
+        public bool TryLevelReset(out int lvResetCnt)
+        {
+            if (curLv == 0)
+            {
+                lvResetCnt = 0;
+                return false;
+            }
+            lvResetCnt = curLv;
+            curLv = 0;
+            StatUpdate();
+            return true;
         }
     }
 }

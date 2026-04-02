@@ -13,12 +13,12 @@ namespace Personal.HagYun
         [SerializeField] private Button skillDetailsPopupBtn;
         [SerializeField] private TextMeshProUGUI lvTxt;
         [SerializeField] private Image skillImg;
-        [SerializeField] private int skillNum;
+        private int skillNum;
         public int SkillNum => skillNum;
-        public void SetSkillDetailsBtn(SkillSO skillData, int skillNum)
+        public void SetSkillDetailsBtn(Skill skill, int skillNum)
         {
-            skillImg.sprite = skillData.skillIcon;
-            if (skillData is ActiveSkillSO aSkillData && aSkillData.Targeting == TargetingMode.Homing)
+            skillImg.sprite = skill.SkillData.skillIcon;
+            if (skill is ActiveSkill aSkill && aSkill.IsHomingSkill)
                 skillImg.rectTransform.localEulerAngles = new Vector3(0, 0, 135f);
             else
                 skillImg.rectTransform.localEulerAngles = Vector3.zero;

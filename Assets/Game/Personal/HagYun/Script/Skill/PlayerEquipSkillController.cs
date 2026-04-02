@@ -214,7 +214,7 @@ namespace Personal.HagYun
                 // Debug.LogWarning("자동 사용 가능한 스킬 없음");
                 return false;
             }
-            pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.Data.range);
+            pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.ActiveSkillData.range);
             if (pesc.td.IsDetectedTarget)
             {
                 // 몬스터가 있을 시 스킬 사용 + auto skill 순서를 다음 번호로 변경
@@ -226,7 +226,7 @@ namespace Personal.HagYun
                 OrderNumUpdate();
                 // Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 성공");
                 if (CheckAutoSkillUsePossibleNumByAllPriority())
-                    pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.Data.range);
+                    pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.ActiveSkillData.range);
             }
             return true;
         }
@@ -298,17 +298,10 @@ namespace Personal.HagYun
                 for (int i = 0; i < 6; i++)
                 {
                     index = i;
-                    if (skillPool.TryGetSkill(index, out Skill skill))
+                    if (skillPool.TryGetActiveSkill(index, out ActiveSkill skill))
                     {
-                        // Debug.Log($"{index}번 스킬 장착 시도");
                         SkillEquip(index, skill, true);
-                        // Debug.Log($"skillPool에서 {i}번 스킬 장착");
                     }
-                    // else
-                    // {
-                    //     Debug.LogWarning("스킬 없음");
-                    //     break;
-                    // }
                 }
             }
             SetUseSkillPossibleCnt();
@@ -350,50 +343,25 @@ namespace Personal.HagYun
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 TryAtkSkillUseToMonster(1);
-                // Debug.Log("2번 스킬 시도");
-                // if (TryAtkSkillUseToMonster(1))
-                //     Debug.Log("2번 스킬 사용");
-                // else
-                //     Debug.LogWarning("2번 스킬 사용 실패");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
                 TryAtkSkillUseToMonster(2);
-                // Debug.Log("3번 스킬 시도");
-                // if (TryAtkSkillUseToMonster(2))
-                //     Debug.Log("3번 스킬 사용");
-                // else
-                //     Debug.LogWarning("3번 스킬 사용 실패");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
             {
                 TryAtkSkillUseToMonster(3);
-                // Debug.Log("4번 스킬 시도");
-                // if (TryAtkSkillUseToMonster(3))
-                //     Debug.Log("4번 스킬 사용");
-                // else
-                //     Debug.LogWarning("4번 스킬 사용 실패");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha5))
             {
                 TryAtkSkillUseToMonster(4);
-                // Debug.Log("5번 스킬 시도");
-                // if (TryAtkSkillUseToMonster(4))
-                //     Debug.Log("5번 스킬 사용");
-                // else
-                //     Debug.LogWarning("5번 스킬 사용 실패");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha6))
             {
                 TryAtkSkillUseToMonster(5);
-                // Debug.Log("6번 스킬 시도");
-                // if (TryAtkSkillUseToMonster(5))
-                //     Debug.Log("6번 스킬 사용");
-                // else
-                //     Debug.LogWarning("6번 스킬 사용 실패");
             }
         }
-        public override void SkillEquip(int index, Skill targetSkill, bool isInit = false)
+        public override void SkillEquip(int index, ActiveSkill targetSkill, bool isInit = false)
         {
             base.SkillEquip(index, targetSkill, isInit);
             if (!isInit) AutoSkillUseCntUpdate(index);
@@ -411,41 +379,13 @@ namespace Personal.HagYun
         }
         public void UnequipUpdateToEquipSkillChecker(int index) => autoSkillController.UnequipUpdate(index); //eSkillCheckerSet.SkillUnequipUpdate(index);
 
-        public void SubscribeUseSkillPossibleCnt(int index)
-        {
-            EquipSkill TESkill = equipSkillArr[index];
-            if (TESkill == null)
-            {
-                //Debug.LogWarning($"이벤트 구독할 {index}번 EquipSkill 없음");
-                return;
-            }
-        }
         public void SubscribeUseSkillPossibleCntAll()
         {
-            for (int i = 0; i < 6; i++)
-            {
-                int index = i;
-                SubscribeUseSkillPossibleCnt(index);
-            }
             eventHub.OnSkillUsed += AutoSkillUseCntUpdate;
             eventHub.OnSkillCoolEnd += AutoSkillUseCntUpdate;
         }
-        public void UnsubscribeUseSkillPossibleCnt(int index)
-        {
-            EquipSkill tESkill = equipSkillArr[index];
-            if (tESkill == null)
-            {
-                //Debug.LogWarning($"이벤트 구독할 {index}번 EquipSkill 없음");
-                return;
-            }
-        }
         public void UnsubscribeUseSkillPossibleCntAll()
         {
-            for (int i = 0; i < 6; i++)
-            {
-                int index = i;
-                UnsubscribeUseSkillPossibleCnt(index);
-            }
             eventHub.OnSkillUsed -= AutoSkillUseCntUpdate;
             eventHub.OnSkillCoolEnd -= AutoSkillUseCntUpdate;
         }

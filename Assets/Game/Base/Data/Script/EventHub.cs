@@ -57,8 +57,8 @@ namespace Base.Data
         public void PlayerHit() => OnPlayerHit?.Invoke();
         public event Action<int> OnSkillUsed; //스킬 사용
         public void SkillUsed(int order) => OnSkillUsed?.Invoke(order);
-        public event Action<Skill> OnSkillCanUse; //스킬 사용 가능
-        public void SkillCanUse(Skill skill) => OnSkillCanUse?.Invoke(skill);
+        public event Action<ActiveSkill> OnSkillCanUse; //스킬 사용 가능
+        public void SkillCanUse(ActiveSkill skill) => OnSkillCanUse?.Invoke(skill);
         public event Action<int> OnSkillCoolEnd; //스킬 쿨타임 돌았을 때
         public void SkillCoolEnd(int order) => OnSkillCoolEnd?.Invoke(order);
         public event Action OnCastingStart; //스킬 캐스팅 시작
@@ -100,6 +100,8 @@ namespace Base.Data
         #region 퀘스트
         public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
+        public event Action<StatusType> OnStatusEnhanced; //스탯 강화
+        public void StatusEnhanced(StatusType type) => OnStatusEnhanced?.Invoke(type);
         public event Action OnBasicItemEquip;
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
         public event Action OnSkillEnhance;
@@ -107,6 +109,9 @@ namespace Base.Data
         
         public event Action<QuestDataReader, bool> OnQuestCompleted;
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
+        public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
+        public static void NewDayStarted(string dateStr) => OnNewDayStarted?.Invoke(dateStr);
+
         #endregion
         public int GetOrder() => 0;
     }
