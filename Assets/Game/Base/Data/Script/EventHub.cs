@@ -81,6 +81,8 @@ namespace Base.Data
         //나중에 이벤트 목록 정리 부탁드립니다
         public event Action OnAutoHuntActivate;
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
+        public event Action<StatusType> OnStatusEnhanced; //스탯 강화
+        public void StatusEnhanced(StatusType type) => OnStatusEnhanced?.Invoke(type);
         public event Action OnBasicItemEquip;
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
         public event Action OnSkillEnhance;
