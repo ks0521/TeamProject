@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class SkillButtonPresenter : MonoBehaviour
+    public class SkillButtonPresenter : MonoBehaviour, IManager
     {
         [SerializeField] private SkillButtonView[] btnViewArr;
 
@@ -136,5 +136,7 @@ namespace Personal.HagYun
             eventHub.OnSkillSet -= SkillIconSet;
             eventHub.OnSkillUnset -= SkillIconUnset;
         }
+
+        public int GetOrder() => 77;
     }
 }

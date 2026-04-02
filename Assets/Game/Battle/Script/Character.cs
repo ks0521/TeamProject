@@ -1,23 +1,30 @@
 using Base.Data;
 using Base.Managers;
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 namespace Battle
 {
+    //데미지 텍스트 결정용 타입
+    public enum HitType
+    {
+        Normal, Critical //, Dot, HpHeal, MpHeal
+    }
+
     public enum CharacterState
     {
         Idle, Move, Attack, Dead
     }
+
     public abstract class Character : MonoBehaviour
     {
         // stat
         //[SerializeField] PlayerBaseStatusSO baseStat;
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
         public abstract BattleStat CurrentBattleStat { get; }
+        public Transform damageAnchor;
         [SerializeField] protected float hp;
+
         public virtual float Hp
         {
             get => hp;
@@ -28,6 +35,7 @@ namespace Battle
                 {
                     hp = CurrentBattleStat.maxHp;
                 }
+
                 //cEvent.RaiseHPValueChange(hp, CurrentBattleStat.maxHp);
                 if (hp <= 0f)
                 {
@@ -35,7 +43,9 @@ namespace Battle
                 }
             }
         }
+
         public float MaxHp => CurrentBattleStat.maxHp;
+
         // battle element
         // action split class (component X)
         protected CharacterMove cm;
@@ -46,17 +56,25 @@ namespace Battle
         protected bool isDead;
         public bool IsDead => isDead;
         protected abstract float AttackRange { get; } //공격 거리
+
         protected float TargetSqrMagnitudeRange => AttackRange * AttackRange;
+
         // event
         protected EventHub eventHub;
+
         // test
         public bool canMove;
+
         public bool canAtk;
+
         // SPUM Animation
         protected CharacterState state;
-        [Header("Animation (SPUM)")]
-        [SerializeField] protected SPUM_Prefabs spumController;
+
+        [Header("Animation (SPUM)")] [SerializeField]
+        protected SPUM_Prefabs spumController;
+
         [SerializeField] protected Transform uniRoot;
+
         private void OnEnable()
         {
             canMove = true;
@@ -70,6 +88,7 @@ namespace Battle
             {
                 spumController = GetComponentInChildren<SPUM_Prefabs>();
             }
+
             if (spumController != null)
             {
                 Animator anim = spumController._anim;
@@ -84,37 +103,52 @@ namespace Battle
                 spumController.OverrideControllerInit();
             }
         }
+
         public virtual void Init()
         {
             // rb = GetComponent<Rigidbody2D>();
             hp = CurrentBattleStat.maxHp;
-            
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+
+            damageAnchor = GetComponentInChildren<DamageTextMarker>()?.transform;
+            //마커 없으면 기본 오브젝트 위치를 마커로 함
+            if (damageAnchor == null)
+            {
+                damageAnchor = gameObject.transform;
+            }
         }
+
         protected void TargetSet(Character target)
         {
             this.target = target;
             targetTransform = target.transform;
         }
+
         protected abstract void OnDead();
+
         private void Update()
         {
             UpdateFeat();
             // test
             //cm.canMove = canMove;
         }
+
         protected abstract void UpdateFeat();
+
         private void FixedUpdate()
         {
             FixedUpdateFeat();
         }
+
         protected abstract void FixedUpdateFeat();
+
         protected Vector2 DirFromPosToTarget()
         {
             Vector2 thisPos = transform.position;
             Vector2 targetPos = targetTransform.position;
             return (targetPos - thisPos).normalized;
         }
+
         protected bool CheckTargetIsClose()
         {
             if (target == null) return false;
@@ -124,10 +158,12 @@ namespace Battle
             // 사이 거리 / 판정 거리 : 판정 거리보다 짧아야 true
             return (targetPos - thisPos).sqrMagnitude <= TargetSqrMagnitudeRange;
         }
-        public virtual void Hit(float damage)
+
+        public virtual void Hit(float damage, HitType type)
         {
-            float resultDmg = Mathf.Max(1 , damage - CurrentBattleStat.def);
+            float resultDmg = Mathf.Max(1, damage - CurrentBattleStat.def);
             // Hp -= damage - CurrentBattleStat.def;
+            SendHitSignal(resultDmg, type);
             Hp -= resultDmg;
             if (Hp <= 0)
             {
@@ -137,18 +173,20 @@ namespace Battle
             {
                 Debug.Log($"{resultDmg} Damage!\n{gameObject.name} HP {Hp} 남음");
             }
-            SendHitSignal();
         }
-        protected abstract void SendHitSignal();
+
+        protected abstract void SendHitSignal(float resultDamage, HitType type);
+
         bool IsCriticalChance()
         {
             if (UnityEngine.Random.Range(0f, 1f) < CurrentBattleStat.critChance) return true;
             return false;
         }
-        protected void NormalAttack(Character target)
+
+        protected void NormalAttack(Character hitTarget)
         {
-            if (target == null || !canAtk || isDead || isAtkCooltime) return;
-            
+            if (hitTarget == null || !canAtk || isDead || isAtkCooltime) return;
+            HitType type = HitType.Normal;
             AtkCooltimeTask().Forget();
             //Debug.Log($"{name} 이 {target.name}에게 일반공격!");
             if (spumController != null)
@@ -159,27 +197,33 @@ namespace Battle
             float resultDmg = CurrentBattleStat.atk;
             if (IsCriticalChance())
             {
+                type = HitType.Critical;
                 resultDmg *= CurrentBattleStat.critDamage;
-                // Debug.Log("크리티컬!");
+
+                //Debug.Log("크리티컬!");
             }
-            target.Hit(resultDmg);
+
+            hitTarget.Hit(resultDmg, type);
         }
 
-        protected void SkillAttack(Character target, float multiplier)
+        protected void SkillAttack(Character hitTarget, float multiplier)
         {
-            if (target == null|| !canAtk || isDead || isAtkCooltime) return;
-
+            if (hitTarget == null || !canAtk || isDead) return;
+            HitType type = HitType.Normal;
             AtkCooltimeTask().Forget();
             //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
 
-            float resultDmg = CurrentBattleStat.atk * multiplier;
+            float resultDmg = CurrentBattleStat.atk * (1 + multiplier);
             if (IsCriticalChance())
             {
+                type = HitType.Critical;
                 resultDmg *= CurrentBattleStat.critDamage;
                 // Debug.Log("크리티컬!");
             }
-            target.Hit(resultDmg);
+
+            hitTarget.Hit(resultDmg, type);
         }
+
         public float SkillResultDmg(float increasePower)
         {
             float resultDmg = CurrentBattleStat.atk;
@@ -188,8 +232,10 @@ namespace Battle
             {
                 resultDmg *= CurrentBattleStat.critDamage;
             }
+
             return resultDmg;
         }
+
         protected void UpdateFacing(float horizontalDir)
         {
             if (uniRoot == null) return;
@@ -203,6 +249,7 @@ namespace Battle
                 uniRoot.localScale = new Vector3(1, 1, 1);
             }
         }
+
         async UniTaskVoid AtkCooltimeTask()
         {
             //Debug.Log("공격 쿨타임 시작");
@@ -215,6 +262,7 @@ namespace Battle
                 await UniTask.Yield();
                 if (this == null) return;
             }
+
             //Debug.Log("공격 쿨타임 종료");
             isAtkCooltime = false;
         }

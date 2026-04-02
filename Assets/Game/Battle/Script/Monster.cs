@@ -105,14 +105,16 @@ namespace Battle
         {
         }
 
-        public override void Hit(float damage)
+        public override void Hit(float damage, HitType type)
         {
-            base.Hit(damage);
+            base.Hit(damage,type);
             OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
         }
-        protected override void SendHitSignal()
+        protected override void SendHitSignal(float resultDamage, HitType type)
         {
+            if (isDead) return;
             eventHub?.MonsterHit();
+            eventHub?.RequestDamageText(damageAnchor.position, (int)resultDamage, type, isMonster: true);
         }
         /*
         private void FixedUpdate()

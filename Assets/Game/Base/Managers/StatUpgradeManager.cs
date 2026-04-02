@@ -94,6 +94,7 @@ namespace Base.Managers
                     playerManager.Player.RecoveryHP(healAmount);
                 }
             }
+            eventHub.StatusEnhanced(statType);
             return true;
         }
     }

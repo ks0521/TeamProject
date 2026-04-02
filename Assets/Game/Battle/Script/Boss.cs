@@ -133,7 +133,7 @@ public class Boss : Monster
                 if (hitCheck != null)
                 {
                     Debug.Log($"돌진 적중: {hitCheck.name}");
-                    target.Hit(CurrentBattleStat.atk);
+                    SkillAttack(target, 0.5f);
                     hasDamaged = true;
                 }
             }
@@ -382,7 +382,7 @@ public class Boss : Monster
             }
         }
     }
-    protected override void SendHitSignal()
+    protected override void SendHitSignal(float resultDamage, HitType type)
     {
         eventHub?.MonsterHit();
     }

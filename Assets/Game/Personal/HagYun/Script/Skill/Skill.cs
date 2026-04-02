@@ -105,7 +105,7 @@ namespace Personal.HagYun
         {
             //cha.Hit(PlSkillDmg());
             // cha.Hit(PlOwner.SkillResultDmg(data.baseDamage));
-            cha.Hit(owner.SkillResultDmg(data.baseValue));
+            cha.Hit(owner.SkillResultDmg(data.baseValue),HitType.Normal);
         }
         public void PlAreaAtk(int inAreaTargetCnt)
         {
@@ -114,7 +114,7 @@ namespace Personal.HagYun
             for (int i = 0; i < inAreaTargetCnt; i++)
             {
                 if (OverlapChecker.GetTargetCol(i).GetComponent<Monster>() is Monster mon && !mon.IsDead)
-                    mon.Hit(resultDmg);
+                    mon.Hit(resultDmg,HitType.Normal);
             }
         }
         public void PlSkillCircleAreaAtk(Vector2 targetPos)

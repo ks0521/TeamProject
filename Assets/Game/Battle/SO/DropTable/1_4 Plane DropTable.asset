@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chapter: 1
   stage: 4
-  rewardExp: 80
+  rewardExp: 8
   dropList:
   - rewardType: 1
     currencyType: 1
