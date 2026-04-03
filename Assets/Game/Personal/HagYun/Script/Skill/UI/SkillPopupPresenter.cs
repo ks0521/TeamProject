@@ -131,7 +131,7 @@ namespace Personal.HagYun
             for (int i = 0; i < 6; i++)
             {
                 int index = i;
-                skillEquipChangePopupView.BtnEventSubscribe(index, () => SkillEquip(index));
+                skillEquipChangePopupView.EquipSlotSelectBtnEventSubscribe(index, () => SkillEquip(index));
 
             }
 
