@@ -21,9 +21,10 @@ namespace UI.Scripts
         [SerializeField] private GameObject abilityPrefab;
         [SerializeField] private GameObject chapterPrefab;
         [SerializeField] private GameObject equipmentPrefab;
+        [SerializeField] private GameObject skillPrefab;
+        [SerializeField] private GameObject shopPrefab;
 
         [Space(10)]
-        [SerializeField] private GameObject skillPrefab;
         [SerializeField] private GameObject dungeonPrefab;
         [SerializeField] private GameObject settingPrefab;
         [SerializeField] private GameObject gameEndPrefab;
@@ -44,6 +45,7 @@ namespace UI.Scripts
         [SerializeField] private Button equipmentBtn;
         [SerializeField] private Button dungeonBtn;
         [SerializeField] private Button settingBtn;
+        [SerializeField] private Button shopBtn;
 
         private EventHub hub;
         private Stack<GameObject> popupStack = new();
@@ -55,6 +57,7 @@ namespace UI.Scripts
         private GameObject skillInstance;
         private GameObject dungeonInstance;
         private GameObject settingInstance;
+        private GameObject shopInstance;
         private GameObject gameEndInstance;
 
         private GameObject clearInstance;
@@ -121,6 +124,7 @@ namespace UI.Scripts
             equipmentBtn.onClick.RemoveAllListeners();
             dungeonBtn.onClick.RemoveAllListeners();
             settingBtn.onClick.RemoveAllListeners();
+            shopBtn.onClick.RemoveAllListeners();
 
             abilityBtn.onClick.AddListener(OpenAbilityPopup);
             chapterBtn.onClick.AddListener(OpenChapterPopup);
@@ -128,6 +132,7 @@ namespace UI.Scripts
             equipmentBtn.onClick.AddListener(OpenEquipmentPopup);
             dungeonBtn.onClick.AddListener(OpenDungeonPopup);
             settingBtn.onClick.AddListener(OpenSettingPopup);
+            shopBtn.onClick.AddListener(OpenShopPopup);
         }//버튼에 함수 넣기
 
         public void SetChallengeUI(bool isCheck)
@@ -264,6 +269,17 @@ namespace UI.Scripts
                 Destroy(prefab);
                 return;
             }
+            PushPopup(prefab);
+        }
+        private void OpenShopPopup()
+        {
+            if (shopInstance != null) return;
+            if (shopPrefab == null) return;
+
+            GameObject prefab = Instantiate (shopPrefab, canvas);
+            
+            ClosePopup(prefab);
+
             PushPopup(prefab);
         }
         private void OpenChapterPopup()
