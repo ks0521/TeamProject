@@ -1,5 +1,6 @@
 using Growth.Equipment;
 using Growth.Skill;
+using Personal.HagYun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,19 +19,8 @@ namespace Growth.Skill
             {
                 return baseAddStat;
             }
-            return new StatIncrease() {
-                flatAttack = baseAddStat.flatAttack + (lvPerIncreaseAddStat.flatAttack * curLv),
-                attackRate = baseAddStat.attackRate + (lvPerIncreaseAddStat.attackRate * curLv),
-                flatMaxHp = baseAddStat.flatMaxHp + (lvPerIncreaseAddStat.flatMaxHp * curLv),
-                maxHpRate = baseAddStat.maxHpRate + (lvPerIncreaseAddStat.maxHpRate * curLv),
-                damageReductionRate = baseAddStat.damageReductionRate + (lvPerIncreaseAddStat.damageReductionRate * curLv),
-                itemDropRateBonus = baseAddStat.itemDropRateBonus + (lvPerIncreaseAddStat.itemDropRateBonus * curLv),
-                goldGainRate = baseAddStat.goldGainRate + (lvPerIncreaseAddStat.goldGainRate * curLv),
-                expGainRate = baseAddStat.expGainRate + (lvPerIncreaseAddStat.expGainRate * curLv),
-                statStoneGainRate = baseAddStat.statStoneGainRate + (lvPerIncreaseAddStat.statStoneGainRate * curLv),
-                moveSpeedRate = baseAddStat.moveSpeedRate + (lvPerIncreaseAddStat.moveSpeedRate * curLv),
-                attackSpeedRate = baseAddStat.attackSpeedRate + (lvPerIncreaseAddStat.attackSpeedRate * curLv),
-            };
+            StatIncrease curLvIncreaseStat = StructMemberCalculator<StatIncrease>.Mul(lvPerIncreaseAddStat, curLv);
+            return StructMemberCalculator<StatIncrease>.Add(baseAddStat, curLvIncreaseStat);
         }
     }
 }
