@@ -8,10 +8,17 @@ namespace Personal.HagYun
 {
     public class SkillPool : MonoBehaviour
     {
-        [SerializeField] Skill[] allSkillObjPool;
+        [SerializeField] public Skill[] allSkillObjPool;
         // 스킬 풀에 있는 스킬
-        [SerializeField] List<ActiveSkill> activeSkillList;
-        [SerializeField] List<PassiveSkill> passiveSkillList;
+        // [SerializeField] public List<ActiveSkill> activeSkillList;
+        // [SerializeField] public List<PassiveSkill> passiveSkillList;
+        [SerializeField] public List<ActiveSkill> activeSkillList;
+        [SerializeField] public List<PassiveSkill> passiveSkillList;
+        public void Init()
+        {
+            SkillAddInit(allSkillObjPool);
+
+        }
         /// <summary>
         /// Player Equip Skill Controller 에서 스킬 장착시킬 때 사용할 함수
         /// </summary>
@@ -65,17 +72,20 @@ namespace Personal.HagYun
             activeSkillList.Add(aSkill);
             activeSkillList.Sort(CheckSortNum);
         }
-        public void ActiveSkillAddInit(Skill[] skillArr)
+        public void SkillAddInit(Skill[] skillArr)
         {
             for (int i = 0; i < skillArr.Length; i++)
             {
                 if (skillArr[i] is ActiveSkill aSkill)
                     activeSkillList.Add(aSkill);
+                else if (skillArr[i] is PassiveSkill pSkill)
+                    passiveSkillList.Add(pSkill);
             }
             activeSkillList.Sort(CheckSortNum);
+            passiveSkillList.Sort(CheckSortNum);
         }
 
-        int CheckSortNum(ActiveSkill a, ActiveSkill b)
+        int CheckSortNum(Skill a, Skill b)
         {
             int aKey = a.SkillData.key;
             int bKey = b.SkillData.key;
@@ -84,7 +94,7 @@ namespace Personal.HagYun
             else if (aKey < bKey) result = -1;
             return result;
         }
-        int ReverseCheckSortNum(ActiveSkill a, ActiveSkill b)
+        int CheckSortNumReverse(Skill a, Skill b)
         {
             int aKey = a.SkillData.key;
             int bKey = b.SkillData.key;
@@ -92,6 +102,14 @@ namespace Personal.HagYun
             if (aKey > bKey) result = -1;
             else if (aKey < bKey) result = 1;
             return result;
+        }
+        void SkillArrQSort(Skill[] arr, int left, int right)
+        {
+            var pivot = arr[left];
+            var low = arr[left + 1];
+            var high = arr[right];
+
+
         }
     }
 }

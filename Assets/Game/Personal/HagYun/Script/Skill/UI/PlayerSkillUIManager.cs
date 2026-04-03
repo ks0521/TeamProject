@@ -1,20 +1,23 @@
 using Base.Data;
 using Base.Managers;
+using Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class SkillUIManager : MonoBehaviour, IManager
+    public class PlayerSkillUIManager : MonoBehaviour, IManager
     {
         [SerializeField] private SkillPopupPresenter skillTreePopupPresenter;
-        // skill 에셋 등록용
-        [SerializeField] private Skill[] skillObjArr;
-        [SerializeField] private EquipSkillController esController;
-        // active skill 장착 시 skill이 들어갈 곳
+
+
         [SerializeField] private SkillPool skillPool;
-        public SkillPool ActiveSkillPool => skillPool;
+        public SkillPool SkillPool => skillPool;
+
+        Player pl;
+        [SerializeField] private EquipSkillController esController;
+
         [SerializeField] EventHub eventHub;
         void Start()
         {
@@ -23,8 +26,8 @@ namespace Personal.HagYun
         public void Init()
         {
             if (skillTreePopupPresenter != null) skillTreePopupPresenter.Init();
-            if(skillPool != null)skillPool.ActiveSkillAddInit(skillObjArr);
-            if(esController != null)esController.Init(null);
+            if (skillPool != null) skillPool.Init();
+            if (esController != null) esController.Init(pl);
         }
         void OnDestroy()
         {
