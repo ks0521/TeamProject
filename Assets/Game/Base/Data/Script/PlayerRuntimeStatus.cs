@@ -1,16 +1,16 @@
 using Base.Data;
 using Base.Managers;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary> 게임 플레이시 사용되는 플레이어 최종스탯 </summary>
 public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
 {
     public static PlayerRuntimeStatus Instance; //MVP종료후 제거
     public PlayerBaseStatusSO baseStat;
-    public BattleStat finalBattleStatus;
-    public RewardStat finalRewardStatus;
-    public float finalRange;
-    public float finalAttackSpeed;
+    public TotalStat finalStatus;
+    public BattleStat finalBattleStatStatus;
+    public RewardStat finalRewardStatStatus;
     // Start is called before the first frame update
     void Awake()
     {
@@ -22,5 +22,5 @@ public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
         Instance = this;
     }
 
-    public int GetOrder() => 2; //PlayerProgressManager(1) 실행이 보장되어야 함
+    public int GetOrder() => 3; //PlayerProgressManager(1) 실행이 보장되어야 함
 }

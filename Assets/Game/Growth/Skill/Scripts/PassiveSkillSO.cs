@@ -19,17 +19,17 @@ namespace Growth.Skill
                 return baseAddStat;
             }
             return new StatIncrease() {
-                flatAttack = baseAddStat.flatAttack + (lvPerIncreaseAddStat.flatAttack * curLv),
-                attackRate = baseAddStat.attackRate + (lvPerIncreaseAddStat.attackRate * curLv),
-                flatMaxHp = baseAddStat.flatMaxHp + (lvPerIncreaseAddStat.flatMaxHp * curLv),
+                atk = baseAddStat.atk + (lvPerIncreaseAddStat.atk * curLv),
+                atkRate = baseAddStat.atkRate + (lvPerIncreaseAddStat.atkRate * curLv),
+                maxHp = baseAddStat.maxHp + (lvPerIncreaseAddStat.maxHp * curLv),
                 maxHpRate = baseAddStat.maxHpRate + (lvPerIncreaseAddStat.maxHpRate * curLv),
-                damageReductionRate = baseAddStat.damageReductionRate + (lvPerIncreaseAddStat.damageReductionRate * curLv),
-                itemDropRateBonus = baseAddStat.itemDropRateBonus + (lvPerIncreaseAddStat.itemDropRateBonus * curLv),
-                goldGainRate = baseAddStat.goldGainRate + (lvPerIncreaseAddStat.goldGainRate * curLv),
-                expGainRate = baseAddStat.expGainRate + (lvPerIncreaseAddStat.expGainRate * curLv),
-                statStoneGainRate = baseAddStat.statStoneGainRate + (lvPerIncreaseAddStat.statStoneGainRate * curLv),
-                moveSpeedRate = baseAddStat.moveSpeedRate + (lvPerIncreaseAddStat.moveSpeedRate * curLv),
-                attackSpeedRate = baseAddStat.attackSpeedRate + (lvPerIncreaseAddStat.attackSpeedRate * curLv),
+                damageReduction = baseAddStat.damageReduction + (lvPerIncreaseAddStat.damageReduction * curLv),
+                itemDropRate = baseAddStat.itemDropRate + (lvPerIncreaseAddStat.itemDropRate * curLv),
+                goldGain = baseAddStat.goldGain + (lvPerIncreaseAddStat.goldGain * curLv),
+                expGain = baseAddStat.expGain + (lvPerIncreaseAddStat.expGain * curLv),
+                statStoneGain = baseAddStat.statStoneGain + (lvPerIncreaseAddStat.statStoneGain * curLv),
+                moveSpeed = baseAddStat.moveSpeed + (lvPerIncreaseAddStat.moveSpeed * curLv),
+                atkSpeed = baseAddStat.atkSpeed + (lvPerIncreaseAddStat.atkSpeed * curLv),
             };
         }
     }

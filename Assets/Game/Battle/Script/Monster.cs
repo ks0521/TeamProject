@@ -13,7 +13,7 @@ namespace Battle
         public const float MonsterAttackRange = 0.6f;
         public const float ApproachStopRange = 0.15f;
         protected override float AttackRange => MonsterAttackRange; 
-        public override BattleStat CurrentBattleStat => monsterSO.battleStat;
+        public override Base.Data.BattleStat CurrentBattleStatStat => monsterSO.battleStatStat;
         private CancellationTokenSource monsterCts;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
         public event Action<Monster> OnMonsterKilled; //연산용
@@ -23,11 +23,11 @@ namespace Battle
             protected set
             {
                 hp = value;
-                if (CurrentBattleStat.maxHp <= hp)
+                if (CurrentBattleStatStat.maxHp <= hp)
                 {
-                    hp = CurrentBattleStat.maxHp;
+                    hp = CurrentBattleStatStat.maxHp;
                 }
-                OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+                OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStatStat.maxHp);
                 if (hp <= 0f)
                 {
                     OnDead();
@@ -108,7 +108,7 @@ namespace Battle
         public override void Hit(float damage, HitType type)
         {
             base.Hit(damage,type);
-            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
+            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStatStat.maxHp);
         }
         protected override void SendHitSignal(float resultDamage, HitType type)
         {
@@ -140,7 +140,7 @@ namespace Battle
             else
             {
                 state = CharacterState.Move;
-                cm.ChaseMove(target.transform, CurrentBattleStat.moveSpeed);
+                cm.ChaseMove(target.transform, CurrentBattleStatStat.moveSpeed);
                 if (spumController != null)
                 {
                     spumController.PlayAnimation(PlayerState.MOVE, 0);

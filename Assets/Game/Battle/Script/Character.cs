@@ -21,7 +21,7 @@ namespace Battle
         // stat
         //[SerializeField] PlayerBaseStatusSO baseStat;
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
-        public abstract BattleStat CurrentBattleStat { get; }
+        public abstract Base.Data.BattleStat CurrentBattleStatStat { get; }
         public Transform damageAnchor;
         [SerializeField] protected float hp;
 
@@ -31,9 +31,9 @@ namespace Battle
             protected set
             {
                 hp = value;
-                if (CurrentBattleStat.maxHp <= hp)
+                if (CurrentBattleStatStat.maxHp <= hp)
                 {
-                    hp = CurrentBattleStat.maxHp;
+                    hp = CurrentBattleStatStat.maxHp;
                 }
 
                 //cEvent.RaiseHPValueChange(hp, CurrentBattleStat.maxHp);
@@ -44,7 +44,7 @@ namespace Battle
             }
         }
 
-        public float MaxHp => CurrentBattleStat.maxHp;
+        public float MaxHp => CurrentBattleStatStat.maxHp;
 
         // battle element
         // action split class (component X)
@@ -107,7 +107,7 @@ namespace Battle
         public virtual void Init()
         {
             // rb = GetComponent<Rigidbody2D>();
-            hp = CurrentBattleStat.maxHp;
+            hp = CurrentBattleStatStat.maxHp;
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
 
             damageAnchor = GetComponentInChildren<DamageTextMarker>()?.transform;
@@ -161,7 +161,7 @@ namespace Battle
 
         public virtual void Hit(float damage, HitType type)
         {
-            float resultDmg = Mathf.Max(1, damage - CurrentBattleStat.def);
+            float resultDmg = Mathf.Max(1, damage - CurrentBattleStatStat.def);
             // Hp -= damage - CurrentBattleStat.def;
             SendHitSignal(resultDmg, type);
             Hp -= resultDmg;
@@ -179,7 +179,7 @@ namespace Battle
 
         bool IsCriticalChance()
         {
-            if (UnityEngine.Random.Range(0f, 1f) < CurrentBattleStat.critChance) return true;
+            if (UnityEngine.Random.Range(0f, 1f) < CurrentBattleStatStat.critChance) return true;
             return false;
         }
 
@@ -194,15 +194,16 @@ namespace Battle
                 spumController.PlayAnimation(PlayerState.ATTACK, 0);
             }
 
-            float resultDmg = CurrentBattleStat.atk;
+            float resultDmg = CurrentBattleStatStat.atk;
             if (IsCriticalChance())
             {
                 type = HitType.Critical;
-                resultDmg *= CurrentBattleStat.critDamage;
+                resultDmg *= CurrentBattleStatStat.critDamage;
 
                 //Debug.Log("크리티컬!");
             }
 
+            resultDmg *= Random.Range(0.9f, 1.1f);
             hitTarget.Hit(resultDmg, type);
         }
 
@@ -214,14 +215,14 @@ namespace Battle
             //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
 
             //float resultDmg = CurrentBattleStat.atk * (1 + multiplier);
-            float resultDmg = CurrentBattleStat.atk * multiplier;
+            float resultDmg = CurrentBattleStatStat.atk * multiplier;
             if (IsCriticalChance())
             {
                 type = HitType.Critical;
-                resultDmg *= CurrentBattleStat.critDamage;
+                resultDmg *= CurrentBattleStatStat.critDamage;
                 // Debug.Log("크리티컬!");
             }
-
+            resultDmg *= Random.Range(0.95f, 1.05f);
             hitTarget.Hit(resultDmg, type);
         }
         protected void UpdateFacing(float horizontalDir)
@@ -246,7 +247,7 @@ namespace Battle
             while (curAtkCooltime > 0)
             {
                 //Debug.Log($"{curAtkCooltime}");
-                curAtkCooltime -= Time.deltaTime * CurrentBattleStat.atkSpeed;
+                curAtkCooltime -= Time.deltaTime * CurrentBattleStatStat.atkSpeed;
                 await UniTask.Yield();
                 if (this == null) return;
             }

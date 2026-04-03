@@ -41,9 +41,9 @@ public class ItemDropManager : MonoBehaviour, IManager
 
     void GetGold(int dropGold)
     {
-        int finalGold = (int)(dropGold * (1 + stat.finalRewardStatus.goldRate));
+        int finalGold = (int)(dropGold * (1 + stat.finalRewardStatStatus.goldGain));
         progress.currency.gold += finalGold;
-        Debug.Log($"{dropGold} 획득, 플레이어 골드획득량 증가 {stat.finalRewardStatus.goldRate}적용되어 최종 {finalGold} 획득\n" +
+        Debug.Log($"{dropGold} 획득, 플레이어 골드획득량 증가 {stat.finalRewardStatStatus.goldGain}적용되어 최종 {finalGold} 획득\n" +
                   $"현재 소유 골드 : {progress.currency.gold}");
         hub.GetCurrency();
         hub.CurrencyChange(CurrencyType.GOLD, progress.currency.gold);
@@ -52,10 +52,10 @@ public class ItemDropManager : MonoBehaviour, IManager
 
     void GetStatStone(int dropStatStone)
     {
-        int finalStatStone = (int)(dropStatStone * (1 + stat.finalRewardStatus.goldRate));
+        int finalStatStone = (int)(dropStatStone * (1 + stat.finalRewardStatStatus.goldGain));
         progress.currency.statStone += finalStatStone;
         Debug.Log(
-            $"스탯강화석 {dropStatStone} 획득, 플레이어 스탯강화석 증가 {stat.finalRewardStatus.goldRate}적용되어 최종 {finalStatStone} 획득\n" +
+            $"스탯강화석 {dropStatStone} 획득, 플레이어 스탯강화석 증가 {stat.finalRewardStatStatus.goldGain}적용되어 최종 {finalStatStone} 획득\n" +
             $"현재 소유 스탯강화석 : {progress.currency.statStone}");
         hub.GetCurrency();
         hub.CurrencyChange(CurrencyType.STATSTONE, progress.currency.statStone);
@@ -65,9 +65,9 @@ public class ItemDropManager : MonoBehaviour, IManager
     //경험치는 드랍없이 바로 가서 일단 public으로 쓰긴 하는데 바꿔야함
     public void GetExp(int dropExp)
     {
-        int finalExp = (int)(dropExp * (1 + stat.finalRewardStatus.expRate));
+        int finalExp = (int)(dropExp * (1 + stat.finalRewardStatStatus.expGain));
         progress.currency.exp += finalExp;
-        Debug.Log($"경험치 {dropExp} 획득, 플레이어 경험치 증가 {stat.finalRewardStatus.expRate}적용되어 최종 {finalExp} 획득\n" +
+        Debug.Log($"경험치 {dropExp} 획득, 플레이어 경험치 증가 {stat.finalRewardStatStatus.expGain}적용되어 최종 {finalExp} 획득\n" +
                   $"현재 소유 경험치 : {progress.currency.exp}");
         while (progress.currency.exp > 100)
         {
@@ -129,5 +129,5 @@ public class ItemDropManager : MonoBehaviour, IManager
     }
 
 
-    public int GetOrder() => 3; //ItemDropTable은 stage이전에 생성 필요
+    public int GetOrder() => 4; //ItemDropTable은 stage이전에 생성 필요
 }

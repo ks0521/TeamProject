@@ -12,17 +12,17 @@ public class AbilityDetailView : MonoBehaviour
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine($"공격력 : {status.finalBattleStatus.atk}");
-        sb.AppendLine($"최대체력 : {status.finalBattleStatus.maxHp}");
-        sb.AppendLine($"방어력 : {status.finalBattleStatus.def}");
-        sb.AppendLine($"공격속도 : {status.finalBattleStatus.atkSpeed * 100}%");
-        sb.AppendLine($"이동속도 : {status.finalBattleStatus.moveSpeed * 100}%");
-        sb.AppendLine($"크리티컬확률 : {status.finalBattleStatus.critChance}%");
-        sb.AppendLine($"크리티컬데미지 : {status.finalBattleStatus.critDamage}%");
+        sb.AppendLine($"공격력 : {status.finalBattleStatStatus.atk}");
+        sb.AppendLine($"최대체력 : {status.finalBattleStatStatus.maxHp}");
+        sb.AppendLine($"방어력 : {status.finalBattleStatStatus.def}");
+        sb.AppendLine($"공격속도 : {status.finalBattleStatStatus.atkSpeed * 100}%");
+        sb.AppendLine($"이동속도 : {status.finalBattleStatStatus.moveSpeed * 100}%");
+        sb.AppendLine($"크리티컬확률 : {status.finalBattleStatStatus.critChance}%");
+        sb.AppendLine($"크리티컬데미지 : {status.finalBattleStatStatus.critDamage}%");
 
-        sb.AppendLine($"골드획득률 : {status.finalRewardStatus.goldRate * 100}%");
-        sb.AppendLine($"경험치획득률 : {status.finalRewardStatus.expRate * 100}%");
-        sb.AppendLine($"아이템드랍률 : {status.finalRewardStatus.itemDropRateBonus * 100}%");
+        sb.AppendLine($"골드획득률 : {status.finalRewardStatStatus.goldGain * 100}%");
+        sb.AppendLine($"경험치획득률 : {status.finalRewardStatStatus.expGain * 100}%");
+        sb.AppendLine($"아이템드랍률 : {status.finalRewardStatStatus.itemDropRate * 100}%");
 
         statText.text = sb.ToString().TrimEnd();
     }

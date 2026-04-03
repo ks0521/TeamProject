@@ -123,7 +123,7 @@ public class NormalStageRule : StageRule
     public void ItemDrop(Monster monster)
     {
         List<DropReward> items =
-            stage.dropTable.GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatus.itemDropRateBonus);
+            stage.dropTable.GetDroppedItems(PlayerRuntimeStatus.Instance.finalRewardStatStatus.itemDropRate);
         dropManager.GetExp(stage.dropTable.GetExp());
         foreach (var item in items)
         {

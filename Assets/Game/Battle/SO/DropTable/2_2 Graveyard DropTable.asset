@@ -34,20 +34,20 @@ MonoBehaviour:
     currencyType: 2
     currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
     chance: 0.08
-    itemSO: {fileID: 0}
-    minAmount: 115
-    maxAmount: 120
-  - rewardType: 0
-    currencyType: 2
-    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
-    chance: 0.12
-    itemSO: {fileID: 11400000, guid: f3a79261ed87c424a8ae72087b3d3a6a, type: 2}
+    itemSO: {fileID: 11400000, guid: 5ab3d03330838d44b9665eeb1eee89be, type: 2}
     minAmount: 1
     maxAmount: 1
   - rewardType: 0
     currencyType: 2
     currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
-    chance: 0.1
-    itemSO: {fileID: 11400000, guid: 8ad746beadfbd3f4193540c7bda190fc, type: 2}
+    chance: 0.12
+    itemSO: {fileID: 11400000, guid: 5feabd390d9c0b4458fc992faf9e488b, type: 2}
+    minAmount: 1
+    maxAmount: 1
+  - rewardType: 0
+    currencyType: 2
+    currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
+    chance: 0.05
+    itemSO: {fileID: 11400000, guid: 3aa98074b6ab8ed489255e230bcaf0d1, type: 2}
     minAmount: 1
     maxAmount: 1

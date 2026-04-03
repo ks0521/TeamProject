@@ -100,36 +100,36 @@ namespace UI.Equipment
             StringBuilder sb = new StringBuilder(); //자동 줄 바꿈
 
             //AppendLine : 기존 내용 뒤에 내용추가하고 줄바꿈
-            if (so.ownedBaseIncrease.flatAttack > 0)
-                sb.AppendLine($"공격력 +{so.ownedBaseIncrease.flatAttack + so.ownedPerLevelIncrease.flatAttack * level}");
-            if (so.ownedBaseIncrease.attackRate > 0)
-                sb.AppendLine($"피해량 +{so.ownedBaseIncrease.attackRate + so.ownedPerLevelIncrease.attackRate * level}%");
+            if (so.ownedBaseIncrease.atk > 0)
+                sb.AppendLine($"공격력 +{so.ownedBaseIncrease.atk + so.ownedPerLevelIncrease.atk * level}");
+            if (so.ownedBaseIncrease.atkRate > 0)
+                sb.AppendLine($"피해량 +{so.ownedBaseIncrease.atkRate + so.ownedPerLevelIncrease.atkRate * level}%");
 
-            if (so.ownedBaseIncrease.flatMaxHp > 0)
-                sb.AppendLine($"체력 +{so.ownedBaseIncrease.flatMaxHp + so.ownedPerLevelIncrease.flatMaxHp * level}");
+            if (so.ownedBaseIncrease.maxHp > 0)
+                sb.AppendLine($"체력 +{so.ownedBaseIncrease.maxHp + so.ownedPerLevelIncrease.maxHp * level}");
             if (so.ownedBaseIncrease.maxHpRate > 0)
                 sb.AppendLine(
                     $"최대 체력 배율 +{so.ownedBaseIncrease.maxHpRate + so.ownedPerLevelIncrease.maxHpRate * level}%");
-            if (so.ownedBaseIncrease.damageReductionRate > 0)
+            if (so.ownedBaseIncrease.damageReduction > 0)
                 sb.AppendLine(
-                    $"받는 피해 비율 감소 +{so.ownedBaseIncrease.damageReductionRate + so.ownedPerLevelIncrease.damageReductionRate * level}");
+                    $"받는 피해 비율 감소 +{so.ownedBaseIncrease.damageReduction + so.ownedPerLevelIncrease.damageReduction * level}");
 
-            if (so.ownedBaseIncrease.itemDropRateBonus > 0)
+            if (so.ownedBaseIncrease.itemDropRate > 0)
                 sb.AppendLine(
-                    $"아이템 드랍률 +{so.ownedBaseIncrease.itemDropRateBonus + so.ownedPerLevelIncrease.itemDropRateBonus * level}%");
-            if (so.ownedBaseIncrease.goldGainRate > 0)
+                    $"아이템 드랍률 +{so.ownedBaseIncrease.itemDropRate + so.ownedPerLevelIncrease.itemDropRate * level}%");
+            if (so.ownedBaseIncrease.goldGain > 0)
                 sb.AppendLine(
-                    $"골드 획득량 +{so.ownedBaseIncrease.goldGainRate + so.ownedPerLevelIncrease.goldGainRate * level}%");
-            if (so.ownedBaseIncrease.expGainRate > 0)
+                    $"골드 획득량 +{so.ownedBaseIncrease.goldGain + so.ownedPerLevelIncrease.goldGain * level}%");
+            if (so.ownedBaseIncrease.expGain > 0)
                 sb.AppendLine(
-                    $"경험치 획득량 +{so.ownedBaseIncrease.expGainRate + so.ownedPerLevelIncrease.expGainRate * level}%");
+                    $"경험치 획득량 +{so.ownedBaseIncrease.expGain + so.ownedPerLevelIncrease.expGain * level}%");
 
-            if (so.ownedBaseIncrease.moveSpeedRate > 0)
+            if (so.ownedBaseIncrease.moveSpeed > 0)
                 sb.AppendLine(
-                    $"이동속도 증가 + {so.ownedBaseIncrease.moveSpeedRate + so.ownedPerLevelIncrease.moveSpeedRate * level}%");
-            if (so.ownedBaseIncrease.attackSpeedRate > 0)
+                    $"이동속도 증가 + {so.ownedBaseIncrease.moveSpeed + so.ownedPerLevelIncrease.moveSpeed * level}%");
+            if (so.ownedBaseIncrease.atkSpeed > 0)
                 sb.AppendLine(
-                    $"공속 증가 + {so.ownedBaseIncrease.attackSpeedRate + so.ownedPerLevelIncrease.attackSpeedRate * level}%");
+                    $"공속 증가 + {so.ownedBaseIncrease.atkSpeed + so.ownedPerLevelIncrease.atkSpeed * level}%");
 
             return sb.Length > 0 ? sb.ToString().TrimEnd() : "보유 효과 없음";
         } 

@@ -37,7 +37,7 @@ namespace Personal_Jongjun
         public void Init()
         {
             Load();
-            calculator?.Calculate(runtimeProgressState);
+            
         }
 
         /// <summary> 런타임 데이터 기기에 저장</summary>
