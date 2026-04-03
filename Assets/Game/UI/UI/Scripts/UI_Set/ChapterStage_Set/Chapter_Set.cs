@@ -1,8 +1,6 @@
 using Base.Data;
 using Base.Managers;
 using Base.Save;
-
-using Personal_Jongjun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
