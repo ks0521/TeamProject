@@ -7674,7 +7674,7 @@ GameObject:
   - component: {fileID: 2470656480971952820}
   - component: {fileID: 8520293879892434521}
   m_Layer: 5
-  m_Name: Ability_Popup
+  m_Name: Ability_Detail_Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

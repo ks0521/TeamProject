@@ -5697,24 +5697,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   btnViewArr:
-  - btn: {fileID: 0}
-    cooltimeMask: {fileID: 0}
-    skillImg: {fileID: 0}
-  - btn: {fileID: 0}
-    cooltimeMask: {fileID: 0}
-    skillImg: {fileID: 0}
-  - btn: {fileID: 0}
-    cooltimeMask: {fileID: 0}
-    skillImg: {fileID: 0}
-  - btn: {fileID: 0}
-    cooltimeMask: {fileID: 0}
-    skillImg: {fileID: 0}
-  - btn: {fileID: 0}
-    cooltimeMask: {fileID: 0}
-    skillImg: {fileID: 0}
-  - btn: {fileID: 0}
-    cooltimeMask: {fileID: 0}
-    skillImg: {fileID: 0}
+  - btn: {fileID: 6774347383488241699}
+    cooltimeMask: {fileID: 4088985727205531723}
+    skillImg: {fileID: 376203331516241202}
+  - btn: {fileID: 3893836200128108355}
+    cooltimeMask: {fileID: 1277791388379038257}
+    skillImg: {fileID: 7702203638874254638}
+  - btn: {fileID: 612340708284759354}
+    cooltimeMask: {fileID: 6141465946758004858}
+    skillImg: {fileID: 3717080382621928970}
+  - btn: {fileID: 8995547699070163988}
+    cooltimeMask: {fileID: 8856201718126183262}
+    skillImg: {fileID: 2924934257029076388}
+  - btn: {fileID: 982741734549021973}
+    cooltimeMask: {fileID: 9197417318337363926}
+    skillImg: {fileID: 2690524805049444829}
+  - btn: {fileID: 3056904172123763413}
+    cooltimeMask: {fileID: 3485503481918462842}
+    skillImg: {fileID: 3388919973372734644}
   borderArr: []
 --- !u!1 &5951077934738275981
 GameObject:
