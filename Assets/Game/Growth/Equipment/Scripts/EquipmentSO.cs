@@ -69,7 +69,7 @@ namespace Growth.Equipment
     public class EquipmentSO : ItemSO
     {
         public EquipType equipType;
-        [Header("Quality")] 
+        [Header("Quality")]
         public EquipRarity rarity;
         public EquipQuality quality;
 
