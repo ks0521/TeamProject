@@ -60,12 +60,15 @@ namespace UI.Scripts
         void RefreshAll()
         {
             StageManager stageManager = GameManager.Instance.GetGameSystem<StageManager>();
-            Character player = FindAnyObjectByType<Character>();
-
+            Player player = FindAnyObjectByType<Player>();
+            if (player == null)
+            {
+                LvText.SetLv(0);
+            }
             if (player != null)
             {
                 hp.SetHp(player.Hp, player.MaxHp);
-                LvText.SetLv(((Player)player).Level);
+                LvText.SetLv(player.Level);
             }
 
             foreach (var ui in mainUItype)
