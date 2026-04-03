@@ -35,7 +35,6 @@ namespace Base.Save
         public void Init()
         {
             LoadProgress();
-            playerStatCalculator?.Calculate(progress);
             AutoSave(this.GetCancellationTokenOnDestroy(), 3f).Forget();
         }
 

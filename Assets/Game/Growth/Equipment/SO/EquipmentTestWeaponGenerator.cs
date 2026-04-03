@@ -70,36 +70,46 @@ public static class EquipmentTestWeaponGenerator
         float totalMultiplier = rarityMultiplier * qualityMultiplier;
 
         weapon.key = key;
+        weapon.itemName = $"스태프_{key - 3100}";
         weapon.name = $"Weapon_{key}_{rarity}_{quality}";
         weapon.equipType = EquipType.Weapon;
         weapon.rarity = rarity;
         weapon.quality = quality;
-
+        weapon.UpgradeNeedCost = (int)(totalMultiplier * 15);
         // 장착 기본 효과 : 공격력 + 공격력%
         weapon.equipBaseIncrease = new StatIncrease
         {
-            flatAttack = Mathf.RoundToInt(10 * totalMultiplier),
-            attackRate = RoundRate(0.03f * totalMultiplier)
+            atk = Mathf.RoundToInt(10 * totalMultiplier),
+            atkRate = RoundRate(0.03f * totalMultiplier),
+            damageDealtRate = RoundRate(0.05f * totalMultiplier)
         };
 
         // 장착 레벨당 효과 : 공격력 + 공격력%
         weapon.equipPerLevelIncrease = new StatIncrease
         {
-            flatAttack = Mathf.Max(1, Mathf.RoundToInt(2 * totalMultiplier)),
-            attackRate = RoundRate(0.005f * totalMultiplier)
+            atk = Mathf.Max(1, Mathf.RoundToInt(2 * totalMultiplier)),
+            atkRate = RoundRate(0.005f * totalMultiplier)
         };
 
         // 보유 기본 효과 : 공격력만
         weapon.ownedBaseIncrease = new StatIncrease
         {
-            flatAttack = Mathf.Max(1, Mathf.RoundToInt(3 * totalMultiplier))
+            atk = Mathf.Max(1, Mathf.RoundToInt(3 * totalMultiplier))
         };
 
         // 보유 레벨당 효과 : 공격력만
         weapon.ownedPerLevelIncrease = new StatIncrease
         {
-            flatAttack = Mathf.Max(1, Mathf.RoundToInt(1 * totalMultiplier))
+            atk = Mathf.Max(1, Mathf.RoundToInt(1 * totalMultiplier))
         };
+        if (weapon.rarity == EquipRarity.Unique)
+        {
+            weapon.combineNeedAmount = 3;
+        }
+        else
+        {
+            weapon.combineNeedAmount = 5;
+        }
     }
 
     private static float GetRarityMultiplier(EquipRarity rarity)

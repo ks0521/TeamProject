@@ -9,8 +9,10 @@ using UnityEngine;
 
 namespace Base.Managers
 {
+    /// <summary>
+    /// UI에서 사용하기 위한 정보 모음집
+    /// </summary>
     [Serializable]
-    /// <summary> UI에서 사용하기 위한 정보 모음집</summary>
     public struct StageEntry
     {
         public int chapter; //챕터

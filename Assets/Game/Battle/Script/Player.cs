@@ -19,9 +19,9 @@ namespace Battle
             protected set
             {
                 hp = value;
-                if (CurrentBattleStat.maxHp <= hp)
+                if (CurrentBattleStatStat.maxHp <= hp)
                 {
-                    hp = CurrentBattleStat.maxHp;
+                    hp = CurrentBattleStatStat.maxHp;
                 }
                 eventHub.HpChanged(hp,MaxHp);
                 if (hp <= 0f)
@@ -31,8 +31,8 @@ namespace Battle
             }
         }
         public PlayerEquipSkillController ESController => equipSkillController;
-        public override BattleStat CurrentBattleStat => runtimeStatus.finalBattleStatus;
-        protected override float AttackRange => runtimeStatus.finalRange;
+        public override BattleStat CurrentBattleStatStat => runtimeStatus.finalBattleStatStatus;
+        protected override float AttackRange => runtimeStatus.finalBattleStatStatus.atkRange;
         [SerializeField] private RuntimeProgressState runtimeProgress;
         [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
@@ -57,7 +57,7 @@ namespace Battle
         void Rebirth()
         {
             isDead = false;
-            Hp = CurrentBattleStat.maxHp;
+            Hp = CurrentBattleStatStat.maxHp;
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
@@ -133,7 +133,7 @@ namespace Battle
 
         void UpdateMoveFeat()
         {
-            cm.UpdateMoveInput(CurrentBattleStat.moveSpeed);
+            cm.UpdateMoveInput(CurrentBattleStatStat.moveSpeed);
             // TestMoveTargetSet();
             //AtkFeat();
         }
@@ -182,7 +182,7 @@ namespace Battle
             if (!CheckTargetIsClose())
             {
                 state = CharacterState.Move;
-                cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
+                cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStatStat.moveSpeed);
                 if (spumController != null)
                 {
                     spumController.PlayAnimation(PlayerState.MOVE, 0);

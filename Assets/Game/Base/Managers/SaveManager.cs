@@ -62,10 +62,10 @@ namespace Base.Managers
                 },
                 currency = new PlayerCurrencyState()
                 {
-                    level = 0,
+                    level = 1,
                     exp = 0,
-                    gold = 0,
-                    statStone = 0
+                    gold = 10,
+                    statStone = 10
                 },
                 equipmentInventory = new EquipmentInventoryState()
                 {
