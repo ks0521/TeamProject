@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 5672682298447202343}
   - component: {fileID: 215724110754101800}
   m_Layer: 11
-  m_Name: Skill_Water Ball
+  m_Name: ASkill_Water Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
