@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4379793774679644589
+--- !u!1 &1564956497993801449
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,68 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6008147642997644485}
-  - component: {fileID: 2302903319994846780}
-  - component: {fileID: 2212497148594222792}
-  - component: {fileID: 266004814372706844}
-  - component: {fileID: 958576018294973880}
+  - component: {fileID: 3921390101479258619}
+  - component: {fileID: 8342513297051544675}
+  - component: {fileID: 5631668641644454996}
+  - component: {fileID: 7678819755171153191}
   m_Layer: 0
-  m_Name: DroppedItem
+  m_Name: Drop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &6008147642997644485
-RectTransform:
+--- !u!4 &3921390101479258619
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379793774679644589}
+  m_GameObject: {fileID: 1564956497993801449}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1.25, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.08, y: -0.43}
-  m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2302903319994846780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379793774679644589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b1b5f4f790006c44bf4c98fb7a07ab3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dropDelay: 0
-  isDropped: 0
-  img: {fileID: 0}
-  target: {fileID: 0}
-  reward:
-    rewardType: 0
-    currencyType: 0
-    currencySO: {fileID: 0}
-    itemSO: {fileID: 0}
-    amount: 0
-  dropManager: {fileID: 0}
-  itemPool: {fileID: 0}
---- !u!212 &2212497148594222792
+--- !u!212 &8342513297051544675
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379793774679644589}
+  m_GameObject: {fileID: 1564956497993801449}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -116,13 +87,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &266004814372706844
+--- !u!114 &5631668641644454996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564956497993801449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b1b5f4f790006c44bf4c98fb7a07ab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropDelay: 0
+  isDropped: 0
+  img: {fileID: 0}
+  target: {fileID: 0}
+  reward:
+    rewardType: 0
+    currencyType: 0
+    currencySO: {fileID: 0}
+    itemSO: {fileID: 0}
+    amount: 0
+  dropManager: {fileID: 0}
+  itemPool: {fileID: 0}
+--- !u!58 &7678819755171153191
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379793774679644589}
+  m_GameObject: {fileID: 1564956497993801449}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -150,12 +145,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.3
---- !u!222 &958576018294973880
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379793774679644589}
-  m_CullTransparentMesh: 1
+  m_Radius: 0.5

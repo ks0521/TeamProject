@@ -14,58 +14,74 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 3106
   icon: {fileID: -1456871091, guid: 7e0f0532e84b5ac429b1d99ecbdeb22c, type: 3}
-  itemName: "\uC2A4\uD0DC\uD5047"
+  itemName: "\uC2A4\uD0DC\uD504_6"
   context: 
   equipType: 0
   rarity: 1
   quality: 2
   combineNeedAmount: 5
-  UpgradeNeedCost: 50
+  UpgradeNeedCost: 20
   equipBaseIncrease:
-    flatAttack: 14
-    attackRate: 0.041
-    flatMaxHp: 0
+    atk: 14
+    atkRate: 0.041
+    damageDealtRate: 0.069
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
     maxHpRate: 0
-    damageReductionRate: 0
-    itemDropRateBonus: 0
-    goldGainRate: 0
-    expGainRate: 0
-    statStoneGainRate: 0
-    moveSpeedRate: 0
-    attackSpeedRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0
+    atkSpeed: 0
+    itemDropRate: 0
+    goldGain: 0
+    expGain: 0
+    statStoneGain: 0
   equipPerLevelIncrease:
-    flatAttack: 3
-    attackRate: 0.007
-    flatMaxHp: 0
+    atk: 3
+    atkRate: 0.007
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
     maxHpRate: 0
-    damageReductionRate: 0
-    itemDropRateBonus: 0
-    goldGainRate: 0
-    expGainRate: 0
-    statStoneGainRate: 0
-    moveSpeedRate: 0
-    attackSpeedRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0
+    atkSpeed: 0
+    itemDropRate: 0
+    goldGain: 0
+    expGain: 0
+    statStoneGain: 0
   ownedBaseIncrease:
-    flatAttack: 4
-    attackRate: 0
-    flatMaxHp: 0
+    atk: 4
+    atkRate: 0
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
     maxHpRate: 0
-    damageReductionRate: 0
-    itemDropRateBonus: 0
-    goldGainRate: 0
-    expGainRate: 0
-    statStoneGainRate: 0
-    moveSpeedRate: 0
-    attackSpeedRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0
+    atkSpeed: 0
+    itemDropRate: 0
+    goldGain: 0
+    expGain: 0
+    statStoneGain: 0
   ownedPerLevelIncrease:
-    flatAttack: 1
-    attackRate: 0
-    flatMaxHp: 0
+    atk: 1
+    atkRate: 0
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
     maxHpRate: 0
-    damageReductionRate: 0
-    itemDropRateBonus: 0
-    goldGainRate: 0
-    expGainRate: 0
-    statStoneGainRate: 0
-    moveSpeedRate: 0
-    attackSpeedRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0
+    atkSpeed: 0
+    itemDropRate: 0
+    goldGain: 0
+    expGain: 0
+    statStoneGain: 0

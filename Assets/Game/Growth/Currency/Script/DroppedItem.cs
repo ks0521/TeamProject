@@ -7,6 +7,7 @@ using Base.Save;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
 namespace Growth.Currency
@@ -16,14 +17,15 @@ namespace Growth.Currency
     
     public class DroppedItem : MonoBehaviour
     {
-        public bool dropDelay; //드랍 유휴시간
-        public bool isDropped; //중복 드랍 제거
-        public SpriteRenderer img;
-        public Transform target;
-        public DropReward reward;
-        public ItemDropManager dropManager;
-        public ItemPoolManager itemPool;
-        public CancellationTokenSource cts;
+        private float targetSize;
+        private bool dropDelay; //드랍 유휴시간 플래그
+        private bool isDropped; //중복 드랍 감지용 플래그
+        private SpriteRenderer img;
+        private Transform target;
+        private DropReward reward;
+        private ItemDropManager dropManager;
+        private ItemPoolManager itemPool;
+        private CancellationTokenSource cts;
 
         private void Awake()
         {
@@ -43,16 +45,28 @@ namespace Growth.Currency
             {
                 case DropRewardType.Currency:
                     img.sprite = reward.currencySO.icon;
+                    targetSize = 0.6f;
                     break;
                 case DropRewardType.Item:
                     img.sprite = reward.itemSO.icon;
+                    targetSize = 1f;
                     break;
             }
-
+            FixSize(img, targetSize);
             cts = new CancellationTokenSource();
             DropDelay(cts.Token).Forget();
         }
-        
+
+        void FixSize(SpriteRenderer spriteRenderer, float targetWorldSize)
+        {
+            if (spriteRenderer.sprite == null) return;
+            Vector2 size = spriteRenderer.sprite.bounds.size;
+            float maxSize = Mathf.Max(size.x, size.y);
+
+            if (maxSize <= 0f) return;
+            float scale = targetWorldSize / maxSize;
+            spriteRenderer.transform.localScale = Vector3.one * scale;
+        }
         //필드에 떨어진 후 1초후 드랍가능
         async UniTaskVoid DropDelay(CancellationToken cts)
         {
