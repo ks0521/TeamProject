@@ -12,17 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64f9af3e4e7aa644ba081cf09802f61, type: 3}
   m_Name: New Player Base Status SO
   m_EditorClassIdentifier: 
-  baseBattle:
-    maxHp: 100
-    atk: 5
-    def: 2
-    atkSpeed: 1
-    moveSpeed: 1
-    critChance: 0.5
-    critDamage: 1.5
-  baseReward:
-    goldRate: 0
-    expRate: 0
-    itemDropRateBonus: 0
-  baseAttackRange: 2
-  baseAttackCooldown: 1
+  total:
+    battle:
+      atk: 5
+      critChance: 0.5
+      critDamage: 2
+      maxHp: 100
+      def: 1
+      atkSpeed: 1
+      moveSpeed: 1
+      atkRange: 3
+    reward:
+      goldGain: 0
+      statStoneGain: 0
+      expGain: 0
+      itemDropRate: 0
+    extra:
+      damageDealtRate: 0
+      damageReduceRate: 0

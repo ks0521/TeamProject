@@ -121,6 +121,7 @@ namespace Base.Manager
                 return;
             }
             runtimeState.equipment.equippedWeponKey = equipment.key;
+            eventHub.EquipChenged(equipment);
             //장작후 스탯 계산 필요
         }
         #endregion
@@ -134,7 +135,7 @@ namespace Base.Manager
             //장비가 없으면 합성불가
             if (!EquipmentInventory.ContainsKey(key)) return false;
             //장비도감에 다음 장비가 없으면(합성 결과의 장비가 없으면) 합성불가 
-            if (!EquipmentInventory.ContainsKey(key + 1)) return false;
+            if (!dictionarys.equipmentTable.GetSO(key+1)) return false;
             //장비 개수가 조합개수보다 낮으면 합성불가
             if (EquipmentInventory[key].ownedCount < 
                 dictionarys.equipmentTable.GetSO(key).combineNeedAmount) return false;
@@ -177,10 +178,12 @@ namespace Base.Manager
             int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
             runtimeState.currency.gold -= cost;
             eventHub.CurrencyChange(CurrencyType.GOLD, runtimeState.currency.gold);
+            eventHub.EquipEnhanced(equipmentSo);
             Debug.Log("강화 성공");
             return true;
         }
         #endregion
+        
         
         
         /// <summary> 기본 상태(미획득) 장비의 EquipmentEntryState 획득용 </summary>

@@ -82,8 +82,7 @@ namespace Base.Managers
             
             Debug.Log($"{statType}스탯 {upgradeCount}번 강화, {requireCost}강화석 사용, 남은 강화석 : {Progress.currency.statStone} " +
                       $"\n {statType}스탯 강화횟수 : {Progress.statUpgrades.upgradeLevelsByType[statType]}(+{upgradeCount})");
-            //강화결과 실제 스탯에 반영
-            calculator.Calculate(Progress);
+
             //최대체력 증가 스탯일 경우에는 증가한 최대체력만큼 HP 회복
             if (statType == StatusType.MaxHp)
             {

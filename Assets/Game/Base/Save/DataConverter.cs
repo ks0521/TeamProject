@@ -144,7 +144,7 @@ namespace Base.Save
                 runProgressState.skillProgress.skillProgressState.TryAdd(skill.key, skill.enhancementCount);
                 Debug.Log($"{skill.key}키값을 가진 스킬 추가 : {runProgressState.skillProgress.skillProgressState[skill.key]}개 ");
             }
-
+            Debug.Log("저장된 정보 변환 완료");
             return runProgressState;
         }
     }
