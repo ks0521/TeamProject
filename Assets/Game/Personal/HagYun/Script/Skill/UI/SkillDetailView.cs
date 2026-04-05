@@ -1,3 +1,4 @@
+using Growth.Equipment;
 using Growth.Skill;
 using System;
 using System.Collections;
@@ -25,32 +26,25 @@ namespace Personal.HagYun
         [SerializeField, Tooltip("스킬 장착 버튼")] private Button equipBtn;
         [SerializeField, Tooltip("장착 스킬 우선순위 변경 버튼")] private Button priorityChangeBtn;
 
-        public void SkillDataShow(Skill skill)
+        // skill value change용 StringBuilder
+        StringBuilder sb = new StringBuilder();
+
+        public void SkillDetailViewUIShowAndHide(bool isActive)
         {
-            if (skill == null) return;
-            var data = skill.SkillData;
-            SkillNameChange(data.skillName);
-            if (data.Type == Growth.Skill.SkillType.Passive)
+            if (isActive)
             {
-                skillCooltimeText.gameObject.SetActive(false);
-                equipBtn.gameObject.SetActive(false);
-                priorityChangeBtn.gameObject.SetActive(false);
-                SkillImgChange(data.skillIcon, false);
-                PassiveSkill passiveSkill = (PassiveSkill)skill;
-                SkillValueChange(passiveSkill);
-            }
-            else
-            {
-                var activeSkill = (ActiveSkill)skill;
-                var activeData = activeSkill.ActiveSkillData;
-                SkillCooltimeChange(activeData.coolDown);
-                SkillImgChange(data.skillIcon, activeSkill.IsHomingSkill);
-                SkillValueChange(activeSkill);
+                skillDescriptionText.gameObject.SetActive(true);
                 skillCooltimeText.gameObject.SetActive(true);
                 equipBtn.gameObject.SetActive(true);
                 priorityChangeBtn.gameObject.SetActive(true);
             }
-            SkillDescriptionChange(data.description);
+            else
+            {
+                skillDescriptionText.gameObject.SetActive(false);
+                skillCooltimeText.gameObject.SetActive(false);
+                equipBtn.gameObject.SetActive(false);
+                priorityChangeBtn.gameObject.SetActive(false);
+            }
         }
         public void SkillImgChange(Sprite sp, bool isHoming)
         {
@@ -60,87 +54,22 @@ namespace Personal.HagYun
         }
         public void SkillNameChange(string skillName) => nameText.text = skillName;
         public void SkillLevelChange(int curLv, int maxLv) => levelText.text = $"Lv : {curLv} / {maxLv}";
-        public void SkillValueChange(Skill skill)
+        public void ActiveSkillStatValueTextInit()
         {
-            SkillLevelChange(skill.CurLv, skill.MaxLv);
-            if(skill.SkillData.Type == Growth.Skill.SkillType.Passive)
-            {
-                SkillValueChange((PassiveSkill)skill);
-            }
-            else
-            {
-                SkillValueChange((ActiveSkill)skill);
-            }
+            sb.Clear();
+            sb.Append("배율 : ");
         }
-        StringBuilder sb = new StringBuilder();
-        public void SkillValueChange(ActiveSkill activeSkill)
-        {
-            skillValueText.text = $"배율 : {activeSkill.ResultDamage * 100}%";
-        }
-        public void SkillValueChange(PassiveSkill passiveSkill)
+        public void PassiveSkillStatValueTextInit()
         {
             sb.Clear();
             sb.AppendLine("증가 스탯");
-            foreach (var extractor in passiveSkill.Extractors)
-            {
-                var statData = passiveSkill.ResultSkillData;
-                if (extractor.IsEffective(statData))
-                {
-                    extractor.GetValue(statData, PassiveValueStringSet);
-                }
-            }
-            skillValueText.text = sb.ToString();
         }
-        void PassiveValueStringSet(string name, string value)
+        public void SkillStatValueTextBuild(string contents, bool isEnter)
         {
-            switch (name)
-            {
-                // 공격력 증가(상수)
-                case "flatAttack":
-                    sb.AppendLine($"공격력 + {value}");
-                    break;
-                    // 공격력 % 증가
-                case "attackRate":
-                    sb.AppendLine($"공격력 + {value}%");
-                    break;
-                    // HP 증가(상수)
-                case "flatMaxHp":
-                    sb.AppendLine($"HP + {value}");
-                    break;
-                    // HP % 증가
-                case "maxHpRate":
-                    sb.AppendLine($"HP + {value}%");
-                    break;
-                    // 받는 피해 비율 감소
-                case "damageReductionRate":
-                    sb.AppendLine($"받는 피해 감소 + {value}%");
-                    break;
-                    // 아이템 드랍률 증가
-                case "itemDropRateBonus":
-                    sb.AppendLine($"아이템 드랍률 + {value}%");
-                    break;
-                    // 골드 획득량 증가
-                case "goldGainRate":
-                    sb.AppendLine($"골드 획득량 + {value}");
-                    break;
-                    // 경험치 획득량 증가
-                case "expGainRate":
-                    sb.AppendLine($"경험치 획득량 + {value}");
-                    break;
-                    // 스탯 강화석 획득량 증가
-                case "statStoneGainRate":
-                    sb.AppendLine($"스탯 강화석 + {value}");
-                    break;
-                    // 이동속도 증가
-                case "moveSpeedRate":
-                    sb.AppendLine($"이동속도 + {value}");
-                    break;
-                    // 공격속도 증가
-                case "attackSpeedRate":
-                    sb.AppendLine($"공격속도 + {value}");
-                    break;
-            }
+            if (isEnter) sb.Append($"\n{contents}");
+            else sb.Append(contents);
         }
+        public void SkillStatValueTextChange() => skillValueText.text = sb.ToString();
         public void SkillCooltimeChange(float cooltime) => skillCooltimeText.text = $"쿨타임 : {cooltime}초";
         public void SkillDescriptionChange(string skillDescription) => skillDescriptionText.text = skillDescription;
         public void SkillLevelUpBtnInteractable(bool isInteractable)

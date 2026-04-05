@@ -85,6 +85,7 @@ namespace Personal.HagYun
         private int equipSlotIndex = -1;
         public int EquipSlotIndex => equipSlotIndex;
         public bool IsHomingSkill => data.Targeting == TargetingMode.Homing;
+        public bool IsHasSkillObject { get; protected set; }
         protected Vector2 ThisPos
         {
             get => transform.position;
@@ -103,7 +104,6 @@ namespace Personal.HagYun
         public void EquipSkillSlotIndexUpdate(int index) => equipSlotIndex = index;
         public void SkillAtk(Character cha)
         {
-            // cha.Hit(owner.SkillResultDmg(ResultDamage));
             owner.SkillAttack(cha, ResultDamage);
         }
         public void PlAreaAtk(int inAreaTargetCnt)
