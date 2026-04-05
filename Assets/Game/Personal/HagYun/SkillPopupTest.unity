@@ -804,6 +804,11 @@ PrefabInstance:
       propertyPath: equipSkillBtnSet.Array.data[5].img
       value: 
       objectReference: {fileID: 314486090}
+    - target: {fileID: 7610368439105413724, guid: cd36d5e6184204941a7277465aa2fc91,
+        type: 3}
+      propertyPath: skillPool
+      value: 
+      objectReference: {fileID: 973574391}
     - target: {fileID: 7832527201987463423, guid: cd36d5e6184204941a7277465aa2fc91,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -953,8 +958,7 @@ MonoBehaviour:
   - {fileID: 215724110754101800, guid: f2c3298bd8b151443b0f6d406f40d575, type: 3}
   - {fileID: 3182465722278937716, guid: 0d3947f65c2441041a107ddad00baafe, type: 3}
   - {fileID: 3182465722278937716, guid: d21c617f1de926e49b1efec4b682a617, type: 3}
-  activeSkillList: []
-  passiveSkillList: []
+  skillObjPoolTransform: {fileID: 0}
 --- !u!4 &973574392
 Transform:
   m_ObjectHideFlags: 0
