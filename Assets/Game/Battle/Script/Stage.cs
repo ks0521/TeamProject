@@ -71,10 +71,10 @@ using Random = UnityEngine.Random;
                     await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
                     float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
                     float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
-
-                    GameObject monsterObj = monsterPool.UsePool(stageSO.preset[0].monster.key);
+                    int randIdx = WeightCalc(stageSO.preset);
+                    GameObject monsterObj = monsterPool.UsePool(stageSO.preset[randIdx].monster.key);
                     Monster monster = monsterObj.GetComponent<Monster>();
-                    monster.SetUp(stageSO.preset[0].monster);
+                    monster.SetUp(stageSO.preset[randIdx].monster);
                     monster.Init();
                     monsterObj.transform.position = new Vector3(randx, randy, 0);
                     monsterObj.SetActive(true);
@@ -90,6 +90,38 @@ using Random = UnityEngine.Random;
             }
         }
 
+        int WeightCalc(in List<MonsterPreset> presets)
+        {
+            int total = 0;
+            foreach (var preset in presets)
+            {
+                if (preset.weights <= 0)
+                {
+                    Debug.LogWarning($"가중치가 0보다 작은 값({preset.weights}) 입력됨");
+                    return 0;
+                }
+                total += preset.weights;
+            }
+            if (total <= 0)
+            {
+                Debug.LogWarning($"가중합이 0미만입니다({total}");
+                return 0;
+            }
+
+            int weightSum = Random.Range(0, total);
+            for (int i = 0; i < presets.Count; i++)
+            {
+                if (presets[i].weights > weightSum)
+                {
+                    Debug.Log($"{i}번째 {presets[i].monster.name} 사용");
+                    return i;
+                }
+                
+                weightSum -= presets[i].weights;
+            }
+            Debug.LogWarning("가중합 계산 오류");
+            return 0;
+        }
         /// <summary> 새 몬스터 풀에서 꺼내왔을 때 스테이지에서 확인할 수 있게 연결</summary>
         /// <param name="monster"> 꺼내온 몬스터 </param>
         private void Register(Monster monster)
