@@ -9,6 +9,7 @@ using UI.Scripts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 
 public class AllChapter_Set : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class AllChapter_Set : MonoBehaviour
         if (hub != null)
         {
             hub.OnClearStage += EventChain;
-            hub.OnStageChangeClear += UpdateStageChange;
+            hub.OnChangeStage += UpdateStageChange;
             Debug.Log("스테이지창 이벤트 구독!");
         }
     }
@@ -63,7 +64,7 @@ public class AllChapter_Set : MonoBehaviour
     {
         if (hub == null) return;
         hub.OnClearStage -= EventChain;
-        hub.OnStageChangeClear -= UpdateStageChange;
+        hub.OnChangeStage -= UpdateStageChange;
         Debug.Log("스테이지창 이벤트 구독 해제");
     }
     
@@ -181,10 +182,31 @@ public class AllChapter_Set : MonoBehaviour
     {
         if (stageSo.type == StageType.Normal)
         {
-            GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>().SetChallengeUI(false);
+            
+            var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
+            popup.CloseBossUI();
+            popup.CloseMonsterKill();
+            popup.CloseTimer();
             return;
         }
-        GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>().SetChallengeUI(true);
+        if (stageSo.type == StageType.Challenge)
+        {
+            var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
+            popup.CloseBossUI();
+
+            popup.OpenTimer();
+            popup.OpenMonsterKill();
+            return;
+        }
+        if (stageSo.type == StageType.Boss)
+        {
+            var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
+            popup.CloseMonsterKill();
+
+            popup.OpenTimer();
+            popup.OpenBossUI();
+            return;
+        }
     }
     //챌린지 UI 활성 / 비활성화 경로
     //1. OnClickChangeStage -> StageManager.ChangeStage -> StageManager.EventHub.StageChangeClear -> UpdateStageChange
