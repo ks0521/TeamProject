@@ -2,11 +2,11 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
+using Growth.Equipment;
 using Growth.Skill;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.WebSockets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -164,13 +164,16 @@ namespace Personal.HagYun
         #region SkillTreeUISetView 내부 UI 기능
         public void SkillDetailsPopupShow(int value)
         {
+            if(skillLvSetArr == null || skillLvSetArr.Length <= selectSkillUINum)return;
+            var skill = skillLvSetArr[selectSkillUINum].skill;
+            if(skill == null)return;
             selectSkillUINum = value;
             GameObject skillDetailViewObject = skillDetailView.gameObject;
             if (!skillDetailViewObject.activeSelf)
             {
                 skillDetailViewObject.SetActive(true);
             }
-            ref var skill = ref skillLvSetArr[value].skill;
+            // ref var skill = ref skillLvSetArr[value].skill;
             skillDetailView.SkillDataShow(skill);
             if (skill is ActiveSkill aSkill)
                 equipTargetSkill = aSkill;
@@ -185,7 +188,9 @@ namespace Personal.HagYun
         public void SkillLevelChangeUpdate(bool isInit = false)
         {
             // ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
+            if(skillLvSetArr == null || skillLvSetArr.Length <= selectSkillUINum)return;
             var skill = skillLvSetArr[selectSkillUINum].skill;
+            if(skill == null)return;
             if (skillTreeUISetArr[selectSkillUINum] is SkillTreeUISetView stSet)
             {
                 stSet.SetLvText(skill.CurLv, skill.MaxLv);
@@ -207,6 +212,9 @@ namespace Personal.HagYun
         }
         public void SkillLevelUp()
         {
+            if(skillLvSetArr == null || skillLvSetArr.Length <= selectSkillUINum)return;
+            var skill = skillLvSetArr[selectSkillUINum].skill;
+            if(skill == null)return;
             if (skillPoint.curPoint <= 0) return;
             else if (skillLvSetArr[selectSkillUINum].skill.TryLevelOneUp())
             {
@@ -217,6 +225,9 @@ namespace Personal.HagYun
         }
         public void SkillLevelUpMax()
         {
+            if(skillLvSetArr == null || skillLvSetArr.Length <= selectSkillUINum)return;
+            var skill = skillLvSetArr[selectSkillUINum].skill;
+            if(skill == null)return;
             if (skillPoint.curPoint <= 0) return;
             else if (skillLvSetArr[selectSkillUINum].skill.TryLevelMaxUp(out int lvUpCnt))
             {
@@ -227,6 +238,9 @@ namespace Personal.HagYun
         }
         public void SetSkillLevel(int lv)
         {
+            if(skillLvSetArr == null || skillLvSetArr.Length <= selectSkillUINum)return;
+            var skill = skillLvSetArr[selectSkillUINum].skill;
+            if(skill == null)return;
             if (skillPoint.curPoint <= 0) return;
             else if (skillLvSetArr[selectSkillUINum].skill.TryLevelSet(lv, out int lvChangeCnt))
             {
@@ -237,6 +251,9 @@ namespace Personal.HagYun
         }
         public void SkillLevelReset(int index)
         {
+            if(skillLvSetArr == null || skillLvSetArr.Length <= selectSkillUINum)return;
+            var skill = skillLvSetArr[selectSkillUINum].skill;
+            if(skill == null)return;
             if (skillPoint.maxPoint <= skillPoint.curPoint)
             {
                 return;
