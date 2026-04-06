@@ -2,6 +2,8 @@ using Base.Data;
 using Base.Managers;
 using Base.Save;
 using Battle;
+using System;
+using System.Collections;
 using UnityEngine;
 namespace UI.Scripts
 {
@@ -22,35 +24,29 @@ namespace UI.Scripts
 
         [SerializeField] private PlayerProgressManager manager;
         [SerializeField] private EventHub hub;
-        [SerializeField ]private StageManager stageManager;
+        [SerializeField] private StageManager stageManager;
+        [SerializeField] private PopupManager popup;
 
-        private void Update()
-        {
-            PopupManager popup = GameManager.Instance.GetGameSystem<PopupManager>();
-            if (popup == null) return;
-
-            if (stageManager.TryGetChallengeData(out var data))
-            {
-                if (popup.TryGetChallengeUI(out var timer, out var kill))
-                {
-                    timer.SetTime(data.maxTime, data.currentTime);
-                    kill.UpdateKillText(target: data.targetKill, current: data.currentKill);
-                }
-            }
-        }
+        private Coroutine timerCoroutine; //코루틴 저장용
+        
         public void Init()
         {
             manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
+            popup = GameManager.Instance.GetGameSystem<PopupManager>();
 
             RefreshAll();
-            
+
             hub.OnHpChange += hp.SetHp;
-            hub.OnLevelChange += LvText.SetLv; 
+            hub.OnLevelChange += LvText.SetLv;
             hub.OnCurrencyChange += ReFreshCurrency;
 
             hub.OnChangeStage += stageText.SetStage;
+
+            hub.OnStageChangeClear += RefreshChallengeUIOnce;
+            hub.OnMonsterKill += ReFreshMonsterKill;
+
             //스킬 부분 미구현
             //자동전투 버튼 미구현
         }
@@ -88,7 +84,7 @@ namespace UI.Scripts
                         break;
                 }
             }
-            
+
             if (stageManager != null)
             {
                 stageText.SetStage(stageManager.CurrentStageSo);
@@ -103,6 +99,75 @@ namespace UI.Scripts
                 {
                     ui.SetUI(currency);
                 }
+            }
+        }
+        void RefreshChallengeUIOnce(StageSO stageSO)
+        {
+            if (popup == null || stageManager == null) return;
+            if (!stageManager.TryGetChallengeData(out var data)) { Debug.Log("챌린지 데이터 못가져옴"); return; }
+            if (!popup.TryGetTimer(out var timer)) { Debug.Log("timerInstance 못가져옴"); return; }
+            if (!popup.TryGetMonster(out var kill)) { Debug.Log("monsterKillInstance 데이터 못가져옴"); return; }
+
+            timer.SetTime(data.currentTime, data.maxTime);
+            kill.UpdateKillText(data.currentKill, data.targetKill);
+
+            StartTimerRoutine();
+        }//챌린지 UI 초기값 세팅
+        void ReFreshMonsterKill(MonsterSO monsterSO)
+        {
+            if(popup == null || stageManager == null) return;
+            if (!stageManager.TryGetChallengeData(out var data)) return;
+            if (!popup.TryGetMonster(out var kill)) return;
+
+            kill.UpdateKillText(data.currentKill);
+        }//몬스터 갱신용
+        void ReFreshBoss()
+        {
+            if (popup == null || stageManager == null) return;
+            //if(!stageManager.) 보스 스테이지 데이터 가져오기(?)
+            if (!popup.TryGetBossHpBar(out var bossHp)) return;
+            if(!popup.TryGetTimer(out var timer)) return;
+
+            bossHp.SetBoss(0);    
+        }//보스 갱신용
+
+        void StartTimerRoutine()
+        {
+            StopTimerRoutine();
+            timerCoroutine = StartCoroutine(CoRefreshTimer());
+        }
+        void StopTimerRoutine()
+        {
+            if (timerCoroutine != null)
+            {
+                StopCoroutine(timerCoroutine);
+                timerCoroutine = null;
+            }
+        }
+        IEnumerator CoRefreshTimer()
+        {
+            while (true)
+            {
+                if (popup == null || stageManager == null)//팝업 , 스테이지 매니저 체크
+                {
+                    yield return null;
+                    continue;
+                }
+
+                if (!stageManager.TryGetChallengeData(out var data))//챌린지 체크
+                {
+                    StopTimerRoutine();
+                    yield break;
+                }
+
+                if (!popup.TryGetTimer(out var timer))//UI 생성 체크
+                {
+                    yield return null;
+                    continue;
+                }
+
+                timer.SetTime(data.currentTime);
+                yield return null;
             }
         }
     }
