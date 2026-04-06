@@ -15,6 +15,7 @@ using static QuestSystem.TutorialSteps.Tutorial_Click;
 
 namespace QuestSystem
 {
+    [System.Serializable]
     public class ActiveQuest
     {
         public QuestDataReader Data { get; private set; } //연결된 원본 데이터
@@ -124,6 +125,17 @@ namespace QuestSystem
             EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
             RefreshQuests(); //초기 퀘스트
             RefreshUI();
+        }
+
+        //활성화된 모든 퀘스트 리스트 반환
+        public List<ActiveQuest> GetActiveQuests()
+        {
+            return activeQuests;
+        }
+        //특정 카테고리의 활성 퀘스트 필터링
+        public List<ActiveQuest> GetActiveQuestsByCategory(QuestCategory category)
+        {
+            return activeQuests.FindAll(q => q.Data.CategoryEnum == category);
         }
 
         void UpdateQuest(GoalType type, int targetID, int amount)
@@ -280,6 +292,7 @@ namespace QuestSystem
             }
             else panel.SetActive(false);
         }
+
         public void ResetDailyQuests()
         {
             activeQuests.RemoveAll(q => q.Data.CategoryEnum == QuestCategory.Daily);
