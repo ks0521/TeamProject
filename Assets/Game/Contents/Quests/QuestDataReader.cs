@@ -9,6 +9,7 @@ public class QuestDataReader
     public int questID;
     public string category; // JSON에서는 문자열로 적고 내부에서 Enum으로 변환합니다.
     public string description;
+    public string questStatus;
     public string goalType;  // JSON에서는 문자열로 관리하는 것이 오타 수정에 유리합니다.
     public int targetID;
     public int targetValue;
@@ -21,6 +22,7 @@ public class QuestDataReader
 
     public QuestCategory CategoryEnum => (QuestCategory)System.Enum.Parse(typeof(QuestCategory), category);
     public GoalType GoalTypeEnum => (GoalType)System.Enum.Parse(typeof(GoalType), goalType);
+    public QuestStatus StatusEnum => (QuestStatus)System.Enum.Parse(typeof(QuestStatus), goalType);
 }
 
 [Serializable]

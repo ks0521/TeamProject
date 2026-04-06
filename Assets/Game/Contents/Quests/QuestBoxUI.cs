@@ -14,8 +14,11 @@ public class QuestBoxUI : MonoBehaviour
 
     private ActiveQuest _quest;
     private QuestUIManager _uiManager;
+    public ActiveQuest GetQuest() => _quest;
     public void Setup(ActiveQuest quest, QuestUIManager uiManager)
     {
+        if (quest == null) return;
+
         _quest = quest;
         _uiManager = uiManager;
 
@@ -26,18 +29,24 @@ public class QuestBoxUI : MonoBehaviour
         // 버튼 클릭 이벤트 연결
         GetComponent<Button>().onClick.AddListener(() => _uiManager.SelectQuest(_quest));
 
-        RefreshRedDot();
+        if (redDot != null) RefreshVisuals();
     }
-
-    public void RefreshRedDot()
+    public void RefreshVisuals()
     {
-        // 완료 가능 상태면 레드닷 표시
-        if (redDot != null) redDot.SetActive(_quest.isCompleted);
+        if (_quest == null) return;
+
+        // 1. 진행도 텍스트 갱신 (예: 10/100)
+        if (progressText != null)
+            progressText.text = $"{_quest.CurrentValue} / {_quest.Data.targetValue}";
+
+        // 2. 완료 여부에 따른 레드닷 표시
+        if (redDot != null)
+            redDot.SetActive(_quest.isCompleted);
     }
 
     public void SetHighlight(bool isSelected)
     {
-        // 선택되면 밝게, 아니면 어둡게 (색상은 기획에 맞게 조절)
-        background.color = isSelected ? new Color(0.8f, 0.8f, 0.8f) : Color.white;
+        if (background != null)
+            background.color = isSelected ? new Color(0.7f, 0.9f, 0.7f) : Color.white;
     }
 }
