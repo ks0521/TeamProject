@@ -87,12 +87,18 @@ namespace Base.Managers
 
             isStageResultProcessing = false;
             //기존 스테이지에서 연결한 이벤트 제거
-            eventHub.OnDeadPlayer -= OnPlayerDie; 
+            eventHub.OnDeadPlayer -= OnPlayerDie;
+            if (stage != null)
+            {
+                stage.OnMonsterKilledInStage -= stageRule.MonsterKilledInStage;
+                stage.OnMonsterKilledInStage -= MonsterKillChain;
+            }
             if (stageRule is ChallengeStageRule oldChallengeRule)
             {
                 oldChallengeRule.ChallengeSuccess -= OnChallengeSucceeded;
                 oldChallengeRule.ChallengeFail -= OnChallengeFailed;
             }
+            
             //입장하려는 스테이지가 도전 스테이지
             if (selectedChapter == stageProgress.nextChallengeChapter &&
                 selectedStage == stageProgress.nextChallengeStage)
@@ -111,7 +117,6 @@ namespace Base.Managers
                 Debug.LogWarning($"{selectedChapter}-{selectedStage}SO를 불러오지 못해 스테이지를 바꿀 수 없습니다. ");
                 return;
             }
-
             
             //기존 스테이지 정리 + 새 스테이지 & 스테이지 룰 생성
             stage?.Destroy(); //기존 스테이지 있으면 정리
@@ -121,21 +126,20 @@ namespace Base.Managers
             eventHub.StageChanged(currentStageSO); // 바뀐 챕터 - 스테이지 정보 전달
             monsterPool.ChangeStage(currentStageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
             stage = new Stage(currentStageSO, monsterPool, spawnArea); // 신규 스테이지 생성
-            if (currentStageSO.type == StageType.Normal)
+            if (currentStageSO.stageType == StageType.Normal)
             {
                 stageProgress = SelectNormalStage(currentStageSO.chapter, currentStageSO.stage);
                 stageRule = new NormalStageRule();
-                stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
-                eventHub.OnDeadPlayer += OnPlayerDie;
             }
-            else if (currentStageSO.type == StageType.Challenge || currentStageSO.type == StageType.Boss)
+            else if (currentStageSO.stageType == StageType.Challenge || currentStageSO.stageType == StageType.Boss)
             {
                 stageRule = new ChallengeStageRule();
-                stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
                 ((ChallengeStageRule)stageRule).ChallengeSuccess += OnChallengeSucceeded;
                 ((ChallengeStageRule)stageRule).ChallengeFail += OnChallengeFailed;
-                eventHub.OnDeadPlayer += OnPlayerDie;
             }
+            eventHub.OnDeadPlayer += OnPlayerDie;
+            stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
+            stage.OnMonsterKilledInStage += MonsterKillChain;
             stageRule.Init(currentStageSO);
 
             //스테이지와 스테이지 룰 다 초기화된 이후 시작
@@ -200,6 +204,35 @@ namespace Base.Managers
             };
         }
 
+        public bool TryGetTarget(Transform finder,out Monster target)
+        {
+            float minDist = Single.MaxValue;
+            float dist;
+            if (Monsters is null || Monsters.Count == 0)
+            {
+                target = null;
+                return false;
+            }
+
+            target = Monsters[0]; // 일단 버그 방지
+            foreach (var monster in Monsters)
+            {
+                if (monster.IsDead) continue;
+                dist = Vector3.SqrMagnitude(monster.transform.position - finder.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    target = monster;
+                }
+            }
+
+            return true;
+        }
+
+        // public bool TryGetTarget(int count, out IReadOnlyList<Monster> targets)
+        // {
+        //     
+        // }
         /// <summary> 노말 스테이지 변경 </summary>
         /// <returns> 변경된 런타임 스테이지 데이터</returns>
         private StageProgress SelectNormalStage(int changeChapter, int changeStage)
@@ -219,7 +252,7 @@ namespace Base.Managers
         private StageProgress ProgressChallengeStage(StageSO clearStage)
         {
             //보스를 잡았으면 다음 챕터 2-1
-            if (clearStage.type == StageType.Boss)
+            if (clearStage.stageType == StageType.Boss)
             {
                 Progress.stage.nextChallangeChapter = clearStage.chapter + 1;
                 Progress.stage.nextChallangeStage = 2;
@@ -239,7 +272,7 @@ namespace Base.Managers
                 nextChallengeStage = Progress.stage.nextChallangeStage
             };
         }
-
+        
         private void Start()
         {
             Debug.Log("F1 : 스테이지 진입 테스트 / F2 : 스테이지 엔트리 테스트 ");
@@ -297,7 +330,7 @@ namespace Base.Managers
         {
             if (currentStageSO == null) return;
             Debug.Log("StageMaanger : 플레이어 사망");
-            if (currentStageSO.type == StageType.Normal)
+            if (currentStageSO.stageType == StageType.Normal)
             {
                 DelayRebirth(3f, this.GetCancellationTokenOnDestroy()).Forget();
                 return;
@@ -329,6 +362,8 @@ namespace Base.Managers
             return true;
         }
 
+        void MonsterKillChain(Monster monster) => eventHub.MonsterKill(monster.monsterSO);
+        
         /// <summary> input chapter - stage 가 base chapter - stage보다 빠른지 느린지 판별</summary>
         /// <returns>input chapter - stage가 base chapter - stage보다 뒤라면 양수, 같다면 0 , 앞이라면 음수</returns>
         private int CompareStage(int inputChapter, int inputStage, int baseChapter, int baseStage)

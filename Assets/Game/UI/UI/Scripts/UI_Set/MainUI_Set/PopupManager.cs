@@ -137,7 +137,7 @@ namespace UI.Scripts
         void PlayerDeadEventChain(Character character)
         {
             if (stagemanager.CurrentStageSo == null) return;
-            if (stagemanager.CurrentStageSo.type != StageType.Normal) return;
+            if (stagemanager.CurrentStageSo.stageType != StageType.Normal) return;
 
             OpenDeadPopup();
 

@@ -149,7 +149,16 @@ namespace Battle
                 if (stageManager == null) return false;
             }
 
-            stageMonsters = stageManager.Monsters;
+            if (!stageManager.TryGetTarget(this.transform, out var result))
+            {
+                return false;
+            }
+
+            target = result;
+            targetTransform = result.transform;
+            return true;
+            //target = targetMonster;
+            /*stageMonsters = stageManager.Monsters;
             float minDist = Single.MaxValue;
             float dist;
             if (stageMonsters is null || stageMonsters.Count == 0)
@@ -170,7 +179,7 @@ namespace Battle
                 }
             }
 
-            return true;
+            return true;*/
         }
 
         void FixedUpdateMoveFeat()
