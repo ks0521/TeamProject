@@ -180,7 +180,7 @@ public class AllChapter_Set : MonoBehaviour
     /// 꼭 StageSO를 안받고 해당 코드의 StageEntry를 이용해도 괜찮을듯함</summary>
     public void UpdateStageChange(StageSO stageSo)
     {
-        if (stageSo.type == StageType.Normal)
+        if (stageSo.stageType == StageType.Normal)
         {
             
             var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
@@ -189,7 +189,7 @@ public class AllChapter_Set : MonoBehaviour
             popup.CloseTimer();
             return;
         }
-        if (stageSo.type == StageType.Challenge)
+        if (stageSo.stageType == StageType.Challenge)
         {
             var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
             popup.CloseBossUI();
@@ -198,7 +198,7 @@ public class AllChapter_Set : MonoBehaviour
             popup.OpenMonsterKill();
             return;
         }
-        if (stageSo.type == StageType.Boss)
+        if (stageSo.stageType == StageType.Boss)
         {
             var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
             popup.CloseMonsterKill();

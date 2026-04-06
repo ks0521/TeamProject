@@ -100,6 +100,7 @@ MonoBehaviour:
       nextChallangeChapter: 0
     currency:
       level: 0
+      skillPoint: 0
       exp: 0
       gold: 0
       statStone: 0
@@ -108,7 +109,7 @@ MonoBehaviour:
       equippedArmorKey: 0
       equippedAccessoryKey: 0
     skillProgress:
-      skillSlots: 0
+      skillSlots: 
     lastSession:
       lastConnectTime: 0
 --- !u!1 &8219014861411383797
@@ -123,6 +124,7 @@ GameObject:
   - component: {fileID: 4680927838447828395}
   - component: {fileID: 1117561631283408730}
   - component: {fileID: 4994273503000915237}
+  - component: {fileID: 2356944207652742676}
   m_Layer: 0
   m_Name: GrowthManager
   m_TagString: Untagged
@@ -177,6 +179,7 @@ MonoBehaviour:
       nextChallangeChapter: 0
     currency:
       level: 0
+      skillPoint: 0
       exp: 0
       gold: 0
       statStone: 0
@@ -185,7 +188,7 @@ MonoBehaviour:
       equippedArmorKey: 0
       equippedAccessoryKey: 0
     skillProgress:
-      skillSlots: 0
+      skillSlots: 
     lastSession:
       lastConnectTime: 0
   hub: {fileID: 0}
@@ -203,6 +206,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NEED_COMBINE: 5
   equipItem: {fileID: 0}
+--- !u!114 &2356944207652742676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8219014861411383797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f74bbe9ffe6c1ae429c6addc3ca46e57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9049779580080515874
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,5 +262,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed200e9fa2e7cb4883e694787f3297b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlockSpawning: 1
+  BlockSpawning: 0
   spawnArea: {fileID: 0}
