@@ -189,7 +189,7 @@ public class AllChapter_Set : MonoBehaviour
             popup.CloseTimer();
             return;
         }
-        if (stageSo.type == StageType.Challenge)
+        if (stageSo.stageType == StageType.Challenge)
         {
             var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
             popup.CloseBossUI();
@@ -198,7 +198,7 @@ public class AllChapter_Set : MonoBehaviour
             popup.OpenMonsterKill();
             return;
         }
-        if (stageSo.type == StageType.Boss)
+        if (stageSo.stageType == StageType.Boss)
         {
             var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
             popup.CloseMonsterKill();
