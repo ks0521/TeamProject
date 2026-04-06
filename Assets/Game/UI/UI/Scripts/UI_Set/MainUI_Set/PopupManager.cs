@@ -23,11 +23,11 @@ namespace UI.Scripts
         [SerializeField] private GameObject equipmentPrefab;
         [SerializeField] private GameObject skillPrefab;
         [SerializeField] private GameObject shopPrefab;
+        [SerializeField] private GameObject settingPrefab;
+        [SerializeField] private GameObject gameEndPrefab;
 
         [Space(10)]
         [SerializeField] private GameObject dungeonPrefab;
-        [SerializeField] private GameObject settingPrefab;
-        [SerializeField] private GameObject gameEndPrefab;
 
         [Header("이벤트 팝업 프리팹")]
         [SerializeField] private GameObject clearPrefab;
@@ -37,6 +37,9 @@ namespace UI.Scripts
         [Header("챌린지 팝업 프리팹")]
         [SerializeField] SetViewer timer;
         [SerializeField] SetViewer monsterKill;
+
+        [Header("보스 체력 프리팹")]
+        [SerializeField] SetViewer BossHp;
 
         [Header("팝업 버튼")]
         [SerializeField] private Button abilityBtn;
@@ -66,6 +69,7 @@ namespace UI.Scripts
 
         private SetViewer timerInstance;
         private SetViewer monsterKillInstance;
+        private SetViewer bossHpInstance;
         private void Awake()
         {
             if (instance == null)
@@ -90,11 +94,7 @@ namespace UI.Scripts
                     CloseLastPopup();
                 }
             }
-            if (stagemanager.TryGetChallengeData(out var data))
-            {
-                timerInstance.SetTime(data.maxTime, data.currentTime);
-                monsterKillInstance.UpdateKillText(target: data.targetKill, current: data.currentKill);
-            }//챌린지 전용 UI 활성화 / 비활성화
+            
         }
 
         public void Init()
@@ -102,16 +102,14 @@ namespace UI.Scripts
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
 
-            clearPrefab.SetActive(false);
-            failPrefab.SetActive(false);
-            deadPrefab.SetActive(false);
-
             BindAllButton();
             popupStack.Clear();
 
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
+
+            Debug.Log(timer);
         }
 
         public int GetOrder() => 201;
@@ -135,17 +133,6 @@ namespace UI.Scripts
             shopBtn.onClick.AddListener(OpenShopPopup);
         }//버튼에 함수 넣기
 
-        public void SetChallengeUI(bool isCheck)
-        {
-            if (isCheck)
-            {
-                OpenChallengeUI();
-            }
-            else
-            {
-                CloseChallengeUI();
-            }
-        }
 
         void PlayerDeadEventChain(Character character)
         {
@@ -159,11 +146,16 @@ namespace UI.Scripts
         void ClearEventChain(StageSO stage)
         {
             OpenClearPopup();
+            CloseTimer();
+            CloseMonsterKill();
         }
         void FailEventChain(StageSO stage)
         {
             OpenFailPopup();
+            CloseTimer();
+            CloseMonsterKill();
         }
+
         IEnumerator FadeOutPopup(GameObject popup, float time)
         {
             CanvasGroup popupCan = popup.GetComponent<CanvasGroup>();
@@ -247,12 +239,14 @@ namespace UI.Scripts
             Destroy(lastPop);
 
         }
+
         private void PushPopup(GameObject prefab)
         {
             prefab.SetActive(true);
             prefab.transform.SetAsLastSibling();
             popupStack.Push(prefab);
         }
+
         private void OpenAbilityPopup()
         {
             if (abilityInstance != null) return;
@@ -333,6 +327,8 @@ namespace UI.Scripts
             dungeonInstance = Instantiate(dungeonPrefab, canvas);
             PushPopup(dungeonInstance);
         }
+
+
         private void OpenSettingPopup()
         {
             if (settingInstance != null) return;
@@ -349,44 +345,59 @@ namespace UI.Scripts
             gameEndInstance = Instantiate(gameEndPrefab, canvas);
             PushPopup(gameEndInstance);
         }
+
+
         private void OpenClearPopup()
         {
             if (clearInstance != null) return;
             if (clearPrefab == null) return;
 
-            GameObject gameObject = Instantiate(clearPrefab, canvas);
-            gameObject.SetActive(true);
-            StartCoroutine(FadeOutPopup(gameObject, 4f));
+            clearInstance = Instantiate(clearPrefab, canvas);
+            StartCoroutine(FadeOutPopup(clearInstance, 4f));
         }
         private void OpenFailPopup()
         {
             if (failInstance != null) return;
             if (failPrefab == null) return;
 
-            GameObject gameObject = Instantiate(failPrefab, canvas);
-            gameObject.SetActive(true);
-            StartCoroutine(FadeOutPopup(gameObject, 4f));
+            failInstance = Instantiate(failPrefab, canvas);
+            StartCoroutine(FadeOutPopup(failInstance, 4f));
         }
         private void OpenDeadPopup()
         {
             if (deadInstance != null) return;
             if (deadPrefab == null) return;
 
-            GameObject gameObject = Instantiate(deadPrefab, canvas);
-            gameObject.SetActive(true);
-            StartCoroutine(FadeOutPopup(gameObject, 3f));
+            deadInstance = Instantiate(deadPrefab, canvas);
+            StartCoroutine(FadeOutPopup(deadInstance, 3f));
         }
-        private void OpenChallengeUI()
+
+
+        public void OpenMonsterKill()
         {
-            if (timer != null || timerInstance == null)
+            if (monsterKill != null && monsterKillInstance == null)
             {
-                timerInstance = Instantiate(timer, canvas);
-            }
-            if (monsterKill != null || monsterKillInstance == null)
-            {
+                Debug.Log("몬스터 킬 생성");
                 monsterKillInstance = Instantiate(monsterKill, canvas);
             }
+
         }
+        public void OpenTimer()
+        {
+            if (timer != null && timerInstance == null)
+            {
+                Debug.Log("타이머 생성");
+                timerInstance = Instantiate(timer, canvas);
+            }
+        }
+        public void OpenBossUI()
+        {
+            if (BossHp != null && bossHpInstance == null)
+            {
+                bossHpInstance = Instantiate(BossHp , canvas);
+            }
+        }
+
 
         private void ClosePopup(GameObject gameObject)
         {
@@ -396,32 +407,123 @@ namespace UI.Scripts
             {
                 Button button = transform.GetComponent<Button>();
                 button.onClick.RemoveAllListeners();//중복 방지용
-                button.onClick.AddListener(() =>Destroy(gameObject));
+                button.onClick.AddListener(() =>
+                {
+                    RemovePopupFromStack(gameObject);
+                    ClearPopupReference(gameObject);
+                    Destroy(gameObject);
+                });
             }
             
         }
-        private void CloseChallengeUI()
+
+        public void CloseTimer()
         {
             if (timerInstance != null)
             {
                 Destroy(timerInstance.gameObject);
                 timerInstance = null;
             }
+        }
+        public void CloseMonsterKill()
+        {
             if (monsterKillInstance != null)
             {
                 Destroy(monsterKillInstance.gameObject);
                 monsterKillInstance = null;
             }
         }
+        public void CloseBossUI()
+        {
+            if (bossHpInstance != null)
+            {
+                Destroy(bossHpInstance.gameObject);
+                bossHpInstance = null;
+            }
+        }
+        private void ClearPopupReference(GameObject target)
+        {
+            if (target == null) return;
 
-        public  bool TryGetChallengeUI(out SetViewer timer , out SetViewer kill)
+            if (abilityInstance != null && target == abilityInstance.gameObject)
+            {
+                abilityInstance = null;
+                return;
+            }
+            if (chapterInstance != null && target == chapterInstance.gameObject)
+            {
+                chapterInstance = null;
+                return;
+            }
+            if (equipmentInstance != null && target == equipmentInstance.gameObject)
+            {
+                equipmentInstance = null;
+                return;
+            }
+            if (skillInstance != null && target == skillInstance)
+            {
+                skillInstance = null;
+                return;
+            }
+            if (dungeonInstance != null && target == dungeonInstance)
+            {
+                dungeonInstance = null;
+                return;
+            }
+            if (settingInstance != null && target == settingInstance)
+            {
+                settingInstance = null;
+                return;
+            }
+            if (shopInstance != null && target == shopInstance)
+            {
+                shopInstance = null;
+                return;
+            }
+            if (gameEndInstance != null && target == gameEndInstance)
+            {
+                gameEndInstance = null;
+                return;
+            }
+        }//instance 참조 중복 방지용
+        private void RemovePopupFromStack(GameObject target) 
+        {
+            if (target == null || popupStack.Count == 0) return;
+
+            Stack<GameObject> temp = new Stack<GameObject>();
+
+            while (popupStack.Count > 0)
+            {
+                GameObject pop = popupStack.Pop();
+
+                if (pop != target)
+                {
+                    temp.Push(pop);
+                }
+            }
+            while (temp.Count > 0)
+            {
+                popupStack.Push(temp.Pop());
+            }
+
+        }//ClosePopup 으로 닫는 팝업을 popupstack 에서 제거용 + popupstack 정렬용
+
+
+        public  bool TryGetTimer(out SetViewer timer)
         {
             timer = timerInstance;
-            kill = monsterKillInstance;
-
-            return timerInstance != null && monsterKillInstance != null;
+            return timer != null;
         }
-
+        public bool TryGetMonster(out SetViewer kill)
+        {
+            kill = monsterKillInstance;
+            return kill != null;
+        }
+        public bool TryGetBossHpBar(out SetViewer bossHp)
+        {
+            bossHp = bossHpInstance;
+            return bossHp != null;
+        }
     }
 
 }
