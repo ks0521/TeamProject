@@ -109,7 +109,8 @@ namespace Base.Data
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
         public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
         public static void NewDayStarted(string dateStr) => OnNewDayStarted?.Invoke(dateStr);
-
+        public static event Action OnQuestProgressUpdated; //퀘스트 진척도 변경
+        public static void QuestProgressUpdated() => OnQuestProgressUpdated?.Invoke();
         #endregion
         public int GetOrder() => 0;
     }

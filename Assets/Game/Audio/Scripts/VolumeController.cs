@@ -20,18 +20,18 @@ public class VolumeController : MonoBehaviour
 
     public void SetMasterVolume(float volume)
     {
-        audioMixer.SetFloat("Master Volume", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("Master Volume", Mathf.Log10(Mathf.Clamp(volume, min:0.0001f, max:1f)) * 20);
     }
     public void SetBGMVolume(float volume)
     {
-        audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("Master Volume", Mathf.Log10(Mathf.Clamp(volume, min: 0.0001f, max: 1f)) * 20);
     }
     public void SetSkillVolume(float volume)
     {
-        audioMixer.SetFloat("Skill Sound", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("Master Volume", Mathf.Log10(Mathf.Clamp(volume, min: 0.0001f, max: 1f)) * 20);
     }
     public void SetSFXVolume(float volume)
     {
-        audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("Master Volume", Mathf.Log10(Mathf.Clamp(volume, min: 0.0001f, max: 1f)) * 20);
     }
 }
