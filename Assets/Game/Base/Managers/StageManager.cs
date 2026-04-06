@@ -111,7 +111,6 @@ namespace Base.Managers
                 Debug.LogWarning($"{selectedChapter}-{selectedStage}SO를 불러오지 못해 스테이지를 바꿀 수 없습니다. ");
                 return;
             }
-
             
             //기존 스테이지 정리 + 새 스테이지 & 스테이지 룰 생성
             stage?.Destroy(); //기존 스테이지 있으면 정리
