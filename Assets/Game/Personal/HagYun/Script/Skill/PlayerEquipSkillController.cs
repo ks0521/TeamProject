@@ -1,4 +1,4 @@
-using Base.Data;
+﻿using Base.Data;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
@@ -297,16 +297,11 @@ namespace Personal.HagYun
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    index = i + 1001;
+                    index = i;
                     if (skillPool.TryGetActiveSkill(index, out ActiveSkill skill))
                     {
                         SkillEquip(index, skill, true);
                     }
-                    //index = i;
-                    //if (skillPool.TryGetActiveSkill(index, out ActiveSkill skill))
-                    //{
-                    //    SkillEquip(index, skill, true);
-                    //}
                 }
             }
             SetUseSkillPossibleCnt();
