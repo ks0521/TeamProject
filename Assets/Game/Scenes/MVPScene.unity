@@ -392,6 +392,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1190109410278909850, guid: d98a94c1cf3e6944cb03cab3403743e8,
+        type: 3}
+      propertyPath: _bgmChanger
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3488576700427005340, guid: d98a94c1cf3e6944cb03cab3403743e8,
         type: 3}
       propertyPath: hit

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Base.Data;
-using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -33,20 +32,20 @@ using Random = UnityEngine.Random;
         public void Enter()
         {
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 시작");
-            if (stageSO.type == StageType.Boss)
+            if (stageSO.stageType == StageType.Boss)
             {
-                SpawnBoss();
+                BossSpawn();
                 canSpawning = false;
             }
             else
             {
                 spawnerToken = new CancellationTokenSource();
-                Spawning(spawnerToken.Token).Forget();
+                EndlessSpawn(spawnerToken.Token).Forget();
                 canSpawning = true;
             }
         }
         /// <summary> MVP 보여주기용 임시 메서드, 나중에는 룰 자체를 변경할 것</summary>
-        void SpawnBoss()
+        void BossSpawn()
         {
             float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
             float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
@@ -62,7 +61,7 @@ using Random = UnityEngine.Random;
         }
         /// <summary> 실제 몬스터 스폰 비동기 메서드</summary>
         /// <param name="token">종료 토큰</param>
-        async UniTaskVoid Spawning(CancellationToken token)
+        async UniTaskVoid EndlessSpawn(CancellationToken token)
         {
             try
             {
@@ -113,12 +112,13 @@ using Random = UnityEngine.Random;
             {
                 if (presets[i].weights > weightSum)
                 {
-                    Debug.Log($"{i}번째 {presets[i].monster.name} 사용");
-                    return i;
+                    //Debug.Log($"{i}번째 {presets[i].monster.name} 사용");
+                    return i;// rarity
                 }
                 
                 weightSum -= presets[i].weights;
             }
+            
             Debug.LogWarning("가중합 계산 오류");
             return 0;
         }
@@ -176,5 +176,4 @@ using Random = UnityEngine.Random;
             //player.Reset(); // 플레이어 상태(체력, 버프/디버프 등) 초기화
             //AudioManager.StopBattle() //맵 관련 효과음(스킬 효과음 등..) 정지
         }
-
     }

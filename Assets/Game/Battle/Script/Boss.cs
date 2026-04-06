@@ -385,6 +385,7 @@ public class Boss : Monster
     protected override void SendHitSignal(float resultDamage, HitType type)
     {
         eventHub?.MonsterHit();
+        eventHub?.BossHit();
     }
 
     void OnDrawGizmosSelected()

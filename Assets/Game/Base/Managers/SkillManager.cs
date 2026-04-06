@@ -1,17 +1,14 @@
 using Base.Data;
 using Base.Managers;
 using Base.Save;
-using Cysharp.Threading.Tasks;
 using Growth.Skill;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public struct SkillDatas
 {
-    public SkillSO so;
-    public int level;
+    public SkillSO so; //스킬의 정보
+    public int level; //스킬의 현재레벨
     //public bool isUnlocked; 스킬 SO에 스킬 획득가능 레벨 생기면 추가
 }
 public class SkillManager : MonoBehaviour,IManager
@@ -26,7 +23,10 @@ public class SkillManager : MonoBehaviour,IManager
     public SkillSO[] GetAllSkills() => skillTable?.GetAll();
     public int GetSkillLevel(int key) => 
         (skillProgress.TryGetValue(key, out int value) ? value : 0); //값을 찾을 수 있으면 value, 없으면 스킬찍은적 없음
-
+    
+    /// <summary> 스킬 딕셔너리에 있는 모든 스킬이 얼만큼 레벨업 되어있는지 제공하는 메서드
+    /// </summary>
+    /// <returns></returns>
     public IReadOnlyList<SkillDatas> GetAllSkillInfo()
     {
         List<SkillDatas> datas = new();
@@ -35,7 +35,7 @@ public class SkillManager : MonoBehaviour,IManager
             datas.Add(new SkillDatas(){level = GetSkillLevel(skill.key), so = skill});
         }
         return datas;
-    }
+    } 
     public bool CanEnhanceSkill(int count) => count < progress.currency.skillPoint;
 
     public void MaxEnhanceSkill(SkillSO skill)
