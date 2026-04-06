@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Growth.Skill;
 using System;
 using System.Collections.Generic;
@@ -20,13 +20,11 @@ namespace Personal.HagYun
         // Equiped Skill
         [SerializeField] ActiveSkill skill;
         public ActiveSkill Skill => skill;
-        [SerializeField] private int equippedSkillKey;
-        public int EquippedSkillKey => equippedSkillKey;
-        [SerializeField] SkillPool skillPool;
+
         // Cooltime Check
         public float CurCooltime { get; private set; }
         public float MaxCooltime { get; private set; }
-        [field: SerializeField] public bool IsCooltime { get; private set; }
+        [field : SerializeField] public bool IsCooltime { get; private set; }
 
         // Current priority
         public Priority priority;
@@ -50,24 +48,10 @@ namespace Personal.HagYun
 
             if (!isInit) CooltimeStart();
         }
-        public void SkillEquipByKey(int key, bool isInit = false)
-        {
-            if (!skillPool.TryGetActiveSkillToKey(key, out ActiveSkill aSkill)) return;
-            equippedSkillKey = key;
-            aSkill.Init(owner);
-            skill = aSkill;
-            MaxCooltime = aSkill.ActiveSkillData.coolDown;
-
-            if (!isInit) CooltimeStart();
-        }
         public void SkillUnequip()
         {
             skill = null;
             IsCooltime = false;
-        }
-        public void SkillUnequipByKey()
-        {
-            equippedSkillKey = -1;
         }
         public void SkillUse(Character target)
         {

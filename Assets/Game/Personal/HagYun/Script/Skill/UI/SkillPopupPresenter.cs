@@ -2,10 +2,11 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
-using Growth.Equipment;
 using Growth.Skill;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +33,7 @@ namespace Personal.HagYun
     }
     public enum PassiveSkillType { Attack, Range, MultipleNormalAttack }
     public enum ActiveSkillType { FireBall, WaterBall, ElectricBall, FireCircle, IceFall, Lightning, }
-    public class SkillPopupPresenter : MonoBehaviour, IMemberReceiver
+    public class SkillPopupPresenter : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI skillPointTxt;
         [SerializeField] private SkillTreeUISetView[] skillTreeUISetArr;
@@ -145,7 +146,6 @@ namespace Personal.HagYun
             {
                 skillTreeUI.BtnEventUnsubscribe();
             }
-            skillDetailView.BtnEventUnsubscribe();
             resetPointBtn.onClick.RemoveAllListeners();
             skillEquipChangePopupView.BtnEventUnsubscribe();
         }
@@ -171,112 +171,10 @@ namespace Personal.HagYun
                 skillDetailViewObject.SetActive(true);
             }
             ref var skill = ref skillLvSetArr[value].skill;
+            skillDetailView.SkillDataShow(skill);
             if (skill is ActiveSkill aSkill)
                 equipTargetSkill = aSkill;
-            SkillDataShow(skill);
 
-        }
-        public void SkillDataShow(Skill skill)
-        {
-            if (skill == null) return;
-            var data = skill.SkillData;
-            skillDetailView.SkillNameChange(data.skillName);
-            skillDetailView.SkillLevelChange(skill.CurLv, skill.MaxLv);
-            if (data.Type == SkillType.Active)
-            {
-                skillDetailView.SkillDetailViewUIShowAndHide(true);
-                
-                var aSkill = (ActiveSkill)skill;
-
-                skillDetailView.SkillCooltimeChange(aSkill.ActiveSkillData.coolDown);
-                skillDetailView.SkillImgChange(data.skillIcon, aSkill.IsHomingSkill);
-
-                ActiveSkillValueTextSet(aSkill);
-                skillDetailView.SkillDescriptionChange(data.description);
-            }
-            else
-            {
-                skillDetailView.SkillDetailViewUIShowAndHide(false);
-                skillDetailView.SkillImgChange(data.skillIcon, false);
-
-                PassiveSkillValueTextSet((PassiveSkill)skill);
-
-            }
-        }
-        void ActiveSkillValueTextSet(ActiveSkill aSkill)
-        {
-            skillDetailView.ActiveSkillStatValueTextInit();
-            skillDetailView.SkillStatValueTextBuild(ActiveSkillDamageValueToString(aSkill.ResultDamage), false);
-            skillDetailView.SkillStatValueTextChange();
-        }
-        void PassiveSkillValueTextSet(PassiveSkill pSkill)
-        {
-            skillDetailView.PassiveSkillStatValueTextInit();
-            MemberExtractor<StatIncrease>.ExtractAll(pSkill.ResultSkillData, this);
-            skillDetailView.SkillStatValueTextChange();
-        }
-        string ActiveSkillDamageValueToString(float damage) => $"{damage * 100}%";
-        public void Receive(string name, int value) { }
-        public void Receive(string name, float value)
-        {
-            if (value == 0) return;
-            string contents = PassiveStatValueToString(name, value);
-            if (!string.IsNullOrEmpty(contents)) skillDetailView.SkillStatValueTextBuild(contents, true);
-        }
-        public void Receive(string name, string value) { }
-        public void ReceiveOther(string name, object value) { }
-        string PassiveStatValueToString(string name, float value)
-        {
-            switch (name)
-            {
-                // 공격력 증가(상수)
-                case nameof(StatIncrease.atk):
-                    return $"공격력 + {value}";
-                // 공격력 % 증가
-                case nameof(StatIncrease.atkRate):
-                    return ($"공격력 + {value * 100}%");
-                // 피해량 증가
-                case nameof(StatIncrease.damageDealtRate):
-                    return ($"피해량 + {value * 100}%");
-                // 치명타 확률 증가
-                case nameof(StatIncrease.critChance):
-                    return ($"치명타확률 + {value * 100}%");
-                // 치명타 피해량 증가
-                case nameof(StatIncrease.critDamage):
-                    return ($"치명타피해량 + {value * 100}%");
-                // HP 증가(상수)
-                case nameof(StatIncrease.maxHp):
-                    return ($"최대체력 + {value}");
-                // HP % 증가
-                case nameof(StatIncrease.maxHpRate):
-                    return ($"최대체력 + {value * 100}%");
-                // 방어력 비율 감소
-                case nameof(StatIncrease.def):
-                    return ($"방어력 + {value * 100}%");
-                // 받는 피해 비율 감소
-                case nameof(StatIncrease.damageReduction):
-                    return ($"피해감소율 + {value * 100}%");
-                // 이동속도 증가
-                case nameof(StatIncrease.moveSpeed):
-                    return ($"이동속도 + {value * 100}%");
-                // 공격속도 증가
-                case nameof(StatIncrease.atkSpeed):
-                    return ($"공격속도 + {value * 100}%");
-                // 아이템 드랍률 증가
-                case nameof(StatIncrease.itemDropRate):
-                    return ($"아이템드랍률 + {value * 100}%");
-                // 골드 획득량 증가
-                case nameof(StatIncrease.goldGain):
-                    return ($"골드획득률 + {value * 100}%");
-                // 경험치 획득량 증가
-                case nameof(StatIncrease.expGain):
-                    return ($"경험치획득률 + {value * 100}%");
-                // 스탯 강화석 획득량 증가
-                case nameof(StatIncrease.statStoneGain):
-                    return ($"스탯강화석획득률 + {value * 100}%");
-                default:
-                    return null;
-            }
         }
         #endregion
         #region SkillDetailView 내부 UI 기능
@@ -284,31 +182,28 @@ namespace Personal.HagYun
         {
             skillDetailView.SkillLevelUpBtnInteractable(isLevelUpBtnOn);
         }
-        public void SkillLevelChangeUpdate(int skillUIIndex, bool isInit = false)
+        public void SkillLevelChangeUpdate(bool isInit = false)
         {
-            if (skillLvSetArr.Length <= skillUIIndex) return;
-            var skill = skillLvSetArr[skillUIIndex].skill;
-            int curLv = skill.CurLv;
-            int maxLv = skill.MaxLv;
-            if (skillTreeUISetArr[skillUIIndex] is SkillTreeUISetView stSet)
+            // ref SkillLvSet lvSet = ref skillLvSetArr[selectSkillUINum];
+            var skill = skillLvSetArr[selectSkillUINum].skill;
+            if (skillTreeUISetArr[selectSkillUINum] is SkillTreeUISetView stSet)
             {
-                stSet.SetLvText(curLv, maxLv);
+                stSet.SetLvText(skill.CurLv, skill.MaxLv);
             }
             SetSkillPointText();
             if (!isInit && skillDetailView != null && skillDetailView.gameObject.activeSelf)
             {
-                skillDetailView.SkillLevelChange(curLv, maxLv);
+                skillDetailView.SkillValueChange(skill);
             }
-            if (skill is ActiveSkill aSkill) ActiveSkillValueTextSet(aSkill);
-            else if (skill is PassiveSkill pSkill) PassiveSkillValueTextSet(pSkill);
         }
         void InitSkillLevelUpdate()
         {
             for (int i = 0; i < skillTreeUISetArr.Length; i++)
             {
-                int index = i;
-                SkillLevelChangeUpdate(index, false);
+                selectSkillUINum = i;
+                SkillLevelChangeUpdate(false);
             }
+            selectSkillUINum = 0;
         }
         public void SkillLevelUp()
         {
@@ -317,31 +212,29 @@ namespace Personal.HagYun
             {
                 skillPoint.curPoint--;
                 skillPoint.usePoint++;
-                SkillLevelChangeUpdate(selectSkillUINum);
+                SkillLevelChangeUpdate();
             }
         }
         public void SkillLevelUpMax()
         {
-            ref int curPoint = ref skillPoint.curPoint;
-            if (curPoint <= 0) return;
-            else if (skillLvSetArr[selectSkillUINum].skill.TryLevelMaxUp(curPoint, out int lvUpCnt))
+            if (skillPoint.curPoint <= 0) return;
+            else if (skillLvSetArr[selectSkillUINum].skill.TryLevelMaxUp(out int lvUpCnt))
             {
-                curPoint -= lvUpCnt;
+                skillPoint.curPoint -= lvUpCnt;
                 skillPoint.usePoint += lvUpCnt;
-                SkillLevelChangeUpdate(selectSkillUINum);
+                SkillLevelChangeUpdate();
             }
         }
-        //public void SetSkillLevel(int setLv)
-        //{
-        //    ref int curPoint = ref skillPoint.curPoint;
-        //    if (curPoint <= 0) return;
-        //    else if (skillLvSetArr[selectSkillUINum].skill.TryLevelSet(curPoint, setLv, out int lvChangeCnt))
-        //    {
-        //        curPoint -= lvChangeCnt;
-        //        skillPoint.usePoint += lvChangeCnt;
-        //        SkillLevelChangeUpdate(selectSkillUINum);
-        //    }
-        //}
+        public void SetSkillLevel(int lv)
+        {
+            if (skillPoint.curPoint <= 0) return;
+            else if (skillLvSetArr[selectSkillUINum].skill.TryLevelSet(lv, out int lvChangeCnt))
+            {
+                skillPoint.curPoint -= lvChangeCnt;
+                skillPoint.usePoint += lvChangeCnt;
+                SkillLevelChangeUpdate();
+            }
+        }
         public void SkillLevelReset(int index)
         {
             if (skillPoint.maxPoint <= skillPoint.curPoint)
@@ -358,7 +251,7 @@ namespace Personal.HagYun
                     skillPoint.curPoint = skillPoint.maxPoint;
                     skillPoint.usePoint = 0;
                 }
-                SkillLevelChangeUpdate(index);
+                SkillLevelChangeUpdate();
             }
         }
         public void SkillLevelReset() => SkillLevelReset(selectSkillUINum);

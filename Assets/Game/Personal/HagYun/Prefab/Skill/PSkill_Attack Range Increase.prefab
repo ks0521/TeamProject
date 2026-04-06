@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
   curLv: 0
-  skillData: {fileID: 11400000, guid: 9780a3f5661a4f846987665c860aeba0, type: 2}
+  skillData: {fileID: 11400000, guid: e0c78ea2170689c4d88a46a426906cbe, type: 2}

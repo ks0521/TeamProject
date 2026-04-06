@@ -18,32 +18,27 @@ namespace Personal.HagYun
         public virtual void Init(Character owner)
         {
             if (owner != null && this.owner == null) this.owner = owner;
-            int maxLv = MaxLv;
-            if(curLv < 0) curLv = Math.Max(curLv, 0);
-            else if (maxLv < curLv)curLv = Math.Min(curLv, maxLv);
-            //this.curLv = curLv;
             StatUpdate();
         }
         public abstract void StatUpdate();
-        //public bool TryLevelSet(int curSkillPoint, int setLv, out int lvChangeCnt)
-        //{
-        //    int maxLv = MaxLv;
-        //    if (setLv < 0 || maxLv <= curLv || setLv == curLv)
-        //    {
-        //        lvChangeCnt = 0;
-        //        return false;
-        //    }
-        //    else if (maxLv < setLv)
-        //    {
-        //        Debug.LogWarning("시도하려는 Setting Lv이 MaxLv보다 높습니다. Setting Lv을 MaxLv로 조정합니다.");
-        //        setLv = maxLv;
-        //    }
-        //    if (curSkillPoint < setLv) setLv = curSkillPoint;
-        //    lvChangeCnt = setLv - curLv;
-        //    curLv = setLv;
-        //    StatUpdate();
-        //    return true;
-        //}
+        public bool TryLevelSet(int setLv, out int lvChangeCnt)
+        {
+            int maxLv = MaxLv;
+            if (setLv < 0 || maxLv <= curLv || setLv == curLv)
+            {
+                lvChangeCnt = 0;
+                return false;
+            }
+            else if (maxLv < setLv)
+            {
+                Debug.LogWarning("시도하려는 Setting Lv이 MaxLv보다 높습니다. Setting Lv을 MaxLv로 조정합니다.");
+                setLv = maxLv;
+            }
+            lvChangeCnt = setLv - curLv;
+            curLv = setLv;
+            StatUpdate();
+            return true;
+        }
         public virtual void SkillImgSet(Image img)
         {
             img.sprite = SkillData.skillIcon;
@@ -60,7 +55,7 @@ namespace Personal.HagYun
             StatUpdate();
             return true;
         }
-        public bool TryLevelMaxUp(int curSkillPoint, out int lvUpCnt)
+        public bool TryLevelMaxUp(out int lvUpCnt)
         {
             int maxLv = MaxLv;
             if (maxLv <= curLv)
@@ -69,7 +64,6 @@ namespace Personal.HagYun
                 return false;
             }
             lvUpCnt = maxLv - curLv;
-            if (curSkillPoint < lvUpCnt) lvUpCnt = curSkillPoint;
             curLv += lvUpCnt;
             StatUpdate();
             return true;
