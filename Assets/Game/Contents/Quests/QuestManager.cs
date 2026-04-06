@@ -21,6 +21,7 @@ namespace QuestSystem
         public QuestDataReader Data { get; private set; } //연결된 원본 데이터
         public int StartValue; //퀘스트 시작 시점의 값
         public int CurrentValue; //현재 진행 수치
+        public QuestStatus questStatus;
         public bool isCompleted;
 
         //현재는 1회성 목표 달성이 n레벨 달성뿐임을 전제로 함
@@ -49,7 +50,11 @@ namespace QuestSystem
         private QuestSO questSO;
         private List<ActiveQuest> activeQuests = new List<ActiveQuest>(); //진행 중
         private HashSet<int> completedQuestIds = new HashSet<int>(); //완료
-        //private Dictionary<int, QuestData> questDatabase = new Dictionary<int, QuestData>();
+        
+        //모든 누적 수치 기록
+        private Dictionary<string, int> globalStats = new Dictionary<string, int>();
+        //퀘스트가 시작됐을 때의 기준점
+        private Dictionary<int, int> questStartPoints = new Dictionary<int, int>();
 
         [Header("퀘스트 데이터")]
         [SerializeField] private QuestDatabaseSO questDatabase;
@@ -140,6 +145,8 @@ namespace QuestSystem
 
         void UpdateQuest(GoalType type, int targetID, int amount)
         {
+            bool isAnyProgressed = false;
+
             for (int i = activeQuests.Count - 1; i >= 0; i--)
             {
                 var quest = activeQuests[i];
@@ -169,8 +176,13 @@ namespace QuestSystem
                         quest.isCompleted = true;
                         Debug.Log($"퀘스트 [{quest.Data.description}] 완료 가능");
                     }
-                    RefreshUI();
+                    isAnyProgressed = true;
                 }
+            }
+            if (isAnyProgressed) //진척도 수치 변경 시 즉시 갱신
+            {
+                EventHub.QuestProgressUpdated();
+                RefreshUI();
             }
         }
         public void OnClickComplete(string categoryString)
