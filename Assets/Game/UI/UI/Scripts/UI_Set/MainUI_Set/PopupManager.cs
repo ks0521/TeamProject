@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Managers;
 using Battle;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UI.Equipment;
@@ -10,9 +11,25 @@ using UnityEngine.UI;
 
 namespace UI.Scripts
 {
+    public enum PopupName
+    {
+        None,Ability
+    }
+    [Serializable]public struct PopupInfo
+    {
+        PopupName Name;
+        GameObject Prefab;
+
+    }
     public class PopupManager : MonoBehaviour, IManager
     {
         public static PopupManager instance;
+
+
+        //SO 로 만들어서 필요할때만 찾아서 꺼내쓰기
+        [SerializeField] List<PopupInfo> Popuplist;
+        Dictionary<PopupName, GameObject> PopupInfoDic;
+
 
         [Header("프래핍 생성 위치")]
         [SerializeField] private Transform canvas;
@@ -103,6 +120,7 @@ namespace UI.Scripts
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
 
             BindAllButton();
+            abilityPrefab.GetComponent<Ability>().BindAllButtons();
             popupStack.Clear();
 
             hub.OnClearStage += ClearEventChain;
