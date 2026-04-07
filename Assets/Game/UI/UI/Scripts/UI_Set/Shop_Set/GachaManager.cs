@@ -14,7 +14,7 @@ namespace Shop.Gacha
     public class GachaManager : MonoBehaviour, IManager
     {
         private GameDataProvider gameDataProvider;
-        private RuntimeProgressState progressState;
+        private RuntimeProgressData progressState;
         private EventHub hub;
         private ItemDropManager dropManager;
 
@@ -32,7 +32,7 @@ namespace Shop.Gacha
         public void Init()
         {
             gameDataProvider = GameManager.Instance.GetGameSystem<GameDataProvider>();
-            progressState = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
+            progressState = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
 

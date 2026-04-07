@@ -9,7 +9,7 @@ public class GachaPresenter : MonoBehaviour
     [Header("참조")]
     [SerializeField] private GachaView view;
     [SerializeField] private GachaManager gachaManager;
-    [SerializeField] private PlayerProgressManager progressManager;
+    [SerializeField] private ProgressManager progressManager;
 
     // Start is called before the first frame update
     void Start()
