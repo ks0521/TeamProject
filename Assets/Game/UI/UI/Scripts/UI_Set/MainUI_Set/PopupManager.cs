@@ -120,7 +120,6 @@ namespace UI.Scripts
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
 
             BindAllButton();
-            abilityPrefab.GetComponent<Ability>().BindAllButtons();
             popupStack.Clear();
 
             hub.OnClearStage += ClearEventChain;
@@ -288,11 +287,11 @@ namespace UI.Scripts
             if (shopInstance != null) return;
             if (shopPrefab == null) return;
 
-            GameObject prefab = Instantiate (shopPrefab, canvas);
+            shopInstance = Instantiate (shopPrefab, canvas);
             
-            ClosePopup(prefab);
+            ClosePopup(skillInstance);
 
-            PushPopup(prefab);
+            PushPopup(shopInstance);
         }
         private void OpenChapterPopup()
         {
@@ -331,11 +330,11 @@ namespace UI.Scripts
             if (skillInstance != null) return;
             if (skillPrefab == null) return;
             
-            GameObject prefab = Instantiate(skillPrefab, canvas);
+            skillInstance = Instantiate(skillPrefab, canvas);
             //skillInstance = 
-            ClosePopup(prefab);
+            ClosePopup(skillInstance);
 
-            PushPopup(prefab);
+            PushPopup(skillInstance);
         }
         private void OpenDungeonPopup()
         {
