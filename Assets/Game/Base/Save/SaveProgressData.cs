@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Base.Save
@@ -11,33 +12,21 @@ namespace Base.Save
     }
     /// <summary> 실제 게임 저장을 위한 리스트 구조 데이터</summary>
     [Serializable]
-    public class GameSaveData
+    public class SaveProgressData
     {
+        [Header("런타임 - 세이브 공용필드")]
         public StageProgressState stage = new(); //스테이지 진행정보
         public PlayerCurrencyState currency = new(); //재화 상태
+        public PlayerInfo playerInfo = new();
+        public LastSessionTime lastSession = new(); //마지막 접속 시간
+        public PlayerEquipmentState equipment = new(); //플레이어 장착 장비 정보
+        [Header("세이브 전용 필드")]
         public PlayerItemInventoryState itemInventory = new(); // 플레이어 인벤토리 정보
         public EquipmentInventoryState equipmentInventory = new();  //플레이어 장비 보유 정보
-        public PlayerEquipmentState equipment = new(); //플레이어 장착 장비 정보
         public PlayerStatUpgradeState statUpgrades = new(); //플레이어 스탯 업그레이드 정보
         public PlayerSkillState skillProgress = new(); //플레이어 스킬 획득 정보
-        public LastSessionTime lastAccess = new(); //마지막 접속 시간
     }
-    [Serializable]public class StageProgressState
-    {
-        public int selectedNormalStage; //직전 일반스테이지
-        public int selectedNormalChapter; //현재 일반 스테이지
-        public int nextChallangeStage; //도전 가능한 스테이지
-        public int nextChallangeChapter; //도전 가능한 챕터
-    }
-    //currency + iteminventory는 분리저장?
-    [Serializable]public class PlayerCurrencyState
-    {
-        public int level;
-        public int skillPoint;
-        public int exp;
-        public int gold;
-        public int statStone;
-    }
+
     // 인벤토리 내 아이템 정보
     [Serializable]public class PlayerItemInventoryState
     {
@@ -66,14 +55,7 @@ namespace Base.Save
         public List<int> skillSlots; //나중에 스킬슬롯 객체 만들면 수정
         public List<SkillEntry> skillProgressState; //key : 스킬 키, value : 해당 스킬 레벨
     }
-    /// <summary> 아이템 정보 </summary>
-    [Serializable]public class EquipmentEntry
-    {
-        public int key; //아이템 키
-        public int enhancementLevel; //강화 수치
-        public int ownedCount; //개수
-        public bool isDiscovered; //해금 여부
-    }
+    
     /// <summary> 아이템의 필수정보</summary>
     [Serializable]
     public struct ItemEntry
@@ -95,9 +77,5 @@ namespace Base.Save
         public int key; //스킬 키
         public int enhancementCount; //강화 수치
     }
-    [Serializable]
-    public class LastSessionTime
-    {
-        public long lastConnectTime;
-    }
+    
 }
