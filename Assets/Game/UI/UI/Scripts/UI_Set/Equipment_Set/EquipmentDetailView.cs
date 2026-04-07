@@ -62,7 +62,7 @@ namespace UI.Equipment
             ownedEffectText.text = BuildOwnedEffectText(catalog.equipment, catalog.state.enhancementLevel);
             equipEffectText.text = BuildEquipEffectText(catalog.equipment, catalog.state.enhancementLevel);
 
-            this.currentCatalog = catalog;
+            currentCatalog = catalog;
         }
         /// <summary>
         /// Presenter가 계산한 버튼 상태 플래그를 받아

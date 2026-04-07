@@ -31,10 +31,10 @@ namespace Base.Manager
         
         [SerializeField] private EquipmentSO equipItem;
         private GameDataProvider dictionarys;
-        private RuntimeProgressState runtimeState;
+        private RuntimeProgressData runtimeData;
         private ItemDropManager dropManager;
         private EventHub eventHub;
-        private Dictionary<int, EquipmentEntryState> EquipmentInventory => runtimeState.equipmentInventory.equipmentEntries;
+        private Dictionary<int, EquipmentEntryState> EquipmentInventory => runtimeData.equipmentInventory.equipmentEntries;
 
         #region 탐색
         /// <summary> 특정 타입의 장비 관리 상태 가져오기 </summary>
@@ -47,7 +47,7 @@ namespace Base.Manager
             foreach (var equipment in dictionarys.equipmentTable.GetEquipListByType(type))
             {
                 //장비 딕셔너리에 있는 장비를 플레이어가 가지고 있을 때
-                if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
+                if (runtimeData.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
                 {
                     catalogs.Add(new EquipmentCatalog(
                         equipment.key,
@@ -71,7 +71,7 @@ namespace Base.Manager
             foreach (var equipment in dictionarys.equipmentTable.GetEquipList())
             {
                 //장비 딕셔너리에 있는 장비를 플레이어가 가지고 있을 때
-                if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
+                if (runtimeData.equipmentInventory.equipmentEntries.TryGetValue(equipment.key, out var value))
                 {
                     catalogs.Add(new EquipmentCatalog(
                         equipment.key,
@@ -98,7 +98,7 @@ namespace Base.Manager
                 return false;
             }
             //장비 획득정보가 있으면 해당 정보를 카탈로그화시켜서 반환
-            if (runtimeState.equipmentInventory.equipmentEntries.TryGetValue(key, out EquipmentEntryState state))
+            if (runtimeData.equipmentInventory.equipmentEntries.TryGetValue(key, out EquipmentEntryState state))
             {
                 catalog = new EquipmentCatalog(inputKey: equip.key, inputEquipment: equip, inputState: state);
                 return true;
@@ -120,7 +120,7 @@ namespace Base.Manager
                 Debug.Log("이미 장착중인 아이템입니다 ");
                 return;
             }
-            runtimeState.equipment.equippedWeponKey = equipment.key;
+            runtimeData.equipment.equippedWeponKey = equipment.key;
             eventHub.EquipChenged(equipment);
             //장작후 스탯 계산 필요
         }
@@ -166,8 +166,8 @@ namespace Base.Manager
             //최대레벨 제한 처리 추가필요
             if (!EquipmentInventory.ContainsKey(equipmentSo.key)) return false;
             int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
-            Debug.Log($"CanEnhance : {equipmentSo.itemName}, {cost}, {runtimeState.currency.gold}");
-            if (cost > runtimeState.currency.gold) return false;
+            Debug.Log($"CanEnhance : {equipmentSo.itemName}, {cost}, {runtimeData.currency.gold}");
+            if (cost > runtimeData.currency.gold) return false;
             return true;
         }
         
@@ -176,8 +176,8 @@ namespace Base.Manager
             if (!CanEnhanceEquipment(equipmentSo)) return false;
             EquipmentInventory[equipmentSo.key].enhancementLevel += 1;
             int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
-            runtimeState.currency.gold -= cost;
-            eventHub.CurrencyChange(CurrencyType.GOLD, runtimeState.currency.gold);
+            runtimeData.currency.gold -= cost;
+            eventHub.CurrencyChange(CurrencyType.GOLD, runtimeData.currency.gold);
             eventHub.EquipEnhanced(equipmentSo);
             Debug.Log("강화 성공");
             return true;
@@ -195,7 +195,7 @@ namespace Base.Manager
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-            runtimeState = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
+            runtimeData = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
             dictionarys = GameManager.Instance.GetGameSystem<GameDataProvider>();
             dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         }

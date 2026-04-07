@@ -9,7 +9,7 @@ namespace Base.Managers
     public class StatUpgradeManager : MonoBehaviour, IManager
     {
         //UI파트보다 먼저 초기화되어야함
-        private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress;
+        private RuntimeProgressData progress ;
         private StatusCalculator calculator;
         private StatusSO statUpgradeConfig;
         private EventHub eventHub;
@@ -19,6 +19,7 @@ namespace Base.Managers
             statUpgradeConfig = GameDataProvider.Instance.statusTable;
             calculator = GameManager.Instance.GetGameSystem<StatusCalculator>();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         }
 
         public int GetOrder()
@@ -36,13 +37,13 @@ namespace Base.Managers
             int requireCost = 0;
             for (int i = 1; i <= upgradeCount; i++)
             {
-                requireCost += (Progress.statUpgrades.upgradeLevelsByType[statType] + i) * statEntry.enhanceCost;
+                requireCost += (progress.statUpgrades.upgradeLevelsByType[statType] + i) * statEntry.enhanceCost;
             }
 
             Debug.Log($"Need Cost : {requireCost}");
-            if (requireCost > Progress.currency.statStone)
+            if (requireCost > progress.currency.statStone)
             {
-                Debug.Log($"{statType}스텟강화에 필요한 골드가 부족합니다(요구 {requireCost}강화석 / 소지 {Progress.currency.statStone})");
+                Debug.Log($"{statType}스텟강화에 필요한 골드가 부족합니다(요구 {requireCost}강화석 / 소지 {progress.currency.statStone})");
                 return false;
             }
 
@@ -54,7 +55,7 @@ namespace Base.Managers
         /// <returns>강화 횟수</returns>
         public int GetStatUpgradeLevel(StatusType statType)
         {
-            return Progress.statUpgrades.upgradeLevelsByType[statType];
+            return progress.statUpgrades.upgradeLevelsByType[statType];
             //GameDataManager.instance.runtimedata.stat.upgrade[type.atk]
         }
 
@@ -73,15 +74,15 @@ namespace Base.Managers
             int requireCost = 0;
             for (int i = 1; i <= upgradeCount; i++)
             {
-                requireCost += (Progress.statUpgrades.upgradeLevelsByType[statType] + i) * statEntry.enhanceCost;
+                requireCost += (progress.statUpgrades.upgradeLevelsByType[statType] + i) * statEntry.enhanceCost;
             }
             //업그레이드 횟수 늘리고 재화 차감
-            Progress.statUpgrades.upgradeLevelsByType[statType] += upgradeCount;
-            Progress.currency.statStone -= requireCost;
-            eventHub.CurrencyChange(CurrencyType.STATSTONE,Progress.currency.statStone);
+            progress.statUpgrades.upgradeLevelsByType[statType] += upgradeCount;
+            progress.currency.statStone -= requireCost;
+            eventHub.CurrencyChange(CurrencyType.STATSTONE,progress.currency.statStone);
             
-            Debug.Log($"{statType}스탯 {upgradeCount}번 강화, {requireCost}강화석 사용, 남은 강화석 : {Progress.currency.statStone} " +
-                      $"\n {statType}스탯 강화횟수 : {Progress.statUpgrades.upgradeLevelsByType[statType]}(+{upgradeCount})");
+            Debug.Log($"{statType}스탯 {upgradeCount}번 강화, {requireCost}강화석 사용, 남은 강화석 : {progress.currency.statStone} " +
+                      $"\n {statType}스탯 강화횟수 : {progress.statUpgrades.upgradeLevelsByType[statType]}(+{upgradeCount})");
 
             //최대체력 증가 스탯일 경우에는 증가한 최대체력만큼 HP 회복
             if (statType == StatusType.MaxHp)

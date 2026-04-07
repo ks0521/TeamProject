@@ -9,7 +9,7 @@ using UnityEngine;
 public class imsiQuestController : MonoBehaviour, IManager
 {
     private EventHub eventHub;
-    private  RuntimeProgressState progress;
+    private  RuntimeProgressData progress;
     void Update()
     {
         // 1. Delete 키를 누르면 레벨을 강제로 1 올리고 이벤트를 쏩니다.
@@ -20,7 +20,7 @@ public class imsiQuestController : MonoBehaviour, IManager
             {
                 // 데이터 조작: PlayerRuntimeStatus의 레벨을 강제로 올림
                 
-                int currentLevel = ++progress.currency.level;
+                int currentLevel = ++progress.playerInfo.level;
                 Debug.Log($"<color=orange>[TEST] 레벨 강제 조작: {currentLevel}</color>");
 
                 // 이벤트 발생: QuestManager가 이 소식을 듣고 퀘스트를 업데이트함
@@ -49,6 +49,6 @@ public class imsiQuestController : MonoBehaviour, IManager
     public int GetOrder() => 998;
     public void Init()
     {
-        progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
+        progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
     }
 }
