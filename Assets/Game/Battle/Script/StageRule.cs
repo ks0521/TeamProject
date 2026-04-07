@@ -34,12 +34,13 @@ public abstract class StageRule
 [Serializable]
 public class ChallengeStageRule : StageRule
 {
-    [SerializeField] private float remainTime;
     public bool isCleared;
     public event Action ChallengeSuccess;
     public event Action ChallengeFail;
-    private CancellationTokenSource token;
     public float RemainTime => remainTime;
+    
+    protected float remainTime;
+    protected CancellationTokenSource token;
     public override void Init(StageSO stage)
     {
         base.Init(stage);
@@ -54,24 +55,33 @@ public class ChallengeStageRule : StageRule
         token = new CancellationTokenSource();
         ChallengeTimeAttack(token.Token).Forget();
     }
-        
-    async UniTaskVoid ChallengeTimeAttack(CancellationToken token)
+
+    protected void StageClear()
+    {
+        if (isCleared) return;
+        isCleared = true;
+        ChallengeSuccess?.Invoke();
+    }
+    protected void StageFail()
+    {
+        ChallengeFail?.Invoke();
+    }
+    
+    protected async UniTaskVoid ChallengeTimeAttack(CancellationToken token)
     {
         while (remainTime > 0)
         {
             remainTime -= Time.deltaTime;
             await UniTask.Yield(cancellationToken: token);
         }
-        ChallengeFail?.Invoke();
     }
 
     public override void MonsterKilledInStage(Monster monster)
     {
-        if (++killScore >= stage.targetKillScore && !isCleared)
+        if (++killScore >= stage.targetKillScore)
         {
-            isCleared = true;
             Debug.Log("목표처치 달성");
-            ChallengeSuccess?.Invoke();
+            StageClear();
             return;
         }
         Debug.Log($"현재 적 {killScore} 처치 / 목표 처치 : {stage.targetKillScore}");
@@ -85,20 +95,27 @@ public class ChallengeStageRule : StageRule
 }
 
 [Serializable]
-public class BossStageRule : StageRule
+public class BossStageRule : ChallengeStageRule
 {
+    [SerializeField] private float remainTime;
+    
     public override void Enter()
     {
-        //throw new NotImplementedException();
+        Debug.Log($"{stage.chapter} - {stage.stage}(Challenge) BossStageRule 시작. \n" +
+                  $"제한시간 : {stage.deadLine} / 목표 처치 대상 : {stage.targetKillScore}");
+        dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
+        token = new CancellationTokenSource();
+        ChallengeTimeAttack(token.Token).Forget();    
     }
 
     public override void MonsterKilledInStage(Monster monster)
     {
-    }
-
-    public override void Destroy()
-    {
-        //throw new NotImplementedException();
+        if (monster is Boss)
+        {
+            isCleared = true;
+            Debug.Log("목표처치 달성");
+            StageClear();
+        }
     }
 }
 [Serializable]
@@ -129,12 +146,11 @@ public class NormalStageRule : StageRule
         {
             GameObject dropItem = itemPool.UsePool();
             dropItem.GetComponent<DroppedItem>().Init(item, player.transform, itemPool);
-            float randx = monster.transform.position.x + Random.Range(-0.5f, 0.5f);
-            float randy = monster.transform.position.y + Random.Range(-0.5f, 0.5f);
-            dropItem.transform.position = new Vector3(randx, randy, 0);
+            float randX = monster.transform.position.x + Random.Range(-0.5f, 0.5f);
+            float randY = monster.transform.position.y + Random.Range(-0.5f, 0.5f);
+            dropItem.transform.position = new Vector3(randX, randY, 0);
             dropItem.SetActive(true);
         }
-        Debug.Log($"{items.Count}종 아이템 드랍");
     }
     public override void Destroy()
     {

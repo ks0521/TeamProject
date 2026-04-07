@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour, IManager
     //앞으로 오디오과 관련된 새로운 로직이 필요할 경우
     //여기에 그 cs 파일을 등록하고 'cs파일명?.실행할함수명'을 입력하면 됩니다
     [Header("하위 cs 파일들")]
-    [SerializeField] private VolumeController _volumeController;
+    [SerializeField] public VolumeController _volumeController;
     [SerializeField] private BGMChanger _bgmChanger;
     [SerializeField] private SkillSoundPlayer _skillPlayer;
     [SerializeField] private SFXPlayer _sfxPlayer;

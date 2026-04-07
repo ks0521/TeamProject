@@ -11,7 +11,7 @@ public class MainUIStage_Set : MonoBehaviour
 
     public void SetStage(StageSO stageSO)
     {
-        if (stageSO.type == StageType.Challenge || stageSO.type == StageType.Boss)
+        if (stageSO.stageType == StageType.Challenge || stageSO.stageType == StageType.Boss)
         {
             stageText.text = $"{stageSO.chapter}-{stageSO.stage}C";
             return;

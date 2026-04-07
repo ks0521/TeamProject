@@ -40,8 +40,12 @@ namespace Base.Data
         public void HpChanged(float hp, float maxHp) => OnHpChange?.Invoke(hp, maxHp);
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
+        
+        //일반 피격 UI / 사운드는 MonsterHit 사용하세요. BossHit은 보스 UI전용입니다
+        public event Action OnBossHit; //보스몬스터 피격
+        public void BossHit() => OnBossHit?.Invoke(); 
         public event Action OnPlayerHit; //플레이어 피격
-        public event Action<MonsterSO> OnMonsterKill; //몬스터 피격
+        public event Action<MonsterSO> OnMonsterKill; //몬스터 사망
         public void MonsterKill(MonsterSO monsterSO) => OnMonsterKill?.Invoke(monsterSO);
         public event Action<Vector3, int, HitType, bool> OnRequestDamageText;
         public void RequestDamageText(Vector3 position, int damage, HitType type, bool isMonster = true) => OnRequestDamageText?.Invoke(position, damage, type, isMonster);
@@ -109,7 +113,8 @@ namespace Base.Data
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
         public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
         public static void NewDayStarted(string dateStr) => OnNewDayStarted?.Invoke(dateStr);
-
+        public static event Action OnQuestProgressUpdated; //퀘스트 진척도 변경
+        public static void QuestProgressUpdated() => OnQuestProgressUpdated?.Invoke();
         #endregion
         public int GetOrder() => 0;
     }

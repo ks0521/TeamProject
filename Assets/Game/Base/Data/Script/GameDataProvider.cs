@@ -6,6 +6,7 @@ using Battle;
 using Growth.Equipment;
 using Growth.StatUpgrade;
 using Reward;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Base.Data
@@ -31,7 +32,7 @@ namespace Base.Data
             }
             Instance = this;
         }
-
+        //테이블이 늘어나도 한계가 있어서 getTable / 유지 선택
         public int GetOrder() => 0; //다른 매니저에서 참고하기 때문에 가장 우선 활성화
     }
 }

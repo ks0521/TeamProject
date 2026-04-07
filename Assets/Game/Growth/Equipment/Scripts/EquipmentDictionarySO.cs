@@ -11,11 +11,13 @@ namespace Growth.Equipment
         [Header("아이템 전체")] public List<EquipmentSO> allEquipments = new();
         Dictionary<int, EquipmentSO> equipmentsDic;
         private Dictionary<EquipType, List<EquipmentSO>> equipmentsTypeDic;
+        private Dictionary<(EquipType, EquipRarity, EquipQuality), EquipmentSO> equipmentPickupDic;
 
         void MakeDictionary()
         {
             equipmentsDic = new Dictionary<int, EquipmentSO>();
             equipmentsTypeDic = new Dictionary<EquipType, List<EquipmentSO>>();
+            equipmentPickupDic = new Dictionary<(EquipType, EquipRarity, EquipQuality), EquipmentSO>();
             foreach (EquipType type in Enum.GetValues(typeof(EquipType)))
             {
                 equipmentsTypeDic.Add(type, new List<EquipmentSO>());
@@ -24,6 +26,7 @@ namespace Growth.Equipment
             {
                 equipmentsDic.Add(equipment.key, equipment);
                 equipmentsTypeDic[equipment.equipType].Add(equipment);
+                equipmentPickupDic.Add((equipment.equipType,equipment.rarity,equipment.quality),equipment);
             }
         }
         public IReadOnlyList<EquipmentSO> GetEquipListByType(EquipType type)
@@ -53,6 +56,18 @@ namespace Growth.Equipment
 
             Debug.Log($"{item.itemName}");
             return item;
+        }
+        /// <summary> 특정함 등급과 품질, 아이템 타입을 가진 아이템SO를 제공 </summary>
+        /// <returns>해당하는 아이템 SO</returns>
+        public bool TryPickupItem(EquipType type, EquipRarity rarity, EquipQuality quality, out EquipmentSO result)
+        {
+            if (!equipmentPickupDic.TryGetValue((type, rarity, quality), out EquipmentSO so))
+            {
+                result = null;
+                return false;
+            }
+            result = so;
+            return true;
         }
     }
 }
