@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Battle;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Battle
 {
@@ -15,6 +16,21 @@ namespace Battle
         public MonsterSO monster;
         [Header("몬스터 등장 비중")]public int weights;
     }
+    //몬스터 생성 타입(무한, 보스단일, 웨이브 식)
+    public enum SpawnType
+    {
+        Endless, Boss, Wave
+    }
+    //클리어 조건(특정 마릿수, 보스처치, 생존)
+    public enum ClearType
+    {
+        KillCount, BossKill, Survival
+    }
+    //보상 종류(아이템 필드 드랍, 클리어시 한번에)
+    public enum RewardType
+    {
+        ItemDrop, ClearReward
+    }
     [CreateAssetMenu(menuName = "Game/Battle/Stage")]
     public class StageSO : ScriptableObject
     {
@@ -25,8 +41,10 @@ namespace Battle
         [Tooltip("스테이지")] public int stage;
         [Tooltip("드랍 테이블")] public DropTableSO dropTable;
         [Tooltip("몬스터 프리셋")] public List<MonsterPreset> preset;
-        [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType type;
-
+        [FormerlySerializedAs("type")] [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType stageType;
+        //[Tooltip("스폰 형식")]public SpawnType SpawnType;
+        //[Tooltip("클리어 조건")]public ClearType clearType;
+        //[Tooltip("보상 종류")]public RewardType rewardType;
         [Header("스테이지 돌파 전용")] 
         [Tooltip("제한시간")] public float deadLine;
         [Tooltip("목표 처치 수")] public int targetKillScore;

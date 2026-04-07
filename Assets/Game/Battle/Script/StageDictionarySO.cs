@@ -18,7 +18,7 @@ namespace Battle
             stageDic = new Dictionary<(int,int,StageType), StageSO>();
             foreach (var stage in stageList)
             {
-                stageDic.Add((stage.chapter,stage.stage,stage.type), stage);
+                stageDic.Add((stage.chapter,stage.stage,stage.stageType), stage);
             }
         }
         /// <summary> 특정 챕터의 스테이지 정보를 불러오는 메서드</summary>
