@@ -15,6 +15,8 @@ public class QuestDataReader
     public int targetValue;
     public int prevQuestID;
     public int rewardGroupID;
+    public int valueModifier;
+    public bool isInfinite;
     public bool isAbsoluteGoal;
     //ㄴ현재 값이 기준치 이상인가?
     //예: '레벨 30 달성' '누적 몬스터 3000마리 처치' 등의 1회성 퀘스트

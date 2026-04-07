@@ -126,9 +126,9 @@ public class QuestUIManager : MonoBehaviour, IManager
         currentSelectedQuest = quest;
 
         //우측의 상세 정보
-        questDescription.text = quest.Data.description;
-        questStatus.text = quest.isCompleted ? "<color=green>완료 가능</color>" : "<color=white>진행 중</color>";
-        questProgress.text = $"{quest.CurrentValue} / {quest.Data.targetValue}";
+        questDescription.text = quest.RuntimeDescription;
+        questStatus.text = $"({quest.GetStatusText()})";
+        questProgress.text = $"{quest.CurrentValue} / {quest.RuntimeTargetValue}";
 
         receiveButton.interactable = quest.isCompleted;
 
@@ -184,23 +184,32 @@ public class QuestUIManager : MonoBehaviour, IManager
         }
     }
 
-    //퀘스트 모두 완료 버튼
+    //퀘스트 모두 완료 버튼(반복성 퀘스트 한번에 클리어 기능 추가)
     public void OnClickQuestAllClear()
     {
         if (questManager == null) return;
 
-        QuestCategory currentCat = (QuestCategory)currentTabIndex;
-
-        // 현재 카테고리 중 완료 가능한 것들만 추출
-        var targetQuests = questManager.GetActiveQuests()
-            .Where(q => q.Data.CategoryEnum == currentCat && q.isCompleted)
-            .ToList();
-
-        foreach (var q in targetQuests)
+        bool checkAgain = true;
+        while(checkAgain)
         {
-            questManager.TryCompleteQuest(q);
-        }
+            QuestCategory currentCat = (QuestCategory)currentTabIndex;
 
+            // 현재 카테고리 중 완료 가능한 것들만 추출
+            var targetQuests = questManager.GetActiveQuests()
+                .Where(q => q.Data.CategoryEnum == currentCat && q.isCompleted)
+                .ToList();
+
+            if (targetQuests.Count > 0)
+            {
+                foreach (var q in targetQuests)
+                {
+                    questManager.TryCompleteQuest(q);
+                }
+                //다음 퀘스트가 초과분만으로 완료될 수 있는지 체크
+                checkAgain = true;
+            }
+            else checkAgain = false;    
+        }
         RefreshQuestBox();
         UpdateTabVisuals();
     }
@@ -217,7 +226,7 @@ public class QuestUIManager : MonoBehaviour, IManager
         // 2. 오른쪽 상세창 수치 및 버튼 상태 갱신
         if (currentSelectedQuest != null)
         {
-            questProgress.text = $"{currentSelectedQuest.CurrentValue} / {currentSelectedQuest.Data.targetValue}";
+            questProgress.text = $"{currentSelectedQuest.CurrentValue} / {currentSelectedQuest.RuntimeTargetValue}";
             receiveButton.interactable = currentSelectedQuest.isCompleted;
             questStatus.text = currentSelectedQuest.isCompleted ? "<color=green>완료 가능</color>" : "<color=white>진행 중</color>";
         }
