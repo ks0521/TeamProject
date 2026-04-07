@@ -9,9 +9,9 @@ using UnityEngine;
 public class Test : MonoBehaviour, IManager
 {
     // Update is called once per frame
-    [SerializeField]private GameSaveData saveData;
-    [SerializeField] private RuntimeProgressState runProgressState;
-    [SerializeField] private PlayerRuntimeStatus runStat;
+    [SerializeField]private SaveProgressData saveProgressData;
+    [SerializeField] private RuntimeProgressData runProgressData;
+    [SerializeField] private RuntimeStatus runStat;
     [SerializeField] private StatusCalculator calc;
     [SerializeField] private EquipmentManager equip;
     [SerializeField] private EquipmentDictionarySO dic;
@@ -42,7 +42,7 @@ public class Test : MonoBehaviour, IManager
         if (Input.GetKeyDown(KeyCode.F3))
         {
             Debug.Log("모든 아이템 제거");
-            runProgressState.equipmentInventory.equipmentEntries = new Dictionary<int, EquipmentEntryState>() ;
+            runProgressData.equipmentInventory.equipmentEntries = new Dictionary<int, EquipmentEntryState>() ;
             PrintAllItems();
         }
 
@@ -74,7 +74,7 @@ public class Test : MonoBehaviour, IManager
     public void Init()
     {
         equip = GameManager.Instance.GetGameSystem<EquipmentManager>();
-        runProgressState = GameManager.Instance.GetGameSystem<PlayerProgressManager>().progress;
+        runProgressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
         dic = GameManager.Instance.GetGameSystem<GameDataProvider>().equipmentTable;
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         hub = GameManager.Instance.GetGameSystem<EventHub>();

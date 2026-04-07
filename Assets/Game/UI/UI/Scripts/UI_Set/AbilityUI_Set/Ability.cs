@@ -11,9 +11,10 @@ namespace UI.Scripts
     public class Ability : MonoBehaviour
     {
         private StatUpgradeManager manager;
+        private ProgressManager progressManager;
         private EventHub hub;
         private GameDataProvider gameDB;
-        private PlayerRuntimeStatus playerData;
+        private RuntimeStatus _data;
 
         [Header("스텟 UI 목록")]
         [SerializeField] StatItemView[] statItemViews;
@@ -37,14 +38,15 @@ namespace UI.Scripts
         private void OnEnable()
         {
             manager = GameManager.Instance.GetGameSystem<StatUpgradeManager>();
+            progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             gameDB = GameManager.Instance.GetGameSystem<GameDataProvider>();
-            playerData = GameManager.Instance.GetGameSystem<PlayerRuntimeStatus>();
+            _data = GameManager.Instance.GetGameSystem<RuntimeStatus>();
 
             BindAllButtons();
             ReFreshAllUI(1);
             ChangeState(XState.X1);
-            AbilityDetailView.RefreshDetailView(playerData);
+            AbilityDetailView.RefreshDetailView(_data);
 
             if (hub != null)
             {
@@ -91,7 +93,7 @@ namespace UI.Scripts
         }//이벤트 연결용
         void DetailViewEventChain(StatusType statusType)
         {
-            AbilityDetailView.RefreshDetailView(playerData);
+            AbilityDetailView.RefreshDetailView(_data);
         }
         void ReFreshAllUI(int fake)
         {
@@ -108,7 +110,7 @@ namespace UI.Scripts
                 return;
             }//null 방지
 
-            int playerGold = PlayerProgressManager.Instance.progress.currency.statStone;
+            int playerGold = progressManager.Currency.statStone;
             int currentLevle = manager.GetStatUpgradeLevel(type);
 
             float currentValue = currentLevle * statEntry.increasePerEnhance; //현재 스텟 수치
@@ -119,7 +121,7 @@ namespace UI.Scripts
             {
                 cost += (currentLevle + i) * statEntry.enhanceCost;
             }
-            bool isUnLock = PlayerProgressManager.Instance.progress.currency.level >= statEntry.unlockLevel;
+            bool isUnLock = progressManager.PlayerInfo.level >= statEntry.unlockLevel;
 
             bool canLevelUp = manager.CanUpgradeStat(type, multiPress) && (currentLevle < statEntry.maxLevel) && isUnLock;
 

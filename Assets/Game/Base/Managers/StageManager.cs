@@ -43,7 +43,8 @@ namespace Base.Managers
         private int curStage = 0; //현재 진행중인 스테이지
         private bool isStageResultProcessing; //현재 스테이지 진행여부 플래그
         private bool isRebirthProcessing; //일반 스테이지 사망 후 부활 처리 중복 방지
-        private RuntimeProgressState Progress => PlayerProgressManager.Instance.progress; //축약용 프로퍼티
+        private RuntimeProgressData progress; //축약용 프로퍼티
+        private ProgressManager progressManager;
         private MonsterPoolManager monsterPool; //몬스터 풀
         private GameDataProvider datahub;
         private EventHub eventHub; //이벤트 허브
@@ -58,6 +59,7 @@ namespace Base.Managers
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             monsterPool = GameManager.Instance.GetGameSystem<MonsterPoolManager>();
             datahub = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
             stageProgress = GetStageProgress();
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
         }
@@ -197,10 +199,10 @@ namespace Base.Managers
         {
             return new StageProgress()
             {
-                selectedNormalChapter = Progress.stage.selectedNormalChapter,
-                selectedNormalStage = Progress.stage.selectedNormalStage,
-                nextChallengeChapter = Progress.stage.nextChallangeChapter, //현재 도전 챕터(최대 진행 챕터)
-                nextChallengeStage = Progress.stage.nextChallangeStage//현재 도전 스테이지(최대 진행 스테이지)
+                selectedNormalChapter = progressManager.progress.stage.selectedNormalChapter,
+                selectedNormalStage = progressManager.progress.stage.selectedNormalStage,
+                nextChallengeChapter = progressManager.progress.stage.nextChallangeChapter, //현재 도전 챕터(최대 진행 챕터)
+                nextChallengeStage = progressManager.progress.stage.nextChallangeStage//현재 도전 스테이지(최대 진행 스테이지)
             };
         }
 
@@ -237,15 +239,15 @@ namespace Base.Managers
         /// <returns> 변경된 런타임 스테이지 데이터</returns>
         private StageProgress SelectNormalStage(int changeChapter, int changeStage)
         {
-            Progress.stage.selectedNormalChapter = changeChapter;
-            Progress.stage.selectedNormalStage = changeStage;
-            PlayerProgressManager.Instance.SaveProgress();
+            progressManager.StageProgress.selectedNormalChapter = changeChapter;
+            progressManager.StageProgress.selectedNormalStage = changeStage;
+            progressManager.SaveProgress();
             return new StageProgress()
             {
-                selectedNormalChapter = Progress.stage.selectedNormalChapter,
-                selectedNormalStage = Progress.stage.selectedNormalStage,
-                nextChallengeChapter = Progress.stage.nextChallangeChapter,
-                nextChallengeStage = Progress.stage.nextChallangeStage
+                selectedNormalChapter = progressManager.StageProgress.selectedNormalChapter,
+                selectedNormalStage = progressManager.StageProgress.selectedNormalStage,
+                nextChallengeChapter = progressManager.StageProgress.nextChallangeChapter,
+                nextChallengeStage = progressManager.StageProgress.nextChallangeStage
             };
         }
 
@@ -254,22 +256,22 @@ namespace Base.Managers
             //보스를 잡았으면 다음 챕터 2-1
             if (clearStage.stageType == StageType.Boss)
             {
-                Progress.stage.nextChallangeChapter = clearStage.chapter + 1;
-                Progress.stage.nextChallangeStage = 2;
+                progressManager.StageProgress.nextChallangeChapter = clearStage.chapter + 1;
+                progressManager.StageProgress.nextChallangeStage = 2;
             }
             //아니면 스테이지 +1만
             else
             {
-                Progress.stage.nextChallangeStage++;
+                progressManager.StageProgress.nextChallangeStage++;
             }
 
-            PlayerProgressManager.Instance.SaveProgress();
+            progressManager.SaveProgress();
             return new StageProgress()
             {
-                selectedNormalChapter = Progress.stage.selectedNormalChapter,
-                selectedNormalStage = Progress.stage.selectedNormalStage,
-                nextChallengeChapter = Progress.stage.nextChallangeChapter,
-                nextChallengeStage = Progress.stage.nextChallangeStage
+                selectedNormalChapter = progressManager.StageProgress.selectedNormalChapter,
+                selectedNormalStage = progressManager.StageProgress.selectedNormalStage,
+                nextChallengeChapter = progressManager.StageProgress.nextChallangeChapter,
+                nextChallengeStage = progressManager.StageProgress.nextChallangeStage
             };
         }
         

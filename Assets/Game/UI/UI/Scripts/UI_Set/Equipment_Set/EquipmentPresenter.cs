@@ -3,6 +3,7 @@ using Base.Manager;
 using Base.Managers;
 using Base.Save;
 using Growth.Equipment;
+using Growth.Skill;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,14 +59,15 @@ namespace UI.Equipment
         private EquipmentSlotView[] weaponSlots; //무기 아이콘 슬롯배열
         private EquipmentSlotView[] armorSlots; //방어구 아이콘 슬롯배열
         private EquipmentSlotView[] accSlots; //장신구 아이콘 슬롯배역
+        private Dictionary<int, EquipmentSlotView> slotdic;
 
         private void Awake()
         {
             openWeaponTabButton.onClick.AddListener(() => ShowPopup(EquipType.Weapon));
             openArmorTabButton.onClick.AddListener(() => ShowPopup(EquipType.Armor));
             openAccessoryTabButton.onClick.AddListener(() => ShowPopup(EquipType.Accessory));
-            
         }
+        
         private void OnEnable()
         {
             equipmentManager = GameManager.Instance.GetGameSystem<EquipmentManager>();

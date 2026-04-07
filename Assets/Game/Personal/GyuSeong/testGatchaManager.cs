@@ -15,7 +15,7 @@ public struct GatchaLevels
 public class testGatchaManager : MonoBehaviour,IManager
 {
     private GameDataProvider dictionarys;
-    private RuntimeProgressState runtimeState;
+    private RuntimeProgressData _runtimeData;
     private EventHub eventhub;
     private ItemDropManager dropmanager;
     
@@ -39,7 +39,7 @@ public class testGatchaManager : MonoBehaviour,IManager
     public bool TryGetCatcha(int count, out List<EquipmentSO> ResultList)
     {
         int cost = count * 100;
-        if (runtimeState.currency.gold < cost)
+        if (_runtimeData.currency.gold < cost)
         {
             ResultList = null;
             return false;
@@ -52,8 +52,8 @@ public class testGatchaManager : MonoBehaviour,IManager
             ResultList.Add(result);
             dropmanager.GetItem(new DropReward(){rewardType = DropRewardType.Item, amount = 1, itemSO = result});
         }
-        runtimeState.currency.gold -= cost;
-        eventhub.CurrencyChange(CurrencyType.GOLD, runtimeState.currency.gold);
+        _runtimeData.currency.gold -= cost;
+        eventhub.CurrencyChange(CurrencyType.GOLD, _runtimeData.currency.gold);
         return true;
     }
     //제네릭으로 바꿔도 좋을듯
@@ -66,7 +66,7 @@ public class testGatchaManager : MonoBehaviour,IManager
     public void Init()
     {
         dictionarys = GameManager.Instance.GetGameSystem<GameDataProvider>();
-        runtimeState = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
+        _runtimeData = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         eventhub = GameManager.Instance.GetGameSystem<EventHub>();
         dropmanager = GameManager.Instance.GetGameSystem<ItemDropManager>();
     }

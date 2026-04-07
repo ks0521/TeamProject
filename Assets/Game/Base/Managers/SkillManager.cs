@@ -3,6 +3,7 @@ using Base.Managers;
 using Base.Save;
 using Growth.Skill;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public struct SkillDatas
@@ -11,11 +12,13 @@ public struct SkillDatas
     public int level; //스킬의 현재레벨
     //public bool isUnlocked; 스킬 SO에 스킬 획득가능 레벨 생기면 추가
 }
+
 public class SkillManager : MonoBehaviour,IManager
 {
+    
     private SkillDictionarySO skillTable;
-    private PlayerProgressManager playerProgressManager;
-    private RuntimeProgressState progress;
+    private ProgressManager _progressManager;
+    private RuntimeProgressData progress;
     private Dictionary<int, int> skillProgress => progress.skillProgress.skillProgressState;
     private EventHub eventHub;
     
@@ -36,17 +39,19 @@ public class SkillManager : MonoBehaviour,IManager
         }
         return datas;
     } 
-    public bool CanEnhanceSkill(int count) => count < progress.currency.skillPoint;
+    /// <summary> 스킬 레벨업 가능한지 확인하는 메서드</summary>
+    /// <param name="count">스킬 증가시키려는 횟수</param>
+    public bool CanEnhanceSkill(int count) => count < progress.playerInfo.skillPoint;
 
     public void MaxEnhanceSkill(SkillSO skill)
     {
-        EnhanceSkill(skill,progress.currency.skillPoint);
+        EnhanceSkill(skill,progress.playerInfo.skillPoint);
     }
     public void EnhanceSkill(SkillSO skill, int count)
     {
-        if (skill == null || progress.currency.skillPoint < count)
+        if (skill == null || progress.playerInfo.skillPoint < count)
         {
-            Debug.LogWarning($"{skill} == null 또는 스킬포인트가 부족해 스킬을 강화하지 못했습니다. (필요 {count} / 보유 {progress.currency.skillPoint})");
+            Debug.LogWarning($"{skill} == null 또는 스킬포인트가 부족해 스킬을 강화하지 못했습니다. (필요 {count} / 보유 {progress.playerInfo.skillPoint})");
             return;
         }
 
@@ -55,17 +60,24 @@ public class SkillManager : MonoBehaviour,IManager
             //이미 해당 키가 추가되어있다면(해당 스킬이 이미 찍혀있음) 수치추가만 한다
             skillProgress[skill.key] += count;
         }
-        progress.currency.skillPoint -= count;
-        Debug.Log($"{skill.skillName}스킬을 {count}만큼 업그레이드 했습니다. 남은 스킬 포인트 : {progress.currency.skillPoint}");
+        progress.playerInfo.skillPoint -= count;
+        Debug.Log($"{skill.skillName}스킬을 {count}만큼 업그레이드 했습니다. 남은 스킬 포인트 : {progress.playerInfo.skillPoint}");
         eventHub.SkillEnhanced(skill);
+    }
+
+    public void SkillInit()
+    {
+        progress.playerInfo.skillPoint = progress.playerInfo.maxSkillPoint;
+        progress.skillProgress.skillProgressState = new Dictionary<int, int>();
+        eventHub.InitSkill();
     }
     public int GetOrder() => 20;
 
     public void Init()
     {
         skillTable = GameManager.Instance.GetGameSystem<GameDataProvider>().SkillTable;
-        playerProgressManager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
+        _progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-        progress = playerProgressManager.progress;
+        progress = _progressManager.progress;
     }
 }

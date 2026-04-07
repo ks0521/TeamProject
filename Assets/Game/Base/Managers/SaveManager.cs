@@ -14,16 +14,16 @@ namespace Base.Managers
         private static string SavePath => Path.Combine(Application.persistentDataPath, "SaveData.json");
         
         /// <summary> 데이터 저장하기 </summary>
-        public static void Save(GameSaveData data)
+        public static void Save(SaveProgressData progressData)
         {
-            data.lastAccess.lastConnectTime = DateTime.Now.ToBinary(); //최종 접속시간 저장
-            string json = JsonUtility.ToJson(data, true);
+            progressData.lastSession.lastConnectTime = DateTime.Now.ToBinary(); //최종 접속시간 저장
+            string json = JsonUtility.ToJson(progressData, true);
             File.WriteAllText(SavePath,json);
             Debug.Log($"파일 저장 완료 , 경로 : {Application.persistentDataPath}");
         }
 
         /// <summary> 데이터 불러오기 </summary>
-        public static GameSaveData Load()
+        public static SaveProgressData Load()
         {
             if (!File.Exists(SavePath))
             {
@@ -32,10 +32,10 @@ namespace Base.Managers
             }
             
             string json = File.ReadAllText(SavePath);
-            GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
-            if (data is null) return MakeDefaultSaveData();
+            SaveProgressData progressData = JsonUtility.FromJson<SaveProgressData>(json);
+            if (progressData is null) return MakeDefaultSaveData();
             Debug.Log($"세이브파일 로드 완료 , 경로 : {Application.persistentDataPath}");
-            return data;
+            return progressData;
         }
 
         public static void DeleteSaveFile()
@@ -49,9 +49,9 @@ namespace Base.Managers
             Debug.Log($"세이브파일 삭제 완료 , 경로 : {Application.persistentDataPath}");
         }
         /// <summary> 게임 처음 시작했을 때의 기본 데이터 설정</summary>
-        public static GameSaveData MakeDefaultSaveData()
+        public static SaveProgressData MakeDefaultSaveData()
         {
-            GameSaveData data =  new GameSaveData()
+            SaveProgressData progressData =  new SaveProgressData()
             {
                 stage = new StageProgressState()
                 {
@@ -62,10 +62,16 @@ namespace Base.Managers
                 },
                 currency = new PlayerCurrencyState()
                 {
-                    level = 1,
                     exp = 0,
                     gold = 10,
                     statStone = 10
+                },
+                playerInfo = new PlayerInfo()
+                {
+                    level  = 1,
+                    maxSkillPoint = 0,
+                    skillPoint = 0,
+                    weaponGachaLevel = 1
                 },
                 equipmentInventory = new EquipmentInventoryState()
                 {
@@ -84,23 +90,23 @@ namespace Base.Managers
                 {
                     skillProgressState = new()
                 },
-                lastAccess = new LastSessionTime()
+                lastSession = new LastSessionTime()
                 {
                     lastConnectTime = DateTime.Now.ToBinary() //최종 접속시간 저장
                 }
             };
             foreach (StatusType type in Enum.GetValues(typeof(StatusType)))
             {
-                data.statUpgrades.upgradeLevelsByType.Add(new StatusEntry
+                progressData.statUpgrades.upgradeLevelsByType.Add(new StatusEntry
                 {
                     statType = type,
                     enhancementLevel = 0
                 });
             }
-            string json = JsonUtility.ToJson(data, true);
+            string json = JsonUtility.ToJson(progressData, true);
             File.WriteAllText(SavePath,json);
             Debug.Log("새 저장파일 생성 완료");
-            return data;
+            return progressData;
         }
     }
 }
