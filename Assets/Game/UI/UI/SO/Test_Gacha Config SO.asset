@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdc101a5f604274438fc4642f1ba3f39, type: 3}
+  m_Name: Test_Gacha Config SO
+  m_EditorClassIdentifier: 
+  targetEquipType: 0
+  defaultLevel: 1
+  maxLevel: 15
+  levelUpDraw: 14000000320000005a0000008c000000c80000000e0100005e010000c20100003a020000c602000070030000380400002805000040060000
+  drawCosts:
+  - drawType: 0
+    count: 1
+    cost: 100
+  - drawType: 0
+    count: 10
+    cost: 1000
+  - drawType: 0
+    count: 100
+    cost: 10000
+  baseRarityWeights:
+  - rarity: 0
+    weight: 700
+  - rarity: 1
+    weight: 220
+  - rarity: 2
+    weight: 70
+  - rarity: 3
+    weight: 10
+  levelRarityBonuses:
+  - level: 1
+    bonusWeights:
+    - rarity: 0
+      weight: 0
+    - rarity: 1
+      weight: 0
+    - rarity: 2
+      weight: 0
+    - rarity: 3
+      weight: 0
+  - level: 2
+    bonusWeights:
+    - rarity: 0
+      weight: -20
+    - rarity: 1
+      weight: 8
+    - rarity: 2
+      weight: 10
+    - rarity: 3
+      weight: 2
+  - level: 3
+    bonusWeights:
+    - rarity: 0
+      weight: -40
+    - rarity: 1
+      weight: 14
+    - rarity: 2
+      weight: 20
+    - rarity: 3
+      weight: 6
+  - level: 4
+    bonusWeights:
+    - rarity: 0
+      weight: -60
+    - rarity: 1
+      weight: 20
+    - rarity: 2
+      weight: 28
+    - rarity: 3
+      weight: 12
+  - level: 5
+    bonusWeights:
+    - rarity: 0
+      weight: -80
+    - rarity: 1
+      weight: 24
+    - rarity: 2
+      weight: 38
+    - rarity: 3
+      weight: 18
+  - level: 6
+    bonusWeights:
+    - rarity: 0
+      weight: -100
+    - rarity: 1
+      weight: 28
+    - rarity: 2
+      weight: 48
+    - rarity: 3
+      weight: 24
+  - level: 7
+    bonusWeights:
+    - rarity: 0
+      weight: -120
+    - rarity: 1
+      weight: 32
+    - rarity: 2
+      weight: 58
+    - rarity: 3
+      weight: 24
+  - level: 8
+    bonusWeights:
+    - rarity: 0
+      weight: -140
+    - rarity: 1
+      weight: 36
+    - rarity: 2
+      weight: 68
+    - rarity: 3
+      weight: 36
+  - level: 9
+    bonusWeights:
+    - rarity: 0
+      weight: -160
+    - rarity: 1
+      weight: 40
+    - rarity: 2
+      weight: 78
+    - rarity: 3
+      weight: 42
+  - level: 10
+    bonusWeights:
+    - rarity: 0
+      weight: -180
+    - rarity: 1
+      weight: 44
+    - rarity: 2
+      weight: 88
+    - rarity: 3
+      weight: 48
+  - level: 11
+    bonusWeights:
+    - rarity: 0
+      weight: -200
+    - rarity: 1
+      weight: 48
+    - rarity: 2
+      weight: 98
+    - rarity: 3
+      weight: 54
+  - level: 12
+    bonusWeights:
+    - rarity: 0
+      weight: -220
+    - rarity: 1
+      weight: 52
+    - rarity: 2
+      weight: 108
+    - rarity: 3
+      weight: 60
+  - level: 13
+    bonusWeights:
+    - rarity: 0
+      weight: -235
+    - rarity: 1
+      weight: 56
+    - rarity: 2
+      weight: 116
+    - rarity: 3
+      weight: 63
+  - level: 14
+    bonusWeights:
+    - rarity: 0
+      weight: -245
+    - rarity: 1
+      weight: 58
+    - rarity: 2
+      weight: 122
+    - rarity: 3
+      weight: 65
+  - level: 15
+    bonusWeights:
+    - rarity: 0
+      weight: -250
+    - rarity: 1
+      weight: 60
+    - rarity: 2
+      weight: 130
+    - rarity: 3
+      weight: 60
+  qualityWeights:
+  - quality: 0
+    weight: 70
+  - quality: 1
+    weight: 20
+  - quality: 2
+    weight: 9
+  - quality: 3
+    weight: 1
