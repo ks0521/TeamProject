@@ -12,9 +12,9 @@ public class StatusCalculator : MonoBehaviour,IManager
 {
     [SerializeField] private GameDataProvider dic;
     [SerializeField] private EventHub eventHub;
-    [SerializeField] private PlayerRuntimeStatus runtimeStatus; //계산된 값을 저장하는 공간
-    [SerializeField] private PlayerProgressManager progressManager;
-    [SerializeField] private RuntimeProgressState progress;
+    [SerializeField] private RuntimeStatus runtimeStatus; //계산된 값을 저장하는 공간
+    [SerializeField] private ProgressManager progressManager;
+    [SerializeField] private RuntimeProgressData progress;
     [SerializeField] private StatusSO statusConfig; 
     [SerializeField] private Player player; //플레이어 체력 변동용
     [SerializeField] private TotalStat statIncreaseCache;
@@ -24,8 +24,8 @@ public class StatusCalculator : MonoBehaviour,IManager
 
     public void Init()
     {
-        runtimeStatus = GameManager.Instance.GetGameSystem<PlayerRuntimeStatus>();
-        progressManager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
+        runtimeStatus = GameManager.Instance.GetGameSystem<RuntimeStatus>();
+        progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
         dic = GameManager.Instance.GetGameSystem<GameDataProvider>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         
@@ -37,15 +37,15 @@ public class StatusCalculator : MonoBehaviour,IManager
     {
         eventHub.OnGetNewEquipment -= CalcEquip;
         eventHub.OnEquipEnhanced -= CalcEquip;
-        eventHub.OnSkillInit -= CalcSkill;
-        eventHub.OnSkillEnhance -= CalcSkill;
+        eventHub.OnInitSkill -= CalcInitSkill;
+        eventHub.OnSkillEnhance -= CalcInitSkill;
         eventHub.OnStatusEnhanced -= CalcStatus;
         
         eventHub.OnGetNewEquipment += CalcEquip;
         eventHub.OnEquipEnhanced += CalcEquip;
         eventHub.OnEquipChanged += CalcEquip;
-        eventHub.OnSkillInit += CalcSkill;
-        eventHub.OnSkillEnhance += CalcSkill;
+        eventHub.OnInitSkill += CalcInitSkill;
+        eventHub.OnSkillEnhance += CalcInitSkill;
         eventHub.OnStatusEnhanced += CalcStatus;
     }
     public void InputResult()
@@ -81,7 +81,7 @@ public class StatusCalculator : MonoBehaviour,IManager
         InputResult();
     }
 
-    public void CalcSkill()
+    public void CalcInitSkill()
     {
         CalculateSkill();
         InputResult();
@@ -182,7 +182,7 @@ public class StatusCalculator : MonoBehaviour,IManager
         EquipmentSO equip;
         if (progress == null)
         {
-            progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
+            progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         }
         //전체 아이템 보유효과 계산
         foreach (var equipment in progress.equipmentInventory.equipmentEntries)

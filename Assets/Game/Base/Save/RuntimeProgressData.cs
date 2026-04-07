@@ -1,21 +1,25 @@
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
+using UnityEngine;
 
 namespace Base.Save
 {
     /// <summary> 게임 내에서 사용하는 진행도, GameSaveData와의 차이는 리스트 -> 딕셔너리 변환 </summary>
     [Serializable]
-    public class RuntimeProgressState
+    public class RuntimeProgressData
     {
+        [Header("런타임 - 세이브 공용필드")]
         public StageProgressState stage = new(); //플레이어 스테이지 진행 정보
         public PlayerCurrencyState currency = new(); //플레이어 재화 획득 정보
+        public PlayerInfo playerInfo = new();
+        public LastSessionTime lastSession = new(); //플레이어 마지막 접속시간 정보
+        public PlayerEquipmentState equipment = new(); //플레이어 장착 장비 정보
+        [Header("런타임 전용 필드")]
         public ItemInventoryState itemInventory = new(); //플레이어 인벤토리 정보
         public RuntimeEquipmentInventoryState equipmentInventory = new(); //플레이어 장비창 정보
-        public PlayerEquipmentState equipment = new(); //플레이어 장착 장비 정보
         public RuntimeStatUpgradeData statUpgrades = new(); //플레이어 스탯 업그레이드 정보
         public RuntimeSkillData skillProgress = new(); // 플레이어 스킬 획득정보
-        public LastSessionTime lastSession = new(); //플레이어 마지막 접속시간 정보
     }
     //인벤토리 내 아이템 정보
     [Serializable]public class ItemInventoryState

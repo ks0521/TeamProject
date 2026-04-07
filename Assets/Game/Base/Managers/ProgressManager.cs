@@ -15,29 +15,20 @@ namespace Base.Save
         public int nextChallengeStage;
     }
     /// <summary> 실제 런타임 데이터를 보유 / 저장 / 로드하는 데이터 매니저  </summary>
-    public class PlayerProgressManager : MonoBehaviour, IManager
+    public class ProgressManager : MonoBehaviour, IManager
     {
-        public static PlayerProgressManager Instance;
+        //public static ProgressManager Instance;
         [SerializeField] private StatusCalculator playerStatCalculator;
-        public RuntimeProgressState progress; //현재 플레이어의 정보를 전부 저장하고 있는 데이터
-        public RuntimeProgressState Progress => progress;
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-        }
-
+        public RuntimeProgressData progress; //현재 플레이어의 정보를 전부 저장하고 있는 데이터
+        public RuntimeProgressData Progress => progress;
+        public PlayerCurrencyState Currency => progress.currency;
+        public PlayerInfo PlayerInfo => progress.playerInfo;
+        public StageProgressState StageProgress => progress.stage;
         public void Init()
         {
             LoadProgress();
             AutoSave(this.GetCancellationTokenOnDestroy(), 3f).Forget();
         }
-
         public int GetOrder()=> 1; //일단 진행사항이 로딩되어야 다른 매니저가 참고 가능
 
         async UniTaskVoid AutoSave(CancellationToken token, float period)

@@ -22,7 +22,7 @@ namespace UI.Scripts
         [SerializeField] Skill_Set skillIcons;
 
 
-        [SerializeField] private PlayerProgressManager manager;
+        [SerializeField] private ProgressManager manager;
         [SerializeField] private EventHub hub;
         [SerializeField] private StageManager stageManager;
         [SerializeField] private PopupManager popup;
@@ -31,7 +31,7 @@ namespace UI.Scripts
         
         public void Init()
         {
-            manager = GameManager.Instance.GetGameSystem<PlayerProgressManager>();
+            manager = GameManager.Instance.GetGameSystem<ProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
             popup = GameManager.Instance.GetGameSystem<PopupManager>();
@@ -72,15 +72,15 @@ namespace UI.Scripts
                 switch (ui.Currency)
                 {
                     case CurrencyType.GOLD:
-                        ui.SetUI(PlayerProgressManager.Instance.progress.currency.gold);
+                        ui.SetUI(manager.Currency.gold);
                         break;
 
                     case CurrencyType.EXP:
-                        ui.SetUI(PlayerProgressManager.Instance.progress.currency.exp);
+                        ui.SetUI(manager.Currency.exp);
                         break;
 
                     case CurrencyType.STATSTONE:
-                        ui.SetUI(PlayerProgressManager.Instance.progress.currency.statStone);
+                        ui.SetUI(manager.Currency.statStone);
                         break;
                 }
             }

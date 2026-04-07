@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 /// <summary> 게임 플레이시 사용되는 플레이어 최종스탯 </summary>
-public class PlayerRuntimeStatus : MonoBehaviour, IGameSystem
+public class RuntimeStatus : MonoBehaviour, IGameSystem
 {
-    public static PlayerRuntimeStatus Instance; //MVP종료후 제거
+    public static RuntimeStatus Instance; //MVP종료후 제거
     public PlayerBaseStatusSO baseStat;
     public TotalStat finalStatus;
     public BattleStat finalBattleStatStatus;

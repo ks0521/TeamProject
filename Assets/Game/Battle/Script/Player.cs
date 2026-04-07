@@ -33,16 +33,16 @@ namespace Battle
         public PlayerEquipSkillController ESController => equipSkillController;
         public override BattleStat CurrentBattleStatStat => runtimeStatus.finalBattleStatStatus;
         protected override float AttackRange => runtimeStatus.finalBattleStatStatus.atkRange;
-        [SerializeField] private RuntimeProgressState runtimeProgress;
-        [SerializeField] protected PlayerRuntimeStatus runtimeStatus;
+        [SerializeField] private RuntimeProgressData runtimeProgress;
+        [SerializeField] protected RuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
         [SerializeField] private StageManager stageManager;
         [SerializeField] private EventHub hub;
         [SerializeField] private List<Monster> stageMonsters; //현재 스테이지에 존재하는 몬스터의 리스트
 
         public int Level { 
-            get => runtimeProgress.currency.level;
-            set => runtimeProgress.currency.level = value;
+            get => runtimeProgress.playerInfo.level;
+            set => runtimeProgress.playerInfo.level = value;
         }
 
         public override void Init()
@@ -51,7 +51,7 @@ namespace Battle
             equipSkillController.Init(this);
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
-            runtimeProgress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
+            runtimeProgress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         }
 
         void Rebirth()
