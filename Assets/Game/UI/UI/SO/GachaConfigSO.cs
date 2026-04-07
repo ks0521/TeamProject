@@ -19,6 +19,9 @@ namespace Shop.Gacha
         public int defaultLevel = 1;
         public int maxLevel = 100;
 
+        [Header("레벨업 필요 뽑기 횟수")]
+        public List<int> levelUpDraw = new();
+
         [Header("뽑기 비용")]
         public List<GachaCostData> drawCosts = new();
 
@@ -28,8 +31,8 @@ namespace Shop.Gacha
         [Header("레벨별 등급 확률 가중치")]
         public List<GachaLevelRarityBonus> levelRarityBonuses = new();
 
-        [Header("가챠 장비")]
-        public List<EquipmentSO> equipmentPool = new();
+        [Header("품질 확률")]
+        public List<GachaQualityWeight> qualityWeights = new();
 
         public enum GachaDrawType
         {
@@ -52,11 +55,19 @@ namespace Shop.Gacha
             public int weight;
         }
         [Serializable]
+        public class GachaQualityWeight
+        {
+            public EquipQuality quality;
+            public int weight;
+        }
+        [Serializable]
         public class GachaLevelRarityBonus
         {
             public int level;
             public List<GachaRarityWeight> bonusWeights = new List<GachaRarityWeight>();
         }
+
+
     }
 
 }
