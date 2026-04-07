@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Managers;
 using Battle;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UI.Equipment;
@@ -10,9 +11,25 @@ using UnityEngine.UI;
 
 namespace UI.Scripts
 {
+    public enum PopupName
+    {
+        None,Ability
+    }
+    [Serializable]public struct PopupInfo
+    {
+        PopupName Name;
+        GameObject Prefab;
+
+    }
     public class PopupManager : MonoBehaviour, IManager
     {
         public static PopupManager instance;
+
+
+        //SO 로 만들어서 필요할때만 찾아서 꺼내쓰기
+        [SerializeField] List<PopupInfo> Popuplist;
+        Dictionary<PopupName, GameObject> PopupInfoDic;
+
 
         [Header("프래핍 생성 위치")]
         [SerializeField] private Transform canvas;
@@ -270,11 +287,11 @@ namespace UI.Scripts
             if (shopInstance != null) return;
             if (shopPrefab == null) return;
 
-            GameObject prefab = Instantiate (shopPrefab, canvas);
+            shopInstance = Instantiate (shopPrefab, canvas);
             
-            ClosePopup(prefab);
+            ClosePopup(skillInstance);
 
-            PushPopup(prefab);
+            PushPopup(shopInstance);
         }
         private void OpenChapterPopup()
         {
@@ -313,11 +330,11 @@ namespace UI.Scripts
             if (skillInstance != null) return;
             if (skillPrefab == null) return;
             
-            GameObject prefab = Instantiate(skillPrefab, canvas);
+            skillInstance = Instantiate(skillPrefab, canvas);
             //skillInstance = 
-            ClosePopup(prefab);
+            ClosePopup(skillInstance);
 
-            PushPopup(prefab);
+            PushPopup(skillInstance);
         }
         private void OpenDungeonPopup()
         {
