@@ -8,6 +8,8 @@
             "targetValue": 4,
             "prevQuestID": 0,
             "rewardGroupID": 1,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": true
         },
         {
@@ -18,6 +20,8 @@
             "targetValue": 7,
             "prevQuestID": 1,
             "rewardGroupID": 2,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": true
         },
         {
@@ -28,6 +32,8 @@
             "targetValue": 10,
             "prevQuestID": 2,
             "rewardGroupID": 3,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": true
         },
         {
@@ -38,6 +44,8 @@
             "targetValue": 1,
             "prevQuestID": 0,
             "rewardGroupID": 101,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": false
         },
         {
@@ -48,6 +56,20 @@
             "targetValue": 5,
             "prevQuestID": 101,
             "rewardGroupID": 102,
+            "valueModifier": 0,
+            "isInfinite": false,
+            "isAbsoluteGoal": false
+        },
+        {
+            "questID": 103,
+            "category": "Recurring",
+            "description": "Use Skill 3 times",
+            "goalType": "SkillUse",
+            "targetValue": 3,
+            "prevQuestID": 0,
+            "rewardGroupID": 103,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": false
         },
         {
@@ -58,6 +80,8 @@
             "targetValue": 300,
             "prevQuestID": 0,
             "rewardGroupID": 901,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": false
         },
         {
@@ -68,6 +92,8 @@
             "targetValue": 10,
             "prevQuestID": 0,
             "rewardGroupID": 902,
+            "valueModifier": 0,
+            "isInfinite": false,
             "isAbsoluteGoal": false
         },
         {
@@ -78,6 +104,32 @@
             "targetValue": 2,
             "prevQuestID": 0,
             "rewardGroupID": 903,
+            "valueModifier": 0,
+            "isInfinite": false,
+            "isAbsoluteGoal": false
+        },
+        {
+            "questID": 1001,
+            "category": "Achievement",
+            "description": "Achieve Lv {0}",
+            "goalType": "LevelUp",
+            "targetValue": 20,
+            "prevQuestID": 0,
+            "rewardGroupID": 1001,
+            "valueModifier": 20,
+            "isInfinite": true,
+            "isAbsoluteGoal": true
+        },
+        {
+            "questID": 1002,
+            "category": "Achievement",
+            "description": "Use Skill {0} Times",
+            "goalType": "SkillUse",
+            "targetValue": 11,
+            "prevQuestID": 0,
+            "rewardGroupID": 1002,
+            "valueModifier": 11,
+            "isInfinite": true,
             "isAbsoluteGoal": false
         }
     ]
