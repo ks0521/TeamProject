@@ -1,10 +1,9 @@
-﻿using System.Collections;
+﻿using Battle;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Base.Utils
 {
     /// <summary> Physics2D의 Overlap Circle/Capsule/Collider2D 를 통해 target 탐지 및 대상을 검출하는 클래스, 
     /// Layer를 통해 target을 검출 </summary>
@@ -12,8 +11,8 @@ namespace Personal.HagYun
     {
         static readonly Collider2D[] targetColArr = new Collider2D[64];
         /// <summary> 타겟의 콜라이더를 저장하는 배열 </summary>
-        public static Collider2D[] TargetCols => targetColArr;
-
+        // public static Collider2D[] TargetCols => targetColArr;
+        public static IReadOnlyList<Collider2D> GetTargetColArr => targetColArr;
         /// <summary> GetCircleTargetsCount(Capsule/Collider2D)를 실행하여 탐색된 Collider2D 배열에서 index번 Collider2D 반환 </summary>
         /// <param name="index">대상 index</param>
         /// <returns>index번의 Collider2D 반환 (null이 반환될 수 있음)</returns>
@@ -275,6 +274,31 @@ namespace Personal.HagYun
         public static bool TryGetNearTargetByList<T>(this Transform thisTrans, List<T> targetList, out T target) where T : MonoBehaviour
         {
             return TryGetNearTargetByList(thisTrans, targetList, out target);
+        }
+        public static bool TryGetNearCircleTargetCharacter(this Vector2 thisPos, float range, LayerMask lm, out Character nearTarget)
+        {
+            nearTarget = null;
+            int getNearChaCnt = GetCircleTargetsCount(thisPos, range, lm);
+            // Debug.Log($"{lm.value}");
+            if(getNearChaCnt <= 0)
+            {
+                Debug.LogWarning("타겟 못찾음");
+                return false;
+            }
+            float minDis = ((Vector2)GetTargetColArr[0].transform.position - thisPos).sqrMagnitude;
+            for (int i = 0; i < getNearChaCnt; i++)
+            {
+                if (!(GetTargetColArr[i].GetComponent<Character>() is Character cha)) continue;
+                else if(cha.IsDead) {Debug.LogWarning("타겟 죽음");continue;}
+                Vector2 chaPos = cha.transform.position;
+                float curDis = (chaPos - thisPos).sqrMagnitude;
+                if(curDis < minDis)
+                {
+                    minDis = curDis;
+                    nearTarget = cha;
+                }
+            }
+            return nearTarget == null;
         }
     }
 }
