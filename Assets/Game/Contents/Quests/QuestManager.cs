@@ -406,7 +406,7 @@ namespace QuestSystem
         //Pull Request하기 전에 PlayerRuntimeStatus를 Player로 바꿀 것
         int GetCurrentPlayerLevel() //삭제 예정인 인스턴스에 의존하고 있음
         {
-            if (PlayerRuntimeStatus.Instance != null) return player.Level;
+            if (RuntimeStatus.Instance != null) return player.Level;
             return 1; //인스턴스가 없다면 나오는 기본값
         }
         void Update()
@@ -415,7 +415,7 @@ namespace QuestSystem
             {
                 _debugLevel++;
                 Debug.Log($"<color=orange>[Test] 레벨업 조작! 현재 레벨: {_debugLevel}</color>");
-                if (PlayerRuntimeStatus.Instance != null)
+                if (RuntimeStatus.Instance != null)
                     player.Level = _debugLevel;
                 eventHub.LevelChanged(_debugLevel);
             }

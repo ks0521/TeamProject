@@ -10,14 +10,16 @@ using Random = UnityEngine.Random;
 [Serializable]
     public class Stage
     {
+        public bool canSpawning; //스폰 여부 트리거(디버깅용)
+        public event Action<Monster> OnMonsterKilledInStage;
+        public List<Monster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
+        
         [SerializeField] private MonsterPoolManager monsterPool;
         [SerializeField] private StageSO stageSO; //현재 스테이지의 SO
-        public List<Monster> monstersList = new(); //현재 스테이지 내 몬스터 리스트
-        private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
-        public bool canSpawning; //스폰 여부 트리거(디버깅용)
         [SerializeField] private float spawnDelay; // 몬스터 스폰 딜레이
+        
         private BoxCollider2D spawnArea;
-        public event Action<Monster> OnMonsterKilledInStage;
+        private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
         //초기화
         public Stage(StageSO stage, MonsterPoolManager monsterPool, BoxCollider2D spawnArea)
         {
