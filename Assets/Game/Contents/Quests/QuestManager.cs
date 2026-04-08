@@ -5,6 +5,7 @@ using QuestSystem.TutorialSteps;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
@@ -57,6 +58,23 @@ namespace QuestSystem
             }
         }
     }
+
+    [System.Serializable]
+    public class QuestSaveData
+    {
+        //Dictionary를 저장하기 위한 리스트 구조
+        public List<string> statKeys = new List<string>();
+        public List<int> statValues = new List<int>();
+
+        public List<int> startPointKeys = new List<int>();
+        public List<int> startPointValues = new List<int>();
+
+        public List<int> seriesStepKeys = new List<int>();
+        public List<int> seriesStepValues = new List<int>();
+
+        public List<int> completedQuestIds = new List<int>();
+    }
+
     public class QuestManager : MonoBehaviour, IManager
     {
         public static QuestManager Instance { get; private set; }
@@ -83,8 +101,16 @@ namespace QuestSystem
         public GameObject TutorialPanel; //튜토리얼 설명 텍스트가 있는 패널
         public Text TutorialDescText;
 
+        [Header("보상 설정")]
+        [SerializeField] private RewardItemRegistrySO itemDatabase;
+        [SerializeField] private QuestRewardSO rewardDatabase;
+        [SerializeField] private RewardPopupUI rewardPopup;
+
         //무한 반복형 퀘스트에 사용할 단계 딕셔너리
         private Dictionary<int, int> questSeriesSteps = new Dictionary<int, int>();
+
+        //퀘스트 데이터 저장 경로
+        private string SavePath => Path.Combine(Application.persistentDataPath, "QuestSave.json");
 
         private int currentIndex = 0;
         private bool doingQuest = false;
@@ -103,6 +129,10 @@ namespace QuestSystem
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             player = GameManager.Instance.GetGameSystem<PlayerManager>().GetComponent<Player>();
+
+            if (questJsonFile != null) questDatabase.LoadFromJson(questJsonFile.text);
+            LoadProgress();
+            RefreshQuests();
         }
 
         public int GetOrder() => 300;
@@ -117,12 +147,86 @@ namespace QuestSystem
             EventHub.QuestProgressUpdated();
         }
 
-        // 퀘스트 데이터를 불러올 때 저장된 단계 로드 (예시)
-        void LoadStepData()
+        #region 퀘스트 저장/불러오기/초기화
+        //저장된 퀘스트 불러오기
+        public void SaveProgress()
         {
-            // 실제로는 PlayerPrefs나 JSON 저장소에서 가져와야 합니다.
-            // _questSeriesSteps[5001] = PlayerPrefs.GetInt("Step_5001", 1);
+            QuestSaveData saveData = new QuestSaveData();
+
+            foreach (var kvp in globalStats)
+            {
+                saveData.statKeys.Add(kvp.Key);
+                saveData.statValues.Add(kvp.Value);
+            }
+            foreach (var kvp in questStartPoints)
+            {
+                saveData.startPointKeys.Add(kvp.Key);
+                saveData.startPointValues.Add(kvp.Value);
+            }
+            foreach (var kvp in questSeriesSteps)
+            {
+                saveData.seriesStepKeys.Add(kvp.Key);
+                saveData.seriesStepValues.Add(kvp.Value);
+            }
+
+            saveData.completedQuestIds = new List<int>(completedQuestIds);
+
+            string json = JsonUtility.ToJson(saveData, true);
+            File.WriteAllText(SavePath, json);
+            Debug.Log($"[QuestManager] 데이터 저장 완료: {SavePath}");
         }
+        public void LoadProgress()
+        {
+            if (!File.Exists(SavePath))
+            {
+                Debug.Log("[QuestManager] 저장된 데이터가 없습니다. 새로 시작합니다.");
+                return;
+            }
+            string json = File.ReadAllText(SavePath);
+            QuestSaveData saveData = JsonUtility.FromJson<QuestSaveData>(json);
+
+            globalStats.Clear();
+            for (int i = 0; i < saveData.statKeys.Count; i++)
+                globalStats[saveData.statKeys[i]] = saveData.statValues[i];
+            questStartPoints.Clear();
+            for (int i = 0; i < saveData.startPointKeys.Count; i++)
+                questStartPoints[saveData.startPointKeys[i]] = saveData.startPointValues[i];
+            questSeriesSteps.Clear();
+            for (int i = 0; i < saveData.seriesStepKeys.Count; i++)
+                questSeriesSteps[saveData.seriesStepKeys[i]] = saveData.seriesStepValues[i];
+
+            completedQuestIds = new HashSet<int>(saveData.completedQuestIds);
+            Debug.Log("[QuestManager] 데이터 로드 완료");
+        }
+
+        //테스트용: 저장된 퀘스트 내역 삭제 버튼
+        [ContextMenu("Reset All Quest Progress")] // 유니티 인스펙터에서 우클릭으로 실행 가능
+        public void ClearSaveData()
+        {
+            if (File.Exists(SavePath))
+            {
+                File.Delete(SavePath);
+                Debug.Log("<color=red>퀘스트 세이브 파일이 삭제되었습니다.</color>");
+            }
+
+            //PlayerPrefs에 저장된 일퀘 정보 삭제
+            PlayerPrefs.DeleteKey(SelectedDailyKey);
+            PlayerPrefs.DeleteKey("LastResetDate"); //DailyQuestManager 등에서 쓰는 날짜 키
+            PlayerPrefs.Save();
+
+            //그 외의 데이터 초기화
+            globalStats.Clear();
+            questStartPoints.Clear();
+            questSeriesSteps.Clear();
+            completedQuestIds.Clear();
+            activeQuests.Clear();
+
+            RefreshQuests();
+            EventHub.QuestProgressUpdated();
+            FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+            Debug.Log("<color=yellow>모든 퀘스트 진행도가 초기화되었습니다!</color>");
+        }
+        #endregion
 
         //활성화된 모든 퀘스트 리스트 반환
         public List<ActiveQuest> GetActiveQuests()
@@ -134,50 +238,7 @@ namespace QuestSystem
         {
             return activeQuests.FindAll(q => q.Data.CategoryEnum == category);
         }
-        /*
-        void UpdateQuest(GoalType type, int targetID, int amount)
-        {
-            bool isAnyProgressed = false;
 
-            for (int i = activeQuests.Count - 1; i >= 0; i--)
-            {
-                var quest = activeQuests[i];
-                if (quest.isCompleted) continue;
-                
-                if (quest.Data.GoalTypeEnum == type && (quest.Data.targetID == 0 || quest.Data.targetID == targetID))
-                {
-                    if (type == GoalType.LevelUp)
-                    {
-                        if (quest.Data.isAbsoluteGoal)
-                        {
-                            quest.CurrentValue = amount;
-                        }
-                        else
-                        {
-                            //1번 레벨업 : (현재 레벨 - 시작 레벨)
-                            quest.CurrentValue = amount - quest.StartValue;
-                        }
-                    }
-                    else if (type == GoalType.Hunt) quest.CurrentValue += amount;
-                    else if (type == GoalType.SkillUse) quest.CurrentValue += amount;
-                    else if (type == GoalType.StageClear) quest.CurrentValue += amount;
-
-                    //(4.2.)이제 퀘스트는 완료 버튼을 눌러서 처리, 자동완료 x
-                    if (quest.CurrentValue >= quest.Data.targetValue)
-                    {
-                        quest.isCompleted = true;
-                        Debug.Log($"퀘스트 [{quest.Data.description}] 완료 가능");
-                    }
-                    isAnyProgressed = true;
-                }
-            }
-            if (isAnyProgressed) //진척도 수치 변경 시 즉시 갱신
-            {
-                EventHub.QuestProgressUpdated();
-                RefreshUI();
-            }
-        }
-        */
         //퀘스트 진척량이 누적될 때 호출(UpdateQuest 대신 사용)
         public void OnActivity(GoalType type, int targetID, int amount)
         {
@@ -186,9 +247,9 @@ namespace QuestSystem
             if (!globalStats.ContainsKey(statKey)) globalStats[statKey] = 0;
 
             if (type == GoalType.LevelUp)
-                globalStats[statKey] = amount; // 레벨은 갱신
+                globalStats[statKey] = amount; //레벨은 갱신
             else
-                globalStats[statKey] += amount; // 사냥, 스킬 등은 누적
+                globalStats[statKey] += amount; //사냥, 스킬 등은 누적
 
             //아무 스킬 시전에도 대응하려고 만든 부분
             if (targetID != 0)
@@ -214,8 +275,8 @@ namespace QuestSystem
                 int totalProgress = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
                 int startPoint = questStartPoints.ContainsKey(quest.Data.questID) ? questStartPoints[quest.Data.questID] : 0;
                 //진척도 계산: 절대 누적치와 상대치 구분
-                quest.CurrentValue = globalStats[statKey] - startPoint;
-                if (quest.CurrentValue >= quest.Data.targetValue)
+                quest.CurrentValue = quest.Data.isAbsoluteGoal ? totalProgress : totalProgress - startPoint;
+                if (quest.CurrentValue >= quest.RuntimeTargetValue)
                 {
                     quest.isCompleted = true;
                 }
@@ -229,9 +290,16 @@ namespace QuestSystem
             var targetQuest = activeQuests.FirstOrDefault(q => q.Data.CategoryEnum == category && q.isCompleted);
             if (targetQuest != null) TryCompleteQuest(targetQuest);
         }
-        public void TryCompleteQuest(ActiveQuest quest)
+        public void TryCompleteQuest(ActiveQuest quest, bool suppressPopup = false)
         {
-            //GiveReward(quest.Data.RewardGroupID);
+            //보상 리스트 확보 후 팝업 띄우기
+            List<RewardData> rewards = GetRewardsByGroupID(quest.Data.rewardGroupID);
+            //suppressPopup이 false = 개별 팝업
+            if (rewardPopup != null && rewards.Count > 0 && !suppressPopup)
+            {
+                rewardPopup.ShowRewards(rewards);
+            }
+
             QuestCategory currentCategory = quest.Data.CategoryEnum;
             int qID = quest.Data.questID;
 
@@ -277,8 +345,42 @@ namespace QuestSystem
             eventHub.QuestCompleted(quest.Data, isAllCleared);
 
             RefreshQuests();
+            SaveProgress();
             EventHub.QuestProgressUpdated();
         }
+        //rewardGroupID에 따른 보상 목록 반환
+        public List<RewardData> GetRewardsByGroupID(int groupID)
+        {
+            List<RewardData> rewards = new List<RewardData>();
+
+            var group = rewardDatabase.GetGroup(groupID);
+            if (group == null) return rewards;
+
+            //보상 그룹 중에서 필요한 목록 검색
+            foreach(var r in group.items)
+            {
+                var info = rewardDatabase.GetGroup(r.itemID);
+                if (group == null) return rewards;
+            }
+
+            //그룹 내의 아이템들을 RewardData로 변환
+            foreach(var r in group.items)
+            {
+                var info = itemDatabase.GetItem(r.itemID);
+                if(info != null)
+                {
+                    rewards.Add(new RewardData
+                    {
+                        itemID = r.itemID,
+                        itemName = info.itemName,
+                        amount = r.amount,
+                        icon = info.itemIcon
+                    });
+                }
+            }
+            return rewards;
+        }
+
         void RefreshQuests()
         {
             bool isChanged = false;
@@ -311,7 +413,7 @@ namespace QuestSystem
                     }
 
                     ActiveQuest newQuest = new ActiveQuest(data, questStartPoints[data.questID]);
-                    //무한 퀘스트인 경우
+                    
                     if (data.isInfinite)
                     {
                         //퀘스트 단계 확인(없으면 1단계)
@@ -351,11 +453,10 @@ namespace QuestSystem
         }
         void CheckCompleteCondition()
         {
-
             for (int i = activeQuests.Count - 1; i >= 0; i--)
             {
                 var quest = activeQuests[i];
-                if (quest.CurrentValue >= quest.Data.targetValue)
+                if (quest.CurrentValue >= quest.RuntimeTargetValue)
                 {
                     quest.isCompleted = true;
                 }
@@ -374,11 +475,6 @@ namespace QuestSystem
             PickRandomDailyQuest();
             RefreshQuests();
             EventHub.QuestProgressUpdated();
-        }
-        void GiveReward(int rewardGroupID)
-        {
-            // 멘토님 조언대로 RewardData와 연동하는 로직이 들어갈 자리
-            Debug.Log($"보상 그룹 {rewardGroupID}번 지급됨.");
         }
 
         void PickRandomDailyQuest()
