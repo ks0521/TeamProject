@@ -1,11 +1,9 @@
 ﻿using Battle;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Base.Utils
 {
     /// <summary> Physics2D의 Overlap Circle/Capsule/Collider2D 를 통해 target 탐지 및 대상을 검출하는 클래스, 
     /// Layer를 통해 target을 검출 </summary>

@@ -2,13 +2,9 @@ using Base.Data;
 using Growth.Equipment;
 using Growth.Skill;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Common;
 using System.Text;
-using Unity.VisualScripting;
+using Base.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Personal.HagYun
 {

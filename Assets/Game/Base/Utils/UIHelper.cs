@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Personal.HagYun
+namespace Base.Utils
 {
     public static class UIHelper
     {

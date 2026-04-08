@@ -1,10 +1,8 @@
-﻿using Base.Data;
+﻿using Base.Utils;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Personal.HagYun

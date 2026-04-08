@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Personal.HagYun
+namespace Base.Utils
 {
     public interface IMemberReceiver
     {
