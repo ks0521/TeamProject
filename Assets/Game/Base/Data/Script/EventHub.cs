@@ -19,7 +19,7 @@ namespace Base.Data
         public event Action OnPopupOpened; //팝업창 열기
         public void PopupOpened() => OnPopupOpened?.Invoke();
         public event Action OnPopupClosed; //팝업창 닫기
-        public void PopupClosed() => OnPopupClosed?.Invoke();       
+        public void PopupClosed() => OnPopupClosed?.Invoke();
         #endregion
 
         #region 스테이지 파트
@@ -28,7 +28,7 @@ namespace Base.Data
         public event Action<StageSO> OnClearStage; //스테이지 클리어
         public void StageCleared(StageSO stage) => OnClearStage?.Invoke(stage);
         public event Action<StageSO> OnFailStage; //스테이지 실패
-        public void StageFailed(StageSO stage) => OnFailStage?.Invoke(stage);        
+        public void StageFailed(StageSO stage) => OnFailStage?.Invoke(stage);
         public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
         public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
         #endregion
@@ -40,22 +40,31 @@ namespace Base.Data
         public void HpChanged(float hp, float maxHp) => OnHpChange?.Invoke(hp, maxHp);
         public event Action OnMonsterHit; //몬스터 피격
         public void MonsterHit() => OnMonsterHit?.Invoke();
-        
+
         //일반 피격 UI / 사운드는 MonsterHit 사용하세요. BossHit은 보스 UI전용입니다
         public event Action OnBossHit; //보스몬스터 피격
-        public void BossHit() => OnBossHit?.Invoke(); 
+        public void BossHit() => OnBossHit?.Invoke();
         public event Action OnPlayerHit; //플레이어 피격
         public event Action<MonsterSO> OnMonsterKill; //몬스터 사망
         public void MonsterKill(MonsterSO monsterSO) => OnMonsterKill?.Invoke(monsterSO);
         public event Action<Vector3, int, HitType, bool> OnRequestDamageText;
         public void RequestDamageText(Vector3 position, int damage, HitType type, bool isMonster = true) => OnRequestDamageText?.Invoke(position, damage, type, isMonster);
-        
-        
+
+
         #endregion
 
         #region 스킬 파트
-        public event Action<int> OnSkillSet; 
+        public event Action<int> OnSkillSet;
         public void SkillSet(int order) => OnSkillSet?.Invoke(order);
+        // 스킬 장착을 실행하기 위한 이벤트입니다. 위 OnSkillSet은 장착 여부만 판단할 때 사용합니다.
+        public event Action<int, int> OnSkillEquip; 
+        public void SkillEquip(int slotIndex, int skillKey) => OnSkillEquip?.Invoke(slotIndex, skillKey);
+        // 스킬 장착을 완료했을 때 호출시킬 이벤트입니다.
+        public event Action<int, ActiveSkill> OnSkillEquipComplete;
+        public void SkillEquipComplete(int slotIndex, ActiveSkill aSkill) => OnSkillEquipComplete?.Invoke(slotIndex, aSkill);
+        // 스킬 장착 해제를 완료했을 때 호출시킬 이벤트입니다.
+        public event Action<int> OnSkillUnsetComplete;
+        public void SkillUnsetComplete(int order) => OnSkillUnsetComplete?.Invoke(order);
         public event Action<int> OnSkillUnset;
         public void SkillUnset(int order) => OnSkillUnset?.Invoke(order);
         public void PlayerHit() => OnPlayerHit?.Invoke();
@@ -108,7 +117,7 @@ namespace Base.Data
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
         public event Action OnSkillEnhance;
         public void EnhanceSkill() => OnSkillEnhance?.Invoke();
-        
+
         public event Action<QuestDataReader, bool> OnQuestCompleted;
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
         public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
