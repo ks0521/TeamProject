@@ -91,6 +91,8 @@ namespace Base.Data
         public void EquipEnhanced(EquipmentSO equipmentSo) => OnEquipEnhanced?.Invoke(equipmentSo);
         public event Action<EquipmentSO> OnEquipChanged; //장착 장비 변경
         public void EquipChenged(EquipmentSO equipmentSo) => OnEquipChanged?.Invoke(equipmentSo);
+        public event Action<List<DropReward>> OnGetClearRewards; //도전 스테이지 클리어 보상 획득
+        public void GetClearRewards(List<DropReward> rewards) => OnGetClearRewards?.Invoke(rewards);
         public event Action OnGetNewEquipment; //새 장비 획득
         public void GetNewEquipment() => OnGetNewEquipment?.Invoke();
         public event Action<SkillSO> OnSkillEnhanced; //스킬 강화

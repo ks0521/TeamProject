@@ -89,7 +89,7 @@ public class ItemDropManager : MonoBehaviour, IManager
     public void GetItem(DropReward droppedItem)
     {
         hub.GetItems();
-        if (droppedItem.itemSO is Growth.Equipment.EquipmentSO)
+        if (droppedItem.itemSO is EquipmentSO)
         {
             GetEquip(droppedItem);
             return;
