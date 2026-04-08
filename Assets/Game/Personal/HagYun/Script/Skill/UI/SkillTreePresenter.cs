@@ -1,16 +1,11 @@
 using Base.Data;
-using Base.Managers;
-using Battle;
-using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
-using Growth.Equipment;
 using Growth.Skill;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Base.Utils;
 
 namespace Personal.HagYun
 {

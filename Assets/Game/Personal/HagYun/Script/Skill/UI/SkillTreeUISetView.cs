@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using Base.Utils;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro;
-using Growth.Skill;
 
 namespace Personal.HagYun
 {
