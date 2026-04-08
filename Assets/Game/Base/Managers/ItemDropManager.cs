@@ -7,13 +7,13 @@ using UnityEngine;
 
 public class ItemDropManager : MonoBehaviour, IManager
 {
-    [SerializeField] private RuntimeProgressState progress;
+    [SerializeField] private RuntimeProgressData progress;
     [SerializeField] private EventHub hub;
-    private PlayerRuntimeStatus stat => PlayerRuntimeStatus.Instance;
+    private RuntimeStatus stat => RuntimeStatus.Instance;
 
     public void Init()
     {
-        progress = GameManager.Instance.GetGameSystem<PlayerProgressManager>().Progress;
+        progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         hub = GameManager.Instance.GetGameSystem<EventHub>();
     }
 
@@ -71,15 +71,21 @@ public class ItemDropManager : MonoBehaviour, IManager
                   $"현재 소유 경험치 : {progress.currency.exp}");
         while (progress.currency.exp > 100)
         {
-            progress.currency.level++;
-            progress.currency.exp -= 100;
-            Debug.Log($"레벨 상승, 경험치 -100, 남은 경험치 : {progress.currency.exp}");
-            hub.LevelChanged(progress.currency.level);
+            LevelUp();
         }
 
         hub.CurrencyChange(CurrencyType.EXP, progress.currency.exp);
     }
 
+    void LevelUp()
+    {
+        progress.playerInfo.level++;
+        progress.playerInfo.skillPoint++;
+        progress.playerInfo.maxSkillPoint++;
+        progress.currency.exp -= 100;
+        Debug.Log($"레벨 상승, 경험치 -100, 남은 경험치 : {progress.currency.exp}");
+        hub.LevelChanged(progress.playerInfo.level);
+    }
     public void GetItem(DropReward droppedItem)
     {
         hub.GetItems();

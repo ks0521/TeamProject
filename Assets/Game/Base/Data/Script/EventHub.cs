@@ -95,10 +95,8 @@ namespace Base.Data
         public void GetNewEquipment() => OnGetNewEquipment?.Invoke();
         public event Action<SkillSO> OnSkillEnhanced; //스킬 강화
         public void SkillEnhanced(SkillSO skillSo) => OnSkillEnhanced?.Invoke(skillSo);
-        public event Action OnSkillInit; //스킬 초기화
-        public void InitSkill() => OnSkillInit?.Invoke();
-        public event Action<int[]> OnSkillEquipped;
-        public void SkillEquipped(int[] skillSlot) => OnSkillEquipped?.Invoke(skillSlot);
+        public event Action OnInitSkill; //스킬 초기화
+        public void InitSkill() => OnInitSkill?.Invoke();
         #endregion
 
         #region 퀘스트

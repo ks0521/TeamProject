@@ -9,7 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d66b9b11db429349a3e4b49062cc87f, type: 3}
-  m_Name: Item Dictionary SO
+  m_Script: {fileID: 11500000, guid: bdc101a5f604274438fc4642f1ba3f39, type: 3}
+  m_Name: New Gacha Config SO
   m_EditorClassIdentifier: 
-  allItems: []
+  targetEquipType: 0
+  defaultLevel: 1
+  maxLevel: 100
+  baseRarityWeights: []
+  equipmentPool: []

@@ -6,13 +6,13 @@ namespace Battle
     public class PlayerManager : MonoBehaviour, IManager
     {
         private Player player;
-        private PlayerRuntimeStatus runtimeStatus;
+        private RuntimeStatus runtimeStatus;
         public Player Player => player;
-        public PlayerRuntimeStatus RuntimeStatus => runtimeStatus;
+        public RuntimeStatus RuntimeStatus => runtimeStatus;
         private void Awake()
         {
             player = GetComponent<Player>();
-            runtimeStatus = GetComponentInChildren<PlayerRuntimeStatus>();
+            runtimeStatus = GetComponentInChildren<RuntimeStatus>();
         }
         public void Init()
         {

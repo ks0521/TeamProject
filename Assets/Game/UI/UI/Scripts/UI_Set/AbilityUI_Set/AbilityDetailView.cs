@@ -8,7 +8,7 @@ public class AbilityDetailView : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI statText;
 
-    public void RefreshDetailView(PlayerRuntimeStatus status)
+    public void RefreshDetailView(RuntimeStatus status)
     {
         StringBuilder sb = new StringBuilder();
 
