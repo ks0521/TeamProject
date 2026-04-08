@@ -3,8 +3,7 @@ using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using Base.Utils;
 using UnityEngine;
 namespace Personal.HagYun
 {
@@ -39,6 +38,10 @@ namespace Personal.HagYun
 
         // skill pool for get skill
         [SerializeField] protected SkillPool skillPool;
+        public SkillPool SkPool => skillPool;
+        [SerializeField] protected SkillObjectPool skillObjPool;
+        public SkillObjectPool SkObjPool => skillObjPool;
+        public SkillPool Pool => skillPool;
         [SerializeField] protected EquipSkill[] equipSkillArr;
         public EquipSkill[] EquipSkillArr => equipSkillArr;
         public EquipSkill this[int index] => equipSkillArr[index];
@@ -71,49 +74,90 @@ namespace Personal.HagYun
             SpriteShower tss = new SpriteShower(testAreaOffset, range);
             tss.FitSpriteToSize(sr);
         }
-        public virtual void SkillEquip(int slotIndex, ActiveSkill targetSkill, bool isInit = false)
+        public void SkillEquip(int slotIndex, int skillKey) => SkillEquipByKey(slotIndex, skillKey);
+        protected bool IsThisSlotEquipped(int slotIndex, int skillKey)
         {
-            if (targetSkill == null)
+            if (equipSkillArr[slotIndex].EquippedSkillKey == skillKey)
             {
-                Debug.Log($"{slotIndex}번에 장착할 스킬 없음");
-                return;
+                Debug.LogWarning($"{slotIndex}번에 이미 같은 스킬 장착됨");
+                return true;
             }
-            int targetSkillEquipNum = targetSkill.EquipSlotIndex;
-            if (slotIndex == targetSkillEquipNum)
+            return false;
+        }
+        protected bool IsOtherSlotEquipped(int slotIndex, int skillKey, out int otherEquippedSlotIndex)
+        {
+            otherEquippedSlotIndex = -1;
+            for (int i = 0; i < 6; i++)
             {
-                Debug.Log($"{slotIndex}번에 이미 같은 스킬 장착됨");
-                return;
+                if (slotIndex == i) continue;
+                else if (equipSkillArr[i].EquippedSkillKey == skillKey)
+                {
+                    // Debug.LogWarning($"{skillKey}번 스킬은 {i}번 슬롯에 장착됨");
+                    otherEquippedSlotIndex = i;
+                    return true;
+                }
             }
-            else if (targetSkillEquipNum != -1)
-            {
-                SkillUnequip(targetSkillEquipNum);
-            }
-
+            // Debug.Log($"{skillKey}번 스킬은 다른 슬롯에 장착되지 않음");
+            return false;
+        }
+        protected virtual void SkillEquipFeat(int slotIndex, ActiveSkill targetSkill, bool isInit = false)
+        {
             EquipSkill eSkill = equipSkillArr[slotIndex];
             eSkill.SkillEquip(targetSkill, isInit);
-            eSkill.Skill.EquipSkillSlotIndexUpdate(slotIndex);
             PriorityUpdate(slotIndex, Priority.Low);
-            eventHub.SkillSet(slotIndex);
             if (eSkill.isEquipped) return;
             eSkill.isEquipped = true;
             skillCnt++;
+        }
+        public void SkillEquipByKey(int slotIndex, int skillKey, bool isInit = false)
+        {
+            if (!skillPool.TryGetActiveSkillByKey(skillKey, out ActiveSkill aSkill))
+            {
+                // Debug.Log($"{slotIndex}번에 장착할 스킬 없음");
+                return;
+            }
+            else if (IsThisSlotEquipped(slotIndex, skillKey)) return;
+            else if (IsOtherSlotEquipped(slotIndex, skillKey, out int otherEquippedSlotIndex))
+            {
+                // Debug.Log($"{slotIndex}번 슬롯 스킬 장착 해제");
+                SkillUnequip(otherEquippedSlotIndex);
+            }
+            SkillEquipFeat(slotIndex, aSkill, isInit);
+        }
+        public void SkillEquip(int slotIndex, ActiveSkill targetSkill, bool isInit = false)
+        {
+            if (targetSkill == null)
+            {
+                // Debug.Log($"{slotIndex}번에 장착할 스킬 없음");
+                return;
+            }
+            int targetSkillKey = targetSkill.SkillData.key;
+            if (IsThisSlotEquipped(slotIndex, targetSkillKey)) return;
+            else if (IsOtherSlotEquipped(slotIndex, targetSkillKey, out int otherEquippedSlotIndex))
+            {
+                // Debug.Log($"{slotIndex}번 슬롯 스킬 장착 해제");
+                SkillUnequip(otherEquippedSlotIndex);
+            }
+
+            SkillEquipFeat(slotIndex, targetSkill, isInit);
 
         }
-        public virtual void SkillUnequip(int index)
+        protected virtual void SkillUnequipFeat(int index, EquipSkill eSkill)
+        {
+            eSkill.SkillUnequip();
+            eSkill.isEquipped = false;
+            skillCnt--;
+        }
+        public void SkillUnequip(int index)
         {
             EquipSkill eSkill = equipSkillArr[index];
             if (!eSkill.isEquipped) return;
-            eSkill.Skill.EquipSkillSlotIndexUpdate(-1);
-            eSkill.SkillUnequip();
-            eventHub.SkillUnset(index);
-            eSkill.isEquipped = false;
-            skillCnt--;
-
+            SkillUnequipFeat(index, eSkill);
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
         {
+            Debug.Log("캐스팅 시작");
             IsCasting = true;
-            // eventSet.RaiseCastingStart();
             eventHub.CastingStarted();
             float alphaValue = 100f / 255f;
             if (sr != null) sr.color = new Color(0, 0, 1f, alphaValue);
@@ -144,8 +188,8 @@ namespace Personal.HagYun
             if (sr != null) sr.color = new Color(1f, 0, 0, alphaValue);
 
             IsCasting = false;
-            // eventSet.RaiseCastingEnd();
             eventHub.CastingEnd();
+            Debug.Log("캐스팅 완료");
         }
         bool CheckSkillUsePossible(int index)
         {
@@ -164,9 +208,10 @@ namespace Personal.HagYun
         }
         public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            ActiveSkill tSkill = equipSkillArr[skillIndex].Skill;
-            Vector2 plPos = tSkill.OwnerPos;
-            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, tSkill.ActiveSkillData.range, tSkill.TargetMask);
+            ActiveSkill aSkill = equipSkillArr[skillIndex].Skill;
+            Vector2 plPos = owner.transform.position;
+            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, aSkill.ActiveSkillData.range, owner.TargetLayer);
+            // Debug.Log(owner.TargetLayer.ToString());
             if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
             {
                 mon = targetCol.GetComponent<Monster>();
@@ -174,6 +219,19 @@ namespace Personal.HagYun
             }
             mon = null;
             return false;
+            
+            // if (!OverlapChecker.TryGetNearTargetCharacter(
+            //     plPos, aSkill.ActiveSkillData.range, owner.TargetLayer, out var cha))
+            // {
+            //     // Debug.LogWarning("몬스터 찾지 못함");
+            //     mon = null;
+            // }
+            // else if (cha is Monster tMon)
+            // {
+            //     mon = tMon;
+            // }
+            // else mon = null;
+            // return mon == null;
         }
         public void AtkSkillUse(int index, Monster mon)
         {
@@ -184,31 +242,13 @@ namespace Personal.HagYun
             if (!CheckSkillUsePossible(index)) return false;
             else if (TryGetMonsterTargetToAtk(index, out Monster mon))
             {
+                Debug.Log("몬스터 찾음");
                 SkillRangeChange(equipSkillArr[index].Skill.ActiveSkillData.range);
                 AtkSkillUse(index, mon);
                 return true;
             }
+            Debug.Log("몬스터 찾지 못함");
             return false;
         }
-
-        // event subscription Func for external use  
-        public void SkillEquip1(ActiveSkill skill) => SkillEquip(0, skill);
-        public void SkillEquip2(ActiveSkill skill) => SkillEquip(1, skill);
-        public void SkillEquip3(ActiveSkill skill) => SkillEquip(2, skill);
-        public void SkillEquip4(ActiveSkill skill) => SkillEquip(3, skill);
-        public void SkillEquip5(ActiveSkill skill) => SkillEquip(4, skill);
-        public void SkillEquip6(ActiveSkill skill) => SkillEquip(5, skill);
-        public void SkillUnequip1() => SkillUnequip(0);
-        public void SkillUnequip2() => SkillUnequip(1);
-        public void SkillUnequip3() => SkillUnequip(2);
-        public void SkillUnequip4() => SkillUnequip(3);
-        public void SkillUnequip5() => SkillUnequip(4);
-        public void SkillUnequip6() => SkillUnequip(5);
-        public void SkillUse1() => TryAtkSkillUseToMonster(0);
-        public void SkillUse2() => TryAtkSkillUseToMonster(1);
-        public void SkillUse3() => TryAtkSkillUseToMonster(2);
-        public void SkillUse4() => TryAtkSkillUseToMonster(3);
-        public void SkillUse5() => TryAtkSkillUseToMonster(4);
-        public void SkillUse6() => TryAtkSkillUseToMonster(5);
     }
 }

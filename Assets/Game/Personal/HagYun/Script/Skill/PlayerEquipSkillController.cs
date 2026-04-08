@@ -244,18 +244,22 @@ namespace Personal.HagYun
         void AutoSkillUseCntUpdate(int index)
         {
             if (equipSkillArr == null) return;
-            EquipSkill tESkill = equipSkillArr[index];
-            if (tESkill == null) return;
-            else if (tESkill.isEquipped)
+            EquipSkill eSkill = equipSkillArr[index];
+            AutoSkillUseCntUpdateFeat(eSkill);
+        }
+        void AutoSkillUseCntUpdateFeat(EquipSkill eSkill)
+        {
+            if (eSkill == null) return;
+            else if (eSkill.isEquipped)
             {
-                if (!tESkill.IsCooltime)
+                if (!eSkill.IsCooltime)
                     autoSkillUsePossibleCnt++;
                 else
                     autoSkillUsePossibleCnt--;
             }
             else
             {
-                if (!tESkill.IsCooltime)
+                if (!eSkill.IsCooltime)
                     autoSkillUsePossibleCnt--;
             }
         }
@@ -263,6 +267,7 @@ namespace Personal.HagYun
         void SetUseSkillPossibleCnt() => autoSkillUsePossibleCnt = skillCnt;
         private void OnDestroy()
         {
+            EquipSkillSlotEventUnsbuscribe();
             UnsubscribeUseSkillPossibleCntAll();
         }
         public TargetDetectorUsingCircleCollider2D td;
@@ -271,10 +276,11 @@ namespace Personal.HagYun
             if (cha is Player pl)
             {
                 OwnerSet(pl);
-                if (owner == null) Debug.LogWarning("플레이어 주입 안 됨");
                 td = GetComponent<TargetDetectorUsingCircleCollider2D>();
                 eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+                skillObjPool = new SkillObjectPool();
                 SkillEquipInit();
+                skillObjPool.Init(skillPool);
                 AutoSkillUsePossibleCntInit();
             }
         }
@@ -285,8 +291,12 @@ namespace Personal.HagYun
             for (int i = 0; i < 6; i++)
             {
                 index = i;
-                equipSkillArr[index] = new EquipSkill();
-                equipSkillArr[index].Init(owner, index);
+                // equipSkillArr[index] = new EquipSkill();
+                // equipSkillArr[index].Init(owner, index);
+                // equipSkillArr[index].Init(this, index, skillPool, skillObjPool);
+                var eSkill = new EquipSkill();
+                eSkill.Init(this, index, skillPool, skillObjPool);
+                equipSkillArr[index] = eSkill;
             }
 
             if (skillPool == null)
@@ -295,17 +305,29 @@ namespace Personal.HagYun
             }
             else
             {
+                skillPool.Init();
                 for (int i = 0; i < 6; i++)
                 {
                     index = i;
-                    if (skillPool.TryGetActiveSkill(index, out ActiveSkill skill))
+                    // if (skillPool.TryGetActiveSkillByKey(index, out ActiveSkill skill))
+                    if (skillPool.TestTryGetSaveSkill(i, out int key) && 
+                    skillPool.TryGetActiveSkillByKey(key, out var skill))
                     {
                         SkillEquip(index, skill, true);
                     }
                 }
             }
+            EquipSkillSlotEventSubscribe();
             SetUseSkillPossibleCnt();
             SkillRangeChange(2);
+        }
+        void EquipSkillSlotEventSubscribe()
+        {
+            eventHub.OnSkillEquip += SkillEquip;
+        }
+        void EquipSkillSlotEventUnsbuscribe()
+        {
+            eventHub.OnSkillEquip -= SkillEquip;
         }
         public void AutoSkillUsePossibleCntInit()
         {
@@ -361,20 +383,54 @@ namespace Personal.HagYun
                 TryAtkSkillUseToMonster(5);
             }
         }
-        public override void SkillEquip(int index, ActiveSkill targetSkill, bool isInit = false)
+        protected override void SkillEquipFeat(int slotIndex, ActiveSkill targetSkill, bool isInit = false)
         {
-            base.SkillEquip(index, targetSkill, isInit);
-            if (!isInit) AutoSkillUseCntUpdate(index);
+            base.SkillEquipFeat(slotIndex, targetSkill, isInit);
+            eventHub.SkillEquipComplete(slotIndex, targetSkill);
+            if (!isInit) AutoSkillUseCntUpdate(slotIndex);
         }
+        // public override void SkillEquipByKey(int slotIndex, int skillKey, bool isInit = false)
+        // {
+        //     base.SkillEquipByKey(slotIndex, skillKey, isInit);
+        //     if (!skillPool.TryGetActiveSkill(skillKey, out ActiveSkill aSkill)) 
+        //     {
+        //         Debug.Log($"{slotIndex}번에 장착할 스킬 없음");
+        //         return;
+        //     }
+        //     else if (IsThisSlotEquipped(slotIndex, skillKey)) return;
+        //     eventHub.SkillEquipComplete(slotIndex, skillKey);
+        //     eventHub.SkillSet(slotIndex);
+        //     if (!isInit) AutoSkillUseCntUpdate(slotIndex);
+        // }
+        // public override void SkillEquip(int slotIndex, ActiveSkill targetSkill, bool isInit = false)
+        // {
+        //     base.SkillEquip(slotIndex, targetSkill, isInit);
+        //     int skillKey = targetSkill.SkillData.key;
+        //     if (!skillPool.TryGetActiveSkill(skillKey, out ActiveSkill aSkill)) 
+        //     {
+        //         Debug.Log($"{slotIndex}번에 장착할 스킬 없음");
+        //         return;
+        //     }
+        //     else if (IsThisSlotEquipped(slotIndex, skillKey)) return;
+        //     eventHub.SkillEquipComplete(slotIndex, targetSkill.SkillData.key);
+        //     if (!isInit) AutoSkillUseCntUpdate(slotIndex);
+        // }
         public override void PriorityUpdate(int index, Priority pri)
         {
             equipSkillArr[index].priority = pri;
             autoSkillController.EQuipAndPriorityUpdate(index, pri);
         }
-        public override void SkillUnequip(int index)
+        // public override void SkillUnequip(int index)
+        // {
+        //     base.SkillUnequip(index);
+        //     AutoSkillUseCntUpdate(index);
+        //     UnequipUpdateToEquipSkillChecker(index);
+        // }
+        protected override void SkillUnequipFeat(int index, EquipSkill eSkill)
         {
-            base.SkillUnequip(index);
-            AutoSkillUseCntUpdate(index);
+            base.SkillUnequipFeat(index, eSkill);
+            eventHub.SkillUnsetComplete(index);
+            AutoSkillUseCntUpdateFeat(eSkill);
             UnequipUpdateToEquipSkillChecker(index);
         }
         public void UnequipUpdateToEquipSkillChecker(int index) => autoSkillController.UnequipUpdate(index); //eSkillCheckerSet.SkillUnequipUpdate(index);
