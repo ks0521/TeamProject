@@ -79,7 +79,7 @@ namespace QuestSystem
     {
         public static QuestManager Instance { get; private set; }
         private Player player;
-        private EventHub eventHub;
+        [SerializeField] private EventHub eventHub;
         private QuestSO questSO;
         private List<ActiveQuest> activeQuests = new List<ActiveQuest>(); //진행 중
         private HashSet<int> completedQuestIds = new HashSet<int>(); //완료
@@ -127,8 +127,15 @@ namespace QuestSystem
 
         public void Init()
         {
-            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            eventHub = FindObjectOfType<Base.Data.EventHub>();
             player = GameManager.Instance.GetGameSystem<PlayerManager>().GetComponent<Player>();
+
+            eventHub.OnLevelChange += (level) => OnActivity(GoalType.LevelUp, 0, level);
+            eventHub.OnSkillUsed += (skillID) => OnActivity(GoalType.SkillUse, skillID, 1);
+            eventHub.OnClearStage += (stageSO) => OnActivity(GoalType.StageClear, stageSO.stageKey, 1);
+            EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
+            RefreshQuests(); //초기 퀘스트
+            EventHub.QuestProgressUpdated();
 
             if (questJsonFile != null) questDatabase.LoadFromJson(questJsonFile.text);
             LoadProgress();
@@ -136,16 +143,6 @@ namespace QuestSystem
         }
 
         public int GetOrder() => 300;
-
-        void Start()
-        {
-            eventHub.OnLevelChange += (level) => OnActivity(GoalType.LevelUp, 0, level);
-            eventHub.OnSkillUsed += (skillID) => OnActivity(GoalType.SkillUse, skillID, 1);
-            eventHub.OnClearStage += (stageSO) => OnActivity(GoalType.StageClear, stageSO.stageKey, 1);
-            EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
-            RefreshQuests(); //초기 퀘스트
-            EventHub.QuestProgressUpdated();
-        }
 
         #region 퀘스트 저장/불러오기/초기화
         //저장된 퀘스트 불러오기
@@ -357,17 +354,17 @@ namespace QuestSystem
             if (group == null) return rewards;
 
             //보상 그룹 중에서 필요한 목록 검색
-            foreach(var r in group.items)
+            foreach (var r in group.items)
             {
                 var info = rewardDatabase.GetGroup(r.itemID);
                 if (group == null) return rewards;
             }
 
             //그룹 내의 아이템들을 RewardData로 변환
-            foreach(var r in group.items)
+            foreach (var r in group.items)
             {
                 var info = itemDatabase.GetItem(r.itemID);
-                if(info != null)
+                if (info != null)
                 {
                     rewards.Add(new RewardData
                     {
@@ -413,7 +410,7 @@ namespace QuestSystem
                     }
 
                     ActiveQuest newQuest = new ActiveQuest(data, questStartPoints[data.questID]);
-                    
+
                     if (data.isInfinite)
                     {
                         //퀘스트 단계 확인(없으면 1단계)
@@ -664,6 +661,12 @@ namespace QuestSystem
             if (!doingQuest) await RunTutorialQuestLoop();
         }
         */
+        void OnDestroy()
+        {
+            eventHub.OnLevelChange -= (level) => OnActivity(GoalType.LevelUp, 0, level);
+            eventHub.OnSkillUsed -= (skillID) => OnActivity(GoalType.SkillUse, skillID, 1);
+            eventHub.OnClearStage -= (stageSO) => OnActivity(GoalType.StageClear, stageSO.stageKey, 1);
+            EventHub.OnNewDayStarted -= (dateStr) => ResetDailyQuests();
+        }
     }
-
 }
