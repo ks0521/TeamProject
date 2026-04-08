@@ -257,7 +257,7 @@ namespace UI.Scripts
 
         }
 
-        private void PushPopup(GameObject prefab)
+        public void PushPopup(GameObject prefab)
         {
             prefab.SetActive(true);
             prefab.transform.SetAsLastSibling();
