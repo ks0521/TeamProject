@@ -19,9 +19,28 @@ MonoBehaviour:
   chapter: 1
   stage: 1
   dropTable: {fileID: 11400000, guid: d87398cb40a6a4847bd0176edbbdc70b, type: 2}
+  rewardTable:
+  - rewardType: 0
+    currencyType: 1
+    currencySO: {fileID: 0}
+    itemSO: {fileID: 0}
+    amount: 0
+  - rewardType: 1
+    currencyType: 0
+    currencySO: {fileID: 0}
+    itemSO: {fileID: 0}
+    amount: 0
+  - rewardType: 0
+    currencyType: 0
+    currencySO: {fileID: 0}
+    itemSO: {fileID: 0}
+    amount: 0
   preset:
   - monster: {fileID: 11400000, guid: 815629df0fee5c54daa4408678a00052, type: 2}
     weights: 10
-  type: 0
+  stageType: 0
+  spawnType: 0
+  clearType: 0
+  rewardType: 0
   deadLine: 0
   targetKillScore: 0
