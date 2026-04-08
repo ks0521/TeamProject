@@ -10,30 +10,26 @@ namespace Personal.HagYun
         static void Swap(T[] arr, int a, int b)
         {
             T temp = arr[a];
-            arr[b] = arr[a];
-            arr[a] = temp;
+            arr[a] = arr[b];
+            arr[b] = temp;
         }
-        public static void StartArrSort(T[] arr, int length, Comparison<T> comparison) => ArrSort(arr, 0, length - 1, comparison);
-
+        public static void ArrSortStart(T[] arr, Comparison<T> comparison) => ArrSort(arr, 0, arr.Length - 1, comparison);
         public static void ArrSort(T[] arr, int left, int right, Comparison<T> comparison)
         {
-            int rightSubLeft = right - left;
-            if (rightSubLeft <= 1) return;
-            else if (rightSubLeft == 2)
-            {
-                if (0 < comparison(arr[left], arr[right])) Swap(arr, left, right);
-                return;
-            }
+            if (left >= right) return;
 
-            int mid = left + rightSubLeft / 2;
-            if (0 < comparison(arr[left], arr[mid])) Swap(arr, left, mid);
-            if (0 < comparison(arr[left], arr[right])) Swap(arr, left, right);
-            if (0 < comparison(arr[mid], arr[right])) Swap(arr, mid, right);
+            int mid = left + (right - left) / 2;
+            if (comparison(arr[left], arr[mid]) > 0) Swap(arr, left, mid);
+            if (comparison(arr[left], arr[right]) > 0) Swap(arr, left, right);
+            if (comparison(arr[mid], arr[right]) > 0) Swap(arr, mid, right);
 
-            T pivot = arr[mid];
-            Swap(arr, mid, right);
-            int i = left;
-            for (int j = left; j < right; j++)
+            if (right - left <= 2) return;
+
+            Swap(arr, mid, right - 1);
+            T pivot = arr[right - 1];
+
+            int i = left + 1;
+            for (int j = left + 1; j < right - 1; j++)
             {
                 if (comparison(arr[j], pivot) < 0)
                 {
@@ -42,7 +38,7 @@ namespace Personal.HagYun
                 }
             }
 
-            Swap(arr, i, right);
+            Swap(arr, i, right - 1);
 
             ArrSort(arr, left, i - 1, comparison);
             ArrSort(arr, i + 1, right, comparison);

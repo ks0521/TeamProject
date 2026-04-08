@@ -1,4 +1,7 @@
-﻿using Growth.Skill;
+﻿using Base.Data;
+using Base.Managers;
+using Battle;
+using Growth.Skill;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -8,108 +11,101 @@ namespace Personal.HagYun
 {
     public class SkillPool : MonoBehaviour
     {
-        [SerializeField] public Skill[] allSkillObjPool;
-        // 스킬 풀에 있는 스킬
-        // [SerializeField] public List<ActiveSkill> activeSkillList;
-        // [SerializeField] public List<PassiveSkill> passiveSkillList;
-        [SerializeField] public List<ActiveSkill> activeSkillList;
-        [SerializeField] public List<PassiveSkill> passiveSkillList;
+        [SerializeField] private SkillSO[] allSkillData;
+        // private Skill[] allSkillArr;
+        public Skill[] AllSkillArr { get; private set; }
+        private Dictionary<int, ActiveSkill> activeSkillDic;
+        public int ActiveSkillCnt => activeSkillDic.Count;
+        private Dictionary<int, PassiveSkill> passiveSkillDic;
+        public int PassiveSkillCnt => passiveSkillDic.Count;
+        public Dictionary<int, int> skillSaveDic;
+        public bool TestTryGetSaveSkill(int saveSkillIndex, out int saveSkillKey) => skillSaveDic.TryGetValue(saveSkillIndex, out saveSkillKey);
         public void Init()
         {
-            SkillAddInit(allSkillObjPool);
-
+            int cnt = allSkillData.Length;
+            AllSkillArr = new Skill[cnt];
+            Player pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
+            for (int i = 0; i < cnt; i++)
+            {
+                if (allSkillData[i] is ActiveSkillSO aso)
+                {
+                    var aSkill = new ActiveSkill(pl, aso);
+                    AllSkillArr[i] = aSkill;
+                }
+                else if (allSkillData[i] is PassiveSkillSO pso)
+                {
+                    var pSkill = new PassiveSkill(pl, pso);
+                    AllSkillArr[i] = pSkill;
+                }
+            }
+            ArrSorter<Skill>.ArrSortStart(AllSkillArr, (a, b) => a.SkillData.key.CompareTo(b.SkillData.key));
+            TestSkillSave(AllSkillArr);
+            SkillAddInit(AllSkillArr);
+        }
+        void TestSkillSave(Skill[] allSkill)
+        {
+            skillSaveDic = new Dictionary<int, int>(6);
+            int cnt = 0;
+            foreach (Skill s in allSkill)
+            {
+                if (cnt < 6 && s is ActiveSkill aSkill) skillSaveDic.Add(cnt++, s.SkillData.key);
+            }
         }
         /// <summary>
-        /// Player Equip Skill Controller 에서 스킬 장착시킬 때 사용할 함수
+        /// Active Skill Dic에서 Active Skill을 찾을 때 사용하는 함수
         /// </summary>
-        /// <param name="index">skill 풀에 저장된 skill의 index (추후 key값으로 교체 예정)</param>
-        /// <param name="getSkill">EquipSkill에 장착시킬 대상 스킬</param>
-        /// <returns>장착시킬 스킬을 찾았는지 여부 return</returns>
-        public bool TryGetActiveSkill(int index, out ActiveSkill getSkill)
+        /// <param name="key">Active Skill Dic에 저장된 Active Skill의 key</param>
+        /// <param name="aSkill">찾은 Active Skill</param>
+        /// <returns>Active Skill을 찾았는지 여부 return</returns>
+        public bool TryGetActiveSkillByKey(int key, out ActiveSkill aSkill) => activeSkillDic.TryGetValue(key, out aSkill);
+        /// <summary>
+        /// Passive Skill Dic에서 Passive Skill을 찾을 때 사용하는 함수
+        /// </summary>
+        /// <param name="key">Passive Skill Dic에 저장된 Passive Skill의 key</param>
+        /// <param name="pSkill">찾은 Passive Skill</param>
+        /// <returns>Passive Skill을 찾았는지 여부 return</returns>
+        public bool TryGetPassiveSkillByKey(int key, out PassiveSkill pSkill) => passiveSkillDic.TryGetValue(key, out pSkill);
+        public bool TryGetSkillByKey(int key, out Skill skill)
         {
-            if (index < 0 || activeSkillList.Count <= index)
+            skill = null;
+            if (TryGetActiveSkillByKey(key, out ActiveSkill aSkill))
             {
-                getSkill = null;
-                return false;
+                skill = aSkill;
+                return true;
             }
-            getSkill = activeSkillList[index];
-            return true;
-        }
-        public bool TryGetPassiveSkill(int index, out PassiveSkill getSkill)
-        {
-            if (index < 0 || passiveSkillList.Count <= index)
+            else if (TryGetPassiveSkillByKey(key, out PassiveSkill pSkill))
             {
-                getSkill = null;
-                return false;
+                skill = pSkill;
+                return true;
             }
-            getSkill = passiveSkillList[index];
-            return true;
-        }
-        public bool TryGetActiveSkillToKey(int key, out ActiveSkill getSkill)
-        {
-            key -= 1001;
-            if (key < 0 || activeSkillList.Count <= key)
-            {
-                getSkill = null;
-                return false;
-            }
-            getSkill = activeSkillList[key];
-            return true;
-        }
-        public bool TryGetPassiveSkillToKey(int key, out PassiveSkill getSkill)
-        {
-            key -= 1501;
-            if (key < 0 || passiveSkillList.Count <= key)
-            {
-                getSkill = null;
-                return false;
-            }
-            getSkill = passiveSkillList[key];
-            return true;
-        }
-        public void ActiveSkillAdd(ActiveSkill aSkill)
-        {
-            activeSkillList.Add(aSkill);
-            activeSkillList.Sort(CheckSortNum);
+            return false;
         }
         public void SkillAddInit(Skill[] skillArr)
         {
-            for (int i = 0; i < skillArr.Length; i++)
+            AllSkillArr = skillArr;
+            int activeCnt = 0;
+            int passiveCnt = 0;
+            foreach (Skill s in skillArr)
             {
-                if (skillArr[i] is ActiveSkill aSkill)
-                    activeSkillList.Add(aSkill);
-                else if (skillArr[i] is PassiveSkill pSkill)
-                    passiveSkillList.Add(pSkill);
+                if (s is ActiveSkill) activeCnt++;
+                else if (s is PassiveSkill) passiveCnt++;
             }
-            activeSkillList.Sort(CheckSortNum);
-            passiveSkillList.Sort(CheckSortNum);
-        }
-
-        int CheckSortNum(Skill a, Skill b)
-        {
-            int aKey = a.SkillData.key;
-            int bKey = b.SkillData.key;
-            int result = 0;
-            if (aKey > bKey) result = 1;
-            else if (aKey < bKey) result = -1;
-            return result;
-        }
-        int CheckSortNumReverse(Skill a, Skill b)
-        {
-            int aKey = a.SkillData.key;
-            int bKey = b.SkillData.key;
-            int result = 0;
-            if (aKey > bKey) result = -1;
-            else if (aKey < bKey) result = 1;
-            return result;
-        }
-        void SkillArrQSort(Skill[] arr, int left, int right)
-        {
-            var pivot = arr[left];
-            var low = arr[left + 1];
-            var high = arr[right];
-
-
+            activeSkillDic = new Dictionary<int, ActiveSkill>(activeCnt);
+            passiveSkillDic = new Dictionary<int, PassiveSkill>(passiveCnt);
+            foreach (Skill s in skillArr)
+            {
+                int key = s.SkillData.key;
+                if (s is ActiveSkill aSkill)
+                {
+                    activeSkillDic.Add(key, aSkill);
+                    Debug.Log($"activeSkill {key}번 {s.SkillData.name} 저장");
+                }
+                else if (s is PassiveSkill pSkill)
+                {
+                    passiveSkillDic.Add(key, pSkill);
+                    Debug.Log($"passiveSkill {key}번 {s.SkillData.name} 저장");
+                }
+            }
         }
     }
 }
