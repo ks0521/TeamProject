@@ -31,6 +31,8 @@ namespace Base.Data
         public void StageFailed(StageSO stage) => OnFailStage?.Invoke(stage);
         public event Action<StageSO> OnStageChangeClear; //스테이지 변경 완료시 발행
         public void StageChangeClear(StageSO stageSo) => OnStageChangeClear?.Invoke(stageSo);
+        public event Action<Monster> OnBossSpawned;
+        public void BossSpawned(Monster monster) => OnBossSpawned?.Invoke(monster);
         #endregion
 
         #region 전투 파트

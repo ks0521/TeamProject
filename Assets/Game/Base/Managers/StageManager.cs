@@ -63,6 +63,13 @@ namespace Base.Managers
             progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
             stageProgress = GetStageProgress();
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);
+            
+            eventHub.OnDeadPlayer += OnPlayerDie;
+        }
+
+        private void OnDestroy()
+        {
+            eventHub.OnDeadPlayer -= OnPlayerDie;
         }
 
         public int GetOrder() => 10;
@@ -90,7 +97,7 @@ namespace Base.Managers
 
             isStageResultProcessing = false;
             //기존 스테이지에서 연결한 이벤트 제거
-            eventHub.OnDeadPlayer -= OnPlayerDie;
+            
             if (stage != null)
             {
                 stage.OnMonsterKilledInStage -= stageRule.MonsterKilledInStage;
@@ -125,7 +132,6 @@ namespace Base.Managers
             stage?.Destroy(); //기존 스테이지 있으면 정리
             curChapter = selectedChapter;
             curStage = selectedStage;
-            stageRule?.Destroy();
             eventHub.StageChanged(currentStageSO); // 바뀐 챕터 - 스테이지 정보 전달
             //monsterPool.ChangeStage(currentStageSO); // 몬스터풀 설정은 stage에서 관리
             stage = new Stage(currentStageSO, monsterPool, spawnArea); // 신규 스테이지 생성
@@ -136,19 +142,19 @@ namespace Base.Managers
                     stageRule = new NormalStageRule(currentStageSO);
                     break;
                 case ClearType.KillCount:
-                    stageRule = new ChallengeStageRule(currentStageSO);
-                    ((KillCount)stageRule).ChallengeSuccess += OnChallengeSucceeded;
-                    ((KillCount)stageRule).ChallengeFail += OnChallengeFailed;
+                    stageRule = new KillCount(currentStageSO);
                     break;
                 case ClearType.BossKill:
                     stageRule = new BossKill(currentStageSO);
-                    ((BossKill)stageRule).ChallengeSuccess += OnChallengeSucceeded;
-                    ((BossKill)stageRule).ChallengeFail += OnChallengeFailed;
                     break;
                 case ClearType.Survival:
                     break;
             }
-            eventHub.OnDeadPlayer += OnPlayerDie;
+            if (stageRule is ChallengeStageRule challengeRule)
+            {
+                challengeRule.ChallengeSuccess += OnChallengeSucceeded;
+                challengeRule.ChallengeFail += OnChallengeFailed;
+            }
             stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
             stage.OnMonsterKilledInStage += MonsterKillChain;
 
@@ -261,18 +267,21 @@ namespace Base.Managers
 
         private StageProgress ProgressChallengeStage(StageSO clearStage)
         {
-            //보스를 잡았으면 다음 챕터 2-1
-            if (clearStage.stageType == StageType.Boss)
+            if (!BlockProceed)
             {
-                progressManager.StageProgress.nextChallangeChapter = clearStage.chapter + 1;
-                progressManager.StageProgress.nextChallangeStage = 2;
+                //보스를 잡았으면 다음 챕터 2-1
+                if (clearStage.stageType == StageType.Boss)
+                {
+                    progressManager.StageProgress.nextChallangeChapter = clearStage.chapter + 1;
+                    progressManager.StageProgress.nextChallangeStage = 2;
+                }
+                //아니면 스테이지 +1만
+                else
+                {
+                    progressManager.StageProgress.nextChallangeStage++;
+                }
             }
-            //아니면 스테이지 +1만
-            else
-            {
-                progressManager.StageProgress.nextChallangeStage++;
-            }
-
+            
             progressManager.SaveProgress();
             return new StageProgress()
             {
@@ -297,7 +306,7 @@ namespace Base.Managers
             }
 
             stageRule?.Destroy();
-            stageRule = null;
+            //stageRule = null;
         }
         private void OnChallengeSucceeded()
         {
@@ -311,10 +320,8 @@ namespace Base.Managers
         async UniTaskVoid DelayClear(float delay, CancellationToken token)
         {
             Debug.Log("스테이지 클리어, 클리어 기록이 저장됩니다. ");
-            if (BlockProceed) //테스트용, 빌드시 제거할것
-            {
-                stageProgress = ProgressChallengeStage(currentStageSO); 
-            }
+            stageProgress = ProgressChallengeStage(currentStageSO); 
+            
             eventHub.StageCleared(currentStageSO);
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
             Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
