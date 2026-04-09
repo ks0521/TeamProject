@@ -4,6 +4,8 @@ using Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UI.Ability_Set;
+using UI.ChapterStage_Set;
 using UI.Equipment;
 using UI.Scripts;
 using UnityEngine;
@@ -50,6 +52,7 @@ namespace UI.Scripts
         [SerializeField] private GameObject clearPrefab;
         [SerializeField] private GameObject failPrefab;
         [SerializeField] private GameObject deadPrefab;
+        [SerializeField] private ClearReward clearRewardPrefab;
 
         [Header("챌린지 팝업 프리팹")]
         [SerializeField] SetViewer timer;
@@ -87,6 +90,9 @@ namespace UI.Scripts
         private SetViewer timerInstance;
         private SetViewer monsterKillInstance;
         private SetViewer bossHpInstance;
+        private ClearReward clearRewardInstance;
+
+
         private void Awake()
         {
             if (instance == null)
@@ -125,6 +131,7 @@ namespace UI.Scripts
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
+            hub.OnGetClearRewards += OpenClearRewardPopup;
 
             Debug.Log(timer);
         }
@@ -173,6 +180,7 @@ namespace UI.Scripts
             CloseMonsterKill();
         }
 
+ 
         IEnumerator FadeOutPopup(GameObject popup, float time)
         {
             CanvasGroup popupCan = popup.GetComponent<CanvasGroup>();
@@ -388,7 +396,15 @@ namespace UI.Scripts
             deadInstance = Instantiate(deadPrefab, canvas);
             StartCoroutine(FadeOutPopup(deadInstance, 3f));
         }
-
+        public void OpenClearRewardPopup(List<DropReward> rewardList)
+        {
+            if (clearRewardInstance != null) return;
+            if (clearRewardPrefab == null) return;
+            
+            clearRewardInstance = Instantiate(clearRewardPrefab, canvas);
+            clearRewardInstance.SetReward(rewardList);
+            ClosePopup(clearRewardInstance.gameObject);
+        }
 
         public void OpenMonsterKill()
         {
