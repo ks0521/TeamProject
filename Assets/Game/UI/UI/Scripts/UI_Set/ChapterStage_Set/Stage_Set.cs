@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Scripts.Stage
+namespace UI.ChapterStage_Set
 {
     public class Stage_Set : MonoBehaviour
     {
