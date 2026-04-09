@@ -1,3 +1,4 @@
+using Personal.HagYun;
 using UnityEngine;
 
 namespace Growth.Skill
@@ -30,5 +31,7 @@ namespace Growth.Skill
         public float effectArea; //효과 범위
         [Header("사운드")]
         public AudioClip skillSound;
+        [Header("Skill Object")]
+        public ActiveSkillObject skillObj;
     }
 }
