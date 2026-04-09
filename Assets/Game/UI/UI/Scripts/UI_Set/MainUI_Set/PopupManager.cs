@@ -125,6 +125,7 @@ namespace UI.Scripts
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
 
+
             BindAllButton();
             popupStack.Clear();
 
@@ -133,6 +134,7 @@ namespace UI.Scripts
             hub.OnDeadPlayer += PlayerDeadEventChain;
             hub.OnGetClearRewards += OpenClearRewardPopup;
 
+            
             Debug.Log(timer);
         }
 
@@ -172,6 +174,7 @@ namespace UI.Scripts
             OpenClearPopup();
             CloseTimer();
             CloseMonsterKill();
+            CloseBossUI();
         }
         void FailEventChain(StageSO stage)
         {
@@ -432,7 +435,7 @@ namespace UI.Scripts
         }
 
 
-        private void ClosePopup(GameObject gameObject)
+        public void ClosePopup(GameObject gameObject)
         {
             Transform transform = gameObject.transform.Find("Close_Button");
 
@@ -474,6 +477,7 @@ namespace UI.Scripts
                 bossHpInstance = null;
             }
         }
+
         private void ClearPopupReference(GameObject target)
         {
             if (target == null) return;

@@ -39,8 +39,6 @@ namespace UI.ChapterStage_Set
 
         private void Awake()
         {
-            BindButton();
-            Debug.Log("버튼 함수 넣기");
         }
         private void OnEnable()
         {
@@ -49,6 +47,8 @@ namespace UI.ChapterStage_Set
 
             AllChapter();
             ShowChapter();
+            BindButton();
+            Debug.Log("버튼 함수 넣기");
 
             enter.interactable = false;
             if (hub != null)
@@ -62,7 +62,6 @@ namespace UI.ChapterStage_Set
         {
             if (hub == null) return;
             hub.OnClearStage -= EventChain;
-            hub.OnChangeStage -= UpdateStageChange;
             Debug.Log("스테이지창 이벤트 구독 해제");
         }
 
