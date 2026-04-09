@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Base.Utils;
 
 namespace Personal.HagYun
 {
@@ -19,8 +18,12 @@ namespace Personal.HagYun
         {
             ButtonEventUnsubscribe();
         }
-        public void SkillIconImageChange(Sprite sp, bool isHomingSkill) => skillImg.SkillImgSetting(sp, isHomingSkill);
-        public void SkillIconImageUnset() => skillImg.SkillImgUnsetting();
+        public void SkillIconImageChange(Sprite sp, bool isHomingSkill)
+        {
+            skillImg.sprite = sp;
+            if (isHomingSkill) skillImg.rectTransform.localEulerAngles = new Vector3(0, 0, 135f);
+            else skillImg.rectTransform.localEulerAngles = Vector3.zero;
+        }
         public void CooltimeStart()
         {
             cooltimeMask.fillAmount = 1;

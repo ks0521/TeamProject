@@ -30,5 +30,3 @@ MonoBehaviour:
   speed: 0
   effectArea: 1
   skillSound: {fileID: 8300000, guid: 57bc02ff94f08b0458bf51ad67c66a0d, type: 3}
-  skillObj: {fileID: 4539754711409520769, guid: 6f15607cbd69f9447ac68e1309d5c096,
-    type: 3}

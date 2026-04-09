@@ -24,9 +24,9 @@ namespace Battle
     //클리어 조건(특정 마릿수, 보스처치, 생존)
     public enum ClearType
     {
-        None,KillCount, BossKill, Survival
+        KillCount, BossKill, Survival
     }
-    //보상 방식(아이템 필드 드랍, 클리어시 한번에)
+    //보상 종류(아이템 필드 드랍, 클리어시 한번에)
     public enum RewardType
     {
         ItemDrop, ClearReward
@@ -39,13 +39,12 @@ namespace Battle
         [Tooltip("스테이지 이름")][TextArea(2,5)]public string stageName; 
         [Tooltip("챕터")] public int chapter;
         [Tooltip("스테이지")] public int stage;
-        [Tooltip("드랍 테이블")] public DropTableSO dropTable; //일반스테이지
-        [Tooltip("보상 테이블")] public List<DropReward> rewardTable; //도전 스테이지
+        [Tooltip("드랍 테이블")] public DropTableSO dropTable;
         [Tooltip("몬스터 프리셋")] public List<MonsterPreset> preset;
-        [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType stageType;
-        [Tooltip("스폰 형식")]public SpawnType spawnType;
-        [Tooltip("클리어 조건")]public ClearType clearType;
-        [Tooltip("보상 방식")]public RewardType rewardType;
+        [FormerlySerializedAs("type")] [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType stageType;
+        //[Tooltip("스폰 형식")]public SpawnType SpawnType;
+        //[Tooltip("클리어 조건")]public ClearType clearType;
+        //[Tooltip("보상 종류")]public RewardType rewardType;
         [Header("스테이지 돌파 전용")] 
         [Tooltip("제한시간")] public float deadLine;
         [Tooltip("목표 처치 수")] public int targetKillScore;

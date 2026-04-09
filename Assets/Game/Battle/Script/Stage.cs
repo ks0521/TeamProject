@@ -20,46 +20,32 @@ using Random = UnityEngine.Random;
         
         private BoxCollider2D spawnArea;
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
-
-        #region 스테이지 시작
+        //초기화
         public Stage(StageSO stage, MonsterPoolManager monsterPool, BoxCollider2D spawnArea)
         {
-            monsterPool.ChangeStage(stage);
+            //바꾸려는 챕터와 스테이지의 정보를 SO에서 얻어옴
             this.monsterPool = monsterPool;
             this.spawnArea = spawnArea;
             stageSO = stage;
-            canSpawning = false;
-            SpawnTypeSelect(stageSO.spawnType);
-            
+            spawnDelay = 1f;
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 초기화");
-        }
-
-        void SpawnTypeSelect(SpawnType spawnType)
-        {
-            switch (spawnType)
-            {
-                case SpawnType.Endless:
-                    spawnerToken = new CancellationTokenSource();
-                    EndlessSpawn(spawnerToken.Token).Forget();
-                    spawnDelay = 1f;
-                    break;
-                case SpawnType.Boss:
-                    BossSpawn();
-                    break;
-                case SpawnType.Wave:
-
-                    break;
-            }
         }
         //실제 스테이지 시작 지점
         public void Enter()
         {
-            canSpawning = true;
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 시작");
+            if (stageSO.stageType == StageType.Boss)
+            {
+                BossSpawn();
+                canSpawning = false;
+            }
+            else
+            {
+                spawnerToken = new CancellationTokenSource();
+                EndlessSpawn(spawnerToken.Token).Forget();
+                canSpawning = true;
+            }
         }
-        #endregion
-        #region 스폰 타입
-
         /// <summary> MVP 보여주기용 임시 메서드, 나중에는 룰 자체를 변경할 것</summary>
         void BossSpawn()
         {
@@ -104,8 +90,40 @@ using Random = UnityEngine.Random;
                 Debug.Log("스테이지 전환에 따른 스포너 정상 종료");
             }
         }
-        #endregion
-        #region 몬스터 등록 / 해제
+
+        int WeightCalc(in List<MonsterPreset> presets)
+        {
+            int total = 0;
+            foreach (var preset in presets)
+            {
+                if (preset.weights <= 0)
+                {
+                    Debug.LogWarning($"가중치가 0보다 작은 값({preset.weights}) 입력됨");
+                    return 0;
+                }
+                total += preset.weights;
+            }
+            if (total <= 0)
+            {
+                Debug.LogWarning($"가중합이 0미만입니다({total}");
+                return 0;
+            }
+
+            int weightSum = Random.Range(0, total);
+            for (int i = 0; i < presets.Count; i++)
+            {
+                if (presets[i].weights > weightSum)
+                {
+                    //Debug.Log($"{i}번째 {presets[i].monster.name} 사용");
+                    return i;// rarity
+                }
+                
+                weightSum -= presets[i].weights;
+            }
+            
+            Debug.LogWarning("가중합 계산 오류");
+            return 0;
+        }
         /// <summary> 새 몬스터 풀에서 꺼내왔을 때 스테이지에서 확인할 수 있게 연결</summary>
         /// <param name="monster"> 꺼내온 몬스터 </param>
         private void Register(Monster monster)
@@ -135,9 +153,7 @@ using Random = UnityEngine.Random;
             monstersList.Remove(monster);
             monster.OnMonsterKilled -= MonsterKilled;
         }
-        #endregion
-        #region 스테이지 관리
-        /// <summary> 스테이지 내 몬스터 정리 </summary>
+
         public void Clear()
         {
             for(int i= monstersList.Count - 1 ; i>=0 ; i--)
@@ -162,38 +178,4 @@ using Random = UnityEngine.Random;
             //player.Reset(); // 플레이어 상태(체력, 버프/디버프 등) 초기화
             //AudioManager.StopBattle() //맵 관련 효과음(스킬 효과음 등..) 정지
         }
-        #endregion
-        int WeightCalc(in List<MonsterPreset> presets)
-                          {
-                              int total = 0;
-                              foreach (var preset in presets)
-                              {
-                                  if (preset.weights <= 0)
-                                  {
-                                      Debug.LogWarning($"가중치가 0보다 작은 값({preset.weights}) 입력됨");
-                                      return 0;
-                                  }
-                                  total += preset.weights;
-                              }
-                              if (total <= 0)
-                              {
-                                  Debug.LogWarning($"가중합이 0미만입니다({total}");
-                                  return 0;
-                              }
-                  
-                              int weightSum = Random.Range(0, total);
-                              for (int i = 0; i < presets.Count; i++)
-                              {
-                                  if (presets[i].weights > weightSum)
-                                  {
-                                      //Debug.Log($"{i}번째 {presets[i].monster.name} 사용");
-                                      return i;// rarity
-                                  }
-                                  
-                                  weightSum -= presets[i].weights;
-                              }
-                              
-                              Debug.LogWarning("가중합 계산 오류");
-                              return 0;
-                          }
     }

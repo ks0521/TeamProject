@@ -1,5 +1,7 @@
-using Base.Utils;
+using Personal.HagYun;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +18,7 @@ namespace Personal.HagYun
         [SerializeField] private Image targetSkillImage;
         [SerializeField] private EquipSkillPopupBtnSet[] equipSkillBtnSet;
         [SerializeField] private Button closeBtn;
-        public void BtnEventRemoveAllListner()
+        public void BtnEventUnsubscribe()
         {
             foreach (EquipSkillPopupBtnSet btnSet in equipSkillBtnSet)
             {
@@ -24,23 +26,27 @@ namespace Personal.HagYun
             }
             closeBtn.onClick.RemoveAllListeners();
         }
-        public void TargetSkillImgSet(Sprite sp, bool isHomingSkill) => targetSkillImage.SkillImgSetting(sp, isHomingSkill);
-        public void SkillSlotBtnImgSet(int index, Sprite sp, bool isHomingSkill)
+        public void EquipSkillShow(ActiveSkill equipTargetSkill, ActiveSkill[] skillArr)
         {
-            if (index < 0 || 6 <= index)
+            equipTargetSkill.SkillImgSet(targetSkillImage);
+            for (int i = 0; i < 6; i++)
             {
-                Debug.LogWarning("ui : equip skill slot index는 0~6 사이만 가능");
-                return;
+                if (skillArr[i] is ActiveSkill aSkill)
+                {
+                    aSkill.SkillImgSet(equipSkillBtnSet[i].img);
+                }
+                else
+                {
+                    Skill.SkillImgUnset(equipSkillBtnSet[i].img);
+                }
             }
-            equipSkillBtnSet[index].img.SkillImgSetting(sp, isHomingSkill);
         }
-        public void SkillSlotBtnImgUnset(int index) => equipSkillBtnSet[index].img.SkillImgUnsetting();
         public void EquipSlotSelectBtnEventSubscribe(int slotIndex, Action func)
         {
             if (slotIndex < 0 || 6 <= slotIndex) return;
             equipSkillBtnSet[slotIndex].btn.onClick.AddListener(() => func());
         }
-        public void BtnEventAddListner(Action<int> func)
+        public void BtnEventSubscribe(Action<int> func)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -63,7 +69,7 @@ namespace Personal.HagYun
         //         var bSet = new EquipSkillPopupBtnSet();
         //         bSet.btn = btn;
 
-        //         if (btn.transform.TryGetChildrenByName(imgObjectName, out Image img, false))
+        //         if (btn.transform.TryGetChildren(imgObjectName, out Image img, false))
         //             bSet.img = img;
 
         //         equipSkillBtnSet[i] = bSet;

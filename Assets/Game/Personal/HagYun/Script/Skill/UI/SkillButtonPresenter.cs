@@ -39,22 +39,22 @@ namespace Personal.HagYun
             {
                 if (plEquipSkill[i] == null)
                 {
-                    Debug.LogWarning($"{i}번째 EquipSkill 없음");
+                    // Debug.LogWarning($"{i}번째 EquipSkill 없음");
                     continue;
                 }
                 int index = i;
                 SkillButtonView tBtnView = btnViewArr[index];
                 if (btnViewArr[index] == null)
                 {
-                    Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
+                    // Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
                     continue;
                 }
                 tBtnView.ButtonEventSubscribe(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
                 CooltimeCheckTask(index).Forget();
                 ActiveSkillSO skillData = plEquipSkill[index].Skill.ActiveSkillData;
-                // Debug.Log(skillData.skillName);
                 tBtnView.SkillIconImageChange(skillData.skillIcon, skillData.Targeting == TargetingMode.Homing);
             }
+            EquipSkillEventRemove();
             EquipSkillEventSet();
         }
         public void OnDestroyFeat()
@@ -96,12 +96,12 @@ namespace Personal.HagYun
         }
         void BtnCooltimeStartEvent(int index) => btnViewArr[index].CooltimeStart();
         void BtnCooltimeEndEvent(int index) => btnViewArr[index].CooltimeEnd();
-        void SkillIconSet(int slotIndex, ActiveSkill aSkill)
+        void SkillIconSet(int index)
         {
-            ActiveSkillSO so = aSkill.ActiveSkillData;
-            btnViewArr[slotIndex].SkillIconImageChange(so.skillIcon, so.Targeting == TargetingMode.Homing);
+            ActiveSkillSO tSkillData = plEquipSkill[index].Skill.ActiveSkillData;
+            btnViewArr[index].SkillIconImageChange(tSkillData.skillIcon, tSkillData.Targeting == TargetingMode.Homing);
         }
-        void SkillIconUnset(int index) => btnViewArr[index].SkillIconImageUnset();
+        void SkillIconUnset(int index) => btnViewArr[index].SkillIconImageChange(null, false);
         int selectSkillNum = 0;
         void SkillSelect(int index)
         {
@@ -126,18 +126,16 @@ namespace Personal.HagYun
             eventHub.OnSkillUsed += BtnCooltimeStartEvent;
             eventHub.OnSkillCoolEnd += BtnCooltimeEndEvent;
 
+            eventHub.OnSkillSet += SkillIconSet;
             eventHub.OnSkillUnset += SkillIconUnset;
-
-            eventHub.OnSkillEquipComplete += SkillIconSet;
         }
         void EquipSkillEventRemove()
         {
             eventHub.OnSkillUsed -= BtnCooltimeStartEvent;
             eventHub.OnSkillCoolEnd -= BtnCooltimeEndEvent;
 
+            eventHub.OnSkillSet -= SkillIconSet;
             eventHub.OnSkillUnset -= SkillIconUnset;
-            
-            eventHub.OnSkillEquipComplete -= SkillIconSet;
         }
 
     }

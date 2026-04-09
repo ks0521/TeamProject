@@ -8,18 +8,12 @@ using UnityEngine;
 
 namespace Shop.Gacha
 {
-    public enum GachaDrawType
-    {
-        One,
-        Ten,
-        Hundred
-    }
     [CreateAssetMenu(menuName = "Game/Gacha/Gacha Config")]
     public class GachaConfigSO : ScriptableObject
     {
+
         [Header("가챠 타입")]
         public EquipType targetEquipType;
-
 
         [Header("가챠 레벨")]
         public int defaultLevel = 1;
@@ -40,6 +34,12 @@ namespace Shop.Gacha
         [Header("품질 확률")]
         public List<GachaQualityWeight> qualityWeights = new();
 
+        public enum GachaDrawType
+        {
+            One,
+            Ten,
+            Hundred
+        }
 
         [Serializable]
         public class GachaCostData

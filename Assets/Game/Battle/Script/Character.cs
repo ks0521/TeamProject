@@ -50,7 +50,6 @@ namespace Battle
         // action split class (component X)
         protected CharacterMove cm;
         [SerializeField] protected LayerMask targetLayer;
-        public LayerMask TargetLayer => targetLayer; // active skill 에서 타겟 탐지를 위한 layer를 위한 getter
         [SerializeField] protected Character target;
         [SerializeField] protected Transform targetTransform;
         [SerializeField] protected bool isAtkCooltime;

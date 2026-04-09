@@ -205,14 +205,25 @@ MonoBehaviour:
   <IsCasting>k__BackingField: 0
   testAreaOffset: {x: 1, y: 1}
   autoSkillUsePossibleCnt: 0
+  eSkillCheckerSet:
+    equipSkillChecker:
+    - isEquipBoolArr: 000000000000
+      cnt: 0
+    - isEquipBoolArr: 000000000000
+      cnt: 0
+    - isEquipBoolArr: 000000000000
+      cnt: 0
   autoSkillController:
     autoSkillUseOrderNum: 0
     pesc: {fileID: 2560318886816647469}
     eSkillCheckerSet:
       equipSkillChecker:
       - isEquipBoolArr: 000000000000
+        cnt: 0
       - isEquipBoolArr: 000000000000
+        cnt: 0
       - isEquipBoolArr: 000000000000
+        cnt: 0
   td: {fileID: 7611638699218220954}
 --- !u!114 &7611638699218220954
 MonoBehaviour:
@@ -414,38 +425,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStat: {fileID: 11400000, guid: 9bc408a21e5de5d4487bfbd5b50b1255, type: 2}
-  finalStatus:
-    battle:
-      atk: 0
-      critChance: 0
-      critDamage: 0
-      maxHp: 0
-      def: 0
-      atkSpeed: 0
-      moveSpeed: 0
-      atkRange: 0
-    reward:
-      goldGain: 0
-      statStoneGain: 0
-      expGain: 0
-      itemDropRate: 0
-    extra:
-      damageDealtRate: 0
-      damageReduceRate: 0
-  finalBattleStatStatus:
-    atk: 0
-    critChance: 0
-    critDamage: 0
-    maxHp: 0
-    def: 0
-    atkSpeed: 0
-    moveSpeed: 0
-    atkRange: 0
-  finalRewardStatStatus:
-    goldGain: 0
-    statStoneGain: 0
-    expGain: 0
-    itemDropRate: 0
+  finalBattleStatus:
+    maxHp: 100
+    atk: 10
+    def: 2
+    atkSpeed: 1
+    moveSpeed: 1
+    critChance: 0.1
+    critDamage: 1.5
+  finalRewardStatus:
+    goldRate: 0
+    expRate: 0
+    itemDropRateBonus: 0
+  finalRange: 2
+  finalAttackSpeed: 1
 --- !u!114 &3838366801688559725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,104 +451,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6060d8b3a9746249ad0d6341008c6a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dic: {fileID: 0}
-  eventHub: {fileID: 0}
   runtimeStatus: {fileID: 3133453849342583988}
-  progressManager: {fileID: 0}
-  progress:
-    stage:
-      selectedNormalStage: 0
-      selectedNormalChapter: 0
-      nextChallangeStage: 0
-      nextChallangeChapter: 0
-    currency:
-      level: 0
-      skillPoint: 0
-      exp: 0
-      gold: 0
-      statStone: 0
-    equipment:
-      equippedWeponKey: 0
-      equippedArmorKey: 0
-      equippedAccessoryKey: 0
-    skillProgress:
-      skillSlots: 
-    lastSession:
-      lastConnectTime: 0
   statusConfig: {fileID: 11400000, guid: 6343919bca0748442a2f8fc9d656e4d0, type: 2}
   player: {fileID: 0}
-  statIncreaseCache:
-    battle:
-      atk: 0
-      critChance: 0
-      critDamage: 0
-      maxHp: 0
-      def: 0
-      atkSpeed: 0
-      moveSpeed: 0
-      atkRange: 0
-    reward:
-      goldGain: 0
-      statStoneGain: 0
-      expGain: 0
-      itemDropRate: 0
-    extra:
-      damageDealtRate: 0
-      damageReduceRate: 0
-  equipOwnIncreaseCache:
-    battle:
-      atk: 0
-      critChance: 0
-      critDamage: 0
-      maxHp: 0
-      def: 0
-      atkSpeed: 0
-      moveSpeed: 0
-      atkRange: 0
-    reward:
-      goldGain: 0
-      statStoneGain: 0
-      expGain: 0
-      itemDropRate: 0
-    extra:
-      damageDealtRate: 0
-      damageReduceRate: 0
-  equipUsingIncreaseCache:
-    battle:
-      atk: 0
-      critChance: 0
-      critDamage: 0
-      maxHp: 0
-      def: 0
-      atkSpeed: 0
-      moveSpeed: 0
-      atkRange: 0
-    reward:
-      goldGain: 0
-      statStoneGain: 0
-      expGain: 0
-      itemDropRate: 0
-    extra:
-      damageDealtRate: 0
-      damageReduceRate: 0
-  skillIncreaseCache:
-    battle:
-      atk: 0
-      critChance: 0
-      critDamage: 0
-      maxHp: 0
-      def: 0
-      atkSpeed: 0
-      moveSpeed: 0
-      atkRange: 0
-    reward:
-      goldGain: 0
-      statStoneGain: 0
-      expGain: 0
-      itemDropRate: 0
-    extra:
-      damageDealtRate: 0
-      damageReduceRate: 0
 --- !u!1001 &7534207113006038028
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -569,77 +467,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkillObjPull
       objectReference: {fileID: 0}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.size
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: cb97b7bfc04eeb349b1e38bcfa3c1936,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: b43a36bedacfcee4c84b2e18d8783b49,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: 1b837dd5eec53524391157ff64c02261,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[3]
-      value: 
-      objectReference: {fileID: 11400000, guid: 5c989d3d349bf0a409116907035c20c4,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[4]
-      value: 
-      objectReference: {fileID: 11400000, guid: 5fd3daa513a73444aa4c440e7ae38d73,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[5]
-      value: 
-      objectReference: {fileID: 11400000, guid: 13da98c23de50414ebd09483377fc8fc,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[6]
-      value: 
-      objectReference: {fileID: 11400000, guid: e0c78ea2170689c4d88a46a426906cbe,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[7]
-      value: 
-      objectReference: {fileID: 11400000, guid: 94a5f2edaa693c24b920e194cf38d599,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[8]
-      value: 
-      objectReference: {fileID: 11400000, guid: 9780a3f5661a4f846987665c860aeba0,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[9]
-      value: 
-      objectReference: {fileID: 11400000, guid: 698da1c3913b4604991b38019749b7af,
-        type: 2}
-    - target: {fileID: 3987448682982178548, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
-        type: 3}
-      propertyPath: allSkillData.Array.data[10]
-      value: 
-      objectReference: {fileID: 11400000, guid: 698da1c3913b4604991b38019749b7af,
-        type: 2}
     - target: {fileID: 5620078038190453295, guid: 069cc76c6fa6279459a4ec7361c1f8e5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1267,7 +1094,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e286d9a84b5008e46b3964919dc3ec4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAnchor: {fileID: 0}
   hp: 0
   targetLayer:
     serializedVersion: 2
@@ -1279,30 +1105,9 @@ MonoBehaviour:
   canAtk: 0
   spumController: {fileID: 0}
   uniRoot: {fileID: 0}
-  runtimeProgress:
-    stage:
-      selectedNormalStage: 0
-      selectedNormalChapter: 0
-      nextChallangeStage: 0
-      nextChallangeChapter: 0
-    currency:
-      level: 0
-      skillPoint: 0
-      exp: 0
-      gold: 0
-      statStone: 0
-    equipment:
-      equippedWeponKey: 0
-      equippedArmorKey: 0
-      equippedAccessoryKey: 0
-    skillProgress:
-      skillSlots: 
-    lastSession:
-      lastConnectTime: 0
   runtimeStatus: {fileID: 3133453849342583988}
   equipSkillController: {fileID: 2560318886816647469}
   stageManager: {fileID: 0}
-  hub: {fileID: 0}
   stageMonsters: []
 --- !u!114 &4530392472248507200
 MonoBehaviour:

@@ -1,10 +1,11 @@
 ﻿using Battle;
-using Base.Utils;
+using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class ProjectileSkill : ActiveSkillObject
+    public class ProjectileSkill : ActiveSkill
     {
         [SerializeField] protected Character target;
         protected override Vector2 TargetPos => target.transform.position;
@@ -27,7 +28,7 @@ namespace Personal.HagYun
                 gameObject.SetActive(false);
                 return;
             }
-            transform.MoveToTarget(TargetPos, launcher.ActiveSkillData.speed);
+            transform.MoveToTarget(TargetPos, ActiveSkillData.speed);
             transform.LookToTarget(TargetPos);
             if (!transform.CheckDirZeroToTarget(TargetPos))
             {
@@ -68,7 +69,7 @@ namespace Personal.HagYun
         void EnableProjectile()
         {
             if (effectAnim.gameObject.activeSelf) effectAnim.gameObject.SetActive(false);
-            ThisPos = launcher.Owner.transform.position;
+            ThisPos = OwnerPos;
             transform.LookToTarget(TargetPos);
             projectileAnim.gameObject.SetActive(true);
             projectileAnim.Rebind();
