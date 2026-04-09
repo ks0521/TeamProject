@@ -1,11 +1,10 @@
 ﻿using Base.Utils;
 using Base.Managers;
 using Battle;
-using Growth.Skill;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public class SkillPool : MonoBehaviour
     {

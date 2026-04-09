@@ -1,9 +1,7 @@
-﻿using Battle;
-using Cysharp.Threading.Tasks;
-using Growth.Skill;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public class AreaSkill : ActiveSkillObject
     {

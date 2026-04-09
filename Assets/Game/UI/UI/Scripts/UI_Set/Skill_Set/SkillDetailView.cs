@@ -5,39 +5,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public struct SkillDetailViewNeedsNameAndImage
     {
         public string name;
         public Sprite sp;
-        public bool isHomingSkill;
-        public SkillDetailViewNeedsNameAndImage(string name, Sprite sp, bool isHomingSkill)
+        public bool isUnlock;
+        public SkillDetailViewNeedsNameAndImage(string name, Sprite sp, bool isUnlock)
         {
             this.name = name;
             this.sp = sp;
-            this.isHomingSkill = isHomingSkill;
+            this.isUnlock = isUnlock;
         }
-        public SkillDetailViewNeedsNameAndImage(SkillSO so)
+        public SkillDetailViewNeedsNameAndImage(SkillSO so, bool isUnlock)
         {
-            name = so.name;
+            name = so.skillName;
             sp = so.skillIcon;
-            if (so is ActiveSkillSO aSo)
-                isHomingSkill = aSo.Targeting == TargetingMode.Homing;
-            else
-                isHomingSkill = false;
-        }
-        public SkillDetailViewNeedsNameAndImage(ActiveSkillSO so)
-        {
-            name = so.name;
-            sp = so.skillIcon;
-            isHomingSkill = so.Targeting == TargetingMode.Homing;
-        }
-        public SkillDetailViewNeedsNameAndImage(PassiveSkillSO so)
-        {
-            name = so.name;
-            sp = so.skillIcon;
-            isHomingSkill = false;
+            this.isUnlock = isUnlock;
         }
     }
     public struct SkillDetailViewNeedsStatData
@@ -103,6 +88,7 @@ namespace Personal.HagYun
         [SerializeField, Tooltip("스킬 데미지/스탯 정보")] private TextMeshProUGUI skillValueText;
         [SerializeField, Tooltip("스킬 쿨타임")] private TextMeshProUGUI skillCooltimeText;
         [SerializeField, Tooltip("스킬 설명")] private TextMeshProUGUI skillDescriptionText;
+        [SerializeField, Tooltip("스킬 잠금 Mask 이미지")] private Image lockImg;
         [Header("버튼")]
 
         [SerializeField, Tooltip("스킬 레벨 업 버튼")] private Button lvUpBtn;
@@ -112,7 +98,7 @@ namespace Personal.HagYun
         public void SkillDetailViewSetToSkillChange(SkillDetailViewNeedsNameAndImage niData, SkillDetailViewNeedsStatData statData)
         {
             SkillNameChange(niData.name);
-            SkillImgChange(niData.sp, niData.isHomingSkill);
+            SkillImgChange(niData.sp);
 
             SkillDetailViewSetToLvEnhance(statData);
         }
@@ -139,10 +125,9 @@ namespace Personal.HagYun
                 priorityChangeBtn.gameObject.SetActive(false);
             }
         }
-        public void SkillImgChange(Sprite sp, bool isHoming) => skillImg.SkillImgSetting(sp, isHoming);
+        public void SkillImgChange(Sprite sp) => skillImg.sprite = sp;
         public void SkillNameChange(string skillName) => nameText.text = skillName;
-        public void SkillLevelChange(int curLv, int maxLv) => levelText.text = $"Lv : {curLv} / {maxLv}";
-        // public void SkillStatValueTextChange() => skillValueText.text = sb.ToString();
+        public void SkillLevelChange(int curLv, int maxLv) => levelText.text = $"{curLv} / {maxLv}";
         public void SkillStatValueTextChange(string valueText) => skillValueText.text = valueText;
         public void SkillCooltimeChange(float cooltime) => skillCooltimeText.text = $"쿨타임 : {cooltime}초";
         public void SkillDescriptionChange(string skillDescription) => skillDescriptionText.text = skillDescription;

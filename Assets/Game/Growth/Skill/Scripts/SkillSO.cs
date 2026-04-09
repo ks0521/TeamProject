@@ -39,6 +39,7 @@ namespace Growth.Skill
         public string skillName; //스킬 이름
         public virtual SkillType Type { get; } //스킬타입
         public int maxLv; // 스킬 최대 레벨
+        public int unlockPlayerLv; // 스킬 포인트를 찍을 수 있는 레벨
         public string description;
         [Header("스킬 아이콘")]
         public Sprite skillIcon;

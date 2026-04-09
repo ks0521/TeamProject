@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using Base.Utils;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public struct TargetChecker
     {

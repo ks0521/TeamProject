@@ -1,12 +1,10 @@
 ﻿using Cysharp.Threading.Tasks;
-using Growth.Skill;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Battle;
 using Base.Data;
 using Base.Managers;
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     [Serializable]
     public class EquipSkill

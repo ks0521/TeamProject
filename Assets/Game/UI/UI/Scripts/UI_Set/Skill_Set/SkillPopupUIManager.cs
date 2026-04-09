@@ -2,28 +2,25 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public struct UIPresenterInitData
     {
-        public PlayerSkillUIManager owner;
+        public SkillPopupUIManager owner;
+        public SkillManager skillMgr;
         public SkillPool pool;
         public EventHub hub;
-        public UIPresenterInitData(PlayerSkillUIManager owner, SkillPool pool, EventHub hub)
+        public UIPresenterInitData(SkillPopupUIManager owner, SkillManager skillMgr, SkillPool pool, EventHub hub)
         {
             this.owner = owner;
+            this.skillMgr = skillMgr;
             this.pool = pool;
             this.hub = hub;
         }
     }
-    public class PlayerSkillUIManager : MonoBehaviour
+    public class SkillPopupUIManager : MonoBehaviour
     {
         private SkillManager skillMgr;
         public SkillManager SkillMgr => skillMgr;
@@ -57,7 +54,7 @@ namespace Personal.HagYun
             skillDetailPresenter = GetComponentInChildren<SkillDetailPresenter>(true);
             skillEquipChangePresenter = GetComponentInChildren<SkillEquipChangePresenter>(true);
 
-            UIPresenterInitData initData = new UIPresenterInitData(this, pool, hub);
+            UIPresenterInitData initData = new UIPresenterInitData(this, skillMgr, pool, hub);
 
             skillTreePresenter.Init(initData);
             skillTreePresenter.SetSkillPointText(curPoint, maxPoint);
@@ -70,13 +67,6 @@ namespace Personal.HagYun
             AllPresenterAddListnerByPool();
 
         }
-        // void AllPresenterAddListner()
-        // {
-        //     skillTreePresenter.BtnSetInitAndEventSubscribe(SkillDetailSet, SkillReset);
-        //     var so = skillMgr.GetSkill(showSkillKey);
-
-        //     eventHub.OnSkillEnhanced += skillTreePresenter.SetSkillPointText;
-        // }
         void AllPresenterAddListnerByPool()
         {
             skillTreePresenter.BtnEventAddListner(SkillDetailSetByPool, SkillResetByPool);
