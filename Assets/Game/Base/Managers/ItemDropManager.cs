@@ -36,6 +36,7 @@ public class ItemDropManager : MonoBehaviour, IManager
         if(batch.equipmentChanged) hub.GetEquipments();
         if(batch.newEquipmentChanged) hub.GetNewEquipment();
     }
+    
     /// <summary> 아이템 1종 획득하는 메서드</summary>
     /// <param name="playerDropSound">획득 효과음 출력 여부 </param>
     public void GetReward(DropReward reward, bool playerDropSound = true)

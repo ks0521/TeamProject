@@ -105,9 +105,8 @@ public class ChallengeStageRule : StageRule
         isCleared = true;
         if (stage.rewardTable != null)
         {
-            eventHub.GetClearRewards(stage.rewardTable);
             dropManager.GetRewards(stage.rewardTable);
-            
+            eventHub.GetClearRewards(stage.rewardTable);
         }
         ChallengeSuccess?.Invoke();
     }
@@ -116,14 +115,21 @@ public class ChallengeStageRule : StageRule
         ChallengeFail?.Invoke();
     }
 
-    protected async UniTaskVoid ChallengeTimeAttack(CancellationToken token)
+    protected async UniTaskVoid ChallengeTimeAttack(CancellationToken token, bool timeOverIsFail = true)
     {
         while (remainTime > 0)
         {
             remainTime -= Time.deltaTime;
             await UniTask.Yield(cancellationToken: token);
         }
-        StageFail();
+        if (timeOverIsFail)
+        {
+            StageFail();
+        }
+        else
+        {
+            StageClear();
+        }
     }
     public override void MonsterKilledInStage(Monster monster)
     {
@@ -137,12 +143,12 @@ public class ChallengeStageRule : StageRule
     }
     public override void Destroy()
     {
-        token.Cancel();
-        token.Dispose();
+        token?.Cancel();
+        token?.Dispose();
     }
     
 }
-
+/// <summary> 특정 킬 수를 달성하면 클리어되는 스테이지</summary>
 [Serializable]
 public class KillCount : ChallengeStageRule
 {
@@ -172,5 +178,18 @@ public class BossKill : ChallengeStageRule
         }
     }
 }
+/// <summary> 특정시간 생존하면 달성되는 스테이지 </summary>
+[Serializable]
+public class Survival : ChallengeStageRule
+{
+    public Survival(StageSO stage) : base(stage) { }
 
+    public override void Enter()
+    {
+        token = new CancellationTokenSource();
+        ChallengeTimeAttack(token.Token, timeOverIsFail:false).Forget();
+    }
+    //해당 챌린지에서는 
+    public override void MonsterKilledInStage(Monster monster) {  }
+}
 #endregion
