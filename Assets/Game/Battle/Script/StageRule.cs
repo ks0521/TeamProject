@@ -106,10 +106,8 @@ public class ChallengeStageRule : StageRule
         if (stage.rewardTable != null)
         {
             eventHub.GetClearRewards(stage.rewardTable);
-            foreach (var reward in stage.rewardTable)
-            {
-                dropManager.GetItem(reward);
-            }
+            dropManager.GetRewards(stage.rewardTable);
+            
         }
         ChallengeSuccess?.Invoke();
     }
