@@ -370,8 +370,10 @@ namespace QuestSystem
                     {
                         itemID = r.itemID,
                         itemName = info.itemName,
+                        icon = info.itemIcon,
                         amount = r.amount,
-                        icon = info.itemIcon
+                        description = info.description,
+                        originalSO = info.itemSO
                     });
                 }
             }
