@@ -23,6 +23,8 @@ MonoBehaviour:
       amount: 999
     - itemID: 2
       amount: 100
+    - itemID: 101
+      amount: 1
   - groupID: 1001
     items:
     - itemID: 3

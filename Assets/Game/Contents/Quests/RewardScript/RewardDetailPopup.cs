@@ -43,7 +43,28 @@ public class RewardDetailPopup : MonoBehaviour
         else infoText.text = data.description;
 
         AdjustPosition(clickPos);
-        mainContainer.SetActive(true);
+        if (mainContainer != null)
+        {
+            mainContainer.SetActive(true);
+            infoPanelRect.localScale = Vector3.one; //스케일 문제 방지
+        }
+    }
+
+    //패널이 화면 밖으로 나가는 일 방지용
+    void AdjustPosition(Vector2 screenPos)
+    {
+        if (infoPanelRect == null) return;
+
+        //마우스 위치가 화면 좌/우에 위치하는지 판단 후 그 반대로 패널 배치
+        float pivotX = (screenPos.x > Screen.width * 0.5f) ? 1f : 0f;
+        float pivotY = (screenPos.y > Screen.width * 0.5f) ? 1f : 0f;
+
+        infoPanelRect.pivot = new Vector2(pivotX, pivotY);
+        infoPanelRect.position = screenPos;
+
+        Vector3 pos = infoPanelRect.localPosition;
+        pos.z = 0;
+        infoPanelRect.localPosition = pos;
     }
 
     public void HidePanel()
@@ -76,21 +97,5 @@ public class RewardDetailPopup : MonoBehaviour
         if (stat.statStoneGain > 0) sb.AppendLine($"스탯 성장석 획득량 +{stat.statStoneGain}");
 
         return sb.ToString().TrimEnd();
-    }
-
-    //패널이 화면 밖으로 나가는 일 방지용
-    void AdjustPosition(Vector2 screenPos)
-    {
-        if (infoPanelRect == null) return;
-
-        infoPanelRect.localScale = Vector3.one;
-        //마우스 위치가 화면 좌/우에 위치하는지 판단 후 그 반대로 패널 배치
-        float pivotX = (screenPos.x > Screen.width * 0.5f) ? 1.05f : -0.05f;
-        float pivotY = (screenPos.y > Screen.width * 0.5f) ? 1.05f : -0.05f;
-        infoPanelRect.pivot = new Vector2(pivotX, pivotY);
-        infoPanelRect.position = screenPos;
-        Vector3 pos = infoPanelRect.localPosition;
-        pos.z = 0;
-        infoPanelRect.localPosition = pos;
     }
 }

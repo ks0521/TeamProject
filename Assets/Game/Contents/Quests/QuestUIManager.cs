@@ -241,17 +241,18 @@ public class QuestUIManager : MonoBehaviour, IManager
     {
         if (questManager == null) return;
 
-        List<RewardData> totalRewards = new List<RewardData>();
+        //보상 합산용 딕셔너리
+        Dictionary<int, RewardData> stackedRewards = new Dictionary<int, RewardData>();
+        //합산 불가능한 아이템용 리스트
+        List<RewardData> uniqueRewards = new List<RewardData>();
         bool checkAgain = true;
         int safetyCounter = 0; // 무한 루프 방지용
 
         while (checkAgain)
         {
-            QuestCategory currentCat = (QuestCategory)currentTabIndex;
-
             // 현재 카테고리 중 완료 가능한 것들만 추출
             var targetQuests = questManager.GetActiveQuests()
-                .Where(q => q.Data.CategoryEnum == currentCat && q.isCompleted)
+                .Where(q => q.Data.CategoryEnum == (QuestCategory)currentTabIndex && q.isCompleted)
                 .ToList();
 
             if (targetQuests.Count > 0)
@@ -259,21 +260,47 @@ public class QuestUIManager : MonoBehaviour, IManager
                 foreach (var q in targetQuests)
                 {
                     var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
-                    totalRewards.AddRange(rewards);
+
+                    foreach (var r in rewards)
+                    {
+                        bool isStackable = !(r.originalSO is Growth.Equipment.EquipmentSO);
+                        if (isStackable)
+                        {
+                            //이미 딕셔너리에 같은 아이템 ID가 있다면 수량만 추가
+                            if (stackedRewards.ContainsKey(r.itemID))
+                            {
+                                stackedRewards[r.itemID].amount += r.amount;
+                            }
+                            else
+                            {
+                                //처음 나온 재화라면 딕셔너리에 추가
+                                stackedRewards[r.itemID] = r;
+                            }
+                        }
+                        else
+                        {
+                            //장비라면 무조건 개별 리스트에 추가
+                            uniqueRewards.Add(r);
+                        }
+                    }
                     //true: 보상이 합산된 팝업
                     questManager.TryCompleteQuest(q, true);
                 }
                 //다음 퀘스트가 초과분만으로 완료될 수 있는지 체크
                 checkAgain = true;
                 safetyCounter++;
-                //무한루프 방지용
-                if (safetyCounter > 255) checkAgain = false;
+                if (safetyCounter > 255) checkAgain = false; //무한루프 방지용
             }
             else checkAgain = false;    
         }
-        if (totalRewards.Count > 0 && rewardPopup != null)
+        //딕셔너리의 합산 데이터와 장비 리스트를 하나로 합침
+        List<RewardData> finalRewards = new List<RewardData>();
+        finalRewards.AddRange(stackedRewards.Values);
+        finalRewards.AddRange(uniqueRewards);
+
+        if (finalRewards.Count > 0 && rewardPopup != null)
         {
-            rewardPopup.ShowRewards(totalRewards);
+            rewardPopup.ShowRewards(finalRewards);
         }
         RefreshQuestBox();
         UpdateTabVisuals();
