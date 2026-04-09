@@ -1,16 +1,14 @@
 using Base.Data;
 using Base.Managers;
 using Battle;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Growth.Skill;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillEquipChangePresenter : MonoBehaviour
     {
-        private PlayerSkillUIManager owner;
+        private SkillPopupUIManager owner;
         // private SkillManager skillMgr;
         private SkillPool pool;
         private EventHub hub;

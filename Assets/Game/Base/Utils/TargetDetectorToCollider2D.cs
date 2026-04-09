@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Base.Utils
 {
     public class TargetDetectorUsingCircleCollider2D : MonoBehaviour
     {

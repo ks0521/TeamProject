@@ -1,12 +1,11 @@
 ﻿using Base.Data;
 using Base.Managers;
 using Battle;
-using Growth.Skill;
 using System;
-using System.Collections.Generic;
+using Base.Utils;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     [Serializable]
     public struct EquipSkillCheckerByPriority
@@ -23,7 +22,7 @@ namespace Personal.HagYun
             return isEquipBoolArr[index];
         }
         public void BoolArrInit() => isEquipBoolArr = new bool[6];
-        public void EquipSkillCheckerInit(in EquipSkill[] eSkillArr, Priority pri = Priority.Low)
+        public void EquipSkillCheckerInit(EquipSkill[] eSkillArr, Priority pri = Priority.Low)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -60,7 +59,7 @@ namespace Personal.HagYun
                 equipSkillChecker[i].BoolArrInit();
             }
         }
-        public void PrioritySkillNumSetInitAll(in EquipSkill[] eSkillArr)
+        public void PrioritySkillNumSetInitAll(EquipSkill[] eSkillArr)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -279,12 +278,10 @@ namespace Personal.HagYun
                 td = GetComponent<TargetDetectorUsingCircleCollider2D>();
                 eventHub = GameManager.Instance.GetGameSystem<EventHub>();
                 skillObjPool = new SkillObjectPool();
-                SkillEquipInit();
-                skillObjPool.Init(skillPool);
-                AutoSkillUsePossibleCntInit();
+                // SkillEquipInit();
             }
         }
-        void SkillEquipInit()
+        public void SkillEquipInit()
         {
             equipSkillArr = new EquipSkill[6];
             int index = 0;
@@ -295,28 +292,22 @@ namespace Personal.HagYun
                 eSkill.Init(this, index, skillPool, skillObjPool);
                 equipSkillArr[index] = eSkill;
             }
-
-            if (skillPool == null)
+            skillPool.Init();
+            for (int i = 0; i < 6; i++)
             {
-                Debug.LogWarning("스킬풀 없음");
-            }
-            else
-            {
-                skillPool.Init();
-                for (int i = 0; i < 6; i++)
+                index = i;
+                // if (skillPool.TryGetActiveSkillByKey(index, out ActiveSkill skill))
+                if (skillPool.TestTryGetSaveSkill(i, out int key) &&
+                skillPool.TryGetActiveSkillByKey(key, out var skill))
                 {
-                    index = i;
-                    // if (skillPool.TryGetActiveSkillByKey(index, out ActiveSkill skill))
-                    if (skillPool.TestTryGetSaveSkill(i, out int key) && 
-                    skillPool.TryGetActiveSkillByKey(key, out var skill))
-                    {
-                        SkillEquip(index, skill, true);
-                    }
+                    SkillEquip(index, skill, true);
                 }
             }
             EquipSkillSlotEventSubscribe();
             SetUseSkillPossibleCnt();
             SkillRangeChange(2);
+            skillObjPool.Init(skillPool);
+            AutoSkillUsePossibleCntInit();
         }
         void EquipSkillSlotEventSubscribe()
         {

@@ -6,11 +6,11 @@ using System.Text;
 using Base.Utils;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillDetailPresenter : MonoBehaviour, IMemberReceiver
     {
-        private PlayerSkillUIManager owner;
+        private SkillPopupUIManager owner;
         // private SkillManager skillMgr;
         private SkillPool pool;
         private EventHub hub;

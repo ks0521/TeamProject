@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Base.Utils;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     [Serializable]
     public class SkillButtonView

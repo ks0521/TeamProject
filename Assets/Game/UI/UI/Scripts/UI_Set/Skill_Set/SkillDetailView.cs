@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public struct SkillDetailViewNeedsNameAndImage
     {

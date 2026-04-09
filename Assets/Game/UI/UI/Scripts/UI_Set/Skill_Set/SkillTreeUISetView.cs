@@ -4,7 +4,7 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public struct SkillTreeUISetViewNeedsImageData
     {

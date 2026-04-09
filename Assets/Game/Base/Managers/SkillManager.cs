@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Managers;
 using Base.Save;
+using Battle;
 using Growth.Skill;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -20,9 +21,11 @@ public class SkillManager : MonoBehaviour,IManager
     private ProgressManager _progressManager;
     private RuntimeProgressData progress;
     private Dictionary<int, int> skillProgress => progress.skillProgress.skillProgressState;
+    public int PlayerLevel => progress.playerInfo.level;
+    // public bool IsSkillLvUpPossible(int key) => skillProgress[key] < 
     private EventHub eventHub;
-    
-    public SkillSO GetSkill(int key) => skillTable?.GetSO(key);
+    private PlayerEquipSkillController playerEquipSkillController;
+    // public SkillSO GetSkill(int key) => skillTable?.GetSO(key);
     public SkillSO[] GetAllSkills() => skillTable?.GetAll();
     public int GetSkillLevel(int key) => 
         (skillProgress.TryGetValue(key, out int value) ? value : 0); //값을 찾을 수 있으면 value, 없으면 스킬찍은적 없음
@@ -41,7 +44,8 @@ public class SkillManager : MonoBehaviour,IManager
     } 
     /// <summary> 스킬 레벨업 가능한지 확인하는 메서드</summary>
     /// <param name="count">스킬 증가시키려는 횟수</param>
-    public bool CanEnhanceSkill(int count) => count < progress.playerInfo.skillPoint;
+    // public bool CanEnhanceSkill(int count) => count < progress.playerInfo.skillPoint;
+    public bool CanEnhanceSkill() => 0 < progress.playerInfo.skillPoint;
 
     public void MaxEnhanceSkill(SkillSO skill)
     {
@@ -79,5 +83,8 @@ public class SkillManager : MonoBehaviour,IManager
         _progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         progress = _progressManager.progress;
+
+        playerEquipSkillController = GameManager.Instance.GetGameSystem<PlayerManager>().Player.ESController;
+        playerEquipSkillController.SkillEquipInit();
     }
 }
