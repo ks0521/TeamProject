@@ -54,7 +54,7 @@ namespace Growth.Equipment
                 return null;
             }
 
-            Debug.Log($"{item.itemName}");
+            //Debug.Log($"{item.itemName}");
             return item;
         }
         /// <summary> 특정함 등급과 품질, 아이템 타입을 가진 아이템SO를 제공 </summary>

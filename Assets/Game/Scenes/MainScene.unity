@@ -198,6 +198,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8814247254157566161, guid: 01b6924ad040f104498f05300785300d,
         type: 3}
+      propertyPath: BlockProceed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814247254157566161, guid: 01b6924ad040f104498f05300785300d,
+        type: 3}
       propertyPath: BlockSpawning
       value: 0
       objectReference: {fileID: 0}
@@ -968,6 +973,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
+        type: 3}
+      propertyPath: BossHp
+      value: 
+      objectReference: {fileID: 6636286323766086112, guid: b73a2f4dd86f1fe4ab6a83129fd25dac,
+        type: 3}
     - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
       propertyPath: shopBtn
