@@ -1,60 +1,63 @@
 using Base.Managers;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Reward_Set : MonoBehaviour
+
+namespace UI.ChapterStage_Set
 {
-    [SerializeField] Image[] rewardImg;
-
-    [SerializeField] Sprite gold;
-    [SerializeField] Sprite stone;
-    [SerializeField] Sprite exp;
-
-    public void SetReward(StageEntry stageEntry)
+    public class Reward_Set : MonoBehaviour
     {
-        for (int i = 0; i < rewardImg.Length; i++)
-        {
-            rewardImg[i].gameObject.SetActive(false);
-        }
+        [SerializeField] Image[] rewardImg;
 
-        var dropTable = stageEntry.stageSO.dropTable;
+        [SerializeField] Sprite gold;
+        [SerializeField] Sprite stone;
+        [SerializeField] Sprite exp;
 
-        if (dropTable == null)
-        {
-            return;
-        }
 
-        int currentSlot = 0;
-
-        if (dropTable.rewardExp > 0)
+        public void SetReward(StageEntry stageEntry)
         {
-            SetSlot(ref currentSlot , exp);
-        }
-        
-        foreach (var reward in dropTable.dropList)
-        {
-            switch (reward.rewardType)
+            for (int i = 0; i < rewardImg.Length; i++)
             {
-                case DropRewardType.Currency:
-                    SetSlot(ref currentSlot, reward.currencySO.icon);
-                    break;
-               
-                case DropRewardType.Item:
-                    SetSlot(ref currentSlot, reward.itemSO.icon);
-                    break;
+                rewardImg[i].gameObject.SetActive(false);
+            }
+
+            var dropTable = stageEntry.stageSO.dropTable;
+
+            if (dropTable == null)
+            {
+                return;
+            }
+
+            int currentSlot = 0;
+
+            if (dropTable.rewardExp > 0)
+            {
+                SetSlot(ref currentSlot, exp);
+            }
+
+            foreach (var reward in dropTable.dropList)
+            {
+                switch (reward.rewardType)
+                {
+                    case DropRewardType.Currency:
+                        SetSlot(ref currentSlot, reward.currencySO.icon);
+                        break;
+
+                    case DropRewardType.Item:
+                        SetSlot(ref currentSlot, reward.itemSO.icon);
+                        break;
+                }
+            }
+        }
+        private void SetSlot(ref int slot, Sprite icon)
+        {
+            if (slot < rewardImg.Length)
+            {
+                rewardImg[slot].sprite = icon;
+                rewardImg[slot].gameObject.SetActive(true);
+                slot++;
             }
         }
     }
-    private void SetSlot(ref int slot, Sprite icon)
-    {
-        if (slot < rewardImg.Length)
-        {
-            rewardImg[slot].sprite = icon;
-            rewardImg[slot].gameObject.SetActive(true);
-            slot++;
-        }
-    }
+
 }

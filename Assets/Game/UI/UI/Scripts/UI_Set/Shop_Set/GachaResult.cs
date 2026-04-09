@@ -1,4 +1,5 @@
 using Growth.Equipment;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,6 @@ namespace Shop.Gacha
 
         public void Show(List<EquipmentSO> results)
         {
-            // 1. 기존 생성된 것 제거
             for (int i = 0; i < spawnedItems.Count; i++)
             {
                 Destroy(spawnedItems[i]);
@@ -43,6 +43,16 @@ namespace Shop.Gacha
             if (item == null || so == null) return;
 
             item.SetData(so);
+        }
+
+
+        public void BindButton(Action check , Action retry)
+        {
+            checkButton.onClick.RemoveAllListeners();
+            retryButton.onClick.RemoveAllListeners();
+
+            checkButton.onClick.AddListener(() => check?.Invoke());
+            retryButton.onClick.AddListener(() => retry?.Invoke());
         }
 
     }

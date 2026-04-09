@@ -17,7 +17,6 @@ namespace Shop.Gacha
         [Header("UI 참조")]
         [SerializeField] private Button afterButton;
         [SerializeField] private Button beforeButton;
-        [SerializeField] private TextMeshProUGUI level;
 
         public void SetTable(string name , string table)
         {
@@ -26,11 +25,11 @@ namespace Shop.Gacha
         }
         public void BindButtons(Action after, Action before)
         {
-            afterButton.onClick.RemoveAllListeners();
+            /*afterButton.onClick.RemoveAllListeners();
             beforeButton.onClick.RemoveAllListeners();
 
             afterButton.onClick.AddListener(() => after());
-            beforeButton.onClick.AddListener(() => before());
+            beforeButton.onClick.AddListener(() => before());*/
         }
     }
 }
