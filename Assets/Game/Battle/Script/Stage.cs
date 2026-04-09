@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Base.Data;
+using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -20,17 +21,17 @@ using Random = UnityEngine.Random;
         
         private BoxCollider2D spawnArea;
         private CancellationTokenSource spawnerToken; //유니태스크 종료 토큰
-
+        private EventHub eventHub;
         #region 스테이지 시작
         public Stage(StageSO stage, MonsterPoolManager monsterPool, BoxCollider2D spawnArea)
         {
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             monsterPool.ChangeStage(stage);
             this.monsterPool = monsterPool;
             this.spawnArea = spawnArea;
             stageSO = stage;
             canSpawning = false;
             SpawnTypeSelect(stageSO.spawnType);
-            
             Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 초기화");
         }
 
@@ -60,7 +61,7 @@ using Random = UnityEngine.Random;
         #endregion
         #region 스폰 타입
 
-        /// <summary> MVP 보여주기용 임시 메서드, 나중에는 룰 자체를 변경할 것</summary>
+        
         void BossSpawn()
         {
             float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
@@ -73,6 +74,7 @@ using Random = UnityEngine.Random;
             ((Boss)monster).InitBoss();
             monsterObj.transform.position = new Vector3(randx, randy, 0);
             monsterObj.SetActive(true);
+            eventHub.BossSpawned(monster);
             Register(monster);
         }
         /// <summary> 실제 몬스터 스폰 비동기 메서드</summary>
