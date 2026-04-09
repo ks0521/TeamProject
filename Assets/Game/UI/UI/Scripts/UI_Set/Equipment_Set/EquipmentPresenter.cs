@@ -66,6 +66,10 @@ namespace UI.Equipment
             openWeaponTabButton.onClick.AddListener(() => ShowPopup(EquipType.Weapon));
             openArmorTabButton.onClick.AddListener(() => ShowPopup(EquipType.Armor));
             openAccessoryTabButton.onClick.AddListener(() => ShowPopup(EquipType.Accessory));
+            
+            weaponPopup.SetActive(false);
+            armorPopup.SetActive(false);
+            accessoryPopup.SetActive(false);
         }
         
         private void OnEnable()
@@ -73,8 +77,8 @@ namespace UI.Equipment
             equipmentManager = GameManager.Instance.GetGameSystem<EquipmentManager>();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             weaponSlots = weaponPopup.GetComponentsInChildren<EquipmentSlotView>(true);
-            //armorSlots = armorPop.GetComponentsInChildren<EquipmentSlotView>(true);
-            //accSlots = accPop.GetComponentsInChildren<EquipmentSlotView>(true);
+            armorSlots = armorPopup.GetComponentsInChildren<EquipmentSlotView>(true);
+            accSlots = accessoryPopup.GetComponentsInChildren<EquipmentSlotView>(true);
 
             detailView.SetActive(false);
             currentPopUp = weaponPopup; //맨 처음은 무기 인벤토리를 열기
@@ -107,12 +111,12 @@ namespace UI.Equipment
                 case EquipType.Weapon:
                     currentPopUp = weaponPopup;
                     break;
-                    /*case EquipType.Armor:
-                        curPopUp = armorPopUp;
-                        break;
-                    case EquipType.Accessory:
-                        curPopUp = accessoryPopUp;
-                        break;*/
+                case EquipType.Armor: 
+                    currentPopUp = armorPopup;
+                    break;
+                case EquipType.Accessory:
+                    currentPopUp = accessoryPopup;
+                    break;
             }
 
             detailView.SetActive(false);
@@ -133,12 +137,12 @@ namespace UI.Equipment
                 case EquipType.Weapon:
                     BindSlotViews(EquipType.Weapon, weaponSlots);
                     break;
-                    /*case 1:
-                        BindSlots(EquipType.Armor, armorSlots);
-                        break;
-                    case 2:
-                        BindSlots(EquipType.Accessory, accSlots);
-                        break;*/
+                case EquipType.Armor:
+                    BindSlotViews(EquipType.Armor, armorSlots);
+                    break;
+                case EquipType.Accessory:
+                    BindSlotViews(EquipType.Accessory, accSlots);
+                    break;
             }
         }
 

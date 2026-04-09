@@ -35,7 +35,7 @@ public class Test : MonoBehaviour, IManager
             Debug.Log("모든 아이템 획득");
             foreach (var VARIABLE in dic.allEquipments)
             {
-                dropManager.GetEquip(new DropReward(){amount = 1, itemSO = VARIABLE, rewardType = DropRewardType.Item});
+                dropManager.GetReward(new DropReward(){amount = 1, itemSO = VARIABLE, rewardType = DropRewardType.Item});
             }
             PrintAllItems();
         }
