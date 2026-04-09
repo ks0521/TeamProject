@@ -96,12 +96,12 @@ namespace Personal.HagYun
                 if (s is ActiveSkill aSkill)
                 {
                     activeSkillDic.Add(key, aSkill);
-                    Debug.Log($"activeSkill {key}번 {s.SkillData.name} 저장");
+                    //Debug.Log($"activeSkill {key}번 {s.SkillData.name} 저장");
                 }
                 else if (s is PassiveSkill pSkill)
                 {
                     passiveSkillDic.Add(key, pSkill);
-                    Debug.Log($"passiveSkill {key}번 {s.SkillData.name} 저장");
+                    //Debug.Log($"passiveSkill {key}번 {s.SkillData.name} 저장");
                 }
             }
         }
