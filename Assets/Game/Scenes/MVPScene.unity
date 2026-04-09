@@ -666,7 +666,7 @@ PrefabInstance:
         type: 3}
       propertyPath: btnViewArr.Array.data[0].skillImg
       value: 
-      objectReference: {fileID: 1457639388}
+      objectReference: {fileID: 1213168694}
     - target: {fileID: 1268127800039145769, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
       propertyPath: btnViewArr.Array.data[1].skillImg
