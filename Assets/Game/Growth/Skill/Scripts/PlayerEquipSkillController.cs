@@ -385,7 +385,7 @@ namespace Growth.Skill
         protected override void SkillUnequipFeat(int index, EquipSkill eSkill)
         {
             base.SkillUnequipFeat(index, eSkill);
-            eventHub.SkillUnsetComplete(index);
+            eventHub.SkillUnset(index);
             AutoSkillUseCntUpdateFeat(eSkill);
             UnequipUpdateToEquipSkillChecker(index);
         }

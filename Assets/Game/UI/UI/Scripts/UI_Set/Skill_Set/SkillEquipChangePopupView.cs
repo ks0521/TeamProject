@@ -24,15 +24,15 @@ namespace UI.Skill_Set
             }
             closeBtn.onClick.RemoveAllListeners();
         }
-        public void TargetSkillImgSet(Sprite sp, bool isHomingSkill) => targetSkillImage.SkillImgSetting(sp, isHomingSkill);
-        public void SkillSlotBtnImgSet(int index, Sprite sp, bool isHomingSkill)
+        public void TargetSkillImgSet(Sprite sp) => targetSkillImage.sprite = sp;
+        public void SkillSlotBtnImgSet(int index, Sprite sp)
         {
             if (index < 0 || 6 <= index)
             {
                 Debug.LogWarning("ui : equip skill slot index는 0~6 사이만 가능");
                 return;
             }
-            equipSkillBtnSet[index].img.SkillImgSetting(sp, isHomingSkill);
+            equipSkillBtnSet[index].img.SkillImgSetting(sp);
         }
         public void SkillSlotBtnImgUnset(int index) => equipSkillBtnSet[index].img.SkillImgUnsetting();
         public void EquipSlotSelectBtnEventSubscribe(int slotIndex, Action func)
