@@ -45,7 +45,6 @@ namespace Base.Data
         public event Action OnBossHit; //보스몬스터 피격
         public void BossHit() => OnBossHit?.Invoke();
         public event Action OnPlayerHit; //플레이어 피격
-        public void PlayerHit() => OnPlayerHit?.Invoke();
         public event Action<MonsterSO> OnMonsterKill; //몬스터 사망
         public void MonsterKill(MonsterSO monsterSO) => OnMonsterKill?.Invoke(monsterSO);
         public event Action<Vector3, int, HitType, bool> OnRequestDamageText;
@@ -68,9 +67,8 @@ namespace Base.Data
         public void SkillUnsetComplete(int order) => OnSkillUnsetComplete?.Invoke(order);
         public event Action<int> OnSkillUnset;
         public void SkillUnset(int order) => OnSkillUnset?.Invoke(order);
-        public event Action<int> OnPlayerSkillUse; //플레이어 스킬 '사용', 스킬 버튼 입력 등에 사용
-        public void PlayerSkillUse(int order) => OnPlayerSkillUse?.Invoke(order);
-        public event Action<int> OnSkillUsed; //플레이어 스킬 '사용됨', 스킬 시전이 완료되었을 때 호출
+        public void PlayerHit() => OnPlayerHit?.Invoke();
+        public event Action<int> OnSkillUsed; //스킬 사용
         public void SkillUsed(int order) => OnSkillUsed?.Invoke(order);
         public event Action<ActiveSkill> OnSkillCanUse; //스킬 사용 가능
         public void SkillCanUse(ActiveSkill skill) => OnSkillCanUse?.Invoke(skill);

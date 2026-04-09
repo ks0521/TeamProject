@@ -49,8 +49,7 @@ namespace Personal.HagYun
                     Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
                     continue;
                 }
-                // tBtnView.ButtonEventSubscribe(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
-                tBtnView.ButtonEventSubscribe(() => SkillUseToMonster(index));
+                tBtnView.ButtonEventSubscribe(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
                 CooltimeCheckTask(index).Forget();
                 ActiveSkillSO skillData = plEquipSkill[index].Skill.ActiveSkillData;
                 // Debug.Log(skillData.skillName);
@@ -58,7 +57,6 @@ namespace Personal.HagYun
             }
             EquipSkillEventSet();
         }
-        void SkillUseToMonster(int index) => eventHub.PlayerSkillUse(index);
         public void OnDestroyFeat()
         {
             EquipSkillEventRemove();
