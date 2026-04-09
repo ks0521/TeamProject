@@ -285,7 +285,7 @@ namespace Base.Utils
                 Debug.LogWarning("타겟 못찾음");
                 return false;
             }
-            float minDis = float.MaxValue;
+            float minDis = ((Vector2)GetTargetColArr[0].transform.position - thisPos).sqrMagnitude;
             for (int i = 0; i < getNearChaCnt; i++)
             {
                 if (!(GetTargetColArr[i].GetComponent<Character>() is Character cha)) continue;
@@ -298,7 +298,7 @@ namespace Base.Utils
                     nearTarget = cha;
                 }
             }
-            return nearTarget != null;
+            return nearTarget == null;
         }
     }
 }

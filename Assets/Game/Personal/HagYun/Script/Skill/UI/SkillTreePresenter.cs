@@ -6,8 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Base.Utils;
-using Unity.VisualScripting;
-using Cysharp.Threading.Tasks;
 
 namespace Personal.HagYun
 {
@@ -19,13 +17,12 @@ namespace Personal.HagYun
         private EventHub hub;
         [SerializeField] private TextMeshProUGUI skillPointTxt;
         [SerializeField] private SkillTreeUISetView[] skillTreeUISetArr;
-        [SerializeField] private SkillTreeUISetView skillTreeUISetPrefab;
-        [SerializeField] private Button closeBtn;
         private Dictionary<int, SkillTreeUISetView> skillTreeUISetDic;
         [SerializeField] private Transform skillTreeUISetParentTransform;
         [SerializeField] private Button resetPointBtn;
-        [SerializeField] private GridLayoutGroup layoutGroup;
-        [SerializeField] private ContentSizeFitter sizeFitter;
+        [SerializeField] private int selectSkillUIKey;
+        public Transform skillEmptyTransform;
+        public ActiveSkill[] activeSkillArr = new ActiveSkill[6];
         public void Init(UIPresenterInitData data)
         {
             owner = data.owner;
@@ -33,40 +30,7 @@ namespace Personal.HagYun
             hub = data.hub;
             // skillMgr = owner.SkillMgr;
 
-            // ObjectSettingHelper.TryFindChild(skillTreeUISetParentTransform, out skillTreeUISetArr);
-            SkillTreeBtnSetting();
-            LayoutGroupAndSizeFitterOff();
-        }
-        void SkillTreeBtnSetting()
-        {
-            var allSkillArr = pool.AllSkillArr;
-            int length = allSkillArr.Length;
-            int activeCnt = pool.ActiveSkillCnt;
-            skillTreeUISetArr = new SkillTreeUISetView[length];
-            // layoutGroup.enabled = true;
-            // sizeFitter.enabled = true;
-            // 패시브부터 주입
-            for(int i = activeCnt; i < length; i++)
-            {
-                skillTreeUISetArr[i] = Instantiate(skillTreeUISetPrefab, skillTreeUISetParentTransform);
-            }
-            // 액티브 주입
-            for(int i = 0; i < activeCnt; i++)
-            {
-                skillTreeUISetArr[i] = Instantiate(skillTreeUISetPrefab, skillTreeUISetParentTransform);
-            }
-        }
-        async UniTaskVoid LayoutGroupAndSizeFitterOffTask()
-        {
-            layoutGroup.enabled = true;
-            sizeFitter.enabled = true;
-            await UniTask.NextFrame();
-            layoutGroup.enabled = false;
-            sizeFitter.enabled = false;
-        }
-        public void LayoutGroupAndSizeFitterOff()
-        {
-            LayoutGroupAndSizeFitterOffTask().Forget();
+            ObjectSettingHelper.TryFindChild(skillTreeUISetParentTransform, out skillTreeUISetArr);
         }
         public void SkillTreeUISetByPool(int key)
         {
@@ -78,7 +42,6 @@ namespace Personal.HagYun
 
             skillTreeUISetDic[key].SkillTreerUISet(skillTreeUIData);
         }
-        // public void BtnEventAddListner(Action<int> skillDetailShowFunc, Action skillLevelResetFunc, Action skillPopupClose)
         public void BtnEventAddListner(Action<int> skillDetailShowFunc, Action skillLevelResetFunc)
         {
             var skillDatas = pool.AllSkillArr;
@@ -98,7 +61,6 @@ namespace Personal.HagYun
                 skillTreeUI.BtnEventAddListner(() => skillDetailShowFunc(key));
             }
             resetPointBtn.onClick.AddListener(() => skillLevelResetFunc());
-            // closeBtn.onClick.AddListener(() => skillPopupClose());
         }
         public void SkillTreeUISet(int key, SkillDatas data)
         {
@@ -157,7 +119,7 @@ namespace Personal.HagYun
         }
         #region SkillPopupPresenter 내부 UI 기능
         public void SetSkillPointText(int curLv, int maxLv)
-         => skillPointTxt.text = $"보유 SP\n{curLv} / {maxLv}";
+         => skillPointTxt.text = $"보유 SP : {curLv} / {maxLv}";
         #endregion
     }
 }

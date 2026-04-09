@@ -23,7 +23,7 @@ namespace Personal.HagYun
             this.hub = hub;
         }
     }
-    public class PlayerSkillUIManager : MonoBehaviour
+    public class PlayerSkillUIManager : MonoBehaviour, IManager
     {
         private SkillManager skillMgr;
         public SkillManager SkillMgr => skillMgr;
@@ -38,10 +38,6 @@ namespace Personal.HagYun
         [SerializeField] private SkillEquipChangePresenter skillEquipChangePresenter;
         public int curPoint;
         public int maxPoint;
-        void OnEnable()
-        {
-            Init();
-        }
         public void Init()
         {
             curPoint = maxPoint;
@@ -80,7 +76,6 @@ namespace Personal.HagYun
         void AllPresenterAddListnerByPool()
         {
             skillTreePresenter.BtnEventAddListner(SkillDetailSetByPool, SkillResetByPool);
-            // skillTreePresenter.BtnEventAddListner(SkillDetailSetByPool, SkillResetByPool, () => Destroy(gameObject));
 
             skillDetailPresenter.BtnEventAddListner(
                 () => SkillLevelOneUpByPool(showSkillKey),
@@ -148,5 +143,6 @@ namespace Personal.HagYun
         {
             skillEquipChangePresenter.SkillEquipChangePopupShow(showSkillKey);
         }
+        public int GetOrder() => 101;
     }
 }
