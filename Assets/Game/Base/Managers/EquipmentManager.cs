@@ -166,7 +166,7 @@ namespace Base.Manager
             //최대레벨 제한 처리 추가필요
             if (!EquipmentInventory.ContainsKey(equipmentSo.key)) return false;
             int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
-            Debug.Log($"CanEnhance : {equipmentSo.itemName}, {cost}, {runtimeData.currency.gold}");
+            //Debug.Log($"CanEnhance : {equipmentSo.itemName}, {cost}, {runtimeData.currency.gold}");
             if (cost > runtimeData.currency.gold) return false;
             return true;
         }
@@ -179,7 +179,7 @@ namespace Base.Manager
             runtimeData.currency.gold -= cost;
             eventHub.CurrencyChange(CurrencyType.GOLD, runtimeData.currency.gold);
             eventHub.EquipEnhanced(equipmentSo);
-            Debug.Log("강화 성공");
+            
             return true;
         }
         #endregion
