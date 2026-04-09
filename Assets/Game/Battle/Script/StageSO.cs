@@ -40,7 +40,7 @@ namespace Battle
         [Tooltip("챕터")] public int chapter;
         [Tooltip("스테이지")] public int stage;
         [Tooltip("드랍 테이블")] public DropTableSO dropTable; //일반스테이지
-        [Tooltip("보상 테이블")] public List<DropReward> rewardTable; //도전 스테이지
+        [Tooltip("보상 테이블")] public RewardTableSO rewardTable; //도전 스테이지
         [Tooltip("몬스터 프리셋")] public List<MonsterPreset> preset;
         [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType stageType;
         [Tooltip("스폰 형식")]public SpawnType spawnType;

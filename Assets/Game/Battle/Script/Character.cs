@@ -21,7 +21,7 @@ namespace Battle
         // stat
         //[SerializeField] PlayerBaseStatusSO baseStat;
         //자식 (몬스터나 플레이어)에서 전투 스탯을 구현
-        public abstract Base.Data.BattleStat CurrentBattleStatStat { get; }
+        public abstract BattleStat CurrentBattleStatStat { get; }
         public Transform damageAnchor;
         [SerializeField] protected float hp;
 

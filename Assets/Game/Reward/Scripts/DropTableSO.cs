@@ -35,6 +35,7 @@ public class DropRewardPreset
 [Serializable]
 public struct DropReward
 {
+    
     public DropRewardType rewardType;
     public CurrencyType currencyType;
     public CurrencySO currencySO;

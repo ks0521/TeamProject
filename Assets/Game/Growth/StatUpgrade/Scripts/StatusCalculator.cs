@@ -51,8 +51,6 @@ public class StatusCalculator : MonoBehaviour,IManager
     public void InputResult()
     {
         runtimeStatus.finalStatus = statIncreaseCache + equipOwnIncreaseCache + equipUsingIncreaseCache + skillIncreaseCache;
-        runtimeStatus.finalBattleStatStatus = runtimeStatus.finalStatus.battle; //코드 변경 소프트랜딩용
-        runtimeStatus.finalRewardStatStatus = runtimeStatus.finalStatus.reward;
     }
     /// <summary> 모든 성장수단 계산 후 런타임 스탯에 적용 </summary>
     public void CalcAll()
@@ -119,7 +117,6 @@ public class StatusCalculator : MonoBehaviour,IManager
             statIncreaseCache.battle.atkSpeed =
                 runtimeStatus.baseStat.total.battle.atkSpeed -
                 (progress.statUpgrades.upgradeLevelsByType[StatusType.AtkSpeed] * stat.increasePerEnhance);
-            runtimeStatus.finalBattleStatStatus.atkSpeed = Mathf.Clamp(runtimeStatus.finalBattleStatStatus.atkSpeed, 0.1f, 3f); //공격속도 증가 디버프 있을수도 있어서
         }
         else{ Debug.LogWarning($"공격속도 SO 찾지 못함");}
 
@@ -128,7 +125,7 @@ public class StatusCalculator : MonoBehaviour,IManager
             statIncreaseCache.battle.critChance =
                 runtimeStatus.baseStat.total.battle.critChance +
                 progress.statUpgrades.upgradeLevelsByType[StatusType.CritChance] * stat.increasePerEnhance;
-            Mathf.Clamp(runtimeStatus.finalBattleStatStatus.critChance, 0f, 1f); //공격속도 증가 디버프 있을수도 있어서
+            Mathf.Clamp(runtimeStatus.FinalBattleStatStatus.critChance, 0f, 1f); //공격속도 증가 디버프 있을수도 있어서
         }
         else{ Debug.LogWarning($"치명타 확률 SO 찾지 못함");}
 
