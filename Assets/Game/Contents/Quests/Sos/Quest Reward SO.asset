@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Quest Reward SO
   m_EditorClassIdentifier: 
   rewardGroups:
+  - groupID: 1
+    items:
+    - itemID: 101
+      amount: 1
   - groupID: 103
     items:
     - itemID: 1
