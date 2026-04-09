@@ -19,11 +19,6 @@ namespace Shop.Gacha
         [SerializeField] private Button beforeButton;
         [SerializeField] private TextMeshProUGUI level;
 
-
-        private void OnEnable()
-        {
-            
-        }
         public void SetTable(string name , string table)
         {
             Name.text = name;

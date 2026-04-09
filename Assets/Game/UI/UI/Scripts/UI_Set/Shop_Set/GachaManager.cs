@@ -24,7 +24,7 @@ namespace Shop.Gacha
         [SerializeField] private List<GachaConfigSO> gachaConfigSO;
 
         private Dictionary<EquipType, GachaConfigSO> gachaDic = new(); //해당 타입의 가챠 SO
-        
+
 
         public int GetOrder() => 220;
         public void Init()
@@ -33,10 +33,10 @@ namespace Shop.Gacha
             progressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
-            
-           
+
+
             gachaDic.Clear();
-           
+
             if (gachaConfigSO == null || gachaConfigSO.Count == 0)
             {
                 Debug.LogWarning("가챠 SO 가 비어있음");
@@ -100,7 +100,7 @@ namespace Shop.Gacha
             {
                 Debug.LogWarning($"{config.name} : baseRarityWeights 가 비어 있습니다.");
             }
-        }//SO에 MaxLevel 값 확인 , levelUpDraw 개수 확인(인스펙터 검사용 함수)
+        }//SO 데이터 검사 (레벨 , 비용 등등 전체 확인용)
 
 
         private void SetGachaLevel(EquipType equipType, int level)
@@ -164,7 +164,7 @@ namespace Shop.Gacha
             }
 
             return 1;
-        }//현재 가챠 레벨 반환
+        }//타입별 현재 가챠 레벨 반환(방어구 , 악세서리 추가예정)
         public int GetCurrentGachaCount(EquipType equipType)
         {
             switch (equipType)
@@ -180,7 +180,7 @@ namespace Shop.Gacha
             }
 
             return 0;
-        }//현재 가챠 횟수 반환
+        }//타입별 누적 가챠 횟수 반환
         public int GetNextLevelUpCount(EquipType equipType)
         {
             GachaConfigSO config = GetGachaSO(equipType);
@@ -201,7 +201,7 @@ namespace Shop.Gacha
             }
 
             return config.levelUpDraw[index];
-        }//레벨업에 필요한 가챠 횟수 반환
+        }//현재 레벨 기준 레벨업에 필요한 가챠 횟수 반환
         public int GetDrawCost(EquipType equipType, GachaDrawType drawType)
         {
             GachaConfigSO config = GetGachaSO(equipType);
@@ -234,7 +234,7 @@ namespace Shop.Gacha
             if (typeEquipments == null || typeEquipments.Count == 0) return false;
 
             return true;
-        }//가챠 가능/불가능 반환
+        }//가챠 가능 여부 반환
         public string GetProbabilityTableText(EquipType equipType, int level)
         {
             GachaConfigSO configSO = GetGachaSO(equipType);
@@ -276,7 +276,25 @@ namespace Shop.Gacha
                 }
 
                 int finalWeight = baseWeight.weight + bonusWeight;
-                sb.AppendLine($"{baseWeight.rarity} : {finalWeight}");
+
+                switch (baseWeight.rarity)
+                {
+                    case EquipRarity.Common:
+                        sb.AppendLine($"<color=#646464>{baseWeight.rarity}</color> : {finalWeight / 100}%");
+                        break;
+
+                    case EquipRarity.UnCommon:
+                        sb.AppendLine($"<color=#64E6FF>{baseWeight.rarity}</color> : {finalWeight / 100}%");
+                        break;
+
+                    case EquipRarity.Rare:
+                        sb.AppendLine($"<color=#A500FF>{baseWeight.rarity}</color> : {finalWeight / 100}%");
+                        break;
+
+                    case EquipRarity.Unique:
+                        sb.AppendLine($"<color=#FFC800>{baseWeight.rarity}</color> : {finalWeight / 100}%");
+                        break;
+                }
             }
 
             return sb.ToString();
