@@ -27,6 +27,8 @@ namespace UI.Scripts
         [SerializeField] private StageManager stageManager;
         [SerializeField] private PopupManager popup;
 
+        private Monster currentBoss;
+
         private Coroutine timerCoroutine; //코루틴 저장용
         
         public void Init()
@@ -46,6 +48,8 @@ namespace UI.Scripts
 
             hub.OnStageChangeClear += RefreshChallengeUIOnce;
             hub.OnMonsterKill += ReFreshMonsterKill;
+
+            hub.OnBossSpawned += ReFreshBoss;
 
             //스킬 부분 미구현
             //자동전투 버튼 미구현
@@ -121,16 +125,29 @@ namespace UI.Scripts
 
             kill.UpdateKillText(data.currentKill);
         }//몬스터 갱신용
-        void ReFreshBoss()
+        void ReFreshBoss(Monster monster)
         {
-            if (popup == null || stageManager == null) return;
-            //if(!stageManager.) 보스 스테이지 데이터 가져오기(?)
+            if (popup == null) return;
             if (!popup.TryGetBossHpBar(out var bossHp)) return;
-            if(!popup.TryGetTimer(out var timer)) return;
 
-            bossHp.SetBoss(0);    
-        }//보스 갱신용
+            if (currentBoss != null)
+            {
+                currentBoss.OnMonsterHpChanged -= OnBossHpChanged;
+                currentBoss = null;
+            }
 
+            currentBoss = monster;
+
+            bossHp.SetBoss(currentBoss.Hp, currentBoss.CurrentBattleStatStat.maxHp /* ,나중에 여기 보스 이름 추가*/);
+
+            currentBoss.OnMonsterHpChanged += OnBossHpChanged;
+
+        }//보스 생성될때 UI 세팅용
+        private void OnBossHpChanged(float hp, float maxHp)
+        {
+            if (!popup.TryGetBossHpBar(out var bossHp)) return;
+            bossHp.SetBoss(hp);
+        }//보스 Hp 갱신용
         void StartTimerRoutine()
         {
             StopTimerRoutine();

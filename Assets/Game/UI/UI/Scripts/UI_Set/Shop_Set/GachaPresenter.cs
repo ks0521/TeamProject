@@ -16,8 +16,9 @@ public class GachaPresenter : MonoBehaviour
     [SerializeField] private MainUItype_Set goldText;
     [SerializeField] private GachaView[] gachaView;
     [SerializeField] private ProbabilityTable problemTable;
-    [SerializeField] private GachaResult gachaResult;
+    [SerializeField] private GameObject gachaResult;
     [SerializeField] private Transform transform;
+
     [Header("가챠 결과 화면")]
     [SerializeField] private GameObject gachaPanel;
     
@@ -27,6 +28,7 @@ public class GachaPresenter : MonoBehaviour
     private EventHub hub;
 
     private GameObject tableInstance;
+    private GachaResult gachaResultInstance;
     private EquipType currentTableEquipType;
     private int currentTableLevel;
 
@@ -92,10 +94,14 @@ public class GachaPresenter : MonoBehaviour
 
         if (results != null && results.Count > 0)
         {
-            gachaPanel.SetActive(true);
-            gachaResult.Show(results);
+            GameObject prefab = Instantiate(gachaPanel.gameObject , transform);
 
-            gachaResult.BindButton(OnClickConfirm, OnClickRetry);
+            gachaResultInstance = prefab.GetComponent<GachaResult>();
+            gachaResultInstance.Show(results);
+
+            popupManager.PushPopup(gachaResultInstance.gameObject);
+            popupManager.ClosePopup(gachaResultInstance.gameObject);
+            gachaResultInstance.BindButton(OnClickRetry);
         }
 
         RefreshShopUI();
@@ -130,7 +136,7 @@ public class GachaPresenter : MonoBehaviour
     }//상점 UI 갱신
     private void OnClickConfirm()
     {
-        gachaPanel.SetActive(false);
+        popupManager.ClosePopup(gachaResultInstance.gameObject);
     }//가챠 화면 OFF
     private void OnClickRetry()
     {
@@ -148,7 +154,7 @@ public class GachaPresenter : MonoBehaviour
 
         if (results != null && results.Count > 0)
         {
-            gachaResult.Show(results);
+            gachaResultInstance.Show(results);
         }
 
         RefreshShopUI();

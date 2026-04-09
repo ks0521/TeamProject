@@ -46,12 +46,11 @@ namespace Shop.Gacha
         }
 
 
-        public void BindButton(Action check , Action retry)
+        public void BindButton( Action retry)
         {
-            checkButton.onClick.RemoveAllListeners();
+
             retryButton.onClick.RemoveAllListeners();
 
-            checkButton.onClick.AddListener(() => check?.Invoke());
             retryButton.onClick.AddListener(() => retry?.Invoke());
         }
 
