@@ -2,7 +2,7 @@
 using Base.Utils;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public class ProjectileSkill : ActiveSkillObject
     {

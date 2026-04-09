@@ -1,9 +1,6 @@
-using Battle;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public class AreaSkillByProjectile : ProjectileSkill
     {

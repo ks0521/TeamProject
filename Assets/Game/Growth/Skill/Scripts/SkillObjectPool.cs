@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public class SkillObjectPool
     {

@@ -6,12 +6,12 @@ using System.Text;
 using Base.Utils;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillDetailPresenter : MonoBehaviour, IMemberReceiver
     {
-        private PlayerSkillUIManager owner;
-        // private SkillManager skillMgr;
+        private SkillPopupUIManager owner;
+        private SkillManager skillMgr;
         private SkillPool pool;
         private EventHub hub;
         public int SelectedSkillKey { get; private set; }
@@ -19,11 +19,9 @@ namespace Personal.HagYun
         public void Init(UIPresenterInitData data)
         {
             owner = data.owner;
+            skillMgr = data.skillMgr;
             pool = data.pool;
             hub = data.hub;
-            // skillMgr = owner.SkillMgr;
-            // var firstSkill = skillMgr.GetAllSkillInfo()[0];
-            // SkillDetailDataSetToSkillChange(firstSkill.so.key);
             if (pool.AllSkillArr[0] is var skill) SkillDetailDataSetToSkillChangeByPool(skill.SkillData.key);
         }
         public void SkillLevelUpBtnInteractable(bool isLevelUpBtnOn)
@@ -39,12 +37,6 @@ namespace Personal.HagYun
             BtnEventRemoveListner();
         }
         void BtnEventRemoveListner() => skillDetailView.BtnEventRemoveAllListner();
-
-        public void SkillEquipPopupShow()
-        {
-            // skillEquipChangePopupView.EquipSkillShow(equipTargetSkill, activeSkillArr);
-            // skillEquipChangePopupView.gameObject.SetActive(true);
-        }
         public void SkillDetailDataSetToSkillChangeByPool(int key)
         {
             gameObject.SetActive(true);
@@ -53,20 +45,18 @@ namespace Personal.HagYun
             int curLv = skill.CurLv;
             var so = skill.SkillData;
             string value = null;
-            SkillDetailViewNeedsNameAndImage niData = new();
+            SkillDetailViewNeedsNameAndImage niData = new(so, skillMgr.IsSkillUnlock(key));
             SkillDetailViewNeedsStatData data = new();
             if (so is ActiveSkillSO aSO)
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
 
-                niData = new SkillDetailViewNeedsNameAndImage(aSO);
                 data = new SkillDetailViewNeedsStatData(aSO, value, curLv);
             }
             else if (so is PassiveSkillSO pSO)
             {
                 PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
 
-                niData = new SkillDetailViewNeedsNameAndImage(pSO);
                 data = new SkillDetailViewNeedsStatData(pSO, value, curLv);
             }
             skillDetailView.SkillDetailViewSetToSkillChange(niData, data);
@@ -87,71 +77,12 @@ namespace Personal.HagYun
             }
             else if (so is PassiveSkillSO pSO)
             {
-                PassiveSkillValueTextSet(pSO.ResultAddStat(skill.CurLv), out value);
+                PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
                 statData = new SkillDetailViewNeedsStatData(pSO, value, curLv);
             }
             skillDetailView.SkillDetailViewSetToLvEnhance(statData);
 
         }
-        // public void SkillLevelChangeUpdate(int key)
-        // {
-        //     SkillDetailDataSetToSkillLvEnhance(key);
-        // }
-        // public void SkillLevelUp(int key)
-        // {
-        //     SkillLevelChangeUpdate(key);
-        // }
-        // public void SkillLevelUpMax(int key)
-        // {
-        //     SkillLevelChangeUpdate(key);
-        // }
-        // public void SkillDetailDataSetToSkillChange(int key)
-        // {
-        //     gameObject.SetActive(true);
-        //     SelectedSkillKey = key;
-        //     var skill = skillMgr.GetSkill(key);
-        //     int curLv = skillMgr.GetSkillLevel(key);
-        //     string value = null;
-        //     SkillDetailViewNeedsNameAndImage niData = new();
-        //     SkillDetailViewNeedsStatData data = new();
-        //     if (skill is ActiveSkillSO aSO)
-        //     {
-        //         ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
-
-        //         niData = new SkillDetailViewNeedsNameAndImage(aSO);
-        //         data = new SkillDetailViewNeedsStatData(aSO, value, curLv);
-        //     }
-        //     else if (skill is PassiveSkillSO pSO)
-        //     {
-        //         PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
-
-        //         niData = new SkillDetailViewNeedsNameAndImage(pSO);
-        //         data = new SkillDetailViewNeedsStatData(pSO, value, curLv);
-        //     }
-        //     skillDetailView.SkillDetailViewSetToSkillChange(niData, data);
-        // }
-        // public void SkillDetailDataSetToSkillLvEnhance(int key)
-        // {
-        //     // var skill = skillMgr.GetSkill(key);
-        //     // int curLv = skillMgr.GetSkillLevel(key);
-        //     var skill = skillMgr.GetSkill(key);
-        //     int curLv = skillMgr.GetSkillLevel(key);
-        //     string value = null;
-        //     SkillDetailViewNeedsStatData statData = new();
-        //     if (skill is ActiveSkillSO aSO)
-        //     {
-        //         ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
-        //         statData = new SkillDetailViewNeedsStatData(aSO, value, curLv);
-
-        //     }
-        //     else if (skill is PassiveSkillSO pSO)
-        //     {
-        //         PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
-        //         statData = new SkillDetailViewNeedsStatData(pSO, value, curLv);
-        //     }
-        //     skillDetailView.SkillDetailViewSetToLvEnhance(statData);
-        // }
-        // public void SkillDetailDataSetToSkillLvEnhance() => SkillDetailDataSetToSkillLvEnhance(SelectedSkillKey);
         StringBuilder sb = new StringBuilder();
         public void SkillStatValueTextBuild(string contents, bool isEnter)
         {
@@ -168,7 +99,7 @@ namespace Personal.HagYun
         void PassiveSkillValueTextSet(StatIncrease stat, out string valueText)
         {
             sb.Clear();
-            sb.AppendLine("증가 스탯");
+            sb.Append("증가 스탯");
             MemberExtractor<StatIncrease>.ExtractAll(stat, this);
             valueText = sb.ToString();
         }

@@ -1,11 +1,10 @@
 using Base.Data;
 using Battle;
 using Cysharp.Threading.Tasks;
-using Growth.Skill;
 using System;
 using Base.Utils;
 using UnityEngine;
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public struct SpriteShower
     {

@@ -19,7 +19,7 @@ namespace UI.Scripts
 
         [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set autoButton;
-        [SerializeField] Skill_Set skillIcons;
+        // [SerializeField] Skill_Set skillIcons;
 
 
         [SerializeField] private ProgressManager manager;

@@ -1,14 +1,8 @@
 using Battle;
 using Growth.Equipment;
-using Growth.Skill;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public class PassiveSkill : Skill
     {

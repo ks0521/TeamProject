@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Base.Utils;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     [Serializable]
     public class SkillButtonView
@@ -19,7 +19,7 @@ namespace Personal.HagYun
         {
             ButtonEventUnsubscribe();
         }
-        public void SkillIconImageChange(Sprite sp, bool isHomingSkill) => skillImg.SkillImgSetting(sp, isHomingSkill);
+        public void SkillIconImageChange(Sprite sp) => skillImg.SkillImgSetting(sp);
         public void SkillIconImageUnset() => skillImg.SkillImgUnsetting();
         public void CooltimeStart()
         {

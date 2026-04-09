@@ -6,7 +6,7 @@ using Growth.Skill;
 using System.Threading;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillButtonPresenter : MonoBehaviour, IManager
     {
@@ -49,12 +49,10 @@ namespace Personal.HagYun
                     Debug.LogWarning($"{index}번 TestBtnView 연결 안 됨");
                     continue;
                 }
-                // tBtnView.ButtonEventSubscribe(() => plEquipSkillController.TryAtkSkillUseToMonster(index));
                 tBtnView.ButtonEventSubscribe(() => SkillUseToMonster(index));
                 CooltimeCheckTask(index).Forget();
                 ActiveSkillSO skillData = plEquipSkill[index].Skill.ActiveSkillData;
-                // Debug.Log(skillData.skillName);
-                tBtnView.SkillIconImageChange(skillData.skillIcon, skillData.Targeting == TargetingMode.Homing);
+                tBtnView.SkillIconImageChange(skillData.skillIcon);
             }
             EquipSkillEventSet();
         }
@@ -100,8 +98,7 @@ namespace Personal.HagYun
         void BtnCooltimeEndEvent(int index) => btnViewArr[index].CooltimeEnd();
         void SkillIconSet(int slotIndex, ActiveSkill aSkill)
         {
-            ActiveSkillSO so = aSkill.ActiveSkillData;
-            btnViewArr[slotIndex].SkillIconImageChange(so.skillIcon, so.Targeting == TargetingMode.Homing);
+            btnViewArr[slotIndex].SkillIconImageChange(aSkill.ActiveSkillData.skillIcon);
         }
         void SkillIconUnset(int index) => btnViewArr[index].SkillIconImageUnset();
         int selectSkillNum = 0;
