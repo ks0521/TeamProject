@@ -2,12 +2,8 @@ using System;
 
 namespace Base.Save
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-    public class CommonType : Attribute
-    {
-    }
     //런타임과 세이브 동시에 사용하는 필드 모음
-    [Serializable] [CommonType]
+    [Serializable]
     public class StageProgressState
     {
         public int selectedNormalStage; //직전 일반스테이지
@@ -17,7 +13,7 @@ namespace Base.Save
     }
 
     //currency + iteminventory는 분리저장?
-    [Serializable] [CommonType]
+    [Serializable]
     public class PlayerCurrencyState
     {
         // public int level;
@@ -29,7 +25,7 @@ namespace Base.Save
         public int ruby;
     }
 
-    [Serializable] [CommonType]
+    [Serializable]
     public class PlayerInfo
     {
         public int level;
@@ -38,20 +34,18 @@ namespace Base.Save
         public int weaponGachaLevel;
         public int curWeaponGachaCount;
     }
-    
-    [Serializable][CommonType]
-    public class LastSessionTime
-    {
-        public long lastConnectTime;
-    }
-    
     /// <summary> 아이템 정보 </summary>
-    [Serializable]
-    public class EquipmentEntry
+    [Serializable]public class EquipmentEntry
     {
         public int key; //아이템 키
         public int enhancementLevel; //강화 수치
         public int ownedCount; //개수
         public bool isDiscovered; //해금 여부
+    }
+    
+    [Serializable]
+    public class LastSessionTime
+    {
+        public long lastConnectTime;
     }
 }

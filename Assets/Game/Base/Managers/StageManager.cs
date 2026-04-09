@@ -33,15 +33,14 @@ namespace Base.Managers
     {
         #if UNITY_EDITOR
         public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
-        public bool BlockProceed; //테스트용으로 클리어해도 스테이지 넘어가지 않게 고정
         #endif
         
         public StageSO CurrentStageSo => currentStageSO;
         public List<Monster> Monsters => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
         [SerializeField] private BoxCollider2D spawnArea; //몬스터 스폰 공간
         
-        private int curChapter; //현재 진행중인 챕터
-        private int curStage; //현재 진행중인 스테이지
+        private int curChapter = 0; //현재 진행중인 챕터
+        private int curStage = 0; //현재 진행중인 스테이지
         private bool isStageResultProcessing; //현재 스테이지 진행여부 플래그
         private bool isRebirthProcessing; //일반 스테이지 사망 후 부활 처리 중복 방지
         private RuntimeProgressData progress; //축약용 프로퍼티
@@ -127,30 +126,23 @@ namespace Base.Managers
             curStage = selectedStage;
             stageRule?.Destroy();
             eventHub.StageChanged(currentStageSO); // 바뀐 챕터 - 스테이지 정보 전달
-            //monsterPool.ChangeStage(currentStageSO); // 몬스터풀 설정은 stage에서 관리
+            monsterPool.ChangeStage(currentStageSO); // 몬스터풀에 바뀐 스테이지 정보 전달(새 몬스터 생성 위해 필요)
             stage = new Stage(currentStageSO, monsterPool, spawnArea); // 신규 스테이지 생성
-            switch (currentStageSO.clearType)
+            if (currentStageSO.stageType == StageType.Normal)
             {
-                case ClearType.None:
-                    stageProgress = SelectNormalStage(currentStageSO.chapter, currentStageSO.stage);
-                    stageRule = new NormalStageRule(currentStageSO);
-                    break;
-                case ClearType.KillCount:
-                    stageRule = new ChallengeStageRule(currentStageSO);
-                    ((KillCount)stageRule).ChallengeSuccess += OnChallengeSucceeded;
-                    ((KillCount)stageRule).ChallengeFail += OnChallengeFailed;
-                    break;
-                case ClearType.BossKill:
-                    stageRule = new BossKill(currentStageSO);
-                    ((BossKill)stageRule).ChallengeSuccess += OnChallengeSucceeded;
-                    ((BossKill)stageRule).ChallengeFail += OnChallengeFailed;
-                    break;
-                case ClearType.Survival:
-                    break;
+                stageProgress = SelectNormalStage(currentStageSO.chapter, currentStageSO.stage);
+                stageRule = new NormalStageRule();
+            }
+            else if (currentStageSO.stageType == StageType.Challenge || currentStageSO.stageType == StageType.Boss)
+            {
+                stageRule = new ChallengeStageRule();
+                ((ChallengeStageRule)stageRule).ChallengeSuccess += OnChallengeSucceeded;
+                ((ChallengeStageRule)stageRule).ChallengeFail += OnChallengeFailed;
             }
             eventHub.OnDeadPlayer += OnPlayerDie;
             stage.OnMonsterKilledInStage += stageRule.MonsterKilledInStage;
             stage.OnMonsterKilledInStage += MonsterKillChain;
+            stageRule.Init(currentStageSO);
 
             //스테이지와 스테이지 룰 다 초기화된 이후 시작
             stage.Enter();
@@ -311,11 +303,8 @@ namespace Base.Managers
         async UniTaskVoid DelayClear(float delay, CancellationToken token)
         {
             Debug.Log("스테이지 클리어, 클리어 기록이 저장됩니다. ");
-            if (BlockProceed) //테스트용, 빌드시 제거할것
-            {
-                stageProgress = ProgressChallengeStage(currentStageSO); 
-            }
             eventHub.StageCleared(currentStageSO);
+            stageProgress = ProgressChallengeStage(currentStageSO); 
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
             Debug.Log("직전 사냥했던 일반스테이지로 돌아갑니다.");
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);

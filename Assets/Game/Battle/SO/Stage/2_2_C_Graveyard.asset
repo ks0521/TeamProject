@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e407722361f41cb48a091fa4eeb8bcd6, type: 3}
+  m_Name: 2_2_C_Graveyard
+  m_EditorClassIdentifier: 
+  stageKey: 5021
+  stageName: '2-2 Challenge
+
+    Graveyard 2'
+  chapter: 2
+  stage: 2
+  dropTable: {fileID: 0}
+  preset:
+  - monster: {fileID: 11400000, guid: bf99d5ff1ea38d946b0e3e59f5c52fea, type: 2}
+    weights: 10
+  type: 1
+  deadLine: 60
+  targetKillScore: 20

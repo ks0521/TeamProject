@@ -12,8 +12,7 @@ namespace Personal.HagYun
     public class EquipSkill
     {
         // Owner
-        // Character owner;
-        EquipSkillController esController;
+        Character owner;
         // Event
         EventHub eventHub;
         // EquipSkill index
@@ -22,14 +21,10 @@ namespace Personal.HagYun
         [SerializeField] ActiveSkill skill;
         public ActiveSkill Skill => skill;
 
-        [SerializeField] private int equippedSkillKey;
-        public int EquippedSkillKey => equippedSkillKey;
-        SkillPool skillPool;
-        SkillObjectPool skillObjPool;
         // Cooltime Check
         public float CurCooltime { get; private set; }
         public float MaxCooltime { get; private set; }
-        [field: SerializeField] public bool IsCooltime { get; private set; }
+        [field : SerializeField] public bool IsCooltime { get; private set; }
 
         // Current priority
         public Priority priority;
@@ -39,40 +34,22 @@ namespace Personal.HagYun
         public bool IsSkillUsePossible => isEquipped && !IsCooltime;
 
 
-        public void Init(EquipSkillController esController, int index, SkillPool skillPool, SkillObjectPool skillObjPool)
+        public void Init(Character owner, int index)
         {
-            // this.owner = owner;
-            this.esController = esController;
-            this.skillPool = skillPool;
-            this.skillObjPool = skillObjPool;
-            // if(skillObjPool == null)Debug.LogWarning("skillobjpool 없음");
+            this.owner = owner;
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             eSkillIndex = index;
         }
         public void SkillEquip(ActiveSkill skill, bool isInit = false)
         {
-            equippedSkillKey = skill.SkillData.key;
             this.skill = skill;
-            // skill.Init(owner);
+            skill.Init(owner);
             MaxCooltime = skill.ActiveSkillData.coolDown;
 
             if (!isInit) CooltimeStart();
         }
-        public bool TrySkillEquipByKey(int key, bool isInit = false)
-        {
-            if (!skillPool.TryGetActiveSkillByKey(key, out ActiveSkill aSkill)) return false;
-            equippedSkillKey = key;
-            skill = aSkill;
-            // aSkill.Init(owner);
-            MaxCooltime = aSkill.ActiveSkillData.coolDown;
-
-            if (!isInit) CooltimeStart();
-
-            return true;
-        }
         public void SkillUnequip()
         {
-            equippedSkillKey = -1;
             skill = null;
             IsCooltime = false;
         }
@@ -93,17 +70,16 @@ namespace Personal.HagYun
                 Debug.LogWarning("타겟 없음");
                 return;
             }
-            var skillObj = skillObjPool.GetActiveSkill(skill);
             switch (skill.ActiveSkillData.Targeting)
             {
                 case TargetingMode.Self:
-                    skillObj.SkillUseTargeting(new TargetChecker(skill.Owner.transform.position));
+                    skill.SkillUseTargeting(new TargetChecker(skill.OwnerPos));
                     break;
                 case TargetingMode.Homing:
-                    skillObj.SkillUseTargeting(new TargetChecker(target));
+                    skill.SkillUseTargeting(new TargetChecker(target));
                     break;
                 case TargetingMode.GroundTarget:
-                    skillObj.SkillUseTargeting(new TargetChecker(target.transform.position));
+                    skill.SkillUseTargeting(new TargetChecker(target.transform.position));
                     break;
             }
             CooltimeStart();
@@ -116,8 +92,8 @@ namespace Personal.HagYun
             while (0 < CurCooltime)
             {
                 CurCooltime -= Time.deltaTime; // 쿨타임 감소 속도 증가 시, 해당 값 곱하기
-                await UniTask.Yield();
-                if (esController == null || !isEquipped) return;
+                await UniTask.Yield(owner.GetCancellationTokenOnDestroy());
+                if (owner == null || !isEquipped) return;
             }
             IsCooltime = false;
             eventHub.SkillCoolEnd(eSkillIndex);

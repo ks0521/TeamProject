@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Personal.HagYun
 {
-    public class AreaSkill : ActiveSkillObject
+    public class AreaSkill : ActiveSkill
     {
         [SerializeField] protected Vector2 targetPos;
         protected override Vector2 TargetPos => targetPos;
@@ -15,14 +15,14 @@ namespace Personal.HagYun
         [SerializeField] bool isSpriteYPosUp = false;
         // targeting test
         [SerializeField] Transform targetTrans;
-        public override void Init(ActiveSkill launcher)
+        public override void Init(Character owner)
         {
-            base.Init(launcher);
+            base.Init(owner);
             AreaInit();
         }
         protected void AreaInit()
         {
-            float areaSize = launcher.ActiveSkillData.effectArea;
+            float areaSize = ActiveSkillData.effectArea;
             Vector2 effectSize = effectAnim.transform.localScale;
             effectAnim.transform.localScale = effectSize * areaSize;
             if (isSpriteYPosUp)
@@ -48,7 +48,7 @@ namespace Personal.HagYun
         protected void AreaShowColliderInit()
         {
             effectAreaCollider = GetComponent<CapsuleCollider2D>();
-            effectAreaCollider.size *= launcher.ActiveSkillData.effectArea;
+            effectAreaCollider.size *= ActiveSkillData.effectArea;
         }
         public override void SkillUseTargeting(TargetChecker target)
         {
@@ -57,7 +57,7 @@ namespace Personal.HagYun
             {
                 targetPos = target.targetPos;
             }
-            else if (launcher.ActiveSkillData.Targeting == TargetingMode.Self)
+            else if (data.Targeting == TargetingMode.Self)
             {
                 targetPos = ThisPos;
             }
