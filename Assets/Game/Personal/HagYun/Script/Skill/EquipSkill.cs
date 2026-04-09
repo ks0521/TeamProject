@@ -80,7 +80,7 @@ namespace Personal.HagYun
         {
             if (skill == null)
             {
-                // Debug.LogWarning("스킬 없음");
+                Debug.LogWarning("스킬 없음");
                 return;
             }
             else if (IsCooltime)
@@ -90,7 +90,7 @@ namespace Personal.HagYun
             }
             else if (target == null)
             {
-                // Debug.LogWarning("타겟 없음");
+                Debug.LogWarning("타겟 없음");
                 return;
             }
             var skillObj = skillObjPool.GetActiveSkill(skill);
