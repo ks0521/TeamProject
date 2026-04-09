@@ -21,22 +21,16 @@ namespace UI.Skill_Set
             pool = data.pool;
             hub = data.hub;
             eSkillArr = GameManager.Instance.GetGameSystem<PlayerManager>().Player.ESController.EquipSkillArr;
-
-            // hub.OnSkillEquip += EquippedKeySetting;
-            // hub.OnSkillUnset += UnequipKeySetting;
         }
         public void OnDestroyFeat()
         {
             BtnEventRemoveListner();
-            // hub.OnSkillEquip -= EquippedKeySetting;
-            // hub.OnSkillUnset -= UnequipKeySetting;
         }
         public void EquipSkillShow(int targetSkillKey)
         {
             if (!pool.TryGetActiveSkillByKey(targetSkillKey, out var aSkill)) return;
             this.targetSkillKey = targetSkillKey;
-            bool isHomingSkill = aSkill.ActiveSkillData.Targeting == Growth.Skill.TargetingMode.Homing;
-            skillEquipChangePopupView.TargetSkillImgSet(aSkill.SkillData.skillIcon, isHomingSkill);
+            skillEquipChangePopupView.TargetSkillImgSet(aSkill.SkillData.skillIcon);
 
             for (int i = 0; i < 6; i++)
             {
@@ -48,8 +42,7 @@ namespace UI.Skill_Set
                     continue;
                 }
                 var data = tASkill.ActiveSkillData;
-                bool isTHomingSkill = data.Targeting == Growth.Skill.TargetingMode.Homing;
-                skillEquipChangePopupView.SkillSlotBtnImgSet(i, data.skillIcon, isTHomingSkill);
+                skillEquipChangePopupView.SkillSlotBtnImgSet(i, data.skillIcon);
             }
         }
         public void SkillEquipChangePopupShow(int key)

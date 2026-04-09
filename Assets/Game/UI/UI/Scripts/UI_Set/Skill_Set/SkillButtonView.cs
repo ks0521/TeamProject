@@ -19,7 +19,7 @@ namespace UI.Skill_Set
         {
             ButtonEventUnsubscribe();
         }
-        public void SkillIconImageChange(Sprite sp, bool isHomingSkill) => skillImg.SkillImgSetting(sp, isHomingSkill);
+        public void SkillIconImageChange(Sprite sp) => skillImg.SkillImgSetting(sp);
         public void SkillIconImageUnset() => skillImg.SkillImgUnsetting();
         public void CooltimeStart()
         {

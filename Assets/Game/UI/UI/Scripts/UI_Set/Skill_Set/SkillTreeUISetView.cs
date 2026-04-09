@@ -32,11 +32,11 @@ namespace UI.Skill_Set
         public void SkillTreerUISet(SkillTreeUISetViewNeedsImageData data)
         {
             SetSkillKey(data.key);
-            SetImg(data.skillImg, data.isHomingSkill);
+            SetImg(data.skillImg);
             SetLvText(data.curLv, data.maxLv);
         }
         public void SetSkillKey(int key) => skillKey = key;
-        public void SetImg(Sprite sp, bool isHoming) => skillImg.SkillImgSetting(sp, isHoming);
+        public void SetImg(Sprite sp) => skillImg.sprite = sp;
         public void SetLvText(int curLv, int maxLv) => lvTxt.text = $"{curLv} / {maxLv}";
         public void BtnEventAddListner(Action func)
         {

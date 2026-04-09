@@ -14,7 +14,7 @@ namespace Growth.Skill
         [SerializeField] protected int curLv;
         public int CurLv => curLv;
         public int MaxLv => SkillData.maxLv;
-        public bool IsSkillLock => SkillData.openPlayerLv < skillMgr.PlayerLevel;
+        public bool IsSkillLock => SkillData.unlockPlayerLv < skillMgr.PlayerLevel;
         private SkillManager skillMgr;
         private EventHub eventHub;
         public virtual void Init(Character owner)
@@ -32,29 +32,6 @@ namespace Growth.Skill
             StatUpdate();
         }
         public abstract void StatUpdate();
-        public bool TryLvUp(int curSkillPoint, int addLv)
-        {
-            int maxLv = MaxLv;
-            // 현재 스킬 포인트가 0 이하일 때
-            // 현재 스킬 레벨이 최대레벨 이상일 때
-            if (curSkillPoint <= 0 || maxLv <= curLv)
-            {
-                return false;
-            }
-            // curSkillPoint가 작다면 curSkillPoint로, 아니라면 addLv로 lv up
-            addLv = Math.Min(curSkillPoint, addLv);
-            // maxLv - curLv : 레벨업 최대 횟수
-            // addLv은 레벨업 횟수
-            // addLv은 maxLv - curLv 과 addLv 중 작은 쪽으로 lvUp
-            int lvUpCnt = Math.Min(addLv, maxLv - curLv);
-            curLv += lvUpCnt;
-            StatUpdate();
-            // OnSkillLvEnhance?.Invoke(SkillData.key, lvUpCnt);
-            
-            return true;
-        }
-        public bool TryLevelOneUp(int curSkillPoint) => TryLvUp(curSkillPoint, 1);
-        public bool TryLevelMaxUp(int curSkillPoint) => TryLvUp(curSkillPoint, SkillData.maxLv);
         public bool TryLvUp(int curSkillPoint, int addLv, out int lvUpCnt)
         {
             int maxLv = MaxLv;

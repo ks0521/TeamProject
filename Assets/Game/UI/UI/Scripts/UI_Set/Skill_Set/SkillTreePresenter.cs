@@ -96,51 +96,8 @@ namespace UI.Skill_Set
                 skillTreeUI.BtnEventAddListner(() => skillDetailShowFunc(key));
             }
             resetPointBtn.onClick.AddListener(() => skillLevelResetFunc());
-            // closeBtn.onClick.AddListener(() => skillPopupClose());
-        }
-        public void SkillTreeUISet(int key, SkillDatas data)
-        {
-            var so = data.so;
-            bool isHomingSkill = (so is ActiveSkillSO aSO) && (aSO.Targeting == TargetingMode.Homing);
-            SkillTreeUISetViewNeedsImageData skillTreeUIData
-             = new SkillTreeUISetViewNeedsImageData(so.key, data.level, so.maxLv, so.skillIcon, isHomingSkill);
-
-
-            skillTreeUISetDic[key].SkillTreerUISet(skillTreeUIData);
         }
         public void SkillLevelTextChange(int key, int curLv, int maxLv) => skillTreeUISetDic[key].SetLvText(curLv, maxLv);
-        // public void BtnSetInitAndEventSubscribe(Action<int> skillDetailShowFunc, Action skillLevelResetFunc)
-        // {
-        //     var skillDatas = skillMgr.GetAllSkillInfo();
-        //     int forCnt = 0;
-        //     int skillsCnt = skillDatas.Count;
-        //     int skillTreeLength = skillTreeUISetArr.Length;
-
-        //     if (skillsCnt < skillTreeLength)
-        //     {
-        //         Debug.Log("저장된 스킬보다 스킬트리 버튼이 많음");
-        //         forCnt = skillsCnt;
-        //     }
-        //     else if (skillsCnt > skillTreeLength)
-        //     {
-        //         Debug.Log("스킬트리 버튼보다 저장된 스킬이 많음");
-        //         forCnt = skillTreeLength;
-        //     }
-        //     skillTreeUISetDic = new Dictionary<int, SkillTreeUISetView>(skillTreeLength);
-        //     for (int i = 0; i < forCnt; i++)
-        //     {
-        //         int index = i;
-        //         var skillData = skillDatas[index];
-        //         var skillTreeUI = skillTreeUISetArr[index];
-        //         int key = skillData.so.key;
-        //         skillTreeUISetDic.Add(key, skillTreeUI);
-        //         SkillTreeUISet(key, skillData);
-        //         // 버튼 클릭 -> detail view에 상세 내용 노출
-        //         // -> 사이 : 해당 스킬의 key를 확인, key를 통해 skill so 추출, skill so를 통해 필요한 내용들 추출
-        //         skillTreeUI.BtnEventSubscribe(() => skillDetailShowFunc(key));
-        //     }
-        //     resetPointBtn.onClick.AddListener(() => skillLevelResetFunc());
-        // }
         public void OnDestroyFeat()
         {
             BtnEventRemoveListner();
@@ -155,7 +112,8 @@ namespace UI.Skill_Set
         }
         #region SkillPopupPresenter 내부 UI 기능
         public void SetSkillPointText(int curLv, int maxLv)
-         => skillPointTxt.text = $"보유 SP\n{curLv} / {maxLv}";
+        //  => skillPointTxt.text = $"보유 SP : {curLv} / {maxLv}";
+         => skillPointTxt.text = $"{curLv}/{maxLv}";
         #endregion
     }
 }

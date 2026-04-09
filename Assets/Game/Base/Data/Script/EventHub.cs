@@ -62,9 +62,6 @@ namespace Base.Data
         // 스킬 장착을 완료했을 때 호출시킬 이벤트입니다.
         public event Action<int, ActiveSkill> OnSkillEquipComplete;
         public void SkillEquipComplete(int slotIndex, ActiveSkill aSkill) => OnSkillEquipComplete?.Invoke(slotIndex, aSkill);
-        // 스킬 장착 해제를 완료했을 때 호출시킬 이벤트입니다.
-        public event Action<int> OnSkillUnsetComplete;
-        public void SkillUnsetComplete(int order) => OnSkillUnsetComplete?.Invoke(order);
         public event Action<int> OnSkillUnset;
         public void SkillUnset(int order) => OnSkillUnset?.Invoke(order);
         public event Action<int> OnPlayerSkillUse; //플레이어 스킬 '사용', 스킬 버튼 입력 등에 사용

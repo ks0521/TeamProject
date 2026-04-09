@@ -9,11 +9,13 @@ namespace UI.Skill_Set
     public struct UIPresenterInitData
     {
         public SkillPopupUIManager owner;
+        public SkillManager skillMgr;
         public SkillPool pool;
         public EventHub hub;
-        public UIPresenterInitData(SkillPopupUIManager owner, SkillPool pool, EventHub hub)
+        public UIPresenterInitData(SkillPopupUIManager owner, SkillManager skillMgr, SkillPool pool, EventHub hub)
         {
             this.owner = owner;
+            this.skillMgr = skillMgr;
             this.pool = pool;
             this.hub = hub;
         }
@@ -52,7 +54,7 @@ namespace UI.Skill_Set
             skillDetailPresenter = GetComponentInChildren<SkillDetailPresenter>(true);
             skillEquipChangePresenter = GetComponentInChildren<SkillEquipChangePresenter>(true);
 
-            UIPresenterInitData initData = new UIPresenterInitData(this, pool, hub);
+            UIPresenterInitData initData = new UIPresenterInitData(this, skillMgr, pool, hub);
 
             skillTreePresenter.Init(initData);
             skillTreePresenter.SetSkillPointText(curPoint, maxPoint);
@@ -65,13 +67,6 @@ namespace UI.Skill_Set
             AllPresenterAddListnerByPool();
 
         }
-        // void AllPresenterAddListner()
-        // {
-        //     skillTreePresenter.BtnSetInitAndEventSubscribe(SkillDetailSet, SkillReset);
-        //     var so = skillMgr.GetSkill(showSkillKey);
-
-        //     eventHub.OnSkillEnhanced += skillTreePresenter.SetSkillPointText;
-        // }
         void AllPresenterAddListnerByPool()
         {
             skillTreePresenter.BtnEventAddListner(SkillDetailSetByPool, SkillResetByPool);
