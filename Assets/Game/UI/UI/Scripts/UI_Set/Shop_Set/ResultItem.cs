@@ -12,6 +12,16 @@ public class ResultItem : MonoBehaviour
     [SerializeField] Image frame;
     [SerializeField] Image background;
 
+    public void SetData(EquipmentSO so)
+    {
+        if (so == null) return;
+        if (icon != null)
+        {
+            icon.sprite = so.icon;
+        }
+
+        ApplyRarityTheme(frame, background, so.rarity);
+    }
     private void ApplyRarityTheme(Image frame, Image background, EquipRarity rarity)
     {
         if (frame == null || background == null) return;

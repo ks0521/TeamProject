@@ -289,7 +289,7 @@ namespace UI.Scripts
 
             shopInstance = Instantiate (shopPrefab, canvas);
             
-            ClosePopup(skillInstance);
+            ClosePopup(shopInstance);
 
             PushPopup(shopInstance);
         }

@@ -89,7 +89,8 @@ public class GachaPresenter : MonoBehaviour
 
         if (results != null && results.Count > 0)
         {
-            //gachaResult.Show(results, type, drawType);
+            gachaPanel.SetActive(true);
+            gachaResult.Show(results);
         }
 
         RefreshShopUI();
