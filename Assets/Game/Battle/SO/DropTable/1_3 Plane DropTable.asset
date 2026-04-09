@@ -41,6 +41,6 @@ MonoBehaviour:
     currencyType: 2
     currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
     chance: 0.2
-    itemSO: {fileID: 0}
+    itemSO: {fileID: 11400000, guid: 38f79d4ce96246b459cd38ec04e668b9, type: 2}
     minAmount: 1
     maxAmount: 1
