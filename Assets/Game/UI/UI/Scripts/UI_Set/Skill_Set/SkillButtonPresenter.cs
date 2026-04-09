@@ -6,7 +6,7 @@ using Growth.Skill;
 using System.Threading;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillButtonPresenter : MonoBehaviour, IManager
     {

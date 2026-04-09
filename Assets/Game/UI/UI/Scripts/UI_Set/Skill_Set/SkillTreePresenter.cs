@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Base.Utils;
-using Unity.VisualScripting;
 using Cysharp.Threading.Tasks;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillTreePresenter : MonoBehaviour
     {
-        private PlayerSkillUIManager owner;
+        private SkillPopupUIManager owner;
         // private SkillManager skillMgr;
         private SkillPool pool;
         private EventHub hub;

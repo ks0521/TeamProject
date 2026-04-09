@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public class SkillEquipChangePopupView : MonoBehaviour
     {

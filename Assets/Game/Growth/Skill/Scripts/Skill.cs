@@ -1,13 +1,10 @@
+using Base.Data;
+using Base.Managers;
 using Battle;
-using Growth.Skill;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Personal.HagYun
+namespace Growth.Skill
 {
     public abstract class Skill
     {
@@ -17,14 +14,21 @@ namespace Personal.HagYun
         [SerializeField] protected int curLv;
         public int CurLv => curLv;
         public int MaxLv => SkillData.maxLv;
-        // key, 레벨업 변경 카운트
-        // public event Action<int, int> OnSkillLvEnhance;
+        public bool IsSkillLock => SkillData.openPlayerLv < skillMgr.PlayerLevel;
+        private SkillManager skillMgr;
+        private EventHub eventHub;
         public virtual void Init(Character owner)
         {
             if (owner != null && this.owner == null) this.owner = owner;
+
+            skillMgr = GameManager.Instance.GetGameSystem<SkillManager>();
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             int maxLv = SkillData.maxLv;
+            curLv = skillMgr.GetSkillLevel(SkillData.key);
+
             if (curLv < 0) curLv = 0;
             else if (maxLv < curLv) curLv = maxLv;
+
             StatUpdate();
         }
         public abstract void StatUpdate();
@@ -46,6 +50,7 @@ namespace Personal.HagYun
             curLv += lvUpCnt;
             StatUpdate();
             // OnSkillLvEnhance?.Invoke(SkillData.key, lvUpCnt);
+            
             return true;
         }
         public bool TryLevelOneUp(int curSkillPoint) => TryLvUp(curSkillPoint, 1);

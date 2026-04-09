@@ -2,28 +2,23 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Personal.HagYun
+namespace UI.Skill_Set
 {
     public struct UIPresenterInitData
     {
-        public PlayerSkillUIManager owner;
+        public SkillPopupUIManager owner;
         public SkillPool pool;
         public EventHub hub;
-        public UIPresenterInitData(PlayerSkillUIManager owner, SkillPool pool, EventHub hub)
+        public UIPresenterInitData(SkillPopupUIManager owner, SkillPool pool, EventHub hub)
         {
             this.owner = owner;
             this.pool = pool;
             this.hub = hub;
         }
     }
-    public class PlayerSkillUIManager : MonoBehaviour
+    public class SkillPopupUIManager : MonoBehaviour
     {
         private SkillManager skillMgr;
         public SkillManager SkillMgr => skillMgr;

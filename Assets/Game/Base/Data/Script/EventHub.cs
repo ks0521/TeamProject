@@ -4,7 +4,6 @@ using Battle;
 using Growth.Equipment;
 using Growth.Skill;
 using Growth.StatUpgrade;
-using Personal.HagYun;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
