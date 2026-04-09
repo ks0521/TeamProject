@@ -32,8 +32,12 @@ public class QuestUIManager : MonoBehaviour, IManager
     [SerializeField] private Button receiveButton;
     [SerializeField] private Button receiveAllButton;
 
+    [Header("보상 팝업")]
+    [SerializeField] private RewardPopupUI rewardPopup;
+
     private QuestManager questManager;
     private List<QuestBoxUI> instantiatedBoxes = new List<QuestBoxUI>();
+    private List<QuestBoxUI> questBoxPool = new List<QuestBoxUI>(); //미사용 퀘스트 박스 프리팹 보관용
     private ActiveQuest currentSelectedQuest;
 
     public void Init()
@@ -74,8 +78,11 @@ public class QuestUIManager : MonoBehaviour, IManager
         // 1. 기존에 생성된 박스 제거
         foreach (var box in instantiatedBoxes)
         {
-            //지금은 파괴지만 나중에 오브젝트 풀링으로 바꿀 가능성 있음
-            if (box != null) Destroy(box.gameObject);
+            if (box != null)
+            {
+                box.gameObject.SetActive(false);
+                questBoxPool.Add(box);
+            }
         }
         instantiatedBoxes.Clear();
 
@@ -91,8 +98,7 @@ public class QuestUIManager : MonoBehaviour, IManager
         // 3. 프리팹 생성 및 데이터 주입
         foreach (var quest in filteredQuests)
         {
-            GameObject go = Instantiate(questBoxPrefab, questListContainer);
-            QuestBoxUI boxScript = go.GetComponent<QuestBoxUI>();
+            QuestBoxUI boxScript = GetBoxFromPool();
             if (boxScript != null)
             {
                 boxScript.Setup(quest, this);
@@ -117,6 +123,26 @@ public class QuestUIManager : MonoBehaviour, IManager
         questProgress.text = "- / -";
         receiveButton.interactable = false;
         receiveAllButton.interactable = false;
+    }
+    QuestBoxUI GetBoxFromPool()
+    {
+        QuestBoxUI box;
+
+        if (questBoxPool.Count > 0)
+        {
+            //풀에 노는 박스가 있다면 꺼내서 재사용
+            box = questBoxPool[0];
+            questBoxPool.RemoveAt(0);
+            box.gameObject.SetActive(true);
+        }
+        else
+        {
+            //풀이 비어있다면 새로 생성
+            GameObject go = Instantiate(questBoxPrefab, questListContainer);
+            box = go.GetComponent<QuestBoxUI>();
+        }
+
+        return box;
     }
 
     //클릭된 퀘스트 박스의 하이라이트 효과, 퀘스트 상세 정보 등
@@ -156,8 +182,34 @@ public class QuestUIManager : MonoBehaviour, IManager
 
     void RefreshRewardIcons(int groupID)
     {
-        // 보상 프리팹 생성 로직 (현재는 생략)
+        foreach (Transform child in rewardContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        if (questManager == null) return;
+
+        List<RewardData> rewards = questManager.GetRewardsByGroupID(groupID);
+
+        foreach (var data in rewards)
+        {
+            // rewardItemPrefab은 아까 팝업에서 쓴 것과 같은 프리팹을 쓰면 됩니다.
+            GameObject go = Instantiate(rewardItemPrefab, rewardContainer);
+
+            // [중요] 좌표 및 스케일 초기화 (위치 이탈 방지)
+            RectTransform rt = go.GetComponent<RectTransform>();
+            rt.localPosition = Vector3.zero;
+            rt.localScale = Vector3.one;
+
+            // 데이터 주입
+            RewardBoxUI boxUI = go.GetComponent<RewardBoxUI>();
+            if (boxUI != null)
+            {
+                boxUI.Setup(data);
+            }
+        }
     }
+
     //완료 가능한 퀘스트 표시
     bool CheckRedDot(QuestCategory qc)
     {
@@ -189,8 +241,11 @@ public class QuestUIManager : MonoBehaviour, IManager
     {
         if (questManager == null) return;
 
+        List<RewardData> totalRewards = new List<RewardData>();
         bool checkAgain = true;
-        while(checkAgain)
+        int safetyCounter = 0; // 무한 루프 방지용
+
+        while (checkAgain)
         {
             QuestCategory currentCat = (QuestCategory)currentTabIndex;
 
@@ -203,12 +258,22 @@ public class QuestUIManager : MonoBehaviour, IManager
             {
                 foreach (var q in targetQuests)
                 {
-                    questManager.TryCompleteQuest(q);
+                    var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
+                    totalRewards.AddRange(rewards);
+                    //true: 보상이 합산된 팝업
+                    questManager.TryCompleteQuest(q, true);
                 }
                 //다음 퀘스트가 초과분만으로 완료될 수 있는지 체크
                 checkAgain = true;
+                safetyCounter++;
+                //무한루프 방지용
+                if (safetyCounter > 255) checkAgain = false;
             }
             else checkAgain = false;    
+        }
+        if (totalRewards.Count > 0 && rewardPopup != null)
+        {
+            rewardPopup.ShowRewards(totalRewards);
         }
         RefreshQuestBox();
         UpdateTabVisuals();
