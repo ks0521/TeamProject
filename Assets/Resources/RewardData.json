@@ -1,0 +1,11 @@
+{
+  "rewardGroups": [
+    {
+      "groupID": 103,
+      "items": [
+        { "itemID": 1, "amount": 100 },
+        { "itemID": 1, "amount": 999 }
+      ]
+    }
+  ]
+}
