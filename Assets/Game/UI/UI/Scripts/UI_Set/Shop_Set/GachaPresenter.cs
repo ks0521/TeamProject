@@ -3,15 +3,12 @@ using Base.Managers;
 using Base.Save;
 using Growth.Equipment;
 using Shop.Gacha;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+
 using UI.Scripts;
-using Unity.VisualScripting.FullSerializer;
+
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static Shop.Gacha.GachaConfigSO;
-using static UnityEngine.Rendering.DebugUI;
+
 
 public class GachaPresenter : MonoBehaviour
 {
@@ -19,25 +16,31 @@ public class GachaPresenter : MonoBehaviour
     [SerializeField] private MainUItype_Set goldText;
     [SerializeField] private GachaView[] gachaView;
     [SerializeField] private ProbabilityTable problemTable;
-    [SerializeField] private GachaResult gachaResult;
- 
+    [SerializeField] private GameObject gachaResult;
+    [SerializeField] private Transform transform;
+
     [Header("가챠 결과 화면")]
     [SerializeField] private GameObject gachaPanel;
-
+    
     private GachaManager gachaManager;
     private ProgressManager progressManager;
     private PopupManager popupManager;
     private EventHub hub;
 
+    private GameObject tableInstance;
+    private GachaResult gachaResultInstance;
     private EquipType currentTableEquipType;
     private int currentTableLevel;
 
+    private EquipType lastEquipType;
+    private GachaDrawType lastDrawType;
+
     private void OnEnable()
     {
-        gachaManager = GameManager.Instance.GetGameSystem<GachaManager>();
+        gachaManager = GetComponentInParent<GachaManager>();
         progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
         popupManager = GameManager.Instance.GetGameSystem<PopupManager>();
-
+        hub = GameManager.Instance.GetGameSystem<EventHub>();
 
         BindButton();
         RefreshShopUI();
@@ -79,17 +82,26 @@ public class GachaPresenter : MonoBehaviour
         RefreshProbabilityTable();
 
 
-        problemTable.gameObject.SetActive(true);
-        popupManager.PushPopup(problemTable.gameObject);
+        tableInstance = Instantiate(problemTable.gameObject, transform);
+        popupManager.PushPopup(tableInstance);
     }//버튼에 넣을 함수(확률표 열기)
     private void OnClickDraw(EquipType type, GachaDrawType drawType)
     {
+        lastEquipType = type;
+        lastDrawType = drawType;
 
         List<EquipmentSO> results = gachaManager.ExecuteGacha(type, drawType);
 
         if (results != null && results.Count > 0)
         {
-            //gachaResult.Show(results, type, drawType);
+            GameObject prefab = Instantiate(gachaPanel.gameObject , transform);
+
+            gachaResultInstance = prefab.GetComponent<GachaResult>();
+            gachaResultInstance.Show(results);
+
+            popupManager.PushPopup(gachaResultInstance.gameObject);
+            popupManager.ClosePopup(gachaResultInstance.gameObject);
+            gachaResultInstance.BindButton(OnClickRetry);
         }
 
         RefreshShopUI();
@@ -122,6 +134,32 @@ public class GachaPresenter : MonoBehaviour
             view.SetButtonStates(canOne, canTen, canHundred);
         }
     }//상점 UI 갱신
+    private void OnClickConfirm()
+    {
+        popupManager.ClosePopup(gachaResultInstance.gameObject);
+    }//가챠 화면 OFF
+    private void OnClickRetry()
+    {
+        if (gachaManager == null) return;
+
+        bool canDraw = gachaManager.GetCanDraw(lastEquipType, lastDrawType);
+
+        if (!canDraw)
+        {
+            Debug.Log("재화 부족 or 가챠 불가");
+            return;
+        }
+
+        List<EquipmentSO> results = gachaManager.ExecuteGacha(lastEquipType, lastDrawType);
+
+        if (results != null && results.Count > 0)
+        {
+            gachaResultInstance.Show(results);
+        }
+
+        RefreshShopUI();
+        RefreshGoldUI();
+    }//다시 뽑기 체크
     private void RefreshProbabilityTable()
     {
         string tableName = $"{currentTableEquipType} 확률표 Lv.{currentTableLevel}";

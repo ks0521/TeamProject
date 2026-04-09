@@ -20,10 +20,10 @@ MonoBehaviour:
   - drawType: 0
     count: 1
     cost: 100
-  - drawType: 0
+  - drawType: 1
     count: 10
     cost: 1000
-  - drawType: 0
+  - drawType: 2
     count: 100
     cost: 10000
   baseRarityWeights:

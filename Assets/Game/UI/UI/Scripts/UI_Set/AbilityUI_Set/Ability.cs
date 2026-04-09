@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Scripts
+namespace UI.Ability_Set
 {
     public class Ability : MonoBehaviour
     {

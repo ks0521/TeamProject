@@ -1,19 +1,13 @@
 using Base.Data;
 using Base.Managers;
 using Base.Save;
-using Cysharp.Threading.Tasks;
 using Growth.Equipment;
-using Shop.Gacha;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace Shop.Gacha
 {
-    public class GachaManager : MonoBehaviour, IManager
+    public class GachaManager : MonoBehaviour
     {
         private GameDataProvider gameDataProvider;
         private RuntimeProgressData progressData;
@@ -24,8 +18,46 @@ namespace Shop.Gacha
         [SerializeField] private List<GachaConfigSO> gachaConfigSO;
 
         private Dictionary<EquipType, GachaConfigSO> gachaDic = new(); //해당 타입의 가챠 SO
-        
 
+        private void OnEnable()
+        {
+            gameDataProvider = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            progressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
+            hub = GameManager.Instance.GetGameSystem<EventHub>();
+            dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
+
+
+            gachaDic.Clear();
+
+            if (gachaConfigSO == null || gachaConfigSO.Count == 0)
+            {
+                Debug.LogWarning("가챠 SO 가 비어있음");
+                return;
+            }
+
+            for (int i = 0; i < gachaConfigSO.Count; i++)
+            {
+                GachaConfigSO config = gachaConfigSO[i];
+
+                if (config == null)
+                {
+                    Debug.LogWarning($"gachaConfigSO {i} 가 null");
+                    continue;
+                }
+
+                EquipType type = config.targetEquipType;
+
+                if (gachaDic.ContainsKey(config.targetEquipType))
+                {
+                    Debug.LogWarning($"{config.targetEquipType} 타입 SO 가 중복 등록됨");
+                    continue;
+                }
+
+                gachaDic.Add(type, config);
+                CheckDataConfig(config);
+            }
+        }
+        
         public int GetOrder() => 220;
         public void Init()
         {
@@ -33,10 +65,10 @@ namespace Shop.Gacha
             progressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
-            
-           
+
+
             gachaDic.Clear();
-           
+
             if (gachaConfigSO == null || gachaConfigSO.Count == 0)
             {
                 Debug.LogWarning("가챠 SO 가 비어있음");
@@ -100,7 +132,7 @@ namespace Shop.Gacha
             {
                 Debug.LogWarning($"{config.name} : baseRarityWeights 가 비어 있습니다.");
             }
-        }//SO에 MaxLevel 값 확인 , levelUpDraw 개수 확인(인스펙터 검사용 함수)
+        }//SO 데이터 검사 (레벨 , 비용 등등 전체 확인용)
 
 
         private void SetGachaLevel(EquipType equipType, int level)
@@ -164,7 +196,7 @@ namespace Shop.Gacha
             }
 
             return 1;
-        }//현재 가챠 레벨 반환
+        }//타입별 현재 가챠 레벨 반환(방어구 , 악세서리 추가예정)
         public int GetCurrentGachaCount(EquipType equipType)
         {
             switch (equipType)
@@ -180,7 +212,7 @@ namespace Shop.Gacha
             }
 
             return 0;
-        }//현재 가챠 횟수 반환
+        }//타입별 누적 가챠 횟수 반환
         public int GetNextLevelUpCount(EquipType equipType)
         {
             GachaConfigSO config = GetGachaSO(equipType);
@@ -201,7 +233,7 @@ namespace Shop.Gacha
             }
 
             return config.levelUpDraw[index];
-        }//레벨업에 필요한 가챠 횟수 반환
+        }//현재 레벨 기준 레벨업에 필요한 가챠 횟수 반환
         public int GetDrawCost(EquipType equipType, GachaDrawType drawType)
         {
             GachaConfigSO config = GetGachaSO(equipType);
@@ -234,7 +266,7 @@ namespace Shop.Gacha
             if (typeEquipments == null || typeEquipments.Count == 0) return false;
 
             return true;
-        }//가챠 가능/불가능 반환
+        }//가챠 가능 여부 반환
         public string GetProbabilityTableText(EquipType equipType, int level)
         {
             GachaConfigSO configSO = GetGachaSO(equipType);
@@ -276,13 +308,29 @@ namespace Shop.Gacha
                 }
 
                 int finalWeight = baseWeight.weight + bonusWeight;
-                sb.AppendLine($"{baseWeight.rarity} : {finalWeight}");
+
+                switch (baseWeight.rarity)
+                {
+                    case EquipRarity.Common:
+                        sb.AppendLine($"<color=#646464>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        break;
+
+                    case EquipRarity.UnCommon:
+                        sb.AppendLine($"<color=#64E6FF>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        break;
+
+                    case EquipRarity.Rare:
+                        sb.AppendLine($"<color=#A500FF>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        break;
+
+                    case EquipRarity.Unique:
+                        sb.AppendLine($"<color=#FFC800>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        break;
+                }
             }
 
             return sb.ToString();
         }//확률표 반환 함수
-
-
         public int GetDrawCountByType(GachaDrawType drawType)
         {
             switch (drawType)
@@ -489,6 +537,10 @@ namespace Shop.Gacha
 
             progressData.currency.gold -= amount;
 
+            if (hub != null)
+            {
+                hub.CurrencyChange(CurrencyType.GOLD , progressData.currency.gold);
+            }
             return true;
         }//골드 차감 함수
 
