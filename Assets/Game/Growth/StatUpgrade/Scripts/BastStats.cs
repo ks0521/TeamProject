@@ -1,3 +1,4 @@
+using Base.Utils;
 using Growth.Equipment;
 using System;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Base.Data
         }
 
         public static TotalStat operator +(TotalStat a, TotalStat b)
+            //=> StructMemberCalculator<TotalStat>.Add(a, b);
         {
             return new TotalStat()
             {
@@ -48,19 +50,20 @@ namespace Base.Data
         public float atkRange; //일반공격 사거리
 
         public static BattleStat operator +(BattleStat a, BattleStat b)
-        {
-            return new BattleStat
-            {
-                maxHp = a.maxHp + b.maxHp,
-                atk = a.atk + b.atk,
-                def = a.def + b.def,
-                atkSpeed = a.atkSpeed + b.atkSpeed,
-                moveSpeed = a.moveSpeed + b.moveSpeed,
-                critChance = a.critChance + b.critChance,
-                critDamage = a.critDamage + b.critDamage,
-                atkRange = a.atkRange + b.atkRange
-            };
-        }
+           => StructMemberCalculator<BattleStat>.Add(a, b);
+        // {
+        //     return new BattleStat
+        //     {
+        //         maxHp = a.maxHp + b.maxHp,
+        //         atk = a.atk + b.atk,
+        //         def = a.def + b.def,
+        //         atkSpeed = a.atkSpeed + b.atkSpeed,
+        //         moveSpeed = a.moveSpeed + b.moveSpeed,
+        //         critChance = a.critChance + b.critChance,
+        //         critDamage = a.critDamage + b.critDamage,
+        //         atkRange = a.atkRange + b.atkRange
+        //     };
+        // }
 
         public static BattleStat operator +(BattleStat stat, StatIncrease modifier)
         {
@@ -87,16 +90,16 @@ namespace Base.Data
         [Range(-1, 10f)] public float itemDropRate; //아이템 드랍 확률(%)
 
         public static RewardStat operator +(RewardStat a, RewardStat b)
-        {
-            return new RewardStat
-            {
-                goldGain = a.goldGain + b.goldGain,
-                statStoneGain = a.statStoneGain + b.statStoneGain,
-                expGain = a.expGain + b.expGain,
-                itemDropRate = a.itemDropRate + b.itemDropRate
-            };
-        }
-
+           => StructMemberCalculator<RewardStat>.Add(a, b); 
+        // {
+        //     return new RewardStat
+        //     {
+        //         goldGain = a.goldGain + b.goldGain,
+        //         statStoneGain = a.statStoneGain + b.statStoneGain,
+        //         expGain = a.expGain + b.expGain,
+        //         itemDropRate = a.itemDropRate + b.itemDropRate
+        //     };
+        // }
         public static RewardStat operator +(RewardStat stat, StatIncrease modifier)
         {
             return new RewardStat
@@ -115,16 +118,8 @@ namespace Base.Data
     {
         public float damageDealtRate; // 피해량 증가율(%)
         public float damageReduceRate; // 피해량 감소(%)
-
-        public static ExtraStat operator +(ExtraStat a, ExtraStat b)
-        {
-            return new ExtraStat
-            {
-                damageDealtRate = a.damageDealtRate + b.damageDealtRate,
-                damageReduceRate = a.damageReduceRate + b.damageReduceRate
-            };
-        }
-
+        public static ExtraStat operator +(ExtraStat a, ExtraStat b) =>
+            StructMemberCalculator<ExtraStat>.Add(a, b); 
         public static ExtraStat operator +(ExtraStat stat, StatIncrease modifier)
         {
             return new ExtraStat

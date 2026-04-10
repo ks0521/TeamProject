@@ -82,4 +82,44 @@ public class DropTableSO : ScriptableObject
         }
         return droppedItemList;
     }
+    /// <summary> 비접속 보상을 위해 대량의 적 처치를 가정한 보상 리스트를 반환하는 메서드</summary>
+    /// <param name="count">처치 수</param>
+    /// <param name="dropRate">드랍률</param>
+    /// <returns>Count만큼 적을 처치했을 때 획득한 최종 아이템 수</returns>
+    public List<DropReward> GetDroppedItems(int count, float dropRate)
+    {
+        List<DropReward> droppedItemList = new();
+        droppedItemList.Add(new DropReward()
+        {
+            rewardType = DropRewardType.Currency,
+            currencyType = CurrencyType.EXP,
+            amount =  (int)(Random.Range(0.95f,1.05f)*count * rewardExp),
+        });
+        foreach (var reward in dropList)
+        {
+            if (reward == null) continue; //드롭리스트에 아이템 없는 사건 방어
+            if (reward.rewardType == DropRewardType.Currency)
+            {
+                droppedItemList.Add(new(reward,
+                    (int)(Mathf.Clamp01(Random.Range(reward.chance - 0.05f,reward.chance + 0.05f)) * 
+                        (reward.maxAmount + reward.minAmount) * count / 2)));
+                continue;
+            }
+            float value;
+            int totalAmount = 0;
+            float finalChance = Mathf.Clamp01(reward.chance * (1 + dropRate));
+            for (int i = 0; i < count; i++)
+            {
+                value = Random.Range(0f, 1f);
+                if (value < finalChance) //확률 뽑아서 당첨이면 드롭되는 아이템 리스트에 추가
+                {
+                    totalAmount += (reward.minAmount > reward.maxAmount) ? 
+                            1 : Random.Range(reward.minAmount, reward.maxAmount + 1);
+                }
+            }
+            DropReward droppedItem = new(reward, totalAmount);
+            droppedItemList.Add(droppedItem);
+        }
+        return droppedItemList;
+    }
 }
