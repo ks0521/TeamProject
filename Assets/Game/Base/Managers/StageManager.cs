@@ -209,16 +209,13 @@ namespace Base.Managers
             return entry;
         }
 
-        public StageProgress GetStageProgress()
-        {
-            return new StageProgress()
+        public StageProgress GetStageProgress() => new StageProgress()
             {
                 selectedNormalChapter = progressManager.progress.stage.selectedNormalChapter,
                 selectedNormalStage = progressManager.progress.stage.selectedNormalStage,
                 nextChallengeChapter = progressManager.progress.stage.nextChallangeChapter, //현재 도전 챕터(최대 진행 챕터)
                 nextChallengeStage = progressManager.progress.stage.nextChallangeStage//현재 도전 스테이지(최대 진행 스테이지)
             };
-        }
 
         public bool TryGetTarget(Transform finder,out Monster target)
         {
@@ -281,7 +278,6 @@ namespace Base.Managers
                     progressManager.StageProgress.nextChallangeStage++;
                 }
             }
-            
             progressManager.SaveProgress();
             return new StageProgress()
             {
@@ -291,11 +287,6 @@ namespace Base.Managers
                 nextChallengeStage = progressManager.StageProgress.nextChallangeStage
             };
         }
-        
-        private void Start()
-        {
-            Debug.Log("F1 : 스테이지 진입 테스트 / F2 : 스테이지 엔트리 테스트 ");
-        }
         /// <summary> 스테이지 몬스터 스폰 멈추기</summary>
         private void StopCurrentStage()
         {
@@ -304,7 +295,6 @@ namespace Base.Managers
                 stage.canSpawning = false;
                 stage.Clear();
             }
-
             stageRule?.Destroy();
             //stageRule = null;
         }

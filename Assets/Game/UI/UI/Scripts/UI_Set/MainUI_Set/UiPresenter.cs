@@ -129,7 +129,7 @@ namespace UI.Scripts
         {
             if (popup == null) return;
             if (!popup.TryGetBossHpBar(out var bossHp)) return;
-
+            Debug.Log(stageManager.TryGetChallengeData(out var data));
             if (currentBoss != null)
             {
                 currentBoss.OnMonsterHpChanged -= OnBossHpChanged;
