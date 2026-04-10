@@ -90,6 +90,7 @@ namespace Base.Manager
         /// <returns>있으면 true, 없으면 false (catalog = default)</returns>
         public bool TryGetEquipmentCatalog(int key, out EquipmentCatalog catalog)
         {
+            
             EquipmentSO equip = dictionarys.equipmentTable.GetSO(key);
             if (equip == null)
             {

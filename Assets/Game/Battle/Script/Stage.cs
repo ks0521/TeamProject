@@ -37,15 +37,15 @@ using Random = UnityEngine.Random;
 
         void SpawnTypeSelect(SpawnType spawnType)
         {
+            spawnerToken = new CancellationTokenSource();
             switch (spawnType)
             {
                 case SpawnType.Endless:
-                    spawnerToken = new CancellationTokenSource();
                     EndlessSpawn(spawnerToken.Token).Forget();
                     spawnDelay = 1f;
                     break;
                 case SpawnType.Boss:
-                    BossSpawn();
+                    BossSpawn(spawnerToken.Token).Forget();
                     break;
                 case SpawnType.Wave:
 
@@ -62,8 +62,10 @@ using Random = UnityEngine.Random;
         #region 스폰 타입
 
         
-        void BossSpawn()
+        async UniTaskVoid BossSpawn(CancellationToken token)
         {
+            await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
+            
             float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
             float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
 

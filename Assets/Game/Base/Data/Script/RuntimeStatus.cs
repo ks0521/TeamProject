@@ -9,8 +9,8 @@ public class RuntimeStatus : MonoBehaviour, IGameSystem
     public static RuntimeStatus Instance; //MVP종료후 제거
     public PlayerBaseStatusSO baseStat;
     public TotalStat finalStatus;
-    public BattleStat finalBattleStatStatus;
-    public RewardStat finalRewardStatStatus;
+    public BattleStat FinalBattleStatStatus => finalStatus.battle;
+    public RewardStat FinalRewardStatStatus => finalStatus.reward;
     // Start is called before the first frame update
     void Awake()
     {
