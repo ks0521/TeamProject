@@ -75,16 +75,16 @@ public class ItemDropManager : MonoBehaviour, IManager
         switch (reward.currencyType)
         {
             case CurrencyType.EXP:
-                int finalExp = (int)(reward.amount * (1 + stat.finalRewardStatStatus.expGain));
+                int finalExp = (int)(reward.amount * (1 + stat.FinalRewardStatStatus.expGain));
                 progress.currency.exp += finalExp;
                 while (progress.currency.exp > 100) { LevelUp(); }
                 break;
             case CurrencyType.GOLD:
-                int finalGold = (int)(reward.amount * (1 + stat.finalRewardStatStatus.goldGain));
+                int finalGold = (int)(reward.amount * (1 + stat.FinalRewardStatStatus.goldGain));
                 progress.currency.gold += finalGold;
                 break;
             case CurrencyType.STATSTONE:
-                int finalStatStone = (int)(reward.amount * (1 + stat.finalRewardStatStatus.statStoneGain));
+                int finalStatStone = (int)(reward.amount * (1 + stat.FinalRewardStatStatus.statStoneGain));
                 progress.currency.statStone += finalStatStone;
                 break;
         }
@@ -142,7 +142,7 @@ public class ItemDropManager : MonoBehaviour, IManager
         }
     void GetGold(int dropGold)
     {
-        int finalGold = (int)(dropGold * (1 + stat.finalRewardStatStatus.goldGain));
+        int finalGold = (int)(dropGold * (1 + stat.FinalRewardStatStatus.goldGain));
         progress.currency.gold += finalGold;
         /*Debug.Log($"{dropGold} 획득, 플레이어 골드획득량 증가 {stat.finalRewardStatStatus.goldGain}적용되어 최종 {finalGold} 획득\n" +
                   $"현재 소유 골드 : {progress.currency.gold}");*/
@@ -152,7 +152,7 @@ public class ItemDropManager : MonoBehaviour, IManager
 
     void GetStatStone(int dropStatStone)
     {
-        int finalStatStone = (int)(dropStatStone * (1 + stat.finalRewardStatStatus.goldGain));
+        int finalStatStone = (int)(dropStatStone * (1 + stat.FinalRewardStatStatus.goldGain));
         progress.currency.statStone += finalStatStone;
         /*Debug.Log(
             $"스탯강화석 {dropStatStone} 획득, 플레이어 스탯강화석 증가 {stat.finalRewardStatStatus.goldGain}적용되어 최종 {finalStatStone} 획득\n" +
@@ -163,7 +163,7 @@ public class ItemDropManager : MonoBehaviour, IManager
 
     public void GetExp(int dropExp)
     {
-        int finalExp = (int)(dropExp * (1 + stat.finalRewardStatStatus.expGain));
+        int finalExp = (int)(dropExp * (1 + stat.FinalRewardStatStatus.expGain));
         progress.currency.exp += finalExp;
         /*Debug.Log($"경험치 {dropExp} 획득, 플레이어 경험치 증가 {stat.finalRewardStatStatus.expGain}적용되어 최종 {finalExp} 획득\n" +
                   $"현재 소유 경험치 : {progress.currency.exp}");*/

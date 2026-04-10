@@ -42,6 +42,7 @@ namespace Base.Data
         [Header("Utility")] 
         //1.2 = 20% 공격속도 증가
         public float atkSpeed; //공격속도, 1이 기본값으로 해당 수치는 배율처럼 작동
+        [Range(0.1f,3f)]
         public float moveSpeed; //이동속도
         
         public float atkRange; //일반공격 사거리
