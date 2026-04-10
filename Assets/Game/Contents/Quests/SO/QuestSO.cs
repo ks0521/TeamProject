@@ -24,4 +24,3 @@ namespace QuestSystem
         public bool isAbsoluteGoal; //레벨업 등은 true, 사냥은 false
     }
 }
-
