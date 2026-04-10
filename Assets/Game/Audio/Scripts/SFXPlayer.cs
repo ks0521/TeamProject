@@ -44,6 +44,10 @@ public class SFXPlayer : MonoBehaviour
     [Header("기타")]
     [SerializeField] private AudioClip getIdleReward;
 
+    private float lastQuestPlayTime = -1f;
+    private float lastLevelUpPlayTime = -1f;
+    private float soundCooldown = 0.2f; //사운드 중복재생 방지용
+
     //공통 사운드들
     #region
     public void PlayClickSound()
@@ -100,9 +104,15 @@ public class SFXPlayer : MonoBehaviour
     }
     public void PlayLevelupSound()
     {
+        if (Time.time - lastLevelUpPlayTime < soundCooldown) return;
+
         sfxSource.clip = levelUp;
 
-        if (sfxSource.clip != null) sfxSource.PlayOneShot(sfxSource.clip);
+        if (sfxSource.clip != null)
+        {
+            sfxSource.PlayOneShot(sfxSource.clip);
+            lastLevelUpPlayTime = Time.time;
+        }
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");
     }
     public void PlayHitSound() //몬스터의 피격
@@ -223,11 +233,16 @@ public class SFXPlayer : MonoBehaviour
     //퀘스트
     public void PlayQuestClearSound(bool isAllClear)
     {
+        if (!isAllClear && Time.time - lastQuestPlayTime < soundCooldown) return;
+
         AudioClip clipToPlay = isAllClear ? clearAllQuest : clearQuest;
 
         if (clipToPlay != null)
         {
+            if (isAllClear) sfxSource.Stop();
+
             sfxSource.PlayOneShot(clipToPlay);
+            lastQuestPlayTime = Time.time; //마지막 재생 시간 갱신
             if (isAllClear) Debug.Log("<color=gold>★★★ 모든 퀘스트 완료! ★★★</color>");
         }
         else Debug.LogWarning("AudioSource에 클립이 할당되지 않았습니다!");

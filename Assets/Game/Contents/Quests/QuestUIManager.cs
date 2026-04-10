@@ -1,5 +1,6 @@
 using Base.Data;
 using Base.Managers;
+using Base.Save;
 using QuestSystem;
 using System.Collections;
 using System.Collections.Generic;
@@ -236,30 +237,66 @@ public class QuestUIManager : MonoBehaviour, IManager
         }
     }
 
-    //퀘스트 모두 완료 버튼(반복성 퀘스트 한번에 클리어 기능 추가)
+    //퀘스트 모두 완료 버튼(반복성 퀘스트 한번에 클리어 기능 포함)
     public void OnClickQuestAllClear()
     {
         if (questManager == null) return;
 
-        List<RewardData> totalRewards = new List<RewardData>();
+        List<DropReward> dropRewards = new List<DropReward>(); //팀원의 원본 데이터 리스트
+        List<RewardData> uniqueRewards = new List<RewardData>();
+
+        //재화 합산용 딕셔너리
+        Dictionary<CurrencyType, RewardData> totalCurrencies = new Dictionary<CurrencyType, RewardData>();
+
         bool checkAgain = true;
-        int safetyCounter = 0; // 무한 루프 방지용
+        int safetyCounter = 0; //무한루프 방지용
 
         while (checkAgain)
         {
-            QuestCategory currentCat = (QuestCategory)currentTabIndex;
-
-            // 현재 카테고리 중 완료 가능한 것들만 추출
+            //완료 가능한 퀘스트 카테고리 추출
             var targetQuests = questManager.GetActiveQuests()
-                .Where(q => q.Data.CategoryEnum == currentCat && q.isCompleted)
-                .ToList();
+            .Where(q => q.Data.CategoryEnum == (QuestCategory)currentTabIndex && q.isCompleted)
+            .ToList();
 
             if (targetQuests.Count > 0)
             {
                 foreach (var q in targetQuests)
                 {
                     var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
-                    totalRewards.AddRange(rewards);
+
+                    foreach (var r in rewards) //장비(EquipmentSO)인지 확인
+                    {
+                        bool isEquipment = r.originalSO is Growth.Equipment.EquipmentSO;
+
+                        if (isEquipment)
+                        {
+                            // 장비는 합치지 않고 무조건 리스트에 추가 (개별 프리팹 생성됨)
+                            uniqueRewards.Add(r);
+                        }
+                        else
+                        {
+                            CurrencyType cType = r.currencyType;
+                            // 재화라면 딕셔너리에 합산
+                            if (totalCurrencies.ContainsKey(cType))
+                            {
+                                totalCurrencies[cType].amount += r.amount;
+                            }
+                            else
+                            {
+                                // 새로운 재화 등록 (기존 r 객체를 직접 쓰면 참조 문제로 수치가 꼬일 수 있어 새로 생성 권장)
+                                RewardData newData = new RewardData
+                                {
+                                    itemName = r.itemName,
+                                    amount = r.amount,
+                                    icon = r.icon,
+                                    description = r.description,
+                                    originalSO = r.originalSO,
+                                    currencyType = cType
+                                };
+                                totalCurrencies.Add(cType, newData);
+                            }
+                        }
+                    }
                     //true: 보상이 합산된 팝업
                     questManager.TryCompleteQuest(q, true);
                 }
@@ -271,9 +308,13 @@ public class QuestUIManager : MonoBehaviour, IManager
             }
             else checkAgain = false;    
         }
-        if (totalRewards.Count > 0 && rewardPopup != null)
+        List<RewardData> finalList = new List<RewardData>();
+        finalList.AddRange(totalCurrencies.Values);
+        finalList.AddRange(uniqueRewards);
+
+        if (finalList.Count > 0 && rewardPopup != null)
         {
-            rewardPopup.ShowRewards(totalRewards);
+            rewardPopup.ShowRewards(finalList);
         }
         RefreshQuestBox();
         UpdateTabVisuals();

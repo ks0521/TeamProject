@@ -27,6 +27,7 @@ namespace Base.Save
         public int gold;
         public int statStone;
         public int ruby;
+        public int fame; //업적점수(명예)
     }
 
     [Serializable] [CommonType]
