@@ -8,7 +8,7 @@ namespace Base.Save
 {
     public enum CurrencyType
     {
-        EXP, GOLD, STATSTONE
+        EXP, GOLD, STATSTONE, FAME
     }
     /// <summary> 실제 게임 저장을 위한 리스트 구조 데이터</summary>
     [Serializable]

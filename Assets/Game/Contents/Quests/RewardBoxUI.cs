@@ -15,6 +15,14 @@ public class RewardBoxUI : MonoBehaviour
         rData = data;
         iconImage.sprite = data.icon;
         amountText.text = data.amount.ToString();
+        //장비 아이템은 수량 표기 없음, 그 외에는 2 이상의 수량만 노출
+        bool isEquipment = data.originalSO is Growth.Equipment.EquipmentSO;
+        bool shouldShowAmount = !isEquipment && data.amount > 1;
+        if (amountText != null)
+        {
+            amountText.text = data.amount.ToString();
+            amountText.gameObject.SetActive(shouldShowAmount);
+        }
 
         Button btn = GetComponent<Button>();
         btn.onClick.RemoveAllListeners();

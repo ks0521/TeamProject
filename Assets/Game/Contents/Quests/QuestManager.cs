@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Managers;
 using Battle;
+using Growth.Equipment;
 using QuestSystem.TutorialSteps;
 using System;
 using System.Collections;
@@ -101,10 +102,23 @@ namespace QuestSystem
         public GameObject TutorialPanel; //튜토리얼 설명 텍스트가 있는 패널
         public Text TutorialDescText;
 
+        //[SerializeField] private RewardItemRegistrySO itemDatabase;
+        //[SerializeField] private QuestRewardSO rewardDatabase;
+        //[SerializeField] private RewardPopupUI rewardPopup;
         [Header("보상 설정")]
-        [SerializeField] private RewardItemRegistrySO itemDatabase;
-        [SerializeField] private QuestRewardSO rewardDatabase;
+        [SerializeField] private ItemDropManager itemDropManager;
         [SerializeField] private RewardPopupUI rewardPopup;
+
+        // [중요] ID와 RewardTableSO 에셋을 매칭하기 위한 딕셔너리
+        // 인스펙터에서 설정할 수 있도록 리스트 형태로 먼저 선언합니다.
+        [System.Serializable]
+        public struct RewardTableMap
+        {
+            public int groupID;
+            public RewardTableSO table;
+        }
+
+        [SerializeField] private List<RewardTableMap> rewardTableMaps;
 
         //무한 반복형 퀘스트에 사용할 단계 딕셔너리
         private Dictionary<int, int> questSeriesSteps = new Dictionary<int, int>();
@@ -223,7 +237,6 @@ namespace QuestSystem
             FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
             Debug.Log("<color=yellow>모든 퀘스트 진행도가 초기화되었습니다!</color>");
         }
-        #endregion
 
         //활성화된 모든 퀘스트 리스트 반환
         public List<ActiveQuest> GetActiveQuests()
@@ -235,6 +248,7 @@ namespace QuestSystem
         {
             return activeQuests.FindAll(q => q.Data.CategoryEnum == category);
         }
+        #endregion
 
         //퀘스트 진척량이 누적될 때 호출(UpdateQuest 대신 사용)
         public void OnActivity(GoalType type, int targetID, int amount)
@@ -289,12 +303,14 @@ namespace QuestSystem
         }
         public void TryCompleteQuest(ActiveQuest quest, bool suppressPopup = false)
         {
-            //보상 리스트 확보 후 팝업 띄우기
-            List<RewardData> rewards = GetRewardsByGroupID(quest.Data.rewardGroupID);
-            //suppressPopup이 false = 개별 팝업
-            if (rewardPopup != null && rewards.Count > 0 && !suppressPopup)
+            //1. 실제 아이템 지급(팀원 시스템 호출)
+            GiveRewardsToPlayer(quest.Data.rewardGroupID);
+
+            //2. 보상 팝업 표시(사용자 UI 시스템)
+            if (!suppressPopup && rewardPopup != null)
             {
-                rewardPopup.ShowRewards(rewards);
+                var rewards = GetRewardsByGroupID(quest.Data.rewardGroupID);
+                if (rewards.Count > 0) rewardPopup.ShowRewards(rewards);
             }
 
             QuestCategory currentCategory = quest.Data.CategoryEnum;
@@ -345,40 +361,65 @@ namespace QuestSystem
             SaveProgress();
             EventHub.QuestProgressUpdated();
         }
-        //rewardGroupID에 따른 보상 목록 반환
+        
         //rewardGroupID에 따른 보상 목록 반환
         public List<RewardData> GetRewardsByGroupID(int groupID)
         {
-            List<RewardData> rewards = new List<RewardData>();
+            List<RewardData> result = new List<RewardData>();
 
-            var group = rewardDatabase.GetGroup(groupID);
-            if (group == null) return rewards;
+            var map = rewardTableMaps.Find(x => x.groupID == groupID);
+            if (map.table == null) return result;
 
             //보상 그룹 중에서 필요한 목록 검색
-            foreach (var r in group.items)
+            foreach (var drop in map.table.rewardList)
             {
-                var info = rewardDatabase.GetGroup(r.itemID);
-                if (group == null) return rewards;
-            }
-
-            //그룹 내의 아이템들을 RewardData로 변환
-            foreach (var r in group.items)
-            {
-                var info = itemDatabase.GetItem(r.itemID);
-                if (info != null)
+                // [로직 추가] 아이템(장비) 타입인 경우 수량만큼 반복해서 리스트에 추가
+                if (drop.rewardType == DropRewardType.Item)
                 {
-                    rewards.Add(new RewardData
+                    for (int i = 0; i < drop.amount; i++)
                     {
-                        itemID = r.itemID,
-                        itemName = info.itemName,
-                        icon = info.itemIcon,
-                        amount = r.amount,
-                        description = info.description,
-                        originalSO = info.itemSO
-                    });
+                        result.Add(CreateRewardData(drop, 1)); //수량을 무조건 1로 세팅
+                    }
+                }
+                else // 재화(Currency)인 경우 기존처럼 한꺼번에 추가
+                {
+                    result.Add(CreateRewardData(drop, drop.amount));
                 }
             }
-            return rewards;
+            return result;
+        }
+        // 중복 코드를 방지하기 위한 데이터 생성 헬퍼 함수
+        private RewardData CreateRewardData(DropReward drop, int finalAmount)
+        {
+            RewardData uiData = new RewardData();
+            uiData.amount = finalAmount;
+            uiData.currencyType = drop.currencyType;
+
+            if (drop.rewardType == DropRewardType.Currency)
+            {
+                uiData.itemName = drop.currencySO.currencyName;
+                uiData.icon = drop.currencySO.icon;
+                uiData.originalSO = drop.currencySO;
+                uiData.description = drop.currencySO.explain;
+            }
+            else
+            {
+                uiData.itemName = drop.itemSO.itemName;
+                uiData.icon = drop.itemSO.icon;
+                uiData.originalSO = drop.itemSO;
+                uiData.description = "";
+            }
+            return uiData;
+        }
+        //실제 아이템 지급을 요청할 때 사용
+        public void GiveRewardsToPlayer(int groupID)
+        {
+            var map = rewardTableMaps.Find(x => x.groupID == groupID);
+            if (map.table != null && itemDropManager != null)
+            {
+                //팀원이 만든 실제 지급 메서드 호출
+                itemDropManager.GetRewards(map.table.rewardList, true);
+            }
         }
 
         void RefreshQuests()
