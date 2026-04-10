@@ -128,8 +128,10 @@ namespace UI.Scripts
         void ReFreshBoss(Monster monster)
         {
             if (popup == null) return;
+            if (!stageManager.TryGetChallengeData(out var data)) return;
             if (!popup.TryGetBossHpBar(out var bossHp)) return;
-            Debug.Log(stageManager.TryGetChallengeData(out var data));
+            if (!popup.TryGetTimer(out var timer)) return;
+
             if (currentBoss != null)
             {
                 currentBoss.OnMonsterHpChanged -= OnBossHpChanged;
@@ -137,9 +139,13 @@ namespace UI.Scripts
             }
 
             currentBoss = monster;
+            Debug.Log($"보스 UI 세팅 / 현재HP : {currentBoss.Hp}, 최대HP : {currentBoss.CurrentBattleStatStat.maxHp}");
+            Debug.Log($"시간 UI 세팅 / 현재시간 : {data.currentTime}, 최대시간 : {data.maxTime}");
+            bossHp.SetBoss(currentBoss.Hp, currentBoss.CurrentBattleStatStat.maxHp , currentBoss.name);
+            timer.SetTime(data.currentTime , data.maxTime);
+            StartTimerRoutine();
 
-            bossHp.SetBoss(currentBoss.Hp, currentBoss.CurrentBattleStatStat.maxHp /* ,나중에 여기 보스 이름 추가*/);
-
+            currentBoss.OnMonsterHpChanged -= OnBossHpChanged;
             currentBoss.OnMonsterHpChanged += OnBossHpChanged;
 
         }//보스 생성될때 UI 세팅용

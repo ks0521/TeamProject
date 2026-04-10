@@ -7,30 +7,36 @@ using System.Collections.Generic;
 using UI.Ability_Set;
 using UI.ChapterStage_Set;
 using UI.Equipment;
+using UI.Popup;
 using UI.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Scripts
 {
-    public enum PopupName
-    {
-        None,Ability
-    }
-    [Serializable]public struct PopupInfo
-    {
-        PopupName Name;
-        GameObject Prefab;
-
-    }
     public class PopupManager : MonoBehaviour, IManager
     {
         public static PopupManager instance;
 
+        [Header("팝업 프리팹 SO")]
+        [SerializeField] private PopupSO popupSO;   
+        Dictionary<PopupSO.popupType, GameObject> popupDic = new();
 
-        //SO 로 만들어서 필요할때만 찾아서 꺼내쓰기
-        [SerializeField] List<PopupInfo> Popuplist;
-        Dictionary<PopupName, GameObject> PopupInfoDic;
+        private void InitPopupDIc()
+        {
+            if (popupSO != null) return;
+            if (popupSO.PopupList == null) return;
+
+            for (int i = 0; i < popupSO.PopupList.Count; i++)
+            {
+                var data = popupSO.PopupList[i];
+
+                if (data == null) return;
+
+                if (popupDic.ContainsKey(data.popupType)) continue;
+                popupDic.Add(data.popupType, data.popupPrefab);
+            }
+        }//작업중...
 
 
         [Header("프래핍 생성 위치")]
@@ -403,7 +409,7 @@ namespace UI.Scripts
         {
             if (clearRewardInstance != null) return;
             if (clearRewardPrefab == null) return;
-            
+            Debug.Log("보상 함수 실행");
             clearRewardInstance = Instantiate(clearRewardPrefab, canvas);
             clearRewardInstance.SetReward(rewardList);
             ClosePopup(clearRewardInstance.gameObject);
