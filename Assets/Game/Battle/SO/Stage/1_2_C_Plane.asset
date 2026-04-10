@@ -19,11 +19,15 @@ MonoBehaviour:
   chapter: 1
   stage: 2
   dropTable: {fileID: 0}
+  rewardTable: []
   preset:
   - monster: {fileID: 11400000, guid: 42928885a97f57f458d12eb14b974bd4, type: 2}
     weights: 8
   - monster: {fileID: 11400000, guid: 2362faff452f0f044bedae8d451e8aff, type: 2}
     weights: 2
-  type: 1
+  stageType: 1
+  spawnType: 0
+  clearType: 1
+  rewardType: 1
   deadLine: 60
   targetKillScore: 3

@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9af6e0612b7c4946aa67123d831ab7a, type: 3}
+  m_Name: Accessory_3304_UnCommon_Low
+  m_EditorClassIdentifier: 
+  key: 3304
+  icon: {fileID: -1600272067, guid: 56cf9735cb0066a43a4a73ba76752f75, type: 3}
+  itemName: "\uC7A5\uC2E0\uAD6C_4"
+  context: 
+  equipType: 2
+  rarity: 1
+  quality: 0
+  combineNeedAmount: 5
+  UpgradeNeedCost: 15
+  equipBaseIncrease:
+    atk: 0
+    atkRate: 0
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
+    maxHpRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0.153
+    atkSpeed: 0
+    itemDropRate: 0.041
+    goldGain: 0.051
+    expGain: 0.051
+    statStoneGain: 0.051
+  equipPerLevelIncrease:
+    atk: 0
+    atkRate: 0
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
+    maxHpRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0.02
+    atkSpeed: 0
+    itemDropRate: 0.006
+    goldGain: 0.007
+    expGain: 0.007
+    statStoneGain: 0.007
+  ownedBaseIncrease:
+    atk: 0
+    atkRate: 0
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
+    maxHpRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0
+    atkSpeed: 0
+    itemDropRate: 0
+    goldGain: 0.02
+    expGain: 0.02
+    statStoneGain: 0
+  ownedPerLevelIncrease:
+    atk: 0
+    atkRate: 0
+    damageDealtRate: 0
+    critChance: 0
+    critDamage: 0
+    maxHp: 0
+    maxHpRate: 0
+    def: 0
+    damageReduction: 0
+    moveSpeed: 0
+    atkSpeed: 0
+    itemDropRate: 0.003
+    goldGain: 0
+    expGain: 0
+    statStoneGain: 0.003

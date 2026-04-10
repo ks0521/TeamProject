@@ -1,39 +1,40 @@
 using Base.Managers;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StageMonster_Set : MonoBehaviour
+namespace UI.ChapterStage_Set
 {
-    [Header("UI 이미지")]
-    [SerializeField] Image [] monsterImg;
-    
-    public void SetMonster(StageEntry stageEntry)
+    public class StageMonster_Set : MonoBehaviour
     {
-        for (int i = 0; i < monsterImg.Length; i++)
-        {
-            monsterImg[i].gameObject.SetActive(false);
-        }
+        [Header("UI 이미지")]
+        [SerializeField] Image[] monsterImg;
 
-        int currentSlot = 0;
-        var stageMonster = stageEntry.stageSO.preset;
-        for (int i = 0; i < stageMonster.Count; i++)
+        public void SetMonster(StageEntry stageEntry)
         {
-            var stageMon = stageMonster[i].monster;
-            SetSlot(ref currentSlot);
-        }
+            for (int i = 0; i < monsterImg.Length; i++)
+            {
+                monsterImg[i].gameObject.SetActive(false);
+            }
 
-    }
-    void SetSlot(ref int slot, Sprite icon = null)
-    {
-        if (slot < monsterImg.Length)
+            int currentSlot = 0;
+            var stageMonster = stageEntry.stageSO.preset;
+            for (int i = 0; i < stageMonster.Count; i++)
+            {
+                var stageMon = stageMonster[i].monster;
+                SetSlot(ref currentSlot);
+            }
+
+        }
+        void SetSlot(ref int slot, Sprite icon = null)
         {
-            monsterImg[slot].sprite = icon;
-            monsterImg[slot].gameObject.SetActive(true);
-            slot++;
-            Debug.Log("이미지 변경!");
+            if (slot < monsterImg.Length)
+            {
+                monsterImg[slot].sprite = icon;
+                monsterImg[slot].gameObject.SetActive(true);
+                slot++;
+                Debug.Log("이미지 변경!");
+            }
         }
     }
+
 }
