@@ -56,7 +56,7 @@ public class SetViewer : MonoBehaviour
     {
         SetBoss(hp, bossMaxhp);
     }
-    public void SetBoss(float hp,float maxhp , string name = null)
+    public void SetBoss(float hp , float maxhp , string name = null)
     {
         if (maxhp > 0f)
         {
@@ -65,10 +65,10 @@ public class SetViewer : MonoBehaviour
         if (name != null)
         {
             bossName = name;
-            text.text = bossName;
+            text.text = bossName.Replace("(Clone)","").Trim();
         }
         if(bossMaxhp <= 0f) return;
 
-        slider.value = Mathf.Clamp01(hp / bossMaxhp);
+        slider.value = hp / bossMaxhp;
     }
 }
