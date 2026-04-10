@@ -25,11 +25,11 @@ namespace Shop.Gacha
         }
         public void BindButtons(Action after, Action before)
         {
-            /*afterButton.onClick.RemoveAllListeners();
+            afterButton.onClick.RemoveAllListeners();
             beforeButton.onClick.RemoveAllListeners();
 
-            afterButton.onClick.AddListener(() => after());
-            beforeButton.onClick.AddListener(() => before());*/
+            afterButton.onClick.AddListener(() => after?.Invoke());
+            beforeButton.onClick.AddListener(() => before?.Invoke());
         }
     }
 }

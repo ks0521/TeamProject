@@ -85,19 +85,22 @@ public class Stage
     {
         try
         {
-            spawnerToken = new CancellationTokenSource();
-            switch (spawnType)
+            while (true)
             {
-                case SpawnType.Endless:
-                    EndlessSpawn(spawnerToken.Token).Forget();
-                    spawnDelay = 1f;
-                    break;
-                case SpawnType.Boss:
-                    BossSpawn(spawnerToken.Token).Forget();
-                    break;
-                case SpawnType.Wave:
-
-                    break;
+                await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
+                float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
+                float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
+                int randIdx = WeightCalc(stageSO.preset);
+                GameObject monsterObj = monsterPool.UsePool(stageSO.preset[randIdx].monster.key);
+                Monster monster = monsterObj.GetComponent<Monster>();
+                monster.SetUp(stageSO.preset[randIdx].monster);
+                monster.Init();
+                monsterObj.transform.position = new Vector3(randx, randy, 0);
+                monsterObj.SetActive(true);
+                Register(monster);
+                //Debug.Log($"Spawn : {mon.transform.position}");
+                await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
+                await UniTask.WaitWhile(() => monstersList.Count >= 10, cancellationToken: token);
             }
         }
         catch (OperationCanceledException)

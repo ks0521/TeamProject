@@ -76,13 +76,13 @@ public class GachaPresenter : MonoBehaviour
     {
         currentTableEquipType = type;
         currentTableLevel = gachaManager.GetGachaLevel(type);
+        tableInstance = Instantiate(problemTable.gameObject, transform);
 
-        problemTable.BindButtons(OnClickNextTableLevel, OnClickPrevTableLevel);
+        ProbabilityTable tableUI = tableInstance.GetComponent<ProbabilityTable>();
+        tableUI.BindButtons(OnClickNextTableLevel, OnClickPrevTableLevel);
 
         RefreshProbabilityTable();
 
-
-        tableInstance = Instantiate(problemTable.gameObject, transform);
         popupManager.PushPopup(tableInstance);
     }//버튼에 넣을 함수(확률표 열기)
     private void OnClickDraw(EquipType type, GachaDrawType drawType)
@@ -134,10 +134,7 @@ public class GachaPresenter : MonoBehaviour
             view.SetButtonStates(canOne, canTen, canHundred);
         }
     }//상점 UI 갱신
-    private void OnClickConfirm()
-    {
-        popupManager.ClosePopup(gachaResultInstance.gameObject);
-    }//가챠 화면 OFF
+   
     private void OnClickRetry()
     {
         if (gachaManager == null) return;
@@ -162,10 +159,12 @@ public class GachaPresenter : MonoBehaviour
     }//다시 뽑기 체크
     private void RefreshProbabilityTable()
     {
+        ProbabilityTable tableUI = tableInstance.GetComponent<ProbabilityTable>();
+
         string tableName = $"{currentTableEquipType} 확률표 Lv.{currentTableLevel}";
         string tableText = gachaManager.GetProbabilityTableText(currentTableEquipType, currentTableLevel);
 
-        problemTable.SetTable(tableName, tableText);
+        tableUI.SetTable(tableName, tableText);
     }//확률표 UI 갱신
     private void RefreshGoldUI()
     {
@@ -188,7 +187,7 @@ public class GachaPresenter : MonoBehaviour
         GachaConfigSO configSO = gachaManager.GetGachaSO(currentTableEquipType);
         if (configSO == null) return;
         if (currentTableLevel >= configSO.maxLevel) return;
-
+        Debug.Log($"다음 레벨 클릭: {currentTableLevel}");
         currentTableLevel++;
         RefreshProbabilityTable();
     }//확률표 다음 레벨 보기

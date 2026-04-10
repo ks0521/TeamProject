@@ -38,7 +38,13 @@ namespace UI.ChapterStage_Set
                 stages[i].SetStage(entry);
             }
         }
+        public Stage_Set GetStage(int num)
+        {
+            if (stages == null) return null;
+            if (num < 0 || num >= stages.Length) return null;
 
+            return stages[num];
+        }
 
     }
 
