@@ -12,6 +12,9 @@ public class RewardItemRegistrySO : ScriptableObject
         public int itemID;
         public string itemName;
         public Sprite itemIcon;
+        [TextArea(3, 5)]
+        public string description; //일반 아이템용 플레이버 텍스트
+        public ScriptableObject itemSO; //실제 스탯이 담긴 EquipmentSO 등을 연결
     }
 
     public List<ItemInfo> allItems;
