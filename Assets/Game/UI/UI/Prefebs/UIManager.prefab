@@ -1410,7 +1410,7 @@ MonoBehaviour:
     type: 3}
   equipmentPrefab: {fileID: 5393540894332862103, guid: 75cb6ce84b285e54ba50845e17a929c0,
     type: 3}
-  skillPrefab: {fileID: 234969964878609753, guid: 70e964a59f3ea384ba0f31ed04a30e5c,
+  skillPrefab: {fileID: 9214214365782438512, guid: 8ab82ac43c8d0564bbae040792b6ce4d,
     type: 3}
   shopPrefab: {fileID: 3935247060243164817, guid: 1aca20c9f88fddb4f95f71875de5818b,
     type: 3}
@@ -1424,6 +1424,8 @@ MonoBehaviour:
   failPrefab: {fileID: 356307498151926037, guid: 90257cb2cd85aba43b005cb592fa8879,
     type: 3}
   deadPrefab: {fileID: 966986213065669838, guid: 09d17db730f545e4eb4850adfd460bde,
+    type: 3}
+  clearRewardPrefab: {fileID: 1576542953155327128, guid: bc14bea11ef830d498aca4cb4f571f6b,
     type: 3}
   timer: {fileID: 3047087367141977803, guid: de2046b59ea3e2744bc22d07a660013d, type: 3}
   monsterKill: {fileID: 5937011571217827798, guid: fa26bd555bcb60a4ab950387b7775b52,
@@ -1456,7 +1458,6 @@ MonoBehaviour:
   - {fileID: 440578052209408871}
   stageText: {fileID: 8651225164835758699}
   autoButton: {fileID: 1755363094899948925}
-  skillIcons: {fileID: 5267193571342696450}
   manager: {fileID: 0}
   hub: {fileID: 0}
   stageManager: {fileID: 0}

@@ -130,7 +130,6 @@ public class AudioManager : MonoBehaviour, IManager
     }
     #endregion
 
-
     //지금은 임시로 SFXPlayer에 전부 할당했습니다
     //나중에 필요에 따라 다른 cs 파일로 분할하는 게 좋습니다
     #region SFXs
@@ -199,7 +198,6 @@ public class AudioManager : MonoBehaviour, IManager
         _sfxPlayer?.PlaySynthesizeItemSound();
     }
 
-    //이제 퀘스트 완료는 EventHub가 감지함
     public void PlayQuestClearSound(QuestDataReader questData, bool isAllCleared)
     {
         _sfxPlayer?.PlayQuestClearSound(isAllCleared);

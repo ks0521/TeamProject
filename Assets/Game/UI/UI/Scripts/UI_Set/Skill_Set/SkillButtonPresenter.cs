@@ -3,6 +3,7 @@ using Base.Managers;
 using Battle;
 using Cysharp.Threading.Tasks;
 using Growth.Skill;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -13,8 +14,10 @@ namespace UI.Skill_Set
         [SerializeField] private SkillButtonView[] btnViewArr;
 
         private EventHub eventHub;
-        private EquipSkillController plEquipSkillController;
-        private EquipSkill[] plEquipSkill;
+        // private EquipSkillController plEquipSkillController;
+        private SkillManager skillMgr;
+        // private EquipSkill[] plEquipSkill;
+        private IReadOnlyList<EquipSkill> plEquipSkill;
         private Player pl;
         // 0 : 기본, 1 : 선택됨
         [SerializeField] private Sprite[] borderArr;
@@ -33,8 +36,10 @@ namespace UI.Skill_Set
                 // Debug.LogWarning("SkillButtonPresenter에서 Player 찾지 못함");
                 return;
             }
-            plEquipSkillController = pl.ESController;
-            plEquipSkill = plEquipSkillController.EquipSkillArr;
+            // plEquipSkillController = pl.ESController;
+            // plEquipSkill = plEquipSkillController.EquipSkillList;
+            skillMgr = GameManager.Instance.GetGameSystem<SkillManager>();
+            plEquipSkill = skillMgr.PlayerEquipSkillList;
             for (int i = 0; i < 6; i++)
             {
                 if (plEquipSkill[i] == null)

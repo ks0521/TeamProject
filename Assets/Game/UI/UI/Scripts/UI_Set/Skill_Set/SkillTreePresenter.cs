@@ -11,9 +11,7 @@ namespace UI.Skill_Set
 {
     public class SkillTreePresenter : MonoBehaviour
     {
-        private SkillPopupUIManager owner;
-        // private SkillManager skillMgr;
-        private SkillPool pool;
+        private SkillManager skillMgr;
         private EventHub hub;
         [SerializeField] private TextMeshProUGUI skillPointTxt;
         [SerializeField] private SkillTreeUISetView[] skillTreeUISetArr;
@@ -26,25 +24,20 @@ namespace UI.Skill_Set
         [SerializeField] private ContentSizeFitter sizeFitter;
         public void Init(UIPresenterInitData data)
         {
-            owner = data.owner;
-            pool = data.pool;
             hub = data.hub;
-            // skillMgr = owner.SkillMgr;
+            skillMgr = data.skillMgr;
 
-            // ObjectSettingHelper.TryFindChild(skillTreeUISetParentTransform, out skillTreeUISetArr);
             SkillTreeBtnSetting();
             LayoutGroupAndSizeFitterOff();
         }
         void SkillTreeBtnSetting()
         {
-            var allSkillArr = pool.AllSkillArr;
-            int length = allSkillArr.Length;
-            int activeCnt = pool.ActiveSkillCnt;
-            skillTreeUISetArr = new SkillTreeUISetView[length];
-            // layoutGroup.enabled = true;
-            // sizeFitter.enabled = true;
+            var allSkillArr = skillMgr.AllSkillList;
+            int cnt = allSkillArr.Count;
+            int activeCnt = skillMgr.ActiveSkillCnt;
+            skillTreeUISetArr = new SkillTreeUISetView[cnt];
             // 패시브부터 주입
-            for(int i = activeCnt; i < length; i++)
+            for(int i = activeCnt; i < cnt; i++)
             {
                 skillTreeUISetArr[i] = Instantiate(skillTreeUISetPrefab, skillTreeUISetParentTransform);
             }
@@ -68,7 +61,7 @@ namespace UI.Skill_Set
         }
         public void SkillTreeUISetByPool(int key)
         {
-            if (!pool.TryGetSkillByKey(key, out var skill)) return;
+            if (!skillMgr.TryGetSkill(key, out var skill)) return;
             var so = skill.SkillData;
             bool isHomingSkill = (so is ActiveSkillSO aSO) && (aSO.Targeting == TargetingMode.Homing);
             SkillTreeUISetViewNeedsImageData skillTreeUIData
@@ -79,8 +72,8 @@ namespace UI.Skill_Set
         // public void BtnEventAddListner(Action<int> skillDetailShowFunc, Action skillLevelResetFunc, Action skillPopupClose)
         public void BtnEventAddListner(Action<int> skillDetailShowFunc, Action skillLevelResetFunc)
         {
-            var skillDatas = pool.AllSkillArr;
-            int skillsCnt = skillDatas.Length;
+            var skillDatas = skillMgr.AllSkillList;
+            int skillsCnt = skillDatas.Count;
             int skillTreeLength = skillTreeUISetArr.Length;
 
             skillTreeUISetDic = new Dictionary<int, SkillTreeUISetView>(skillTreeLength);
@@ -111,9 +104,8 @@ namespace UI.Skill_Set
             resetPointBtn.onClick.RemoveAllListeners();
         }
         #region SkillPopupPresenter 내부 UI 기능
-        public void SetSkillPointText(int curLv, int maxLv)
-        //  => skillPointTxt.text = $"보유 SP : {curLv} / {maxLv}";
-         => skillPointTxt.text = $"{curLv}/{maxLv}";
+        // public void SetSkillPointText(int curLv, int maxLv) => skillPointTxt.text = $"{curLv}/{maxLv}";
+        public void SetSkillPointText(int curSkillPoint) => skillPointTxt.text = $"{curSkillPoint}";
         #endregion
     }
 }

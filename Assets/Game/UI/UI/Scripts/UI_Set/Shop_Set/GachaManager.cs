@@ -57,7 +57,7 @@ namespace Shop.Gacha
                 CheckDataConfig(config);
             }
         }
-        
+
         public int GetOrder() => 220;
         public void Init()
         {
@@ -143,13 +143,13 @@ namespace Shop.Gacha
                     progressData.playerInfo.weaponGachaLevel = level;
                     break;
 
-                    /*case EquipType.Armor:
-                        progressData.playerInfo.armorGachaLevel = level;
-                        break;
+                case EquipType.Armor:
+                    progressData.playerInfo.armorGachaLevel = level;
+                    break;
 
-                    case EquipType.Accessory:
-                        progressData.playerInfo.accessoryGachaLevel = level;
-                        break;*/
+                case EquipType.Accessory:
+                    progressData.playerInfo.accessoryGachaLevel = level;
+                    break;
             }
         }//가챠 레벨 저장용
         private void SetCurrentGachaCount(EquipType equipType, int count)
@@ -160,13 +160,13 @@ namespace Shop.Gacha
                     progressData.playerInfo.curWeaponGachaCount = count;
                     break;
 
-                    /*case EquipType.Armor:
-                        progressData.playerInfo.curArmorGachaCount = count;
-                        break;
+                case EquipType.Armor:
+                    progressData.playerInfo.curArmorGachaCount = count;
+                    break;
 
-                    case EquipType.Accessory:
-                        progressData.playerInfo.curAccessoryGachaCount = count;
-                        break;*/
+                case EquipType.Accessory:
+                    progressData.playerInfo.curAccessoryGachaCount = count;
+                    break;
             }
         }//가챠 횟수 저장용
 
@@ -188,15 +188,14 @@ namespace Shop.Gacha
                 case EquipType.Weapon:
                     return progressData.playerInfo.weaponGachaLevel;
 
-                    /*case EquipType.Armor:
-                        break;
+                case EquipType.Armor:
+                    return progressData.playerInfo.armorGachaLevel;
 
-                    case EquipType.Accessory:
-                        break;*/
+                case EquipType.Accessory:
+                    return progressData.playerInfo.accessoryGachaLevel;
             }
-
             return 1;
-        }//타입별 현재 가챠 레벨 반환(방어구 , 악세서리 추가예정)
+        }//타입별 현재 가챠 레벨 반환
         public int GetCurrentGachaCount(EquipType equipType)
         {
             switch (equipType)
@@ -204,11 +203,11 @@ namespace Shop.Gacha
                 case EquipType.Weapon:
                     return progressData.playerInfo.curWeaponGachaCount;
 
-                    /*case EquipType.Armor:
-                    break;
+                case EquipType.Armor:
+                    return progressData.playerInfo.curArmorGachaCount;
 
-                    case EquipType.Accessory:
-                    break;*/
+                case EquipType.Accessory:
+                    return progressData.playerInfo.curAccessoryGachaCount;
             }
 
             return 0;
@@ -312,19 +311,19 @@ namespace Shop.Gacha
                 switch (baseWeight.rarity)
                 {
                     case EquipRarity.Common:
-                        sb.AppendLine($"<color=#646464>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        sb.AppendLine($"<color=#646464>{baseWeight.rarity}</color> : {(float)finalWeight / 10}%");
                         break;
 
                     case EquipRarity.UnCommon:
-                        sb.AppendLine($"<color=#64E6FF>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        sb.AppendLine($"<color=#64E6FF>{baseWeight.rarity}</color> : {(float)finalWeight / 10}%");
                         break;
 
                     case EquipRarity.Rare:
-                        sb.AppendLine($"<color=#A500FF>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        sb.AppendLine($"<color=#A500FF>{baseWeight.rarity}</color> : {(float)finalWeight / 10}%");
                         break;
 
                     case EquipRarity.Unique:
-                        sb.AppendLine($"<color=#FFC800>{baseWeight.rarity}</color> : {finalWeight / 10}%");
+                        sb.AppendLine($"<color=#FFC800>{baseWeight.rarity}</color> : {(float)finalWeight / 10}%");
                         break;
                 }
             }
@@ -539,7 +538,7 @@ namespace Shop.Gacha
 
             if (hub != null)
             {
-                hub.CurrencyChange(CurrencyType.GOLD , progressData.currency.gold);
+                hub.CurrencyChange(CurrencyType.GOLD, progressData.currency.gold);
             }
             return true;
         }//골드 차감 함수

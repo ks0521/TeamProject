@@ -27,4 +27,3 @@ public class QuestRewardSO : ScriptableObject
         return rewardGroups.Find(x => x.groupID == id);
     }
 }
-

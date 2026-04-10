@@ -3,6 +3,7 @@ using Base.Managers;
 using Battle;
 using System.Collections.Generic;
 using UnityEngine;
+using Base.Data;
 
 namespace Growth.Skill
 {
@@ -17,21 +18,26 @@ namespace Growth.Skill
         public int PassiveSkillCnt => passiveSkillDic.Count;
         public Dictionary<int, int> skillSaveDic;
         public bool TestTryGetSaveSkill(int saveSkillIndex, out int saveSkillKey) => skillSaveDic.TryGetValue(saveSkillIndex, out saveSkillKey);
-        public void Init()
+        public void Init(IReadOnlyList<SkillSO> allSkillArr, Dictionary<int, int> skillLvDic)
         {
             int cnt = allSkillData.Length;
             AllSkillArr = new Skill[cnt];
             Player pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
-            for (int i = 0; i < cnt; i++)
+            // for (int i = 0; i < cnt; i++)
+            for (int i = 0; i < allSkillArr.Count; i++)
             {
-                if (allSkillData[i] is ActiveSkillSO aso)
+                var so = allSkillArr[i];
+                PlayerSkillLevelProvider lvProvider = new PlayerSkillLevelProvider(skillLvDic, so.key);
+                // if (allSkillData[i] is ActiveSkillSO aso)
+                if (so is ActiveSkillSO aso)
                 {
-                    var aSkill = new ActiveSkill(pl, aso);
+                    var aSkill = new ActiveSkill(pl, aso, lvProvider);
                     AllSkillArr[i] = aSkill;
                 }
-                else if (allSkillData[i] is PassiveSkillSO pso)
+                // else if (allSkillData[i] is PassiveSkillSO pso)
+                else if (so is PassiveSkillSO pso)
                 {
-                    var pSkill = new PassiveSkill(pl, pso);
+                    var pSkill = new PassiveSkill(pl, pso, lvProvider);
                     AllSkillArr[i] = pSkill;
                 }
             }
