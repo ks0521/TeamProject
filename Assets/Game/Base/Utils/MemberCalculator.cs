@@ -117,9 +117,9 @@ namespace Base.Utils
         public static T Add(T a, T b) => addFunc(a, b);
         /// <summary> struct T a - struct T b </summary>
         public static T Sub(T a, T b) => subFunc(a, b);
-        /// <summary> struct T a + int b </summary>
+        /// <summary> struct T a * int b </summary>
         public static T Mul(T a, int b) => intMultiplyFunc(a, b);
-        /// <summary> struct T a + float b </summary>
+        /// <summary> struct T a * float b </summary>
         public static T Mul(T a, float b) => floatMultiplyFunc(a, b);
         private static TDelegate GenerateOP<TDelegate>(MemberData<T>[] dataArr, ParameterExpression left, ParameterExpression right,
         Func<Expression, Expression, BinaryExpression> calFunc)
