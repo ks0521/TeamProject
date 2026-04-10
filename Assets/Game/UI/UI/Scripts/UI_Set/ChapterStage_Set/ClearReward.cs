@@ -27,6 +27,8 @@ public class ClearReward : MonoBehaviour
             }
         }
 
+            Debug.LogError(rewards.Count);
+
         int currentSlot = 0;
 
         for (int i = 0; i < rewards.Count; i++)
@@ -51,10 +53,14 @@ public class ClearReward : MonoBehaviour
 
         rewardImg[slot].sprite = icon;
         rewardImg[slot].gameObject.SetActive(true);
+        Debug.LogError(rewardImg[slot].sprite);
+        
+
 
         if (slot < rewardText.Length && rewardText[slot] != null)
         {
             rewardText[slot].text = valueText;
+            Debug.LogError(rewardText[slot].text);
         }
 
         slot++;
