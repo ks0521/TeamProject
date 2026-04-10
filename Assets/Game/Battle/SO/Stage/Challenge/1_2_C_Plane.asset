@@ -19,7 +19,7 @@ MonoBehaviour:
   chapter: 1
   stage: 2
   dropTable: {fileID: 0}
-  rewardTable: []
+  rewardTable: {fileID: 11400000, guid: f010b48b0aa3ab9469191ae8e4c7ac1a, type: 2}
   preset:
   - monster: {fileID: 11400000, guid: 42928885a97f57f458d12eb14b974bd4, type: 2}
     weights: 8
