@@ -15,15 +15,15 @@ namespace Growth.Skill
         public float ResultDamage => resultDamage;
         // public bool IsHomingSkill => skillData.Targeting == TargetingMode.Homing;
         public ActiveSkillObject skillObj;
-        public ActiveSkill(Character cha, ActiveSkillSO skillData)
+        public ActiveSkill(Character cha, ActiveSkillSO skillData, ISkillLevelProvider lvProvider)
         {
             this.skillData = skillData;
             targetLayer = cha.TargetLayer;
-            Init(cha);
+            Init(cha, lvProvider);
         }
         public override void StatUpdate()
         {
-            resultDamage = skillData.ResultDamage(curLv);
+            resultDamage = skillData.ResultDamage(CurLv);
         }
         // public void SkillUseTargeting(TargetChecker target)
         // {
