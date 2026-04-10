@@ -11,14 +11,14 @@ namespace Growth.Skill
         public PassiveSkillSO PassiveSkillData => skillData;
         private StatIncrease resultSkillData;
         public StatIncrease ResultSkillData => resultSkillData;
-        public PassiveSkill(Character cha, PassiveSkillSO skillData)
+        public PassiveSkill(Character cha, PassiveSkillSO skillData, ISkillLevelProvider lvProvider)
         {
             this.skillData = skillData;
-            Init(cha);
+            Init(cha, lvProvider);
         }
         public override void StatUpdate()
         {
-            resultSkillData = skillData.ResultAddStat(curLv);
+            resultSkillData = skillData.ResultAddStat(CurLv);
         }
     }
 }

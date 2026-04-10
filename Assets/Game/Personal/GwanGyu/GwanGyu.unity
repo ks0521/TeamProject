@@ -1322,24 +1322,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
-        type: 3}
-      propertyPath: shopPrefab
-      value: 
-      objectReference: {fileID: 3935247060243164817, guid: 1aca20c9f88fddb4f95f71875de5818b,
-        type: 3}
-    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
-        type: 3}
-      propertyPath: skillPrefab
-      value: 
-      objectReference: {fileID: 9214214365782438512, guid: 8ab82ac43c8d0564bbae040792b6ce4d,
-        type: 3}
-    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
-        type: 3}
-      propertyPath: clearRewardPrefab
-      value: 
-      objectReference: {fileID: 1576542953155327128, guid: bc14bea11ef830d498aca4cb4f571f6b,
-        type: 3}
     - target: {fileID: 7944571381944515057, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
       propertyPath: m_AnchorMax.y

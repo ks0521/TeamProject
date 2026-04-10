@@ -1,11 +1,16 @@
+using Base.Save;
 using UnityEngine;
 
-//아이템 ID나 개수 등을 저장
 [System.Serializable]
 public class RewardData
 {
     public int itemID;
     public string itemName;
+    public Sprite icon;
     public int amount;
-    public Sprite icon; //실제 아이콘 이미지
+    public string description;  //팀원 SO엔 없지만, 우리가 UI용으로 쓸 변수
+    public ScriptableObject originalSO; //장비, 재화 판별용 원본 데이터
+
+    //[추가] 재화 합산 시 키값으로 사용하기 위함
+    public CurrencyType currencyType;
 }

@@ -27,6 +27,7 @@ namespace Base.Save
         public int gold;
         public int statStone;
         public int ruby;
+        public int fame; //업적점수(명예)
     }
 
     [Serializable] [CommonType]
@@ -37,6 +38,10 @@ namespace Base.Save
         public int maxSkillPoint;
         public int weaponGachaLevel;
         public int curWeaponGachaCount;
+        public int armorGachaLevel;
+        public int curArmorGachaCount;
+        public int accessoryGachaLevel;
+        public int curAccessoryGachaCount;
     }
     
     [Serializable][CommonType]

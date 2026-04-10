@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,8 +13,8 @@ public class Auto_Set : MonoBehaviour
     {
         if (isAuto)
         {
-        onButton.SetActive(isAuto);
-        offButton.SetActive(!isAuto);
+            onButton.SetActive(isAuto);
+            offButton.SetActive(!isAuto);
 
         }
         else
@@ -24,5 +24,5 @@ public class Auto_Set : MonoBehaviour
         }
     }
 
-    
+
 }
