@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa9d57c92d5904649a7945a47bc6f41a, type: 3}
-  m_Name: Exp
+  m_Script: {fileID: 11500000, guid: 17b9806f459f9274bb1904807eb50c87, type: 3}
+  m_Name: Achievement Reward SO
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: b422b3761d07f43e0abb1f48f1447678, type: 3}
-  currencyName: "\uACBD\uD5D8\uCE58"
-  explain: "\uB178\uB825\uC740 \uBC30\uC2E0\uD558\uC9C0 \uC54A\uB294\uB2E4."
-  type: 0
+  rewardList:
+  - rewardType: 1
+    currencyType: 3
+    currencySO: {fileID: 11400000, guid: 0fecbedc4588e5349952d5696a0f97e0, type: 2}
+    itemSO: {fileID: 0}
+    amount: 1
