@@ -10,19 +10,14 @@ namespace UI.Skill_Set
 {
     public class SkillDetailPresenter : MonoBehaviour, IMemberReceiver
     {
-        private SkillPopupUIManager owner;
         private SkillManager skillMgr;
-        private SkillPool pool;
         private EventHub hub;
-        public int SelectedSkillKey { get; private set; }
         [SerializeField] private SkillDetailView skillDetailView;
         public void Init(UIPresenterInitData data)
         {
-            owner = data.owner;
             skillMgr = data.skillMgr;
-            pool = data.pool;
             hub = data.hub;
-            if (pool.AllSkillArr[0] is var skill) SkillDetailDataSetToSkillChangeByPool(skill.SkillData.key);
+            if (skillMgr.AllSkillSOList[0] is var so) SkillDetailDataSetToSkillChange(so.key);
         }
         public void SkillLevelUpBtnInteractable(bool isLevelUpBtnOn)
         {
@@ -37,15 +32,13 @@ namespace UI.Skill_Set
             BtnEventRemoveListner();
         }
         void BtnEventRemoveListner() => skillDetailView.BtnEventRemoveAllListner();
-        public void SkillDetailDataSetToSkillChangeByPool(int key)
+        public void SkillDetailDataSetToSkillChange(int key)
         {
             gameObject.SetActive(true);
-            SelectedSkillKey = key;
-            if (!pool.TryGetSkillByKey(key, out var skill)) return;
-            int curLv = skill.CurLv;
-            var so = skill.SkillData;
+            if (!skillMgr.TryGetSkillSO(key, out var so)) return;
+            int curLv = skillMgr.GetSkillLevel(key);
             string value = null;
-            SkillDetailViewNeedsNameAndImage niData = new(so, skillMgr.IsSkillUnlock(key));
+            SkillDetailViewNeedsNameAndImage niData = new(so, skillMgr.IsSkillUnlock(so));
             SkillDetailViewNeedsStatData data = new();
             if (so is ActiveSkillSO aSO)
             {
@@ -61,14 +54,12 @@ namespace UI.Skill_Set
             }
             skillDetailView.SkillDetailViewSetToSkillChange(niData, data);
         }
-        public void SkillDetailDataSetToSkillLvEnhanceByPool(int key)
+        public void SkillDetailDataSetToSkillLvEnhance(int key)
         {
-            if (!pool.TryGetSkillByKey(key, out var skill)) return;
-            if (skill == null) return;
+            if (!skillMgr.TryGetSkillSO(key, out var so)) return;
             string value = null;
             SkillDetailViewNeedsStatData statData = new();
-            int curLv = skill.CurLv;
-            var so = skill.SkillData;
+            int curLv = skillMgr.GetSkillLevel(key);
             if (so is ActiveSkillSO aSO)
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);

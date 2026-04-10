@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using Base.Utils;
 using UnityEngine;
+using System.Collections.Generic;
 namespace Growth.Skill
 {
     public struct SpriteShower
@@ -42,7 +43,8 @@ namespace Growth.Skill
         public SkillObjectPool SkObjPool => skillObjPool;
         public SkillPool Pool => skillPool;
         [SerializeField] protected EquipSkill[] equipSkillArr;
-        public EquipSkill[] EquipSkillArr => equipSkillArr;
+        // public EquipSkill[] EquipSkillArr => equipSkillArr;
+        public IReadOnlyList<EquipSkill> EquipSkillList => equipSkillArr;
         public EquipSkill this[int index] => equipSkillArr[index];
         protected int skillCnt;
         public int SkillCnt => skillCnt;

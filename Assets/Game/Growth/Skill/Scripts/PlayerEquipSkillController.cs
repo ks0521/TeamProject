@@ -4,6 +4,7 @@ using Battle;
 using System;
 using Base.Utils;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Growth.Skill
 {
@@ -22,7 +23,7 @@ namespace Growth.Skill
             return isEquipBoolArr[index];
         }
         public void BoolArrInit() => isEquipBoolArr = new bool[6];
-        public void EquipSkillCheckerInit(EquipSkill[] eSkillArr, Priority pri = Priority.Low)
+        public void EquipSkillCheckerInit(IReadOnlyList<EquipSkill> eSkillArr, Priority pri = Priority.Low)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -59,7 +60,7 @@ namespace Growth.Skill
                 equipSkillChecker[i].BoolArrInit();
             }
         }
-        public void PrioritySkillNumSetInitAll(EquipSkill[] eSkillArr)
+        public void PrioritySkillNumSetInitAll(IReadOnlyList<EquipSkill> eSkillArr)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -112,7 +113,7 @@ namespace Growth.Skill
         {
             this.pesc = pesc;
             eSkillCheckerSet = new EquipSkillCheckerByPrioritySet();
-            eSkillCheckerSet.PrioritySkillNumSetInitAll(pesc.EquipSkillArr);
+            eSkillCheckerSet.PrioritySkillNumSetInitAll(pesc.EquipSkillList);
         }
         public void EQuipAndPriorityUpdate(int index, Priority pri) => eSkillCheckerSet.EquipSkillPriorityUpdate(index, pri);
         public void UnequipUpdate(int index) => eSkillCheckerSet.SkillUnequipUpdate(index);
@@ -158,7 +159,7 @@ namespace Growth.Skill
                 }
                 // Debug.Log($"자동 스킬 사용\n{pri} 우선순위, 다음 번호 : {autoSkillUseOrderNum}");
             }
-            ref EquipSkill tESkill = ref pesc.EquipSkillArr[autoSkillUseOrderNum];
+            EquipSkill tESkill = pesc.EquipSkillList[autoSkillUseOrderNum];
             // 해당 순서의 스킬이 사용 가능한지 여부 체크
             return !tESkill.IsCooltime;
             // if(!tESkill.IsCooltime)
@@ -213,7 +214,7 @@ namespace Growth.Skill
                 // Debug.LogWarning("자동 사용 가능한 스킬 없음");
                 return false;
             }
-            pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.ActiveSkillData.range);
+            pesc.td.ColliderRadiusChange(pesc.EquipSkillList[autoSkillUseOrderNum].Skill.ActiveSkillData.range);
             if (pesc.td.IsDetectedTarget)
             {
                 // 몬스터가 있을 시 스킬 사용 + auto skill 순서를 다음 번호로 변경
@@ -225,13 +226,14 @@ namespace Growth.Skill
                 OrderNumUpdate();
                 // Debug.Log($"{autoSkillUseOrderNum}번 스킬 자동 사용 성공");
                 if (CheckAutoSkillUsePossibleNumByAllPriority())
-                    pesc.td.ColliderRadiusChange(pesc.EquipSkillArr[autoSkillUseOrderNum].Skill.ActiveSkillData.range);
+                    pesc.td.ColliderRadiusChange(pesc.EquipSkillList[autoSkillUseOrderNum].Skill.ActiveSkillData.range);
             }
             return true;
         }
     }
     public class PlayerEquipSkillController : EquipSkillController
     {
+        private SkillManager skillMgr;
         public bool IsForceSkillSelect { get; private set; }
         // auto skill use
         [SerializeField] int autoSkillUsePossibleCnt = 0;
@@ -281,7 +283,7 @@ namespace Growth.Skill
                 // SkillEquipInit();
             }
         }
-        public void SkillEquipInit()
+        public void SkillEquipInit(IReadOnlyList<SkillSO> allSkillSOArr, Dictionary<int, int> skillLvDic)
         {
             equipSkillArr = new EquipSkill[6];
             int index = 0;
@@ -292,7 +294,7 @@ namespace Growth.Skill
                 eSkill.Init(this, index, skillPool, skillObjPool);
                 equipSkillArr[index] = eSkill;
             }
-            skillPool.Init();
+            skillPool.Init(allSkillSOArr, skillLvDic);
             for (int i = 0; i < 6; i++)
             {
                 index = i;

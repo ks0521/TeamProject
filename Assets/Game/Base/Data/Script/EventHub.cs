@@ -56,6 +56,8 @@ namespace Base.Data
         #endregion
 
         #region 스킬 파트
+        public event Func<bool> OnSkillAutoToggle;
+        public bool SkillAutoToggle() => OnSkillAutoToggle?.Invoke() ?? false;
         public event Action<int> OnSkillSet;
         public void SkillSet(int order) => OnSkillSet?.Invoke(order);
         // 스킬 장착을 실행하기 위한 이벤트입니다. 위 OnSkillSet은 장착 여부만 판단할 때 사용합니다.
@@ -104,8 +106,16 @@ namespace Base.Data
         public void GetClearRewards(List<DropReward> rewards) => OnGetClearRewards?.Invoke(rewards);
         public event Action OnGetNewEquipment; //새 장비 획득
         public void GetNewEquipment() => OnGetNewEquipment?.Invoke();
-        public event Action<SkillSO> OnSkillEnhanced; //스킬 강화
-        public void SkillEnhanced(SkillSO skillSo) => OnSkillEnhanced?.Invoke(skillSo);
+        // public event Action<SkillSO> OnSkillEnhanced; //스킬 강화
+        // public void SkillEnhanced(SkillSO skillSo) => OnSkillEnhanced?.Invoke(skillSo);
+        public event Action<int> OnSkillLevelOneUpInput;
+        public void SkillLevelOneUpInput(int skillKey) => OnSkillLevelOneUpInput?.Invoke(skillKey);
+        public event Action<int> OnSkillLevelMaxUpInput;
+        public void SkillLevelMaxUpInput(int skillKey) => OnSkillLevelMaxUpInput?.Invoke(skillKey);
+        public event Action OnSkillLevelResetInput;
+        public void SkillLevelResetInput() => OnSkillLevelResetInput?.Invoke();
+        public event Action<Skill> OnSkillLevelChange; //스킬 레벨 변경
+        public void SkillLevelChange(Skill skill) => OnSkillLevelChange?.Invoke(skill);
         public event Action OnInitSkill; //스킬 초기화
         public void InitSkill() => OnInitSkill?.Invoke();
         #endregion
