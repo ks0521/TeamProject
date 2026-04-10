@@ -65,7 +65,7 @@ public class SetViewer : MonoBehaviour
         if (name != null)
         {
             bossName = name;
-            text.text = bossName.Replace("(Close)","");
+            text.text = bossName.Replace("(Clone)","").Trim();
         }
         if(bossMaxhp <= 0f) return;
 
