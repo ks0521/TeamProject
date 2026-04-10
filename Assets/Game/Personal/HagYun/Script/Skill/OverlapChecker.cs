@@ -276,5 +276,33 @@ namespace Personal.HagYun
         {
             return TryGetNearTargetByList(thisTrans, targetList, out target);
         }
+<<<<<<< HEAD:Assets/Game/Personal/HagYun/Script/Skill/OverlapChecker.cs
+=======
+        public static bool TryGetNearCircleTargetCharacter(this Vector2 thisPos, float range, LayerMask lm, out Character nearTarget)
+        {
+            nearTarget = null;
+            int getNearChaCnt = GetCircleTargetsCount(thisPos, range, lm);
+            // Debug.Log($"{lm.value}");
+            if(getNearChaCnt <= 0)
+            {
+                Debug.LogWarning("타겟 못찾음");
+                return false;
+            }
+            float minDis = float.MaxValue;
+            for (int i = 0; i < getNearChaCnt; i++)
+            {
+                if (!(GetTargetColArr[i].GetComponent<Character>() is Character cha)) continue;
+                else if(cha.IsDead) {Debug.LogWarning("타겟 죽음");continue;}
+                Vector2 chaPos = cha.transform.position;
+                float curDis = (chaPos - thisPos).sqrMagnitude;
+                if(curDis < minDis)
+                {
+                    minDis = curDis;
+                    nearTarget = cha;
+                }
+            }
+            return nearTarget != null;
+        }
+>>>>>>> main:Assets/Game/Base/Utils/OverlapChecker.cs
     }
 }

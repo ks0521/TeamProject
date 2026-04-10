@@ -4,24 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Button_Set : MonoBehaviour
+namespace UI.Ability_Set
 {
-    [SerializeField] public Button [] Xbtn;
-
-    private Color normal = Color.white;
-    private Color press = Color.yellow;
-
-    private int current = 0;
-
-    public void SelectButton(int bt)
+    public class Button_Set : MonoBehaviour
     {
-        current = bt;
+        [SerializeField] public Button[] Xbtn;
 
-        for (int i = 0; i < Xbtn.Length; i++)
+        private Color normal = Color.white;
+        private Color press = Color.yellow;
+
+        private int current = 0;
+
+        public void SelectButton(int bt)
         {
-            Xbtn[i].image.color = normal;
+            current = bt;
+
+            for (int i = 0; i < Xbtn.Length; i++)
+            {
+                Xbtn[i].image.color = normal;
+            }
+            Xbtn[current].image.color = press;
         }
-        Xbtn[current].image.color = press;
     }
+
 }
 

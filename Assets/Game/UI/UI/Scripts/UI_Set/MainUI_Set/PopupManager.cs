@@ -4,6 +4,8 @@ using Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UI.Ability_Set;
+using UI.ChapterStage_Set;
 using UI.Equipment;
 using UI.Scripts;
 using UnityEngine;
@@ -50,6 +52,7 @@ namespace UI.Scripts
         [SerializeField] private GameObject clearPrefab;
         [SerializeField] private GameObject failPrefab;
         [SerializeField] private GameObject deadPrefab;
+        [SerializeField] private ClearReward clearRewardPrefab;
 
         [Header("챌린지 팝업 프리팹")]
         [SerializeField] SetViewer timer;
@@ -87,6 +90,9 @@ namespace UI.Scripts
         private SetViewer timerInstance;
         private SetViewer monsterKillInstance;
         private SetViewer bossHpInstance;
+        private ClearReward clearRewardInstance;
+
+
         private void Awake()
         {
             if (instance == null)
@@ -119,13 +125,16 @@ namespace UI.Scripts
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
 
+
             BindAllButton();
             popupStack.Clear();
 
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
+            hub.OnGetClearRewards += OpenClearRewardPopup;
 
+            
             Debug.Log(timer);
         }
 
@@ -165,6 +174,7 @@ namespace UI.Scripts
             OpenClearPopup();
             CloseTimer();
             CloseMonsterKill();
+            CloseBossUI();
         }
         void FailEventChain(StageSO stage)
         {
@@ -173,6 +183,7 @@ namespace UI.Scripts
             CloseMonsterKill();
         }
 
+ 
         IEnumerator FadeOutPopup(GameObject popup, float time)
         {
             CanvasGroup popupCan = popup.GetComponent<CanvasGroup>();
@@ -289,7 +300,7 @@ namespace UI.Scripts
 
             shopInstance = Instantiate (shopPrefab, canvas);
             
-            ClosePopup(skillInstance);
+            ClosePopup(shopInstance);
 
             PushPopup(shopInstance);
         }
@@ -388,7 +399,15 @@ namespace UI.Scripts
             deadInstance = Instantiate(deadPrefab, canvas);
             StartCoroutine(FadeOutPopup(deadInstance, 3f));
         }
-
+        public void OpenClearRewardPopup(List<DropReward> rewardList)
+        {
+            if (clearRewardInstance != null) return;
+            if (clearRewardPrefab == null) return;
+            
+            clearRewardInstance = Instantiate(clearRewardPrefab, canvas);
+            clearRewardInstance.SetReward(rewardList);
+            ClosePopup(clearRewardInstance.gameObject);
+        }
 
         public void OpenMonsterKill()
         {
@@ -416,7 +435,7 @@ namespace UI.Scripts
         }
 
 
-        private void ClosePopup(GameObject gameObject)
+        public void ClosePopup(GameObject gameObject)
         {
             Transform transform = gameObject.transform.Find("Close_Button");
 
@@ -458,6 +477,7 @@ namespace UI.Scripts
                 bossHpInstance = null;
             }
         }
+
         private void ClearPopupReference(GameObject target)
         {
             if (target == null) return;
