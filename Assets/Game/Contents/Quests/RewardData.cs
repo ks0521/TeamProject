@@ -8,4 +8,6 @@ public class RewardData
     public string itemName;
     public int amount;
     public Sprite icon; //실제 아이콘 이미지
+    public string description;  //일반 아이템용 설명
+    public ScriptableObject originalSO; //원본 SO (EquipmentSO인지 확인용)
 }
