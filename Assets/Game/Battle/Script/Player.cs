@@ -31,8 +31,8 @@ namespace Battle
             }
         }
         public PlayerEquipSkillController ESController => equipSkillController;
-        public override BattleStat CurrentBattleStatStat => runtimeStatus.finalBattleStatStatus;
-        protected override float AttackRange => runtimeStatus.finalBattleStatStatus.atkRange;
+        public override BattleStat CurrentBattleStatStat => runtimeStatus.finalStatus.battle;
+        protected override float AttackRange => runtimeStatus.finalStatus.battle.atkRange;
         [SerializeField] private RuntimeProgressData runtimeProgress;
         [SerializeField] protected RuntimeStatus runtimeStatus;
         [SerializeField] protected PlayerEquipSkillController equipSkillController;
