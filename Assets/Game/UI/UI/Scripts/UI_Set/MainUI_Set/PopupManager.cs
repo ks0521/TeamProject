@@ -403,7 +403,7 @@ namespace UI.Scripts
         {
             if (clearRewardInstance != null) return;
             if (clearRewardPrefab == null) return;
-            
+            Debug.Log("보상 함수 실행");
             clearRewardInstance = Instantiate(clearRewardPrefab, canvas);
             clearRewardInstance.SetReward(rewardList);
             ClosePopup(clearRewardInstance.gameObject);

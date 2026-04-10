@@ -68,8 +68,8 @@ namespace UI.Equipment
             openAccessoryTabButton.onClick.AddListener(() => ShowPopup(EquipType.Accessory));
             
             weaponPopup.SetActive(false);
-            armorPopup.SetActive(false);
-            accessoryPopup.SetActive(false);
+            /*armorPopup.SetActive(false);
+            accessoryPopup.SetActive(false);*/
         }
         
         private void OnEnable()
@@ -77,8 +77,8 @@ namespace UI.Equipment
             equipmentManager = GameManager.Instance.GetGameSystem<EquipmentManager>();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             weaponSlots = weaponPopup.GetComponentsInChildren<EquipmentSlotView>(true);
-            armorSlots = armorPopup.GetComponentsInChildren<EquipmentSlotView>(true);
-            accSlots = accessoryPopup.GetComponentsInChildren<EquipmentSlotView>(true);
+            /*armorSlots = armorPopup.GetComponentsInChildren<EquipmentSlotView>(true);
+            accSlots = accessoryPopup.GetComponentsInChildren<EquipmentSlotView>(true);*/
 
             detailView.SetActive(false);
             currentPopUp = weaponPopup; //맨 처음은 무기 인벤토리를 열기
@@ -111,12 +111,12 @@ namespace UI.Equipment
                 case EquipType.Weapon:
                     currentPopUp = weaponPopup;
                     break;
-                case EquipType.Armor: 
+                /*case EquipType.Armor: 
                     currentPopUp = armorPopup;
                     break;
                 case EquipType.Accessory:
                     currentPopUp = accessoryPopup;
-                    break;
+                    break;*/
             }
 
             detailView.SetActive(false);
