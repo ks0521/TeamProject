@@ -46,10 +46,10 @@ namespace UI.ChapterStage_Set
             hub = GameManager.Instance.GetGameSystem<EventHub>();
 
             AllChapter();
-            ShowChapter();
+            SelectCurrentStage();
             BindButton();
-            Debug.Log("버튼 함수 넣기");
-
+            
+            
             enter.interactable = false;
             if (hub != null)
             {
@@ -99,6 +99,7 @@ namespace UI.ChapterStage_Set
         void EventChain(StageSO stage)//이벤트 연결용
         {
             AllChapter();
+            SelectCurrentStage();
         }
         void AllChapter()
         {
@@ -133,7 +134,27 @@ namespace UI.ChapterStage_Set
                 before.interactable = currentChapter > 0;
             }
         }
+        void SelectCurrentStage()
+        {
+            if (stageManager == null) return;
+            if (stageManager.CurrentStageSo == null) return;
 
+            int chapterNum = stageManager.CurrentStageSo.chapter;
+            int stageNum = stageManager.CurrentStageSo.stage;
+
+            currentChapter = chapterNum - 1;
+            ShowChapter();
+
+            if (currentChapter < 0 || currentChapter >= chapter.Length) return;
+
+            Chapter_Set currentChapterSet = chapter[currentChapter];
+            if (currentChapterSet == null) return;
+
+            Stage_Set currentStage = currentChapterSet.GetStage(stageNum - 1);
+            if (currentStage == null) return;
+
+            EnterStage(chapterNum, stageNum, currentStage);
+        }
 
         void BindButton()
         {

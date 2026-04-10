@@ -46,7 +46,7 @@ namespace UI.Scripts
 
             hub.OnChangeStage += stageText.SetStage;
 
-            hub.OnChangeStage += RefreshChallengeUIOnce;
+            hub.OnStageChangeClear += RefreshChallengeUIOnce;
             hub.OnMonsterKill += ReFreshMonsterKill;
 
             hub.OnBossSpawned += ReFreshBoss;

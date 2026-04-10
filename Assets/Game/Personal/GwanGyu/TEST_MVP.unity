@@ -726,6 +726,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9214214365782438512, guid: 8ab82ac43c8d0564bbae040792b6ce4d,
         type: 3}
+    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
+        type: 3}
+      propertyPath: equipmentPrefab
+      value: 
+      objectReference: {fileID: 289728231536782692, guid: 44bb1edb763ed2a49a3824c932740b40,
+        type: 3}
     - target: {fileID: 7944571381944515057, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1103,6 +1109,10 @@ MonoBehaviour:
       maxSkillPoint: 0
       weaponGachaLevel: 0
       curWeaponGachaCount: 0
+      armorGachaLevel: 0
+      curArmorGachaCount: 0
+      accessoryGachaLevel: 0
+      curAccessoryGachaCount: 0
     lastSession:
       lastConnectTime: 0
     equipment:
@@ -1135,6 +1145,10 @@ MonoBehaviour:
       maxSkillPoint: 0
       weaponGachaLevel: 0
       curWeaponGachaCount: 0
+      armorGachaLevel: 0
+      curArmorGachaCount: 0
+      accessoryGachaLevel: 0
+      curAccessoryGachaCount: 0
     lastSession:
       lastConnectTime: 0
     equipment:
