@@ -2,7 +2,7 @@ using Base.Data;
 using Base.Managers;
 using Base.Save;
 using Cysharp.Threading.Tasks;
-using Personal.HagYun;
+using Growth.Skill;
 using System;
 using System.Collections.Generic;
 using System.Threading;
