@@ -1,4 +1,3 @@
-using Personal.HagYun;
 using UnityEngine;
 
 namespace Growth.Skill

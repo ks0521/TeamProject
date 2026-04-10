@@ -1402,6 +1402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2de545ad731f784b84ae330baad25be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Popuplist: []
   canvas: {fileID: 2167252801647005353}
   abilityPrefab: {fileID: 3560923824785619118, guid: 585e223d88f7a5647baeee8d4e53bbfd,
     type: 3}
@@ -1413,11 +1414,11 @@ MonoBehaviour:
     type: 3}
   shopPrefab: {fileID: 3935247060243164817, guid: 1aca20c9f88fddb4f95f71875de5818b,
     type: 3}
-  dungeonPrefab: {fileID: 0}
   settingPrefab: {fileID: 4638266311165933655, guid: 7401f36b17b6c0b49a14191aa820bfc9,
     type: 3}
   gameEndPrefab: {fileID: 1099741809834494949, guid: 814ac12035591964992cd07caf8f9019,
     type: 3}
+  dungeonPrefab: {fileID: 0}
   clearPrefab: {fileID: 167152665120292641, guid: ecdff62cc6ccfab44abd1d9816584ebd,
     type: 3}
   failPrefab: {fileID: 356307498151926037, guid: 90257cb2cd85aba43b005cb592fa8879,
@@ -1427,6 +1428,7 @@ MonoBehaviour:
   timer: {fileID: 3047087367141977803, guid: de2046b59ea3e2744bc22d07a660013d, type: 3}
   monsterKill: {fileID: 5937011571217827798, guid: fa26bd555bcb60a4ab950387b7775b52,
     type: 3}
+  BossHp: {fileID: 6636286323766086112, guid: b73a2f4dd86f1fe4ab6a83129fd25dac, type: 3}
   abilityBtn: {fileID: 8690177011010013679}
   chapterBtn: {fileID: 6712099048253381315}
   skillBtn: {fileID: 7752294985431395811}
