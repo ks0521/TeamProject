@@ -1,6 +1,7 @@
 using Base.Data;
 using Base.Managers;
 using Base.Save;
+using Base.Utils;
 using Battle;
 using Growth.Equipment;
 using Growth.Skill;
@@ -50,7 +51,9 @@ public class StatusCalculator : MonoBehaviour,IManager
     }
     public void InputResult()
     {
-        runtimeStatus.finalStatus = statIncreaseCache + equipOwnIncreaseCache + equipUsingIncreaseCache + skillIncreaseCache;
+        runtimeStatus.finalStatus = 
+            statIncreaseCache + equipOwnIncreaseCache + equipUsingIncreaseCache + skillIncreaseCache;
+        
     }
     /// <summary> 모든 성장수단 계산 후 런타임 스탯에 적용 </summary>
     public void CalcAll()
