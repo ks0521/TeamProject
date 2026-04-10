@@ -42,22 +42,22 @@ public class NormalStageRule : StageRule
         player = GameManager.Instance.GetGameSystem<PlayerManager>();
     }
 
-    public override void Enter()
-    {
-        Debug.Log($"일반 스테이지{stage.chapter} - {stage.stage} StageRule 시작");
-    }
+    public override void Enter() { }
 
     public override void MonsterKilledInStage(Monster monster)
     {
         ++killScore;
         //몬스터 처치에 대한 기타 작동기전 구현
-        ItemDrop(monster);
+        if (stage.rewardType == RewardType.ItemDrop)
+        {
+            ItemDrop(monster);
+        }
     }
 
     public void ItemDrop(Monster monster)
     {
         List<DropReward> items =
-            stage.dropTable.GetDroppedItems(RuntimeStatus.Instance.finalRewardStatStatus.itemDropRate);
+            stage.dropTable.GetDroppedItems(RuntimeStatus.Instance.FinalRewardStatStatus.itemDropRate);
         dropManager.GetExp(stage.dropTable.GetExp());
         foreach (var item in items)
         {
@@ -103,10 +103,10 @@ public class ChallengeStageRule : StageRule
     {
         if (isCleared) return;
         isCleared = true;
-        if (stage.rewardTable != null)
+        if (stage.rewardType == RewardType.ClearReward)
         {
-            dropManager.GetRewards(stage.rewardTable);
-            eventHub.GetClearRewards(stage.rewardTable);
+            dropManager.GetRewards(stage.rewardTable.rewardList);
+            eventHub.GetClearRewards(stage.rewardTable.rewardList);
         }
         ChallengeSuccess?.Invoke();
     }

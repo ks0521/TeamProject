@@ -20,7 +20,7 @@ namespace Base.Data
                 currencyDic.Add(currency.type, currency);
             }
         }
-
+        
         public CurrencySO GetSO(CurrencyType key)
         {
             if (currencyDic == null)
