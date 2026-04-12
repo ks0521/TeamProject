@@ -108,10 +108,10 @@ namespace Base.Utils
         {
             var memberDataArr = MemberExtractor<T>.MemberDataArr;
             var left = Expression.Parameter(typeof(T), "a");
-            addFunc = GenerateOP<Func<T, T, T>>(memberDataArr, left, Expression.Parameter(typeof(T), "b"), Expression.Add);
-            subFunc = GenerateOP<Func<T, T, T>>(memberDataArr, left, Expression.Parameter(typeof(T), "b"), Expression.Subtract);
-            intMultiplyFunc = GenerateOP<Func<T, int, T>>(memberDataArr, left, Expression.Parameter(typeof(int), "b"), Expression.Multiply);
-            floatMultiplyFunc = GenerateOP<Func<T, float, T>>(memberDataArr, left, Expression.Parameter(typeof(float), "b"), Expression.Multiply);
+            addFunc = GenerateOP<Func<T, T, T>>(memberDataArr, left, Expression.Parameter(typeof(T), "b"), Expression.Add, "op_Addition");
+            subFunc = GenerateOP<Func<T, T, T>>(memberDataArr, left, Expression.Parameter(typeof(T), "b"), Expression.Subtract, "op_Subtraction");
+            intMultiplyFunc = GenerateOP<Func<T, int, T>>(memberDataArr, left, Expression.Parameter(typeof(int), "b"), Expression.Multiply, "op_Multiply");
+            floatMultiplyFunc = GenerateOP<Func<T, float, T>>(memberDataArr, left, Expression.Parameter(typeof(float), "b"), Expression.Multiply, "op_Multiply");
         }
         /// <summary> struct T a + struct Tb </summary>
         public static T Add(T a, T b) => addFunc(a, b);
@@ -122,25 +122,37 @@ namespace Base.Utils
         /// <summary> struct T a * float b </summary>
         public static T Mul(T a, float b) => floatMultiplyFunc(a, b);
         private static TDelegate GenerateOP<TDelegate>(MemberData<T>[] dataArr, ParameterExpression left, ParameterExpression right,
-        Func<Expression, Expression, BinaryExpression> calFunc)
+        Func<Expression, Expression, BinaryExpression> calFunc, string opMethodName)
         {
             int cnt = dataArr.Length;
             var assignments = new MemberAssignment[cnt];
             for (int i = 0; i < cnt; i++)
             {
                 var f = dataArr[i].field;
+                Expression fieldA = Expression.Field(left, f);
+
+                Expression fieldB;
+                if (right.Type == typeof(T))
+                {
+                    fieldB = Expression.Field(right, f);
+                }
+                else
+                {
+                    fieldB = f.FieldType.IsPrimitive ? Expression.Convert(right, f.FieldType) : right;
+                }
+
                 switch (dataArr[i].dataType)
                 {
                     case TypeCode.Int32:
                     case TypeCode.Single:
-                        Expression fieldA = Expression.Field(left, f);
-                        Expression fieldB = (right.Type == typeof(T))
-                            ? Expression.Field(right, f)
-                            : Expression.Convert(right, f.FieldType);
                         assignments[i] = Expression.Bind(f, calFunc(fieldA, fieldB));
                         break;
                     default:
-                        assignments[i] = Expression.Bind(f, Expression.Field(left, f));
+                        var opMethod = f.FieldType.GetMethod(opMethodName,
+                            BindingFlags.Public | BindingFlags.Static,
+                            null, new[] { f.FieldType, fieldB.Type }, null);
+                        if (opMethod != null) assignments[i] = Expression.Bind(f, Expression.Call(opMethod, fieldA, fieldB));
+                        else assignments[i] = Expression.Bind(f, Expression.Field(left, f));
                         break;
                 }
             }
@@ -150,6 +162,75 @@ namespace Base.Utils
             return Expression.Lambda<TDelegate>(body, left, right).Compile();
         }
     }
+    /// <summary>
+    /// struct 멤버 2개를 계산할 때, 동일한 변수명, 동일한 타입일 경우 해당 변수끼리 +/- 시키는 class
+    /// </summary>
+    /// <typeparam name="T">1번째 struct</typeparam>
+    /// <typeparam name="U">2번째 struct</typeparam>
+    public static class StructMixCalculatorOnlySameNameSameType<T, U> where T : struct where U : struct
+    {
+        private static readonly Func<T, U, T> mixAddFunc;
+        private static readonly Func<T, U, T> mixSubFunc;
+
+        static StructMixCalculatorOnlySameNameSameType()
+        {
+            mixAddFunc = GenerateOP(true);
+            mixSubFunc = GenerateOP(false);
+        }
+        static Func<T, U, T> GenerateOP(bool isAdd)
+        {
+            var memberT = MemberExtractor<T>.MemberDataArr;
+            var memberU = MemberExtractor<U>.MemberDataArr;
+
+            var left = Expression.Parameter(typeof(T), "a");
+            var right = Expression.Parameter(typeof(U), "b");
+
+            int cnt = memberT.Length;
+            var assignments = new MemberAssignment[memberT.Length];
+
+            // T(결과물)의 멤버를 기준으로 U에서 같은 이름/타입을 찾습니다.
+            for (int i = 0; i < cnt; i++)
+            {
+                var tData = memberT[i];
+                // 이름과 타입이 완벽히 일치하는 멤버를 찾습니다.
+                var uData = Array.Find(memberU, m => m.name == tData.name && m.dataType == tData.dataType);
+
+                Expression fieldA = Expression.Field(left, tData.field);
+
+                // 일치하는 멤버를 찾았고 연산 가능한 타입인 경우
+                if (uData.field != null)
+                {
+                    switch (tData.dataType)
+                    {
+                        case TypeCode.Int32:
+                        case TypeCode.Single:
+                            Expression fieldB = Expression.Field(right, uData.field);
+
+                            // 직접 더하기 연산 (a.field + b.field)
+                            BinaryExpression calExpr = isAdd ?
+                                Expression.Add(fieldA, fieldB) :
+                                Expression.Subtract(fieldA, fieldB);
+                            assignments[i] = (Expression.Bind(tData.field, calExpr));
+                            break;
+                    }
+                }
+                else
+                {
+                    // 없으면 T의 원래 값을 그대로 유지 (복사)
+                    assignments[i] = (Expression.Bind(tData.field, fieldA));
+                }
+            }
+
+            // T의 새 인스턴스를 생성하며 초기화 (MemberInit)
+            var body = Expression.MemberInit(Expression.New(typeof(T)), assignments);
+            return Expression.Lambda<Func<T, U, T>>(body, left, right).Compile();
+        }
+
+        /// <summary> 서로 다른 구조체 T와 U에서 이름이 같은 멤버끼리 더해 T를 반환합니다. </summary>
+        public static T Add(T a, U b) => mixAddFunc(a, b);
+        public static T Sub(T a, U b) => mixSubFunc(a, b);
+    }
+
     // class 내부 멤버 전체를 자동으로 찾아 계산하는 static class, 원본 유지
     public static class ClassMemberCalculator<T> where T : class, new()
     {
