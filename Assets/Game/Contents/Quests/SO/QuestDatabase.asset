@@ -12,3 +12,160 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097b31bec799176409c1ccfedf3c3a64, type: 3}
   m_Name: QuestDatabase
   m_EditorClassIdentifier: 
+  allQuests:
+  - questID: 1
+    category: 0
+    description: Achieve Lv 4
+    questStatus: 1
+    goalType: 1
+    targetID: 0
+    targetValue: 4
+    prevQuestID: 0
+    rewardGroupID: 1
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 1
+  - questID: 2
+    category: 0
+    description: Achieve Lv 7
+    questStatus: 0
+    goalType: 1
+    targetID: 0
+    targetValue: 7
+    prevQuestID: 1
+    rewardGroupID: 2
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 1
+  - questID: 3
+    category: 0
+    description: Achieve Lv 10
+    questStatus: 0
+    goalType: 1
+    targetID: 0
+    targetValue: 10
+    prevQuestID: 2
+    rewardGroupID: 3
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 1
+  - questID: 11
+    category: 0
+    description: Clear Stage {0}-5
+    questStatus: 1
+    goalType: 5
+    targetID: 0
+    targetValue: 1
+    prevQuestID: 0
+    rewardGroupID: 11
+    valueModifier: 1
+    isInfinite: 1
+    isAbsoluteGoal: 0
+  - questID: 101
+    category: 1
+    description: LevelUP 1 time
+    questStatus: 1
+    goalType: 1
+    targetID: 0
+    targetValue: 1
+    prevQuestID: 0
+    rewardGroupID: 101
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 0
+  - questID: 102
+    category: 1
+    description: Use Skill 5 times
+    questStatus: 1
+    goalType: 4
+    targetID: 0
+    targetValue: 5
+    prevQuestID: 101
+    rewardGroupID: 102
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 0
+  - questID: 103
+    category: 1
+    description: Use Skill 3 times
+    questStatus: 1
+    goalType: 4
+    targetID: 0
+    targetValue: 3
+    prevQuestID: 0
+    rewardGroupID: 103
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 0
+  - questID: 111
+    category: 1
+    description: Hunt 200 Monsters ({0})
+    questStatus: 1
+    goalType: 0
+    targetID: 0
+    targetValue: 200
+    prevQuestID: 11
+    rewardGroupID: 111
+    valueModifier: 0
+    isInfinite: 1
+    isAbsoluteGoal: 0
+  - questID: 901
+    category: 2
+    description: Hunt 300 Monsters
+    questStatus: 0
+    goalType: 0
+    targetID: 0
+    targetValue: 300
+    prevQuestID: 0
+    rewardGroupID: 901
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 0
+  - questID: 902
+    category: 2
+    description: Use Skill 10 times
+    questStatus: 0
+    goalType: 4
+    targetID: 0
+    targetValue: 10
+    prevQuestID: 0
+    rewardGroupID: 902
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 0
+  - questID: 903
+    category: 2
+    description: LevelUP 2 time
+    questStatus: 0
+    goalType: 1
+    targetID: 0
+    targetValue: 2
+    prevQuestID: 0
+    rewardGroupID: 903
+    valueModifier: 0
+    isInfinite: 0
+    isAbsoluteGoal: 0
+  - questID: 1001
+    category: 3
+    description: Achieve Lv {0}
+    questStatus: 1
+    goalType: 1
+    targetID: 0
+    targetValue: 20
+    prevQuestID: 0
+    rewardGroupID: 1001
+    valueModifier: 20
+    isInfinite: 1
+    isAbsoluteGoal: 1
+  - questID: 1002
+    category: 3
+    description: Use Skill {0} Times
+    questStatus: 1
+    goalType: 4
+    targetID: 0
+    targetValue: 11
+    prevQuestID: 0
+    rewardGroupID: 1002
+    valueModifier: 11
+    isInfinite: 1
+    isAbsoluteGoal: 0
