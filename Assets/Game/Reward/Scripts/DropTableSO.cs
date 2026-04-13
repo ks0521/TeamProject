@@ -56,6 +56,7 @@ public class DropTableSO : ScriptableObject
     public int chapter; //챕터
     public int stage; //스테이지
     public int rewardExp; //경험치(드랍X, 바로 제공)
+    public CurrencySO expSO; //경험치 SO넣기(나중에 어드레서블로 자동 불러오면 좋겠음)
     [Header("장비 드랍 테이블")]
     public List<DropRewardPreset> dropList = new();
 
@@ -93,7 +94,8 @@ public class DropTableSO : ScriptableObject
         {
             rewardType = DropRewardType.Currency,
             currencyType = CurrencyType.EXP,
-            amount =  (int)(Random.Range(0.95f,1.05f)*count * rewardExp),
+            currencySO = expSO,
+            amount =  (int)(Random.Range(0.95f , 1.05f) * count * rewardExp),
         });
         foreach (var reward in dropList)
         {

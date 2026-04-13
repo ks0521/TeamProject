@@ -16,7 +16,8 @@ namespace Base.Managers
 
         public void Init()
         {
-            statUpgradeConfig = GameDataProvider.Instance.statusTable;
+            
+            statUpgradeConfig = GameManager.Instance.GetGameSystem<GameDataProvider>().statusTable;
             calculator = GameManager.Instance.GetGameSystem<StatusCalculator>();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
@@ -40,7 +41,7 @@ namespace Base.Managers
                 requireCost += (progress.statUpgrades.upgradeLevelsByType[statType] + i) * statEntry.enhanceCost;
             }
 
-            Debug.Log($"Need Cost : {requireCost}");
+            //Debug.Log($"Need Cost : {requireCost}");
             if (requireCost > progress.currency.statStone)
             {
                 Debug.Log($"{statType}스텟강화에 필요한 골드가 부족합니다(요구 {requireCost}강화석 / 소지 {progress.currency.statStone})");

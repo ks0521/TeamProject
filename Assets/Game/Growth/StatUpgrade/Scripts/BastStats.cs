@@ -34,6 +34,7 @@ namespace Base.Data
     {
         [Header("Attack")] 
         public float atk; //공격력
+        public float atkRate; //공격력 %
         [Range(0, 1)] public float critChance; //크확(0 = 0%, 1 = 100%)
         public float critDamage; //치피
         
@@ -69,7 +70,8 @@ namespace Base.Data
         {
             return new BattleStat
             {
-                atk = (stat.atk + modifier.atk) * (1+modifier.atkRate),
+                atk = stat.atk + modifier.atk,
+                atkRate = stat.atkRate + modifier.atkRate,
                 critChance = stat.critChance + modifier.critChance,
                 critDamage = stat.critDamage + modifier.critDamage,
                 maxHp = (stat.maxHp + modifier.maxHp) * (1+modifier.maxHpRate),

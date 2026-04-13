@@ -204,7 +204,7 @@ namespace Battle
                 //Debug.Log("크리티컬!");
             }
 
-            resultDmg *= Random.Range(0.9f, 1.1f);
+            //resultDmg *= Random.Range(0.9f, 1.1f);
             hitTarget.Hit(resultDmg, type);
         }
 

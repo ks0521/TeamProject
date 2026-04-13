@@ -18,12 +18,13 @@ public class ItemDropManager : MonoBehaviour, IManager
 {
     [SerializeField] private RuntimeProgressData progress;
     [SerializeField] private EventHub hub;
-    private RuntimeStatus stat => RuntimeStatus.Instance;
+    private RuntimeStatus stat;
 
     public void Init()
     {
         progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         hub = GameManager.Instance.GetGameSystem<EventHub>();
+        stat = GameManager.Instance.GetGameSystem<RuntimeStatus>();
     }
 
     void FlushBatch(RewardBatch batch)
