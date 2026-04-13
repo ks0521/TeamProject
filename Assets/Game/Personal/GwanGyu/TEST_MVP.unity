@@ -711,6 +711,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
+      propertyPath: popupSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 405adffff15701547aa5a8f2c43dc417,
+        type: 2}
+    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
+        type: 3}
       propertyPath: shopBtn
       value: 
       objectReference: {fileID: 849202362}
@@ -1103,6 +1109,7 @@ MonoBehaviour:
       gold: 0
       statStone: 0
       ruby: 0
+      fame: 0
     playerInfo:
       level: 0
       skillPoint: 0
@@ -1139,6 +1146,7 @@ MonoBehaviour:
       gold: 0
       statStone: 0
       ruby: 0
+      fame: 0
     playerInfo:
       level: 0
       skillPoint: 0
