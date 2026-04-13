@@ -13,6 +13,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
     private ItemDropManager dropManager;
     private GameDataProvider dic;
     private StageManager stage;
+    private EventHub eventHub;
     private DateTime time;
     [SerializeField] private List<DropReward> drops;
     public void Init()
@@ -20,6 +21,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
         progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         dic = GameManager.Instance.GetGameSystem<GameDataProvider>();
+        eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         stage = GameManager.Instance.GetGameSystem<StageManager>();
         time = DateTime.FromBinary(progress.lastSession.lastConnectTime);
         OfflineKillReward();
@@ -42,7 +44,10 @@ public class OfflineRewardManager : MonoBehaviour,IManager
             stageType : StageType.Normal);
         Debug.Log($"{maxStage.chapter} - {maxStage.stage} Reward : {offlineKillCount}마리 처치");
         drops = maxStage.dropTable.GetDroppedItems(offlineKillCount, 0f);
+        string rewardContext = $"{DateTime.Now - time :hh\\:mm\\:ss} 자동사냥 완료";
+        Debug.Log(rewardContext);
         dropManager.GetRewards(drops);
+        eventHub.GetClearRewards(drops);
     }
     
     public void AutoClearReward(int sec)
@@ -62,5 +67,5 @@ public class OfflineRewardManager : MonoBehaviour,IManager
         drops = maxStage.dropTable.GetDroppedItems(offlineKillCount, 0f);
         dropManager.GetRewards(drops);
     }
-    public int GetOrder() => 50;
+    public int GetOrder() => 600; //UI 프리팹 초기화 된 뒤에 실행되어야 함
 }

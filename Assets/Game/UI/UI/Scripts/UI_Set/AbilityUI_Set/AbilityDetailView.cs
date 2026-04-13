@@ -15,8 +15,11 @@ namespace UI.Ability_Set
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"공격력 : {status.FinalBattleStatStatus.atk}");
+            sb.AppendLine($"공격력% : {status.FinalBattleStatStatus.atkRate * 100}%");
+            sb.AppendLine($"피해량 증가 : {status.finalStatus.extra.damageDealtRate * 100}%");
             sb.AppendLine($"최대체력 : {status.FinalBattleStatStatus.maxHp}");
             sb.AppendLine($"방어력 : {status.FinalBattleStatStatus.def}");
+            sb.AppendLine($"피해량 감소율 : {status.finalStatus.extra.damageReduceRate * 100}%");
             sb.AppendLine($"공격속도 : {status.FinalBattleStatStatus.atkSpeed * 100}%");
             sb.AppendLine($"이동속도 : {status.FinalBattleStatStatus.moveSpeed * 100}%");
             sb.AppendLine($"크리티컬확률 : {status.FinalBattleStatStatus.critChance}%");

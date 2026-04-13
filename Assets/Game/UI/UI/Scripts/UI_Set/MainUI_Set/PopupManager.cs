@@ -422,7 +422,6 @@ namespace UI.Scripts
                 Debug.Log("몬스터 킬 생성");
                 monsterKillInstance = Instantiate(monsterKill, canvas);
             }
-
         }
         public void OpenTimer()
         {
