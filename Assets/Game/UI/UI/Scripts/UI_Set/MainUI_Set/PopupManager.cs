@@ -115,7 +115,7 @@ namespace UI.Scripts
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
-            //hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
+            hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
 
             
             Debug.Log(timer);
@@ -365,7 +365,7 @@ namespace UI.Scripts
         public void ClosePopup(GameObject gameObject)
         {
             Transform transform = gameObject.transform.Find("Close_Button");
-
+            Debug.Log(transform);
             if (transform != null)
             {
                 Button button = transform.GetComponent<Button>();

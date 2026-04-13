@@ -72,7 +72,7 @@ namespace UI.Equipment
         /// </summary>
         public void ApplyButtonState(EquipmentButtonState state)
         {
-            Debug.Log($"DetailView 갱신 결과 : {(int)state}");
+            //Debug.Log($"DetailView 갱신 결과 : {(int)state}");
             equipButton.interactable = (state & EquipmentButtonState.Equip) != 0;
             enhanceButton.interactable = (state & EquipmentButtonState.Enhance) != 0;
             combineButton.interactable = (state & EquipmentButtonState.Combine) != 0;

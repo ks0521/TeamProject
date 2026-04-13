@@ -108,7 +108,7 @@ public class ChallengeStageRule : StageRule
         if (stage.rewardType == RewardType.ClearReward)
         {
             dropManager.GetRewards(stage.rewardTable.rewardList);
-            eventHub.GetClearRewards(stage.rewardTable.rewardList);
+            eventHub.GetClearRewards(stage.rewardTable.rewardList,$"{stage.chapter} - {stage.stage} 스테이지 클리어");
         }
         ChallengeSuccess?.Invoke();
     }

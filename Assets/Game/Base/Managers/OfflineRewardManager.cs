@@ -47,7 +47,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
         string rewardContext = $"{DateTime.Now - time :hh\\:mm\\:ss} 자동사냥 완료";
         Debug.Log(rewardContext);
         dropManager.GetRewards(drops);
-        eventHub.GetClearRewards(drops);
+        eventHub.GetClearRewards(drops,rewardContext);
     }
     
     public void AutoClearReward(int sec)
