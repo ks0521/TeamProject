@@ -20,16 +20,19 @@ namespace Base.Save
     public static class DataConverter
     {
         private static readonly BindingFlags bindFlag = BindingFlags.Public | BindingFlags.Instance;
+
         /// <summary>
         /// [CommonType]이 붙은 타입 목록으로 자동 복사 가능한 공용 블록 타입만 여기에 들어간다
         /// <para>단, 타입에 [CommonType]이 붙어 있어도 RuntimeProgressData / SaveProgressData의 루트 필드에 실제로 존재해야 자동 복사된다</para>
         /// </summary>
         private static readonly HashSet<Type> commonType = HashCommonType();
+
         private static Dictionary<Type, FieldInfo[]> commonFieldCache = new();
-        
+
         private static List<BlockMap> runtimeToSaveMap; //런타임 -> 세이브 데이터로 변환하기 위한 리플렉션 정보
         private static List<BlockMap> saveToRuntimeMap; //세이트 -> 런타임 데이터로 변환하기 위한 리플렉션 정보
         private static bool isReflectionReady;
+
         /// <summary> 현재 어셈블리 안의 Base.Save 네임스페이스를 검사해서 [CommonType]이 붙은 타입들을 모아온다
         /// <para> => 자동 복사 후보 타입 목록을 만드는 역할</para> </summary>
         private static HashSet<Type> HashCommonType()
@@ -44,28 +47,31 @@ namespace Base.Save
                     result.Add(type);
                 }
             }
+
             return result;
         }
+
         /// <summary> 공용 블록 1개를 복사하기 위한 정보 묶음
         /// <para>Ex. RuntimeProgressData.stage -> SaveProgressData.stage 를 복사할 때 필요한 정보 저장</para></summary>
         private class BlockMap
         {
-            public FieldInfo sourceField; 
+            public FieldInfo sourceField;
             // source 루트 객체에서 꺼낼 필드 정보
             // 예: RuntimeProgressData.stage
-            
-            public FieldInfo destinationField; 
+
+            public FieldInfo destinationField;
             // destination 루트 객체에서 값을 넣을 필드 정보
             // 예: SaveProgressData.stage
-            
-            public Type blockType; 
+
+            public Type blockType;
             // 공용 블록의 실제 타입
             // 예: StageProgressState
-            
-            public FieldInfo[] innerField; 
+
+            public FieldInfo[] innerField;
             // 공용 블록 내부 필드 목록
             // 예: selectedNormalStage, selectedNormalChapter ...
         }
+
         /// <summary>
         /// 공용 블록 복사 계획을 처음 1번만 만든다
         /// <para>이후 저장/로드에서는 캐시된 맵을 재사용</para>
@@ -78,6 +84,7 @@ namespace Base.Save
 
             isReflectionReady = true;
         }
+
         /// <summary>
         /// sourceType -> destinationType 사이의 공용 블록 복사 계획 생성
         ///<para></para>
@@ -96,28 +103,30 @@ namespace Base.Save
             FieldInfo[] sourceFields = sourceType.GetFields(bindFlag); //sourceType의 필드를 가져옴(stage,playerInfo...)
             FieldInfo[] destinationFields = destinationType.GetFields(bindFlag); //destinationType의 필드를 가져옴
             //순회 간 탐색효율을 늘리기 위한 딕셔너리
-            Dictionary<string,FieldInfo> destinationFieldDic = destinationFields.ToDictionary(f => f.Name, f => f);
+            Dictionary<string, FieldInfo> destinationFieldDic = destinationFields.ToDictionary(f => f.Name, f => f);
 
             foreach (var sourceField in sourceFields)
             {
-                Type blockType = sourceField.FieldType; 
+                Type blockType = sourceField.FieldType;
                 //sourceType필드 중 공용타입(StageProgressState, PlayerInfo ...)만 맵에 추가
                 if (!commonType.Contains(blockType))
                 {
                     continue;
                 }
+
                 //sourceField의 필드명(stage,currency,playerInfo...)과 destinationField의 필드명이 동일하면 복사
                 //그래서 SaveProgressData와 RuntimeProgressData 공용으로 사용하는 필드의 이름은 통일시켜줘야함
-                //sourceField로 찾으면 이름 상관없어지려나??
                 if (!destinationFieldDic.TryGetValue(sourceField.Name, out FieldInfo destinationField))
                 {
                     Debug.LogWarning($"DataConverter : {destinationType.Name}에 {sourceField.Name}이 없습니다! ");
                     continue;
                 }
+
                 //이름이 같은데 실제 타입은 다르면 (currency = currency지만 source는 PlayerCurrencyState타입, destination은 PlayerInfo타입인 경우같이) 추가하지 않음
                 if (destinationField.FieldType != blockType)
                 {
-                    Debug.LogWarning($"DataConverter : source: {sourceField.Name}와 dest : {destinationField.FieldType.Name}의 타입이 서로 다릅니다! ");
+                    Debug.LogWarning(
+                        $"DataConverter : source: {sourceField.Name}와 dest : {destinationField.FieldType.Name}의 타입이 서로 다릅니다! ");
                     continue;
                 }
 
@@ -132,6 +141,7 @@ namespace Base.Save
 
             return maps;
         }
+
         /// <summary>
         /// 공용 블록 타입 내부의 public instance field 목록을 가져온다
         /// <para>한 번 찾은 결과는 commonFieldCache에 저장해서 재사용</para></summary>
@@ -144,11 +154,13 @@ namespace Base.Save
             {
                 return cache;
             }
+
             //클래스 필드 내의 모든 필드 가져오고 캐싱
             FieldInfo[] fields = type.GetFields(bindFlag);
             commonFieldCache[type] = fields;
             return fields;
         }
+
         /// <summary>
         /// source 루트 객체의 공용 블록 값을 destination 루트 객체로 복사한다.
         ///
@@ -157,7 +169,7 @@ namespace Base.Save
         /// <para>- 예:
         ///   runProgressData.stage.selectedNormalStage
         ///   -> saveProgressData.stage.selectedNormalStage</para></summary>
-        private static void CopyCommonBlock(object source, object destination,List<BlockMap> maps)
+        private static void CopyCommonBlock(object source, object destination, List<BlockMap> maps)
         {
             foreach (var map in maps)
             {
@@ -167,31 +179,30 @@ namespace Base.Save
 
                 object destinationBlock = map.destinationField.GetValue(destination);
                 // 예: source = runProgressData 일 때 sourceBlock = runProgressData.stage
-                
+
                 if (destinationBlock == null)
                 {
                     destinationBlock = Activator.CreateInstance(map.blockType);
-                    map.destinationField.SetValue(destination,destinationBlock);
+                    map.destinationField.SetValue(destination, destinationBlock);
                     // destination 쪽 블록이 없으면 새로 만들어 넣는다
                 }
 
                 foreach (var innerField in map.innerField)
                 {
                     object value = innerField.GetValue(sourceBlock);
-                    innerField.SetValue(destinationBlock,value);
+                    innerField.SetValue(destinationBlock, value);
                     // 예: runProgressData.stage.selectedNormalStage 값을 읽어서
                     // saveProgressData.stage.selectedNormalStage에 넣는다
                 }
             }
         }
+
         /// <summary> 런타임 데이터를 세이브용 데이터로 변경 (저장)</summary>
         /// <returns></returns>
         public static SaveProgressData RuntimeToSave(RuntimeProgressData runProgressData)
         {
-            
             SaveProgressData saveProgressData = new()
             {
-                
                 // stage =
                 // {
                 //     selectedNormalStage = runProgressData.stage.selectedNormalStage,
@@ -217,8 +228,8 @@ namespace Base.Save
                 // {
                 //     lastConnectTime = runProgressData.lastSession.lastConnectTime
                 // },
-                
-                equipmentInventory = {equipmentEntries = new List<EquipmentEntry>()},
+
+                equipmentInventory = { equipmentEntries = new List<EquipmentEntry>() },
                 itemInventory = { owneditemCounts = new List<ItemEntry>() },
                 statUpgrades = { upgradeLevelsByType = new List<StatusEntry>() },
                 skillProgress =
@@ -228,7 +239,7 @@ namespace Base.Save
                 },
             };
             EnsureReflectionReady();
-            CopyCommonBlock(runProgressData,saveProgressData,runtimeToSaveMap);
+            CopyCommonBlock(runProgressData, saveProgressData, runtimeToSaveMap);
             //runtimedata의 딕셔너리를 savedata의 리스트로 변환
             foreach (var item in runProgressData.itemInventory.ownedItemCounts)
             {
@@ -247,6 +258,7 @@ namespace Base.Save
                 };
                 saveProgressData.equipmentInventory.equipmentEntries.Add(entry);
             }
+
             foreach (var stat in runProgressData.statUpgrades.upgradeLevelsByType)
             {
                 StatusEntry entry = new StatusEntry { statType = stat.Key, enhancementLevel = stat.Value };
@@ -285,8 +297,8 @@ namespace Base.Save
                 // {
                 //     lastConnectTime = saveProgressData.lastSession.lastConnectTime
                 // },
-                
-                equipmentInventory = {equipmentEntries = new Dictionary<int, EquipmentEntryState>()},
+
+                equipmentInventory = { equipmentEntries = new Dictionary<int, EquipmentEntryState>() },
                 itemInventory = { ownedItemCounts = new Dictionary<int, int>() },
                 statUpgrades = { upgradeLevelsByType = new Dictionary<StatusType, int>() },
                 skillProgress =
@@ -296,11 +308,11 @@ namespace Base.Save
                 },
             };
             EnsureReflectionReady();
-            CopyCommonBlock(saveProgressData,runProgressData,saveToRuntimeMap);
+            CopyCommonBlock(saveProgressData, runProgressData, saveToRuntimeMap);
             //saveData의 리스트를 runtimeData의 딕셔너리로 변환
 
             //장비 부분은 mvp 이후 구현
-             foreach (var item in saveProgressData.itemInventory.owneditemCounts)
+            foreach (var item in saveProgressData.itemInventory.owneditemCounts)
             {
                 runProgressData.itemInventory.ownedItemCounts.TryAdd(item.key, item.ownedCount);
                 //Debug.Log($"{item.key}키값을 가진 장비 추가 : {runProgressData.itemInventory.ownedItemCounts[item.key]}개 ");
@@ -317,6 +329,7 @@ namespace Base.Save
                         ownedCount = equipment.ownedCount
                     });
             }
+
             foreach (var stat in saveProgressData.statUpgrades.upgradeLevelsByType)
             {
                 runProgressData.statUpgrades.upgradeLevelsByType.TryAdd(stat.statType, stat.enhancementLevel);
@@ -325,9 +338,13 @@ namespace Base.Save
 
             foreach (var skill in saveProgressData.skillProgress.skillProgressState)
             {
-                runProgressData.skillProgress.skillProgressState.TryAdd(skill.key, skill.enhancementCount);
-                //Debug.Log($"{skill.key}키값을 가진 스킬 추가 : {runProgressData.skillProgress.skillProgressState[skill.key]}개 ");
+                if (runProgressData.skillProgress.skillProgressState.TryAdd(skill.key, skill.enhancementCount))
+                {
+                    Debug.Log(
+                        $"{skill.key}키값을 가진 스킬 추가 : {runProgressData.skillProgress.skillProgressState[skill.key]}개 ");
+                }
             }
+
             Debug.Log("저장된 정보 변환 완료");
             return runProgressData;
         }
