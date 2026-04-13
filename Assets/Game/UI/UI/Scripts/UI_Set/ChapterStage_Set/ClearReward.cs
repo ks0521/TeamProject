@@ -9,12 +9,13 @@ using UnityEngine.UI;
 
 public class ClearReward : MonoBehaviour
 {
-    [SerializeField] Image [] rewardImg;
+    [SerializeField] TextMeshProUGUI rewardTypeText;
+    [SerializeField] Image[] rewardImg;
     [SerializeField] TextMeshProUGUI[] rewardText;
 
     [SerializeField] Button checkButton;
 
-    public void SetReward(List<DropReward> rewards)
+    public void SetReward(List<DropReward> rewards, string titleText)
     {
         for (int i = 0; i < rewardImg.Length; i++)
         {
@@ -27,7 +28,11 @@ public class ClearReward : MonoBehaviour
             }
         }
 
+        if (rewards.Count <= 0)
+        {
             Debug.LogError(rewards.Count);
+        }
+        rewardTypeText.text = titleText;
 
         int currentSlot = 0;
 
@@ -38,7 +43,7 @@ public class ClearReward : MonoBehaviour
             switch (reward.rewardType)
             {
                 case DropRewardType.Currency:
-                    SetSlot(ref currentSlot , reward.amount.ToString() , reward.currencySO.icon);
+                    SetSlot(ref currentSlot, reward.amount.ToString(), reward.currencySO.icon);
                     break;
 
                 case DropRewardType.Item:
@@ -47,15 +52,18 @@ public class ClearReward : MonoBehaviour
             }
         }
     }
-    private void SetSlot(ref int slot , string valueText , Sprite icon)
+    private void SetSlot(ref int slot, string valueText, Sprite icon)
     {
         if (slot >= rewardImg.Length) return;
 
         rewardImg[slot].sprite = icon;
         rewardImg[slot].gameObject.SetActive(true);
-        Debug.LogError(rewardImg[slot].sprite);
-        
 
+        if (icon == null)
+        {
+            Debug.LogError($"{rewardImg[slot].sprite} 비었음");
+
+        }
 
         if (slot < rewardText.Length && rewardText[slot] != null)
         {
@@ -65,5 +73,5 @@ public class ClearReward : MonoBehaviour
 
         slot++;
     }
-   
+
 }
