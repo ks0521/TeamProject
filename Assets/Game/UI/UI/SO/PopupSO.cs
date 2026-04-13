@@ -7,22 +7,46 @@ namespace UI.Popup
     [CreateAssetMenu(menuName = "Game/UI/Popup SO")]
     public class PopupSO : ScriptableObject
     {
-        [SerializeField] private List<PopupData> popupList = new();
-        public List<PopupData> PopupList => popupList;
+        [Header("팝업")]
+        [SerializeField] public List<PopupData> popupList = new();
 
-        public enum popupType
+        [Header("이벤트 팝업")]
+        [SerializeField] public List<EventPopupData> eventPopupList = new();
+        
+        [Header("스테이지 팝업")]
+        [SerializeField] public List<StagePopupData> stagePopupList = new();
+
+
+        public enum PopupType
         {
-            None, ability, equipment, skill, stage, shop
+            None, ability, equipment, skill, stage, shop , dungeon , setting , End
         }
 
-
-        [Serializable]
-        public class PopupData
+        public enum EventPopupType
         {
-            public popupType popupType;
+            clear , fail , dead , clearReward
+        }
+        public enum StagePopupType
+        {
+            timer , monKill , Boss
+        }
+        
+        [Serializable] public class PopupData
+        {
+            public PopupType popupType;
             public GameObject popupPrefab;
         }
-
+        
+        [Serializable] public class EventPopupData
+        {
+            public EventPopupType eventPopupType;
+            public GameObject popupPrefab;
+        }
+        [Serializable] public class StagePopupData
+        {
+            public StagePopupType stagePopupType;
+            public GameObject popupPrefab;
+        }
         
     }
 
