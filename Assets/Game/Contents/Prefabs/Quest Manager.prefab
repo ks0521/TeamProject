@@ -7533,8 +7533,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventHub: {fileID: 0}
+  questUIManager: {fileID: 209107819223805055}
   questDatabase: {fileID: 11400000, guid: 4622e25e6a8d26646b739592beb7b053, type: 2}
-  questJsonFile: {fileID: 4900000, guid: 383fba22ce324204a93d2f24256ddb65, type: 3}
   autoHuntButton: {fileID: 0}
   bossMapButton: {fileID: 0}
   newContentButton: {fileID: 0}

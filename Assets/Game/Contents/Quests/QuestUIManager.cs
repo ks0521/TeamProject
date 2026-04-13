@@ -113,6 +113,7 @@ public class QuestUIManager : MonoBehaviour, IManager
                 boxScript.Setup(quest, this);
                 instantiatedBoxes.Add(boxScript);
             }
+            boxScript.RefreshVisuals();
         }
         UpdateReceiveAllButtonState();
         // 4. 리스트가 갱신되면 첫 번째 퀘스트를 자동으로 선택해줌 (상세창 공백 방지)
