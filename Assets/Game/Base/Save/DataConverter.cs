@@ -116,7 +116,6 @@ namespace Base.Save
 
                 //sourceField의 필드명(stage,currency,playerInfo...)과 destinationField의 필드명이 동일하면 복사
                 //그래서 SaveProgressData와 RuntimeProgressData 공용으로 사용하는 필드의 이름은 통일시켜줘야함
-                //sourceField로 찾으면 이름 상관없어지려나??
                 if (!destinationFieldDic.TryGetValue(sourceField.Name, out FieldInfo destinationField))
                 {
                     Debug.LogWarning($"DataConverter : {destinationType.Name}에 {sourceField.Name}이 없습니다! ");

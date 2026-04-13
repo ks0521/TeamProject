@@ -244,23 +244,23 @@ MonoBehaviour:
       nextChallangeStage: 5
       nextChallangeChapter: 1
     currency:
-      exp: 50
-      gold: 67821
-      statStone: 277731
+      exp: 42
+      gold: 8759
+      statStone: 3171
       ruby: 0
       fame: 0
     playerInfo:
-      level: 957
-      skillPoint: 957
-      maxSkillPoint: 957
-      weaponGachaLevel: 0
-      curWeaponGachaCount: 0
-      armorGachaLevel: 0
-      curArmorGachaCount: 0
+      level: 1035
+      skillPoint: 1035
+      maxSkillPoint: 1035
+      weaponGachaLevel: 7
+      curWeaponGachaCount: 30
+      armorGachaLevel: 3
+      curArmorGachaCount: 29
       accessoryGachaLevel: 0
       curAccessoryGachaCount: 0
     lastSession:
-      lastConnectTime: -8584255466978749552
+      lastConnectTime: -8584255424908356666
     equipment:
       equippedWeponKey: 3104
       equippedArmorKey: 0
@@ -271,14 +271,14 @@ MonoBehaviour:
   player: {fileID: 0}
   statIncreaseCache:
     battle:
-      atk: 467
+      atk: 483
       atkRate: 0
       critChance: 0.5
       critDamage: 2
       maxHp: 1180
       def: 26
-      atkSpeed: 0.99
-      moveSpeed: 1.3
+      atkSpeed: 0.73
+      moveSpeed: 1.6
       atkRange: 3
     reward:
       goldGain: 0
@@ -290,27 +290,27 @@ MonoBehaviour:
       damageReduceRate: 0
   equipOwnIncreaseCache:
     battle:
-      atk: 45
-      atkRate: 0.122999996
+      atk: 197
+      atkRate: 0.588
       critChance: 0
       critDamage: 0
       maxHp: 0
       def: 0
       atkSpeed: 0
-      moveSpeed: 0
+      moveSpeed: 0.234
       atkRange: 0
     reward:
-      goldGain: 0
-      statStoneGain: 0
-      expGain: 0
-      itemDropRate: 0
+      goldGain: 0.078
+      statStoneGain: 0.078
+      expGain: 0.078
+      itemDropRate: 0.062
     extra:
-      damageDealtRate: 0.203
+      damageDealtRate: 0.98099995
       damageReduceRate: 0
   equipUsingIncreaseCache:
     battle:
-      atk: 20
-      atkRate: 0.055999998
+      atk: 10
+      atkRate: 0.031
       critChance: 0
       critDamage: 0
       maxHp: 0
@@ -329,9 +329,9 @@ MonoBehaviour:
   skillIncreaseCache:
     battle:
       atk: 0
-      atkRate: 0
+      atkRate: 1.1
       critChance: 0
-      critDamage: 0
+      critDamage: 0.52
       maxHp: 0
       def: 0
       atkSpeed: 0
@@ -1066,6 +1066,12 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
+      propertyPath: popupSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 405adffff15701547aa5a8f2c43dc417,
+        type: 2}
+    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
+        type: 3}
       propertyPath: shopBtn
       value: 
       objectReference: {fileID: 1823383882}
@@ -1086,6 +1092,12 @@ PrefabInstance:
       propertyPath: equipmentPrefab
       value: 
       objectReference: {fileID: 289728231536782692, guid: 44bb1edb763ed2a49a3824c932740b40,
+        type: 3}
+    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
+        type: 3}
+      propertyPath: clearRewardPrefab
+      value: 
+      objectReference: {fileID: 8945756061496121145, guid: 3431f5c1d99c863458bbfb0a0d3112f5,
         type: 3}
     - target: {fileID: 7944571381944515057, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
