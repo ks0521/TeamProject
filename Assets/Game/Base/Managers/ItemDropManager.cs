@@ -18,12 +18,13 @@ public class ItemDropManager : MonoBehaviour, IManager
 {
     [SerializeField] private RuntimeProgressData progress;
     [SerializeField] private EventHub hub;
-    private RuntimeStatus stat => RuntimeStatus.Instance;
+    private RuntimeStatus stat;
 
     public void Init()
     {
         progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         hub = GameManager.Instance.GetGameSystem<EventHub>();
+        stat = GameManager.Instance.GetGameSystem<RuntimeStatus>();
     }
 
     void FlushBatch(RewardBatch batch)
@@ -78,7 +79,8 @@ public class ItemDropManager : MonoBehaviour, IManager
             case CurrencyType.EXP:
                 int finalExp = (int)(reward.amount * (1 + stat.FinalRewardStatStatus.expGain));
                 progress.currency.exp += finalExp;
-                while (progress.currency.exp > 100) { LevelUp(); }
+                LevelUp(progress.currency.exp / 100);
+                progress.currency.exp %= 100;
                 break;
             case CurrencyType.GOLD:
                 int finalGold = (int)(reward.amount * (1 + stat.FinalRewardStatStatus.goldGain));
@@ -135,15 +137,15 @@ public class ItemDropManager : MonoBehaviour, IManager
         }
         batch.equipmentChanged = true;
     }
-    void LevelUp()
-        {
-            progress.playerInfo.level++;
-            progress.playerInfo.skillPoint++;
-            progress.playerInfo.maxSkillPoint++;
-            progress.currency.exp -= 100;
-            //Debug.Log($"레벨 상승, 경험치 -100, 남은 경험치 : {progress.currency.exp}");
-            hub.LevelChanged(progress.playerInfo.level);
-        }
+    void LevelUp(int count)
+    {
+        if (count <= 0) return;
+        progress.playerInfo.level += count;
+        progress.playerInfo.skillPoint += count;
+        progress.playerInfo.maxSkillPoint += count;
+        //Debug.Log($"레벨 상승, 경험치 -100, 남은 경험치 : {progress.currency.exp}");
+        hub.LevelChanged(progress.playerInfo.level);
+    }
     void GetGold(int dropGold)
     {
         int finalGold = (int)(dropGold * (1 + stat.FinalRewardStatStatus.goldGain));
@@ -173,7 +175,8 @@ public class ItemDropManager : MonoBehaviour, IManager
                   $"현재 소유 경험치 : {progress.currency.exp}");*/
         while (progress.currency.exp > 100)
         {
-            LevelUp();
+            LevelUp(progress.currency.exp / 100);
+            progress.currency.exp %= 100;
         }
 
         hub.CurrencyChange(CurrencyType.EXP, progress.currency.exp);

@@ -86,6 +86,24 @@ namespace Base.Manager
             }
             return catalogs;
         }
+
+        public int GetEquippedItem(EquipType type)
+        {
+            switch (type)
+            {
+                case EquipType.Weapon:
+
+                    break;
+                case EquipType.Armor:
+
+                    break;
+                case EquipType.Accessory:
+
+                    break;
+            }
+
+            return 0;
+        }
         /// <summary> 찾으려 하는 특정 키의 장비 정보를 확인함</summary>
         /// <returns>있으면 true, 없으면 false (catalog = default)</returns>
         public bool TryGetEquipmentCatalog(int key, out EquipmentCatalog catalog)
@@ -121,7 +139,23 @@ namespace Base.Manager
                 Debug.Log("이미 장착중인 아이템입니다 ");
                 return;
             }
-            runtimeData.equipment.equippedWeponKey = equipment.key;
+
+            switch (equipment.equipType)
+            {
+                case EquipType.Weapon:
+                    Debug.Log("무기 장착");
+                    runtimeData.equipment.equippedWeponKey = equipment.key;
+                    break;
+                case EquipType.Armor:
+                    Debug.Log("방어구 장착");
+                    runtimeData.equipment.equippedArmorKey = equipment.key;
+                    break;
+                case EquipType.Accessory:
+                    Debug.Log("장신구 장착");
+                    runtimeData.equipment.equippedAccessoryKey = equipment.key;
+                    break;
+            }
+            
             eventHub.EquipChenged(equipment);
             //장작후 스탯 계산 필요
         }

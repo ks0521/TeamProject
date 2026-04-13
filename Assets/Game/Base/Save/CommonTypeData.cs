@@ -7,7 +7,7 @@ namespace Base.Save
     {
     }
     //런타임과 세이브 동시에 사용하는 필드 모음
-    [Serializable] [CommonType]
+    [Serializable, CommonType]
     public class StageProgressState
     {
         public int selectedNormalStage; //직전 일반스테이지
@@ -17,7 +17,7 @@ namespace Base.Save
     }
 
     //currency + iteminventory는 분리저장?
-    [Serializable] [CommonType]
+    [Serializable, CommonType]
     public class PlayerCurrencyState
     {
         // public int level;
@@ -30,7 +30,7 @@ namespace Base.Save
         public int fame; //업적점수(명예)
     }
 
-    [Serializable] [CommonType]
+    [Serializable, CommonType]
     public class PlayerInfo
     {
         public int level;
@@ -44,12 +44,19 @@ namespace Base.Save
         public int curAccessoryGachaCount;
     }
     
-    [Serializable][CommonType]
+    [Serializable, CommonType]
     public class LastSessionTime
     {
         public long lastConnectTime;
     }
-    
+    /// <summary> 현재 장착중인 장비 </summary>
+    [Serializable, CommonType]
+    public class PlayerEquipmentState
+    {
+        public int equippedWeponKey; //장비의 키를 저장
+        public int equippedArmorKey;
+        public int equippedAccessoryKey;
+    }
     /// <summary> 아이템 정보 </summary>
     [Serializable]
     public class EquipmentEntry

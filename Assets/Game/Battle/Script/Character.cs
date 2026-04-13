@@ -110,7 +110,6 @@ namespace Battle
             // rb = GetComponent<Rigidbody2D>();
             hp = CurrentBattleStatStat.maxHp;
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-
             damageAnchor = GetComponentInChildren<DamageTextMarker>()?.transform;
             //마커 없으면 기본 오브젝트 위치를 마커로 함
             if (damageAnchor == null)
@@ -204,7 +203,7 @@ namespace Battle
                 //Debug.Log("크리티컬!");
             }
 
-            resultDmg *= Random.Range(0.9f, 1.1f);
+            //resultDmg *= Random.Range(0.9f, 1.1f);
             hitTarget.Hit(resultDmg, type);
         }
 

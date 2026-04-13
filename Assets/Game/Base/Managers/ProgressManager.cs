@@ -1,6 +1,9 @@
+using Base.Data;
 using System;
 using Base.Managers;
 using Cysharp.Threading.Tasks;
+using Growth.Equipment;
+using Growth.StatUpgrade;
 using System.Threading;
 using UnityEngine;
 
@@ -24,13 +27,31 @@ namespace Base.Save
         public PlayerCurrencyState Currency => progress.currency;
         public PlayerInfo PlayerInfo => progress.playerInfo;
         public StageProgressState StageProgress => progress.stage;
+        private EventHub eventHub;
+        
         public void Init()
         {
             LoadProgress();
             AutoSave(this.GetCancellationTokenOnDestroy(), 3f).Forget();
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+            EventChain();
         }
-        public int GetOrder()=> 1; //일단 진행사항이 로딩되어야 다른 매니저가 참고 가능
 
+        void EventChain()
+        {
+            eventHub.OnInitSkill += SaveProgress;
+            eventHub.OnSkillEnhance += SaveProgress;
+            eventHub.OnGetEquipments += SaveProgress;
+            eventHub.OnGetNewEquipment += SaveProgress;
+            eventHub.OnStatusEnhanced += SaveProgressAdapter;
+            eventHub.OnEquipEnhanced += SaveProgressAdapter;
+        }
+
+        void SaveProgressAdapter(StatusType type) => SaveProgress();
+        void SaveProgressAdapter(EquipmentSO equipment) =>SaveProgress();
+        
+        public int GetOrder()=> 1; //일단 진행사항이 로딩되어야 다른 매니저가 참고 가능
+        
         async UniTaskVoid AutoSave(CancellationToken token, float period)
         {
             while (true)
