@@ -36,7 +36,12 @@ public class QuestUIManager : MonoBehaviour, IManager
     [Header("보상 팝업")]
     [SerializeField] private RewardPopupUI rewardPopup;
 
+    [Header("업적 점수")]
+    [SerializeField] private TextMeshProUGUI fameText;
+
     private QuestManager questManager;
+    private EventHub eventHub;
+    private RuntimeProgressData runtimeProgress;
     private List<QuestBoxUI> instantiatedBoxes = new List<QuestBoxUI>();
     private List<QuestBoxUI> questBoxPool = new List<QuestBoxUI>(); //미사용 퀘스트 박스 프리팹 보관용
     private ActiveQuest currentSelectedQuest;
@@ -44,8 +49,11 @@ public class QuestUIManager : MonoBehaviour, IManager
     public void Init()
     {
         questManager = FindObjectOfType<QuestManager>();
-        EventHub.OnQuestProgressUpdated += RealtimeRefreshVisuals;
+        eventHub = FindObjectOfType<EventHub>();
         OnClickBookmark(0);
+        if (eventHub != null) eventHub.OnCurrencyChange += HandleFameChange;
+        EventHub.OnQuestProgressUpdated += RealtimeRefreshVisuals;
+        UpdateFameDisplay(GetCurrentFame());
     }
     public int GetOrder() => 340;
 
@@ -105,6 +113,7 @@ public class QuestUIManager : MonoBehaviour, IManager
                 boxScript.Setup(quest, this);
                 instantiatedBoxes.Add(boxScript);
             }
+            boxScript.RefreshVisuals();
         }
         UpdateReceiveAllButtonState();
         // 4. 리스트가 갱신되면 첫 번째 퀘스트를 자동으로 선택해줌 (상세창 공백 방지)
@@ -342,8 +351,30 @@ public class QuestUIManager : MonoBehaviour, IManager
         UpdateReceiveAllButtonState();
     }
 
+    void HandleFameChange(CurrencyType type, int currentAmount)
+    {
+        if (type == CurrencyType.FAME)
+        {
+            Debug.Log($"<color=cyan>[FAME 수신]</color> 타입: {type}, 새로운 수치: {currentAmount}");
+            UpdateFameDisplay(currentAmount);
+        }
+    }
+    void UpdateFameDisplay(int amount)
+    {
+        if (fameText != null) fameText.text = amount.ToString("N0");
+    }
+    int GetCurrentFame()
+    {
+        if (runtimeProgress != null)
+        {
+            return runtimeProgress.currency.fame;
+        }
+        return 0;
+    }
+
     void OnDestroy()
     {
         EventHub.OnQuestProgressUpdated -= RealtimeRefreshVisuals;
+        eventHub.OnCurrencyChange -= HandleFameChange;
     }
 }
