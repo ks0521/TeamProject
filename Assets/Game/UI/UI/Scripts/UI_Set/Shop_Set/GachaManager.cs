@@ -58,45 +58,6 @@ namespace Shop.Gacha
             }
         }
 
-        public int GetOrder() => 220;
-        public void Init()
-        {
-            gameDataProvider = GameManager.Instance.GetGameSystem<GameDataProvider>();
-            progressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
-            hub = GameManager.Instance.GetGameSystem<EventHub>();
-            dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
-
-
-            gachaDic.Clear();
-
-            if (gachaConfigSO == null || gachaConfigSO.Count == 0)
-            {
-                Debug.LogWarning("가챠 SO 가 비어있음");
-                return;
-            }
-
-            for (int i = 0; i < gachaConfigSO.Count; i++)
-            {
-                GachaConfigSO config = gachaConfigSO[i];
-
-                if (config == null)
-                {
-                    Debug.LogWarning($"gachaConfigSO {i} 가 null");
-                    continue;
-                }
-
-                EquipType type = config.targetEquipType;
-
-                if (gachaDic.ContainsKey(config.targetEquipType))
-                {
-                    Debug.LogWarning($"{config.targetEquipType} 타입 SO 가 중복 등록됨");
-                    continue;
-                }
-
-                gachaDic.Add(type, config);
-                CheckDataConfig(config);
-            }
-        }
         private void CheckDataConfig(GachaConfigSO config)
         {
             if (config.maxLevel <= 0)
@@ -553,16 +514,23 @@ namespace Shop.Gacha
 
             SetCurrentGachaCount(equipType, currentCount);
         }//가챠 횟수 누적용
-        private void AddEquipment(EquipmentSO equipment)
+        private void AddEquipment(List<EquipmentSO> equipment)
         {
             if (equipment == null) return;
             if (dropManager == null) return;
 
-            DropReward droppedItem = new DropReward();
-            droppedItem.itemSO = equipment;
-            droppedItem.amount = 1;
+            List<DropReward> rewards = new();
 
-            dropManager.GetItem(droppedItem);
+            for (int i = 0; i < equipment.Count; i++)
+            {
+                DropReward item = new();
+                item.itemSO = equipment[i];
+                item.amount = 1;
+
+                rewards.Add(item);
+            }
+
+            dropManager.GetRewards(rewards);
         }//장비 지급하는 함수
 
         private void ProcessLevelUp(EquipType equipType)
@@ -614,11 +582,7 @@ namespace Shop.Gacha
             if (!TrySpendCurrency(cost))
                 return results;
 
-
-            for (int i = 0; i < results.Count; i++)
-            {
-                AddEquipment(results[i]);//이곳 아직 미구현
-            }
+            AddEquipment(results);
 
             AddDrawCount(equipType, results.Count);
             ProcessLevelUp(equipType);
