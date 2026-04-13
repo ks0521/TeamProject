@@ -32,6 +32,7 @@ public class ItemDropManager : MonoBehaviour, IManager
         if(batch.CurrenciesChanged.Contains(CurrencyType.EXP)) hub.CurrencyChange(CurrencyType.EXP,progress.currency.exp);
         if(batch.CurrenciesChanged.Contains(CurrencyType.GOLD)) hub.CurrencyChange(CurrencyType.GOLD,progress.currency.gold);
         if(batch.CurrenciesChanged.Contains(CurrencyType.STATSTONE)) hub.CurrencyChange(CurrencyType.STATSTONE,progress.currency.statStone);
+        if(batch.CurrenciesChanged.Contains(CurrencyType.FAME)) hub.CurrencyChange(CurrencyType.FAME, progress.currency.fame);
         if(batch.itemChanged) hub.GetItems();
         if(batch.equipmentChanged) hub.GetEquipments();
         if(batch.newEquipmentChanged) hub.GetNewEquipment();
@@ -86,6 +87,9 @@ public class ItemDropManager : MonoBehaviour, IManager
             case CurrencyType.STATSTONE:
                 int finalStatStone = (int)(reward.amount * (1 + stat.FinalRewardStatStatus.statStoneGain));
                 progress.currency.statStone += finalStatStone;
+                break;
+            case CurrencyType.FAME:
+                progress.currency.fame += reward.amount;
                 break;
         }
         batch.CurrenciesChanged.Add(reward.currencyType);
