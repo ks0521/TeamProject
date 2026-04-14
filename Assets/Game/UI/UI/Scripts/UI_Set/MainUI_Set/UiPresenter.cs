@@ -50,6 +50,8 @@ namespace UI.Scripts
             hub.OnMonsterKill += ReFreshMonsterKill;
 
             hub.OnBossSpawned += ReFreshBoss;
+            hub.OnSkillAutoToggle += autoButton.SetAutoBattle;
+
             //스킬 부분 미구현
             //자동전투 버튼 미구현
         }

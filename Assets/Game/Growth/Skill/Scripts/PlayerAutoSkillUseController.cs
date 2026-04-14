@@ -134,19 +134,19 @@ namespace Growth.Skill
         }
         private NodeState CurSkillUse()
         {
-            Debug.Log($"CurSkillUse : {curIndex}번 스킬 자동 사용 시도");
+            //Debug.Log($"CurSkillUse : {curIndex}번 스킬 자동 사용 시도");
             if (playerEquipSkillController.TryAtkSkillUseToMonster(curIndex))
             {
                 curIndex = curIndex < 5 ? curIndex + 1 : 0;
-                Debug.Log($"CurSkillUse : {curIndex}번 스킬 자동 사용 성공");
+                //Debug.Log($"CurSkillUse : {curIndex}번 스킬 자동 사용 성공");
                 return NodeState.Success;
             }
-            Debug.Log($"CurSkillUse : {curIndex}번 스킬 자동 사용 실패");
+            //Debug.Log($"CurSkillUse : {curIndex}번 스킬 자동 사용 실패");
             return NodeState.Run;
         }
         private NodeState CurSkillUseFail()
         {
-            Debug.Log($"CurSkillUseFail : {curIndex}번 스킬 자동 사용 실패");
+            //Debug.Log($"CurSkillUseFail : {curIndex}번 스킬 자동 사용 실패");
             curIndex = curIndex < 5 ? curIndex + 1 : 0;
             return NodeState.Fail;
         }
