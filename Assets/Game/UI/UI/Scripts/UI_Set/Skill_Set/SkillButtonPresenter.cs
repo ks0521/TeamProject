@@ -27,19 +27,20 @@ namespace UI.Skill_Set
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             if (eventHub == null)
             {
-                // Debug.LogWarning("SkillButtonPresenter에서 eventHub 찾지 못함");
+                // Debug.LogWarning("SkillButtonPresenter : eventHub 찾지 못함");
                 return;
             }
             pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
             if (pl == null)
             {
-                // Debug.LogWarning("SkillButtonPresenter에서 Player 찾지 못함");
+                // Debug.LogWarning("SkillButtonPresenter : Player 찾지 못함");
                 return;
             }
             // plEquipSkillController = pl.ESController;
             // plEquipSkill = plEquipSkillController.EquipSkillList;
             skillMgr = GameManager.Instance.GetGameSystem<SkillManager>();
             plEquipSkill = skillMgr.PlayerEquipSkillList;
+            if (plEquipSkill == null) Debug.LogWarning("SkillButtonPresenter : plEquipSkill 없음");
             for (int i = 0; i < 6; i++)
             {
                 if (plEquipSkill[i] == null)
@@ -56,8 +57,14 @@ namespace UI.Skill_Set
                 }
                 tBtnView.ButtonEventSubscribe(() => SkillUseToMonster(index));
                 CooltimeCheckTask(index).Forget();
-                ActiveSkillSO skillData = plEquipSkill[index].Skill.ActiveSkillData;
-                tBtnView.SkillIconImageChange(skillData.skillIcon);
+
+                var targetEquipSkill = plEquipSkill[index];
+                if (targetEquipSkill.isEquipped && targetEquipSkill.Skill.ActiveSkillData is ActiveSkillSO skillData)
+                {// ActiveSkillSO skillData = plEquipSkill[index].Skill.ActiveSkillData;
+                    tBtnView.SkillIconImageChange(skillData.skillIcon);
+                }
+                else
+                    tBtnView.SkillIconImageUnset();
             }
             EquipSkillEventSet();
         }
@@ -65,7 +72,7 @@ namespace UI.Skill_Set
         public void OnDestroyFeat()
         {
             EquipSkillEventRemove();
-            foreach(SkillButtonView btnView in btnViewArr)
+            foreach (SkillButtonView btnView in btnViewArr)
             {
                 btnView.OnDestroyFeat();
             }
@@ -81,7 +88,7 @@ namespace UI.Skill_Set
                 }
                 CooltimeUpdate(index);
                 await UniTask.DelayFrame(10, PlayerLoopTiming.Update, ct);
-                
+
             }
         }
         void CooltimeUpdate(int index)
@@ -103,24 +110,29 @@ namespace UI.Skill_Set
         void BtnCooltimeEndEvent(int index) => btnViewArr[index].CooltimeEnd();
         void SkillIconSet(int slotIndex, ActiveSkill aSkill)
         {
+            Debug.Log($"{slotIndex}번 버튼에 {aSkill.SkillData.key}번 스킬 {aSkill.SkillData.skillName} 장착");
             btnViewArr[slotIndex].SkillIconImageChange(aSkill.ActiveSkillData.skillIcon);
         }
-        void SkillIconUnset(int index) => btnViewArr[index].SkillIconImageUnset();
+        void SkillIconUnset(int index)
+        {
+            Debug.Log($"{index}번 버튼 장착 해제");
+            btnViewArr[index].SkillIconImageUnset();
+        }
         int selectSkillNum = 0;
         void SkillSelect(int index)
         {
             SkillButtonView targetSkillBtnView = btnViewArr[index];
-            if(!targetSkillBtnView.IsSelected)
+            if (!targetSkillBtnView.IsSelected)
             {
                 btnViewArr[selectSkillNum].SkillUnset(borderArr[0]);
             }
-            selectSkillNum=index;
+            selectSkillNum = index;
             targetSkillBtnView.SkillSelect(borderArr[1]);
         }
         void SkillSelectCancel(int index)
         {
             SkillButtonView targetSkillBtnView = btnViewArr[index];
-            if(targetSkillBtnView.IsSelected)
+            if (targetSkillBtnView.IsSelected)
             {
                 targetSkillBtnView.SkillUnset(borderArr[0]);
             }
@@ -140,7 +152,7 @@ namespace UI.Skill_Set
             eventHub.OnSkillCoolEnd -= BtnCooltimeEndEvent;
 
             eventHub.OnSkillUnset -= SkillIconUnset;
-            
+
             eventHub.OnSkillEquipComplete -= SkillIconSet;
         }
 
