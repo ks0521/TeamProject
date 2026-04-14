@@ -1,7 +1,5 @@
-using Base.Managers;
-using Battle;
+
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +28,19 @@ namespace UI.ChapterStage_Set
             rewardText[slot].gameObject.SetActive(true);
             rewardImg[slot].sprite = icon;
             rewardText[slot].text = amount ?? exp;
+        }
+
+        public void SetData(Sprite icon, string text)
+        {
+            if (icon == null)
+            {
+                rewardImg[0].gameObject.SetActive(false);
+            }
+            else
+            {
+                rewardImg[0].sprite = icon;
+            }
+            rewardText[0].text = text;
         }
     }
 
