@@ -108,8 +108,8 @@ namespace UI.Scripts
         {
             if (popup == null || stageManager == null) return;
             if (!stageManager.TryGetChallengeData(out var data)) { Debug.Log("챌린지 데이터 못가져옴"); return; }
-            if (!popup.TryGetTimer(out var timer)) { Debug.Log("timerInstance 못가져옴"); return; }
-            if (!popup.TryGetMonster(out var kill)) { Debug.Log("monsterKillInstance 데이터 못가져옴"); return; }
+            if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.timer, out var timer)) { Debug.Log("timerInstance 못가져옴"); return; }
+            if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.monKill, out var kill)) { Debug.Log("monsterKillInstance 데이터 못가져옴"); return; }
 
             timer.SetTime(data.currentTime, data.maxTime);
             kill.UpdateKillText(data.currentKill, data.targetKill);
@@ -120,7 +120,7 @@ namespace UI.Scripts
         {
             if(popup == null || stageManager == null) return;
             if (!stageManager.TryGetChallengeData(out var data)) return;
-            if (!popup.TryGetMonster(out var kill)) return;
+            if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.monKill, out var kill)) return;
 
             kill.UpdateKillText(data.currentKill);
         }//몬스터 갱신용
@@ -128,8 +128,8 @@ namespace UI.Scripts
         {
             if (popup == null) return;
             if (!stageManager.TryGetChallengeData(out var data)) return;
-            if (!popup.TryGetBossHpBar(out var bossHp)) return;
-            if (!popup.TryGetTimer(out var timer)) return;
+            if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.Boss, out var bossHp)) return;
+            if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.timer, out var timer)) return;
 
             if (currentBoss != null)
             {
@@ -150,7 +150,7 @@ namespace UI.Scripts
         }//보스 생성될때 UI 세팅용
         private void OnBossHpChanged(float hp, float maxHp)
         {
-            if (!popup.TryGetBossHpBar(out var bossHp)) return;
+            if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.Boss, out var bossHp)) return;
             bossHp.SetBoss(hp);
         }//보스 Hp 갱신용
         void StartTimerRoutine()
@@ -182,7 +182,7 @@ namespace UI.Scripts
                     yield break;
                 }
 
-                if (!popup.TryGetTimer(out var timer))//UI 생성 체크
+                if (!popup.TryGetStagePopup(Popup.PopupSO.StagePopupType.timer, out var timer))//UI 생성 체크
                 {
                     yield return null;
                     continue;
