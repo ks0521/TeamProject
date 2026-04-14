@@ -17,11 +17,13 @@ public abstract class StageRule
     public int KillScore => killScore;
     protected ItemDropManager dropManager;
     protected EventHub eventHub;
+    protected RuntimeStatus runtimeStatus;
 
     public StageRule(StageSO stage)
     {
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+        runtimeStatus = GameManager.Instance.GetGameSystem<RuntimeStatus>();
         this.stage = stage;
     }
 
@@ -57,7 +59,7 @@ public class NormalStageRule : StageRule
     public void ItemDrop(Monster monster)
     {
         List<DropReward> items =
-            stage.dropTable.GetDroppedItems(RuntimeStatus.Instance.FinalRewardStatStatus.itemDropRate);
+            stage.dropTable.GetDroppedItems(runtimeStatus.FinalRewardStatStatus.itemDropRate);
         dropManager.GetExp(stage.dropTable.GetExp());
         foreach (var item in items)
         {
@@ -106,7 +108,7 @@ public class ChallengeStageRule : StageRule
         if (stage.rewardType == RewardType.ClearReward)
         {
             dropManager.GetRewards(stage.rewardTable.rewardList);
-            eventHub.GetClearRewards(stage.rewardTable.rewardList);
+            eventHub.GetClearRewards(stage.rewardTable.rewardList,$"{stage.chapter} - {stage.stage} 스테이지 클리어");
         }
         ChallengeSuccess?.Invoke();
     }
