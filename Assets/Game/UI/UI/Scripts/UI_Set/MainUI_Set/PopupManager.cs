@@ -4,6 +4,7 @@ using Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UI.ChapterStage_Set;
 using UI.Popup;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,11 @@ using static UI.Popup.PopupSO;
 
 namespace UI.Scripts
 {
+    public enum ExplanationPopup
+    {
+
+    }
+
     public class PopupManager : MonoBehaviour, IManager
     {
         public static PopupManager instance;
@@ -28,20 +34,6 @@ namespace UI.Scripts
 
         [Header("프래핍 생성 위치")]
         [SerializeField] private Transform canvas;
-
-
-        [Header("이벤트 팝업 프리팹")]
-        [SerializeField] private GameObject clearPrefab;
-        [SerializeField] private GameObject failPrefab;
-        [SerializeField] private GameObject deadPrefab;
-        [SerializeField] private ClearReward clearRewardPrefab;
-
-        [Header("챌린지 팝업 프리팹")]
-        [SerializeField] SetViewer timer;
-        [SerializeField] SetViewer monsterKill;
-
-        [Header("보스 체력 프리팹")]
-        [SerializeField] SetViewer BossHp;
 
         [Header("팝업 버튼")]
         [SerializeField] private Button abilityBtn;
@@ -74,7 +66,7 @@ namespace UI.Scripts
             {
                 if (popupStack.Count == 0)
                 {
-                    OpenPopup(PopupType.End);
+                    OpenPopup(PopupType.end);
                 }
                 else
                 {
@@ -99,8 +91,6 @@ namespace UI.Scripts
             hub.OnDeadPlayer += PlayerDeadEventChain;
             hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
             //hub.SkillAutoToggleInput += autoBtn.SetAutoBattle;
-
-            Debug.Log(timer);
         }
 
         public int GetOrder() => 201;
@@ -177,7 +167,6 @@ namespace UI.Scripts
             popup.transform.SetAsLastSibling();
             popupStack.Push(popup);
             openPopupDic[type] = popup;
-
             ClosePopup(popup);
         }
 
@@ -226,6 +215,37 @@ namespace UI.Scripts
             popup.transform.SetAsLastSibling();
             openStagePopupDic[type] = popup;
         }
+
+        public void InfoPopup(Sprite icon, string text)
+        {
+            PopupType type = PopupType.info;
+
+            if (!popupDic.TryGetValue(type, out var prefab))
+            {
+                Debug.Log("Info 팝업 없음");
+                return;
+            }
+
+            if (openPopupDic.TryGetValue(type, out var open))
+            {
+                if (open != null)
+                {
+                    var view = open.GetComponent<Reward_Set>();
+                    view.SetData(icon, text);
+                    return;
+                }
+                openPopupDic.Remove(type);
+            }
+
+            GameObject popup = Instantiate(prefab, canvas);
+            popup.transform.SetAsLastSibling();
+            var popupView = popup.GetComponent<Reward_Set>();
+            popupView.SetData(icon, text);
+            popupStack.Push(popup);
+            openPopupDic[type] = popup;
+
+            ClosePopup(popup);
+        }//아이템,몬스터 등등 설명창(미완성)
         void CloseLastPopup()
         {
             if (popupStack.Count == 0)
