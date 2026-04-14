@@ -73,6 +73,8 @@ namespace UI.Skill_Set
         }
         void OnDestroy()
         {
+            hub.OnSkillLevelChange -= SkillLevelUpdate;
+            Debug.Log("DestroyFeat");
             OnDestroyFeat();
         }
         public void OnDestroyFeat()

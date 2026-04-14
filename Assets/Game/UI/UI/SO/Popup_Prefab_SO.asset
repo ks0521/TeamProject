@@ -45,7 +45,7 @@ MonoBehaviour:
     popupPrefab: {fileID: 966986213065669838, guid: 09d17db730f545e4eb4850adfd460bde,
       type: 3}
   - eventPopupType: 3
-    popupPrefab: {fileID: 6973499155796312968, guid: bc14bea11ef830d498aca4cb4f571f6b,
+    popupPrefab: {fileID: 9222099467499341466, guid: 3431f5c1d99c863458bbfb0a0d3112f5,
       type: 3}
   stagePopupList:
   - stagePopupType: 0

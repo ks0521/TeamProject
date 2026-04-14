@@ -39,7 +39,10 @@ public class ClearReward : MonoBehaviour
         for (int i = 0; i < rewards.Count; i++)
         {
             var reward = rewards[i];
-
+            if (reward.amount == 0)
+            {
+                Debug.LogWarning($"{i} 번째 보상이 0 입니다?");
+            }
             switch (reward.rewardType)
             {
                 case DropRewardType.Currency:
@@ -68,7 +71,10 @@ public class ClearReward : MonoBehaviour
         if (slot < rewardText.Length && rewardText[slot] != null)
         {
             rewardText[slot].text = valueText;
-            Debug.LogError(rewardText[slot].text);
+            if (rewardText[slot].text == null)
+            {
+                Debug.LogError(rewardText[slot].text);
+            }
         }
 
         slot++;

@@ -4,14 +4,8 @@ using Battle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UI.Ability_Set;
-using UI.ChapterStage_Set;
-using UI.Equipment;
 using UI.Popup;
-using UI.Scripts;
 using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 using static UI.Popup.PopupSO;
 
@@ -22,11 +16,11 @@ namespace UI.Scripts
         public static PopupManager instance;
 
         [Header("팝업 프리팹 SO")]
-        [SerializeField] private PopupSO popupSO;   
+        [SerializeField] private PopupSO popupSO;
         Dictionary<PopupType, GameObject> popupDic = new();
         Dictionary<PopupType, GameObject> openPopupDic = new();
 
-        Dictionary<EventPopupType , GameObject> eventPopupDic = new();
+        Dictionary<EventPopupType, GameObject> eventPopupDic = new();
         Dictionary<EventPopupType, GameObject> openEventPopupDic = new();
 
         Dictionary<StagePopupType, GameObject> stagePopupDic = new();
@@ -63,18 +57,6 @@ namespace UI.Scripts
         public Stack<GameObject> PopupStack => popupStack;
         private StageManager stagemanager;
 
-        
-
-        private GameObject clearInstance;
-        private GameObject failInstance;
-        private GameObject deadInstance;
-
-        private SetViewer timerInstance;
-        private SetViewer monsterKillInstance;
-        private SetViewer bossHpInstance;
-        private ClearReward clearRewardInstance;
-
-
         private void Awake()
         {
             if (instance == null)
@@ -99,7 +81,7 @@ namespace UI.Scripts
                     CloseLastPopup();
                 }
             }
-            
+
         }
 
         public void Init()
@@ -115,9 +97,9 @@ namespace UI.Scripts
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
-            //hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
+            hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
+            //hub.SkillAutoToggleInput += autoBtn.SetAutoBattle;
 
-            
             Debug.Log(timer);
         }
 
@@ -133,22 +115,12 @@ namespace UI.Scripts
             settingBtn.onClick.RemoveAllListeners();
             shopBtn.onClick.RemoveAllListeners();
 
-            /*abilityBtn.onClick.AddListener(OpenAbilityPopup);
-            chapterBtn.onClick.AddListener(OpenChapterPopup);
-            skillBtn.onClick.AddListener(OpenSkillPopup);
-            equipmentBtn.onClick.AddListener(OpenEquipmentPopup);
-            dungeonBtn.onClick.AddListener(OpenDungeonPopup);
-            settingBtn.onClick.AddListener(OpenSettingPopup);
-            shopBtn.onClick.AddListener(OpenShopPopup); */ // 이것들은 지울 예정
-
             abilityBtn.onClick.AddListener(() => OpenPopup(PopupType.ability));
             equipmentBtn.onClick.AddListener(() => OpenPopup(PopupType.equipment));
             skillBtn.onClick.AddListener(() => OpenPopup(PopupType.skill));
             chapterBtn.onClick.AddListener(() => OpenPopup(PopupType.stage));
             shopBtn.onClick.AddListener(() => OpenPopup(PopupType.shop));
             settingBtn.onClick.AddListener(() => OpenPopup(PopupType.setting));
-
-
         }//버튼에 함수 넣기
 
 
@@ -156,7 +128,7 @@ namespace UI.Scripts
         {
             if (popupSO == null) return;
             if (popupSO.popupList == null) return;
- 
+
             for (int i = 0; i < popupSO.popupList.Count; i++)
             {
                 var data = popupSO.popupList[i];
@@ -173,27 +145,27 @@ namespace UI.Scripts
                 if (data == null) continue;
                 if (eventPopupDic.ContainsKey(data.eventPopupType)) continue;
 
-                eventPopupDic.Add(data.eventPopupType, data.popupPrefab);  
+                eventPopupDic.Add(data.eventPopupType, data.popupPrefab);
             }
             for (int i = 0; i < popupSO.stagePopupList.Count; i++)
             {
                 var data = popupSO.stagePopupList[i];
 
                 if (data == null) continue;
-                if(stagePopupDic.ContainsKey(data.stagePopupType)) continue;
+                if (stagePopupDic.ContainsKey(data.stagePopupType)) continue;
 
                 stagePopupDic.Add(data.stagePopupType, data.popupPrefab);
             }
         }//작업중...
         private void OpenPopup(PopupType type)
         {
-            if (!popupDic.TryGetValue(type , out var prefab))
+            if (!popupDic.TryGetValue(type, out var prefab))
             {
                 Debug.Log($"팝업 없음 : {type}");
                 return;
             }
 
-            if (openPopupDic.TryGetValue(type , out var open))
+            if (openPopupDic.TryGetValue(type, out var open))
             {
                 if (open != null)
                 {
@@ -201,7 +173,7 @@ namespace UI.Scripts
                 }
                 openPopupDic.Remove(type);
             }//중복생성 방지
-            GameObject popup = Instantiate(prefab , canvas);
+            GameObject popup = Instantiate(prefab, canvas);
             popup.transform.SetAsLastSibling();
             popupStack.Push(popup);
             openPopupDic[type] = popup;
@@ -209,7 +181,7 @@ namespace UI.Scripts
             ClosePopup(popup);
         }
 
-        private void OpenEventPopup(EventPopupType type)
+        public void OpenEventPopup(EventPopupType type)
         {
             if (!eventPopupDic.TryGetValue(type, out var prefab))
             {
@@ -217,19 +189,42 @@ namespace UI.Scripts
                 return;
             }
 
-            if (openEventPopupDic.TryGetValue(type , out var open))
+            if (openEventPopupDic.TryGetValue(type, out var open))
             {
-                if(open != null)
+                if (open != null)
                 {
                     return;
                 }
                 openEventPopupDic.Remove(type);
             }
 
-            GameObject popup = Instantiate(prefab , canvas);
+            GameObject popup = Instantiate(prefab, canvas);
             popup.transform.SetAsLastSibling();
+            openEventPopupDic[type] = popup;
 
+            if (type == EventPopupType.clearReward)return;
+            
+            StartCoroutine(FadeOutPopup(popup , 4f));
+        }
 
+        public void OpenStagePopup(StagePopupType type)
+        {
+            if (!stagePopupDic.TryGetValue(type, out var prefab))
+            {
+                Debug.Log($"팝업 없음 : {type}");
+                return;
+            }
+            if (openStagePopupDic.TryGetValue(type, out var open))
+            {
+                if (open != null)
+                {
+                    return;
+                }
+                openStagePopupDic.Remove(type);
+            }
+            GameObject popup = Instantiate(prefab, canvas);
+            popup.transform.SetAsLastSibling();
+            openStagePopupDic[type] = popup;
         }
         void CloseLastPopup()
         {
@@ -239,12 +234,12 @@ namespace UI.Scripts
             }
 
             GameObject lastPop = popupStack.Pop();
-            RemovePopupDic(lastPop);
+            RemovePopupDic(lastPop, openPopupDic);
+            RemovePopupDic(lastPop, openEventPopupDic);
+            RemovePopupDic(lastPop, openStagePopupDic);
             Destroy(lastPop);
 
         }
-
-
 
 
         void PlayerDeadEventChain(Character character)
@@ -252,25 +247,27 @@ namespace UI.Scripts
             if (stagemanager.CurrentStageSo == null) return;
             if (stagemanager.CurrentStageSo.stageType != StageType.Normal) return;
 
-            OpenDeadPopup();
-
+            OpenEventPopup(EventPopupType.dead);
             Debug.Log("플레이어 사망. 페이드 아웃 시작");
         }//이벤트 연결용
         void ClearEventChain(StageSO stage)
         {
-            OpenClearPopup();
-            CloseTimer();
-            CloseMonsterKill();
-            CloseBossUI();
+            OpenEventPopup(EventPopupType.clear);
+
+            CloseStagePopup(StagePopupType.timer);
+            CloseStagePopup(StagePopupType.monKill);
+            CloseStagePopup(StagePopupType.Boss);
         }
         void FailEventChain(StageSO stage)
         {
-            OpenFailPopup();
-            CloseTimer();
-            CloseMonsterKill();
+            OpenEventPopup(EventPopupType.fail);
+
+            CloseStagePopup(StagePopupType.timer);
+            CloseStagePopup(StagePopupType.monKill);
+            CloseStagePopup(StagePopupType.Boss);
         }
 
- 
+
         IEnumerator FadeOutPopup(GameObject popup, float time)
         {
             CanvasGroup popupCan = popup.GetComponent<CanvasGroup>();
@@ -293,121 +290,55 @@ namespace UI.Scripts
                 popupCan.alpha = Mathf.Lerp(1f, 0f, endTime / time);
                 yield return null;
             }
-            if (popup == clearInstance) clearInstance = null;
-            if (popup == failInstance) failInstance = null;
-            if (popup == deadInstance) deadInstance = null;
 
+            RemovePopupDic(popup, openEventPopupDic);
             Destroy(popup);
+
+
         }//클리어 , 실패 팝업 점점 사라지게 하는 코루틴
-
-
-
-        private void OpenClearPopup()
+        public void OpenClearRewardPopup(List<DropReward> rewardList, string titleText)
         {
-            if (clearInstance != null) return;
-            if (clearPrefab == null) return;
+            OpenEventPopup(EventPopupType.clearReward);
 
-            clearInstance = Instantiate(clearPrefab, canvas);
-            StartCoroutine(FadeOutPopup(clearInstance, 4f));
-        }
-        private void OpenFailPopup()
-        {
-            if (failInstance != null) return;
-            if (failPrefab == null) return;
-
-            failInstance = Instantiate(failPrefab, canvas);
-            StartCoroutine(FadeOutPopup(failInstance, 4f));
-        }
-        private void OpenDeadPopup()
-        {
-            if (deadInstance != null) return;
-            if (deadPrefab == null) return;
-
-            deadInstance = Instantiate(deadPrefab, canvas);
-            StartCoroutine(FadeOutPopup(deadInstance, 3f));
-        }
-        public void OpenClearRewardPopup(List<DropReward> rewardList , string titleText)
-        {
-            if (clearRewardInstance != null) return;
-            if (clearRewardPrefab == null) return;
-            Debug.Log("보상 함수 실행");
-            clearRewardInstance = Instantiate(clearRewardPrefab, canvas);
-            clearRewardInstance.SetReward(rewardList , titleText);
-            ClosePopup(clearRewardInstance.gameObject);
-        }
-
-
-        public void OpenMonsterKill()
-        {
-            if (monsterKill != null && monsterKillInstance == null)
+            if (!TryGetEventPopup(EventPopupType.clearReward, out var popup))
             {
-                Debug.Log("몬스터 킬 생성");
-                monsterKillInstance = Instantiate(monsterKill, canvas);
+                Debug.Log("클리어 보상 팝업을 못 찾음");
+                return;
             }
-
+            popup.SetReward(rewardList, titleText);
+            ClosePopup(popup.gameObject);
         }
-        public void OpenTimer()
-        {
-            if (timer != null && timerInstance == null)
-            {
-                Debug.Log("타이머 생성");
-                timerInstance = Instantiate(timer, canvas);
-            }
-        }
-        public void OpenBossUI()
-        {
-            if (BossHp != null && bossHpInstance == null)
-            {
-                bossHpInstance = Instantiate(BossHp , canvas);
-            }
-        }
-
 
         public void ClosePopup(GameObject gameObject)
         {
-            Transform transform = gameObject.transform.Find("Close_Button");
+            Close_Button_Set closeBtn = gameObject.GetComponentInChildren<Close_Button_Set>();
 
-            if (transform != null)
+            if (closeBtn != null)
             {
-                Button button = transform.GetComponent<Button>();
-                button.onClick.RemoveAllListeners();//중복 방지용
-                button.onClick.AddListener(() =>
+                Action[] actions =
                 {
-                    RemovePopupFromStack(gameObject);
-                    RemovePopupDic(gameObject);
-                    Destroy(gameObject);
-                });
+                    ()=> RemovePopupFromStack(gameObject),
+                    ()=> RemovePopupDic(gameObject, openPopupDic),
+                    ()=> RemovePopupDic(gameObject, openEventPopupDic),
+                    ()=> RemovePopupDic(gameObject, openStagePopupDic),
+                    ()=> Destroy(gameObject)
+                };
+
+                closeBtn.BindButton(actions);
             }
-            
+        }
+        public void CloseStagePopup(StagePopupType type)
+        {
+            if (!openStagePopupDic.TryGetValue(type, out var open)) return;
+
+            if (open != null)
+            {
+                Destroy(open);
+            }
+            openStagePopupDic.Remove(type);
         }
 
-        public void CloseTimer()
-        {
-            if (timerInstance != null)
-            {
-                Destroy(timerInstance.gameObject);
-                timerInstance = null;
-            }
-        }
-        public void CloseMonsterKill()
-        {
-            if (monsterKillInstance != null)
-            {
-                Destroy(monsterKillInstance.gameObject);
-                monsterKillInstance = null;
-            }
-        }
-        public void CloseBossUI()
-        {
-            if (bossHpInstance != null)
-            {
-                Destroy(bossHpInstance.gameObject);
-                bossHpInstance = null;
-            }
-        }
-
-        
-        private void RemovePopupFromStack(GameObject target) 
+        private void RemovePopupFromStack(GameObject target)
         {
             if (target == null || popupStack.Count == 0) return;
 
@@ -428,14 +359,14 @@ namespace UI.Scripts
             }
 
         }//ClosePopup 으로 닫는 팝업을 popupstack 에서 제거용 + popupstack 정렬용
-        private void RemovePopupDic(GameObject target)
+        private void RemovePopupDic<T>(GameObject target, Dictionary<T, GameObject> popupDic)
         {
             if (target == null) return;
 
-            PopupType removeType = default;
+            T removeType = default;
             bool found = false;
 
-            foreach (var popup in openPopupDic)
+            foreach (var popup in popupDic)
             {
                 if (popup.Value == target)
                 {
@@ -447,25 +378,38 @@ namespace UI.Scripts
 
             if (found)
             {
-                openPopupDic.Remove(removeType);
+                popupDic.Remove(removeType);
             }
-        }
+        } //open 딕셔너리 관리용(버튼용)
 
+        public bool TryGetEventPopup(EventPopupType type, out ClearReward prefab)
+        {
+            prefab = null;
 
-        public  bool TryGetTimer(out SetViewer timer)
-        {
-            timer = timerInstance;
-            return timer != null;
+            if(!openEventPopupDic.TryGetValue(type, out var open)) return false;
+
+            if(open == null)
+            {
+                openEventPopupDic.Remove(type);
+                return false;
+            }
+            prefab = open.GetComponent<ClearReward>();
+            return true;
         }
-        public bool TryGetMonster(out SetViewer kill)
+        public bool TryGetStagePopup(StagePopupType type, out SetViewer viewer)
         {
-            kill = monsterKillInstance;
-            return kill != null;
-        }
-        public bool TryGetBossHpBar(out SetViewer bossHp)
-        {
-            bossHp = bossHpInstance;
-            return bossHp != null;
+            viewer = null; 
+
+            if(!openStagePopupDic.TryGetValue(type, out var open)) return false;
+
+            if(open == null)
+            {
+                openStagePopupDic.Remove(type);
+                return false;
+            }
+
+            viewer = open.GetComponent<SetViewer>();
+            return true;
         }
     }
 
