@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SO_Equipment_Accessory
+  m_EditorClassIdentifier: 
+  m_GroupName: SO_Equipment_Accessory
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 2ecaa1928dbed024b8bee16d2caaadc0
+  m_SerializeEntries:
+  - m_GUID: 0f86d04980207fd498e2bd9ed39c4c29
+    m_Address: Accessory_3305_UnCommon_Middle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17bf6ba4fa4e057459ff32b0a690568b
+    m_Address: Accessory_3300_Common_Low
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 191323efb173a6e49959503a43b92103
+    m_Address: Accessory_3312_Unique_Low
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 464fd3c7130fd6a4585318df653bc368
+    m_Address: Accessory_3310_Rare_High
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4c70f1c5a8906de41ac6d8c0571e5d6e
+    m_Address: Accessory_3301_Common_Middle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4de31bd159440f14d8eb62971784acbe
+    m_Address: Accessory_3314_Unique_High
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ecda9be698502d4f81b4edb2ff8d114
+    m_Address: Accessory_3309_Rare_Middle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5209b29c1d698154e8c44b328504b705
+    m_Address: Accessory_3304_UnCommon_Low
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e24f96c82561e04b9c177ef1243929e
+    m_Address: Accessory_3307_UnCommon_Best
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6267a299cf5b6bf46b065d5f9df76bbe
+    m_Address: Accessory_3306_UnCommon_High
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65752d26d81dfb74397a02e7b3b1d95c
+    m_Address: Accessory_3303_Common_Best
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9328a4f7a65305b40a73833e796b57bb
+    m_Address: Accessory_3302_Common_High
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a9d6ffa4d61e4204db1fceea2a6c2c92
+    m_Address: Accessory_3313_Unique_Middle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cf410833a4df8c141ac8539fdd577955
+    m_Address: Accessory_3308_Rare_Low
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db810e28cedf80f4c8e6dbced0ef9d3b
+    m_Address: Accessory_3311_Rare_Best
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f056d1212a1007a4eb053be7cc2d95cf
+    m_Address: Accessory_3315_Unique_Best
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Equipment
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 2db874af9c2711946b3a221dcbda718d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f81e066730ea1c246b304ddd0f9233a2, type: 2}
+    - {fileID: 11400000, guid: 705beba82101cc84b8e352434661c236, type: 2}
