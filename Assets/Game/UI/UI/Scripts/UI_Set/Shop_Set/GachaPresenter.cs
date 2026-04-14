@@ -21,7 +21,7 @@ public class GachaPresenter : MonoBehaviour
 
     [Header("가챠 결과 화면")]
     [SerializeField] private GameObject gachaPanel;
-    
+
     private GachaManager gachaManager;
     private ProgressManager progressManager;
     private PopupManager popupManager;
@@ -53,7 +53,7 @@ public class GachaPresenter : MonoBehaviour
         hub.OnCurrencyChange -= EventChain;
     }
 
-    private void EventChain(CurrencyType type , int fake)
+    private void EventChain(CurrencyType type, int fake)
     {
         RefreshShopUI();
         RefreshGoldUI();
@@ -74,16 +74,18 @@ public class GachaPresenter : MonoBehaviour
     }//View 에 버튼 넣어주기
     private void OnClickTable(EquipType type)
     {
+        if (tableInstance != null) return;
         currentTableEquipType = type;
         currentTableLevel = gachaManager.GetGachaLevel(type);
-        tableInstance = Instantiate(problemTable.gameObject, transform);
+        
 
+        tableInstance = Instantiate(problemTable.gameObject, transform);
         ProbabilityTable tableUI = tableInstance.GetComponent<ProbabilityTable>();
         tableUI.BindButtons(OnClickNextTableLevel, OnClickPrevTableLevel);
 
         RefreshProbabilityTable();
 
-        popupManager.PushPopup(tableInstance);
+        popupManager.PopupStack.Push(tableInstance);
     }//버튼에 넣을 함수(확률표 열기)
     private void OnClickDraw(EquipType type, GachaDrawType drawType)
     {
@@ -94,12 +96,12 @@ public class GachaPresenter : MonoBehaviour
 
         if (results != null && results.Count > 0)
         {
-            GameObject prefab = Instantiate(gachaPanel.gameObject , transform);
+            GameObject prefab = Instantiate(gachaPanel.gameObject, transform);
 
             gachaResultInstance = prefab.GetComponent<GachaResult>();
             gachaResultInstance.Show(results);
 
-            popupManager.PushPopup(gachaResultInstance.gameObject);
+            popupManager.PopupStack.Push(gachaResultInstance.gameObject);
             popupManager.ClosePopup(gachaResultInstance.gameObject);
             gachaResultInstance.BindButton(OnClickRetry);
         }
@@ -134,7 +136,7 @@ public class GachaPresenter : MonoBehaviour
             view.SetButtonStates(canOne, canTen, canHundred);
         }
     }//상점 UI 갱신
-   
+
     private void OnClickRetry()
     {
         if (gachaManager == null) return;

@@ -9,27 +9,33 @@ namespace QuestSystem
     public class QuestDatabaseSO : ScriptableObject
     {
         public List<QuestDataReader> allQuests = new List<QuestDataReader>();
-        private Dictionary<int, QuestDataReader> _questDic = new Dictionary<int, QuestDataReader>();
+        private Dictionary<int, QuestDataReader> questDic;
 
-        public void LoadFromJson(string jsonText)
+        //퀘스트 딕셔너리 초기화
+        void InitQuestDictionary()
         {
-            QuestDataWrapper wrapper = JsonUtility.FromJson<QuestDataWrapper>(jsonText);
-            allQuests = wrapper.quests;
-            _questDic.Clear();
-            foreach (var entry in wrapper.quests)
+            if (questDic != null && questDic.Count == allQuests.Count) return;
+
+            questDic = new Dictionary<int, QuestDataReader>();
+            foreach(var quest in allQuests)
             {
-                if (!_questDic.ContainsKey(entry.questID))
-                    _questDic.Add(entry.questID, entry);
+                if(quest != null && !questDic.ContainsKey(quest.questID))
+                {
+                    questDic.Add(quest.questID, quest);
+                }
             }
-            Debug.Log($"[QuestDatabase] {allQuests.Count}개의 퀘스트 로드 완료.");
         }
 
-        public List<QuestDataReader> GetAllQuests() => _questDic.Values.ToList();
+        public List<QuestDataReader> GetAllQuests() => allQuests;
 
         public QuestDataReader GetQuestByID(int id)
         {
-            _questDic.TryGetValue(id, out var quest);
-            return quest;
+            InitQuestDictionary();
+
+            if (questDic.TryGetValue(id, out var quest)) return quest;
+
+            Debug.LogWarning($"[QuestDatabase] ID {id}번에 해당하는 퀘스트를 찾을 수 없습니다.");
+            return null;
         }
     }
 }

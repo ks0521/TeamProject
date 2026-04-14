@@ -2,6 +2,7 @@ using Base.Data;
 using Base.Manager;
 using Base.Managers;
 using Base.Save;
+using Battle;
 using Growth.Equipment;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,13 +11,16 @@ public class Test : MonoBehaviour, IManager
 {
     // Update is called once per frame
     [SerializeField]private SaveProgressData saveProgressData;
-    [SerializeField] private RuntimeProgressData runProgressData;
-    [SerializeField] private RuntimeStatus runStat;
+    [SerializeField]private RuntimeStatus runStat;
     [SerializeField] private StatusCalculator calc;
-    [SerializeField] private EquipmentManager equip;
-    [SerializeField] private EquipmentDictionarySO dic;
-    [SerializeField] private ItemDropManager dropManager;
-    [SerializeField] private EventHub hub;
+    [SerializeField] private List<DropReward> rewards;
+    
+    private RuntimeProgressData runProgressData;
+    private EquipmentManager equip;
+    private GameDataProvider dic;
+    private ItemDropManager dropManager;
+    private EventHub hub;
+    
     private void Start()
     {
         Debug.Log("1. 현재 가지고 있는 아이템 출력 / 2. 모든 아이템 획득 / 3. 현재 가지고 있는 모든 아이템 제거");
@@ -33,7 +37,7 @@ public class Test : MonoBehaviour, IManager
         if (Input.GetKeyDown(KeyCode.F2))
         {
             Debug.Log("모든 아이템 획득");
-            foreach (var VARIABLE in dic.allEquipments)
+            foreach (var VARIABLE in dic.equipmentTable.allEquipments)
             {
                 dropManager.GetReward(new DropReward(){amount = 1, itemSO = VARIABLE, rewardType = DropRewardType.Item});
             }
@@ -45,7 +49,14 @@ public class Test : MonoBehaviour, IManager
             runProgressData.equipmentInventory.equipmentEntries = new Dictionary<int, EquipmentEntryState>() ;
             PrintAllItems();
         }
-
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            Debug.Log("20분 보상");
+            OfflineRewardManager reward = GameManager.Instance.GetGameSystem<OfflineRewardManager>();
+            reward.AutoClearReward(1200);
+            //PrintAllItems();
+        }
+        
         if (Input.GetKeyDown(KeyCode.Q))
         {
             dropManager.GetReward
@@ -75,7 +86,7 @@ public class Test : MonoBehaviour, IManager
     {
         equip = GameManager.Instance.GetGameSystem<EquipmentManager>();
         runProgressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
-        dic = GameManager.Instance.GetGameSystem<GameDataProvider>().equipmentTable;
+        dic = GameManager.Instance.GetGameSystem<GameDataProvider>();
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         hub = GameManager.Instance.GetGameSystem<EventHub>();
     }

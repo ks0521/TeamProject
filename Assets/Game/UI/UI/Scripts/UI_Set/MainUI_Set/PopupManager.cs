@@ -10,7 +10,10 @@ using UI.Equipment;
 using UI.Popup;
 using UI.Scripts;
 using UnityEngine;
+using UnityEngine.Analytics;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static UI.Popup.PopupSO;
 
 namespace UI.Scripts
 {
@@ -20,39 +23,18 @@ namespace UI.Scripts
 
         [Header("팝업 프리팹 SO")]
         [SerializeField] private PopupSO popupSO;   
-        Dictionary<PopupSO.popupType, GameObject> popupDic = new();
+        Dictionary<PopupType, GameObject> popupDic = new();
+        Dictionary<PopupType, GameObject> openPopupDic = new();
 
-        private void InitPopupDIc()
-        {
-            if (popupSO != null) return;
-            if (popupSO.PopupList == null) return;
+        Dictionary<EventPopupType , GameObject> eventPopupDic = new();
+        Dictionary<EventPopupType, GameObject> openEventPopupDic = new();
 
-            for (int i = 0; i < popupSO.PopupList.Count; i++)
-            {
-                var data = popupSO.PopupList[i];
-
-                if (data == null) return;
-
-                if (popupDic.ContainsKey(data.popupType)) continue;
-                popupDic.Add(data.popupType, data.popupPrefab);
-            }
-        }//작업중...
-
+        Dictionary<StagePopupType, GameObject> stagePopupDic = new();
+        Dictionary<StagePopupType, GameObject> openStagePopupDic = new();
 
         [Header("프래핍 생성 위치")]
         [SerializeField] private Transform canvas;
 
-        [Header("팝업 프리팹")]
-        [SerializeField] private GameObject abilityPrefab;
-        [SerializeField] private GameObject chapterPrefab;
-        [SerializeField] private GameObject equipmentPrefab;
-        [SerializeField] private GameObject skillPrefab;
-        [SerializeField] private GameObject shopPrefab;
-        [SerializeField] private GameObject settingPrefab;
-        [SerializeField] private GameObject gameEndPrefab;
-
-        [Space(10)]
-        [SerializeField] private GameObject dungeonPrefab;
 
         [Header("이벤트 팝업 프리팹")]
         [SerializeField] private GameObject clearPrefab;
@@ -78,16 +60,10 @@ namespace UI.Scripts
 
         private EventHub hub;
         private Stack<GameObject> popupStack = new();
+        public Stack<GameObject> PopupStack => popupStack;
         private StageManager stagemanager;
 
-        private Ability abilityInstance;
-        private AllChapter_Set chapterInstance;
-        private EquipmentPresenter equipmentInstance;
-        private GameObject skillInstance;
-        private GameObject dungeonInstance;
-        private GameObject settingInstance;
-        private GameObject shopInstance;
-        private GameObject gameEndInstance;
+        
 
         private GameObject clearInstance;
         private GameObject failInstance;
@@ -116,7 +92,7 @@ namespace UI.Scripts
             {
                 if (popupStack.Count == 0)
                 {
-                    OpenGameEndPopup();
+                    OpenPopup(PopupType.End);
                 }
                 else
                 {
@@ -131,6 +107,7 @@ namespace UI.Scripts
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stagemanager = GameManager.Instance.GetGameSystem<StageManager>(); //사망팝업과 스테이지 실패팝업 동시에 뜨는것 방지용
 
+            InitPopupDic(); //테스트중
 
             BindAllButton();
             popupStack.Clear();
@@ -138,7 +115,7 @@ namespace UI.Scripts
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
-            hub.OnGetClearRewards += OpenClearRewardPopup;
+            hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
 
             
             Debug.Log(timer);
@@ -156,14 +133,118 @@ namespace UI.Scripts
             settingBtn.onClick.RemoveAllListeners();
             shopBtn.onClick.RemoveAllListeners();
 
-            abilityBtn.onClick.AddListener(OpenAbilityPopup);
+            /*abilityBtn.onClick.AddListener(OpenAbilityPopup);
             chapterBtn.onClick.AddListener(OpenChapterPopup);
             skillBtn.onClick.AddListener(OpenSkillPopup);
             equipmentBtn.onClick.AddListener(OpenEquipmentPopup);
             dungeonBtn.onClick.AddListener(OpenDungeonPopup);
             settingBtn.onClick.AddListener(OpenSettingPopup);
-            shopBtn.onClick.AddListener(OpenShopPopup);
+            shopBtn.onClick.AddListener(OpenShopPopup); */ // 이것들은 지울 예정
+
+            abilityBtn.onClick.AddListener(() => OpenPopup(PopupType.ability));
+            equipmentBtn.onClick.AddListener(() => OpenPopup(PopupType.equipment));
+            skillBtn.onClick.AddListener(() => OpenPopup(PopupType.skill));
+            chapterBtn.onClick.AddListener(() => OpenPopup(PopupType.stage));
+            shopBtn.onClick.AddListener(() => OpenPopup(PopupType.shop));
+            settingBtn.onClick.AddListener(() => OpenPopup(PopupType.setting));
+
+
         }//버튼에 함수 넣기
+
+
+        private void InitPopupDic()
+        {
+            if (popupSO == null) return;
+            if (popupSO.popupList == null) return;
+ 
+            for (int i = 0; i < popupSO.popupList.Count; i++)
+            {
+                var data = popupSO.popupList[i];
+
+                if (data == null) continue;
+                if (popupDic.ContainsKey(data.popupType)) continue;
+
+                popupDic.Add(data.popupType, data.popupPrefab);
+            }
+            for (int i = 0; i < popupSO.eventPopupList.Count; i++)
+            {
+                var data = popupSO.eventPopupList[i];
+
+                if (data == null) continue;
+                if (eventPopupDic.ContainsKey(data.eventPopupType)) continue;
+
+                eventPopupDic.Add(data.eventPopupType, data.popupPrefab);  
+            }
+            for (int i = 0; i < popupSO.stagePopupList.Count; i++)
+            {
+                var data = popupSO.stagePopupList[i];
+
+                if (data == null) continue;
+                if(stagePopupDic.ContainsKey(data.stagePopupType)) continue;
+
+                stagePopupDic.Add(data.stagePopupType, data.popupPrefab);
+            }
+        }//작업중...
+        private void OpenPopup(PopupType type)
+        {
+            if (!popupDic.TryGetValue(type , out var prefab))
+            {
+                Debug.Log($"팝업 없음 : {type}");
+                return;
+            }
+
+            if (openPopupDic.TryGetValue(type , out var open))
+            {
+                if (open != null)
+                {
+                    return;
+                }
+                openPopupDic.Remove(type);
+            }//중복생성 방지
+            GameObject popup = Instantiate(prefab , canvas);
+            popup.transform.SetAsLastSibling();
+            popupStack.Push(popup);
+            openPopupDic[type] = popup;
+
+            ClosePopup(popup);
+        }
+
+        private void OpenEventPopup(EventPopupType type)
+        {
+            if (!eventPopupDic.TryGetValue(type, out var prefab))
+            {
+                Debug.Log($"팝업 없음 : {type}");
+                return;
+            }
+
+            if (openEventPopupDic.TryGetValue(type , out var open))
+            {
+                if(open != null)
+                {
+                    return;
+                }
+                openEventPopupDic.Remove(type);
+            }
+
+            GameObject popup = Instantiate(prefab , canvas);
+            popup.transform.SetAsLastSibling();
+
+
+        }
+        void CloseLastPopup()
+        {
+            if (popupStack.Count == 0)
+            {
+                return;
+            }
+
+            GameObject lastPop = popupStack.Pop();
+            RemovePopupDic(lastPop);
+            Destroy(lastPop);
+
+        }
+
+
 
 
         void PlayerDeadEventChain(Character character)
@@ -219,166 +300,6 @@ namespace UI.Scripts
             Destroy(popup);
         }//클리어 , 실패 팝업 점점 사라지게 하는 코루틴
 
-        void CloseLastPopup()
-        {
-            if (popupStack.Count == 0)
-            {
-                return;
-            }
-
-            GameObject lastPop = popupStack.Pop();
-
-            if (abilityInstance != null && lastPop == abilityInstance.gameObject)
-            {
-                Destroy(abilityInstance.gameObject);
-                abilityInstance = null;
-                return;
-            }
-            if (chapterInstance != null && lastPop == chapterInstance.gameObject)
-            {
-                Destroy(chapterInstance.gameObject);
-                chapterInstance = null;
-                return;
-            }
-            if (equipmentInstance != null && lastPop == equipmentInstance.gameObject)
-            {
-                Destroy(equipmentInstance.gameObject);
-                equipmentInstance = null;
-                return;
-            }
-            if (skillInstance != null && lastPop == skillInstance)
-            {
-                Destroy(skillInstance);
-                skillInstance = null;
-                return;
-            }
-            if (dungeonInstance != null && lastPop == dungeonInstance)
-            {
-                Destroy(dungeonInstance);
-                dungeonInstance = null;
-                return;
-            }
-            if (settingInstance != null && lastPop == settingInstance)
-            {
-                Destroy(settingInstance);
-                settingInstance = null;
-                return;
-            }
-            if (gameEndInstance != null && lastPop == gameEndInstance)
-            {
-                Destroy(gameEndInstance);
-                gameEndInstance = null;
-                return;
-            }
-            Destroy(lastPop);
-
-        }
-
-        public void PushPopup(GameObject prefab)
-        {
-            prefab.SetActive(true);
-            prefab.transform.SetAsLastSibling();
-            popupStack.Push(prefab);
-        }
-
-        private void OpenAbilityPopup()
-        {
-            if (abilityInstance != null) return;
-            if (abilityPrefab == null) return;
-
-            GameObject prefab = Instantiate(abilityPrefab, canvas);
-            abilityInstance = prefab.GetComponent<Ability>();
-
-            ClosePopup(prefab);
-
-            if (abilityInstance == null)
-            {
-                Debug.Log("abilityPrefab 에 Ability 컴포넌트가 없음");
-                Destroy(prefab);
-                return;
-            }
-            PushPopup(prefab);
-        }
-        private void OpenShopPopup()
-        {
-            if (shopInstance != null) return;
-            if (shopPrefab == null) return;
-
-            shopInstance = Instantiate (shopPrefab, canvas);
-            
-            ClosePopup(shopInstance);
-
-            PushPopup(shopInstance);
-        }
-        private void OpenChapterPopup()
-        {
-            if (chapterInstance != null) return;
-            if (chapterPrefab == null) return;
-
-            GameObject prefab = Instantiate(chapterPrefab, canvas);
-            chapterInstance = prefab.GetComponent<AllChapter_Set>();
-
-            if (chapterInstance == null)
-            {
-                Debug.Log("chapterPrefab 에 AllChapter_Set 컴포넌트가 없음");
-                Destroy(prefab);
-                return;
-            }
-            PushPopup(prefab);
-        }
-        private void OpenEquipmentPopup()
-        {
-            if (equipmentInstance != null) return;
-            if (equipmentPrefab == null) return;
-
-            GameObject prefab = Instantiate(equipmentPrefab, canvas);
-            equipmentInstance = prefab.GetComponent<EquipmentPresenter>();
-
-            if (equipmentInstance == null)
-            {
-                Debug.LogError("equipmentPrefab 에 EquipmentPresenter 컴포넌트가 없음");
-                Destroy(prefab);
-                return;
-            }
-            PushPopup(prefab);
-        }
-        private void OpenSkillPopup()
-        {
-            if (skillInstance != null) return;
-            if (skillPrefab == null) return;
-            
-            skillInstance = Instantiate(skillPrefab, canvas);
-            //skillInstance = 
-            ClosePopup(skillInstance);
-
-            PushPopup(skillInstance);
-        }
-        private void OpenDungeonPopup()
-        {
-            if (dungeonInstance != null) return;
-            if (dungeonPrefab == null) return;
-
-            dungeonInstance = Instantiate(dungeonPrefab, canvas);
-            PushPopup(dungeonInstance);
-        }
-
-
-        private void OpenSettingPopup()
-        {
-            if (settingInstance != null) return;
-            if (settingPrefab == null) return;
-
-            settingInstance = Instantiate(settingPrefab, canvas);
-            PushPopup(settingInstance);
-        }
-        private void OpenGameEndPopup()
-        {
-            if (gameEndInstance != null) return;
-            if (gameEndPrefab == null) return;
-
-            gameEndInstance = Instantiate(gameEndPrefab, canvas);
-            PushPopup(gameEndInstance);
-        }
 
 
         private void OpenClearPopup()
@@ -405,15 +326,16 @@ namespace UI.Scripts
             deadInstance = Instantiate(deadPrefab, canvas);
             StartCoroutine(FadeOutPopup(deadInstance, 3f));
         }
-        public void OpenClearRewardPopup(List<DropReward> rewardList)
+        public void OpenClearRewardPopup(List<DropReward> rewardList , string titleText)
         {
             if (clearRewardInstance != null) return;
             if (clearRewardPrefab == null) return;
             Debug.Log("보상 함수 실행");
             clearRewardInstance = Instantiate(clearRewardPrefab, canvas);
-            clearRewardInstance.SetReward(rewardList);
+            clearRewardInstance.SetReward(rewardList , titleText);
             ClosePopup(clearRewardInstance.gameObject);
         }
+
 
         public void OpenMonsterKill()
         {
@@ -422,7 +344,6 @@ namespace UI.Scripts
                 Debug.Log("몬스터 킬 생성");
                 monsterKillInstance = Instantiate(monsterKill, canvas);
             }
-
         }
         public void OpenTimer()
         {
@@ -444,7 +365,7 @@ namespace UI.Scripts
         public void ClosePopup(GameObject gameObject)
         {
             Transform transform = gameObject.transform.Find("Close_Button");
-
+            Debug.Log(transform);
             if (transform != null)
             {
                 Button button = transform.GetComponent<Button>();
@@ -452,7 +373,7 @@ namespace UI.Scripts
                 button.onClick.AddListener(() =>
                 {
                     RemovePopupFromStack(gameObject);
-                    ClearPopupReference(gameObject);
+                    RemovePopupDic(gameObject);
                     Destroy(gameObject);
                 });
             }
@@ -484,51 +405,7 @@ namespace UI.Scripts
             }
         }
 
-        private void ClearPopupReference(GameObject target)
-        {
-            if (target == null) return;
-
-            if (abilityInstance != null && target == abilityInstance.gameObject)
-            {
-                abilityInstance = null;
-                return;
-            }
-            if (chapterInstance != null && target == chapterInstance.gameObject)
-            {
-                chapterInstance = null;
-                return;
-            }
-            if (equipmentInstance != null && target == equipmentInstance.gameObject)
-            {
-                equipmentInstance = null;
-                return;
-            }
-            if (skillInstance != null && target == skillInstance)
-            {
-                skillInstance = null;
-                return;
-            }
-            if (dungeonInstance != null && target == dungeonInstance)
-            {
-                dungeonInstance = null;
-                return;
-            }
-            if (settingInstance != null && target == settingInstance)
-            {
-                settingInstance = null;
-                return;
-            }
-            if (shopInstance != null && target == shopInstance)
-            {
-                shopInstance = null;
-                return;
-            }
-            if (gameEndInstance != null && target == gameEndInstance)
-            {
-                gameEndInstance = null;
-                return;
-            }
-        }//instance 참조 중복 방지용
+        
         private void RemovePopupFromStack(GameObject target) 
         {
             if (target == null || popupStack.Count == 0) return;
@@ -550,6 +427,28 @@ namespace UI.Scripts
             }
 
         }//ClosePopup 으로 닫는 팝업을 popupstack 에서 제거용 + popupstack 정렬용
+        private void RemovePopupDic(GameObject target)
+        {
+            if (target == null) return;
+
+            PopupType removeType = default;
+            bool found = false;
+
+            foreach (var popup in openPopupDic)
+            {
+                if (popup.Value == target)
+                {
+                    removeType = popup.Key;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                openPopupDic.Remove(removeType);
+            }
+        }
 
 
         public  bool TryGetTimer(out SetViewer timer)
