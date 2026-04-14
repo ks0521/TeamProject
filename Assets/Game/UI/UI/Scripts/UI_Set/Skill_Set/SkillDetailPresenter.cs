@@ -36,7 +36,15 @@ namespace UI.Skill_Set
         {
             gameObject.SetActive(true);
             if (!skillMgr.TryGetSkillSO(key, out var so)) return;
-            int curLv = skillMgr.GetSkillLevel(key);
+            SkillDetailDataSetToSkillChange(so);
+        }
+        public void SkillDetailDataSetToSkillChange(SkillSO so)
+        {
+            // gameObject.SetActive(true);
+            // if (!skillMgr.TryGetSkillSO(key, out var so)) return;
+            
+            // int curLv = skillMgr.GetSkillLevel(so.key);
+            skillMgr.TryGetSkillLevel(so, out int curLv);
             string value = null;
             SkillDetailViewNeedsNameAndImage niData = new(so, skillMgr.IsSkillUnlock(so));
             SkillDetailViewNeedsStatData data = new();
@@ -57,9 +65,15 @@ namespace UI.Skill_Set
         public void SkillDetailDataSetToSkillLvEnhance(int key)
         {
             if (!skillMgr.TryGetSkillSO(key, out var so)) return;
+            SkillDetailDataSetToSkillLvEnhance(so);
+        }
+        public void SkillDetailDataSetToSkillLvEnhance(SkillSO so)
+        {
+            // if (!skillMgr.TryGetSkillSO(key, out var so)) return;
             string value = null;
             SkillDetailViewNeedsStatData statData = new();
-            int curLv = skillMgr.GetSkillLevel(key);
+            // int curLv = skillMgr.GetSkillLevel(so.key);
+            skillMgr.TryGetSkillLevel(so, out int curLv);
             if (so is ActiveSkillSO aSO)
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
@@ -71,10 +85,12 @@ namespace UI.Skill_Set
                 PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
                 statData = new SkillDetailViewNeedsStatData(pSO, value, curLv);
             }
-            skillDetailView.SkillDetailViewSetToLvEnhance(statData);
+            skillDetailView.SkillDetailViewSetToLvChange(statData, skillMgr.IsSkillUnlock(so.key));
 
         }
         StringBuilder sb = new StringBuilder();
+        public void SkillLvUpBtnInteractable(bool isSkillLvUpPossible) => skillDetailView.SkillLevelUpBtnInteractable(isSkillLvUpPossible);
+        public void SkillLockImageSet(bool isUnlock) => skillDetailView.SkillLockImgSet(isUnlock);
         public void SkillStatValueTextBuild(string contents, bool isEnter)
         {
             if (isEnter) sb.Append($"\n{contents}");

@@ -1,4 +1,5 @@
-using Base.Managers;
+
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,55 +9,38 @@ namespace UI.ChapterStage_Set
     public class Reward_Set : MonoBehaviour
     {
         [SerializeField] Image[] rewardImg;
+        [SerializeField] TextMeshProUGUI[] rewardText;
 
-        [SerializeField] Sprite gold;
-        [SerializeField] Sprite stone;
-        [SerializeField] Sprite exp;
-
-
-        public void SetReward(StageEntry stageEntry)
+        public void SetReward()
         {
-            for (int i = 0; i < rewardImg.Length; i++)
+            foreach (var s in rewardImg)
             {
-                rewardImg[i].gameObject.SetActive(false);
+                s.gameObject.SetActive(false);
             }
-
-            var dropTable = stageEntry.stageSO.dropTable;
-
-            if (dropTable == null)
+            foreach (var s in rewardText)
             {
-                return;
-            }
-
-            int currentSlot = 0;
-
-            if (dropTable.rewardExp > 0)
-            {
-                SetSlot(ref currentSlot, exp);
-            }
-
-            foreach (var reward in dropTable.dropList)
-            {
-                switch (reward.rewardType)
-                {
-                    case DropRewardType.Currency:
-                        SetSlot(ref currentSlot, reward.currencySO.icon);
-                        break;
-
-                    case DropRewardType.Item:
-                        SetSlot(ref currentSlot, reward.itemSO.icon);
-                        break;
-                }
+                s.gameObject.SetActive(false);
             }
         }
-        private void SetSlot(ref int slot, Sprite icon)
+        public void SetSlot(int slot, Sprite icon, string amount, string exp = null)
         {
-            if (slot < rewardImg.Length)
+            rewardImg[slot].gameObject.SetActive(true);
+            rewardText[slot].gameObject.SetActive(true);
+            rewardImg[slot].sprite = icon;
+            rewardText[slot].text = amount ?? exp;
+        }
+
+        public void SetData(Sprite icon, string text)
+        {
+            if (icon == null)
             {
-                rewardImg[slot].sprite = icon;
-                rewardImg[slot].gameObject.SetActive(true);
-                slot++;
+                rewardImg[0].gameObject.SetActive(false);
             }
+            else
+            {
+                rewardImg[0].sprite = icon;
+            }
+            rewardText[0].text = text;
         }
     }
 

@@ -46,7 +46,7 @@ namespace Base.Save
     /// <summary> 플레이어 스킬 획득 및 슬롯정보 </summary>
     [Serializable]public class PlayerSkillState
     {
-        public int[] skillSlots; 
+        public int[] skillSlots; //나중에 스킬슬롯 객체 만들면 수정
         public List<SkillEntry> skillProgressState; //key : 스킬 키, value : 해당 스킬 레벨
     }
     
