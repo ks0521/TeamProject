@@ -185,7 +185,7 @@ public class SkillManager : MonoBehaviour, IManager
     public void SkillInit()
     {
         progress.playerInfo.skillPoint = progress.playerInfo.maxSkillPoint;
-        progress.skillProgress.skillProgressState = new Dictionary<int, int>();
+        
         eventHub.InitSkill();
     }
     public int GetOrder() => 20;

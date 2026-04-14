@@ -109,7 +109,7 @@ namespace UI.Scripts
             hub.OnClearStage += ClearEventChain;
             hub.OnFailStage += FailEventChain;
             hub.OnDeadPlayer += PlayerDeadEventChain;
-            //hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
+            hub.OnGetClearRewards += OpenClearRewardPopup; //나중에 수정될 예정
 
 
             Debug.Log(timer);
@@ -351,7 +351,6 @@ namespace UI.Scripts
                 Debug.Log("몬스터 킬 생성");
                 monsterKillInstance = Instantiate(monsterKill, canvas);
             }
-
         }
         public void OpenTimer()
         {
@@ -368,6 +367,26 @@ namespace UI.Scripts
                 bossHpInstance = Instantiate(BossHp, canvas);
             }
         }
+
+
+        public void ClosePopup(GameObject gameObject)
+        {
+            Transform transform = gameObject.transform.Find("Close_Button");
+            Debug.Log(transform);
+            if (transform != null)
+            {
+                Button button = transform.GetComponent<Button>();
+                button.onClick.RemoveAllListeners();//중복 방지용
+                button.onClick.AddListener(() =>
+                {
+                    RemovePopupFromStack(gameObject);
+                    RemovePopupDic(gameObject);
+                    Destroy(gameObject);
+                });
+            }
+            
+        }
+
         public void CloseTimer()
         {
             if (timerInstance != null)

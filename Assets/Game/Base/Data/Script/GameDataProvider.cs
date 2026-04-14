@@ -15,7 +15,7 @@ namespace Base.Data
     /// 실제 사용은 GameData로 할 것 </summary>
     public class GameDataProvider : MonoBehaviour, IGameSystem
     {
-        public static GameDataProvider Instance; //MVP 완료 후 제거
+        //public static GameDataProvider Instance; //MVP 완료 후 제거
         public StageDictionarySO stageTable;
         public StatusSO statusTable;
         public SkillDictionarySO SkillTable;
@@ -23,15 +23,15 @@ namespace Base.Data
         public EquipmentDictionarySO equipmentTable;
         public ItemDictionarySO itemTable;
 
-        void Awake()
-        {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-        }
+        // void Awake()
+        // {
+        //     if (Instance != null)
+        //     {
+        //         Destroy(gameObject);
+        //         return;
+        //     }
+        //     Instance = this;
+        // }
         //테이블이 늘어나도 한계가 있어서 getTable / 유지 선택
         public int GetOrder() => 0; //다른 매니저에서 참고하기 때문에 가장 우선 활성화
     }
