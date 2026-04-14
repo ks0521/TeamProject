@@ -15,6 +15,7 @@ namespace UI.Skill_Set
         private EventHub hub;
         [SerializeField] private TextMeshProUGUI skillPointTxt;
         [SerializeField] private SkillTreeUISetView[] skillTreeUISetArr;
+        public IReadOnlyList<SkillTreeUISetView> SkillTreeUISetList => skillTreeUISetArr;
         [SerializeField] private SkillTreeUISetView skillTreeUISetPrefab;
         [SerializeField] private Button closeBtn;
         private Dictionary<int, SkillTreeUISetView> skillTreeUISetDic;
@@ -65,7 +66,7 @@ namespace UI.Skill_Set
             var so = skill.SkillData;
             bool isHomingSkill = (so is ActiveSkillSO aSO) && (aSO.Targeting == TargetingMode.Homing);
             SkillTreeUISetViewNeedsImageData skillTreeUIData
-             = new SkillTreeUISetViewNeedsImageData(so.key, skill.CurLv, so.maxLv, so.skillIcon, isHomingSkill);
+             = new SkillTreeUISetViewNeedsImageData(so.key, skillMgr.IsSkillUnlock(so), skill.CurLv, so.maxLv, so.skillIcon, isHomingSkill);
 
             skillTreeUISetDic[key].SkillTreerUISet(skillTreeUIData);
         }
@@ -90,6 +91,11 @@ namespace UI.Skill_Set
             }
             resetPointBtn.onClick.AddListener(() => skillLevelResetFunc());
         }
+        public void LvResetBtnInteractable(bool isBtnClickPossible)
+        {
+            resetPointBtn.interactable = isBtnClickPossible;
+        }
+        public void SetSkillTreeBtnLockImg(int key, bool isUnlock) => skillTreeUISetDic[key].SetLockImg(isUnlock);
         public void SkillLevelTextChange(int key, int curLv, int maxLv) => skillTreeUISetDic[key].SetLvText(curLv, maxLv);
         public void OnDestroyFeat()
         {
