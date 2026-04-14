@@ -78,7 +78,7 @@ namespace Growth.Skill
         }
         public virtual void PriorityUpdate(int index, Priority pri)
         {
-            if(index < 0 || 6 <= index) return;
+            if (index < 0 || 6 <= index) return;
             equipSkillArr[index].priority = pri;
         }
         [SerializeField] Vector2 testAreaOffset;
@@ -213,7 +213,7 @@ namespace Growth.Skill
             //     await UniTask.Yield(this.GetCancellationTokenOnDestroy());
             //     if (this == null) return;
             // }
-            
+
 
             while (0 < castingTimeValue)
             {
@@ -258,30 +258,42 @@ namespace Growth.Skill
         }
         public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            ActiveSkill aSkill = equipSkillArr[skillIndex].Skill;
-            Vector2 plPos = owner.transform.position;
-            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, aSkill.ActiveSkillData.range, owner.TargetLayer);
-            // Debug.Log(owner.TargetLayer.ToString());
-            if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
-            {
-                mon = targetCol.GetComponent<Monster>();
-                return mon != null;
-            }
             mon = null;
-            return false;
 
-            // if (!OverlapChecker.TryGetNearTargetCharacter(
-            //     plPos, aSkill.ActiveSkillData.range, owner.TargetLayer, out var cha))
+            Vector2 plPos = owner.transform.position;
+
+            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos,
+            equipSkillArr[skillIndex].Skill.ActiveSkillData.range, owner.TargetLayer);
+
+            // if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
             // {
-            //     // Debug.LogWarning("몬스터 찾지 못함");
-            //     mon = null;
+            //     mon = targetCol.GetComponent<Monster>();
+            //     return mon != null;
             // }
-            // else if (cha is Monster tMon)
-            // {
-            //     mon = tMon;
-            // }
-            // else mon = null;
-            // return mon == null;
+            // mon = null;
+            // return false;
+            if(getNearMonCnt <= 0) return false;
+
+            var monsters = OverlapChecker.GetTargetColArr;
+            float curMinDis = float.MaxValue;
+
+            for (int i = 0; i < getNearMonCnt; i++)
+            {
+                if (!monsters[i].gameObject.activeSelf) continue;
+
+                var tMon = monsters[i].GetComponent<Monster>();
+                if (tMon.IsDead) continue;
+
+                Vector2 monPos = tMon.transform.position;
+                float tMinDis = (monPos - plPos).sqrMagnitude;
+                
+                if (tMinDis < curMinDis)
+                {
+                    curMinDis = tMinDis;
+                    mon = tMon;
+                }
+            }
+            return mon != null;
         }
         public void AtkSkillUse(int index, Monster mon)
         {
