@@ -30,7 +30,7 @@ namespace Base.Manager
         public int NEED_COMBINE = 5;
         
         [SerializeField] private EquipmentSO equipItem;
-        private GameDataProvider dictionarys;
+        private GameDataDictionaries dictionarys;
         private RuntimeProgressData runtimeData;
         private ItemDropManager dropManager;
         private EventHub eventHub;
@@ -231,7 +231,7 @@ namespace Base.Manager
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             runtimeData = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
-            dictionarys = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            dictionarys = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
             dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         }
 

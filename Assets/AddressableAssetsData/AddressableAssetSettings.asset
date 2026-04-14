@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: b125870a73b23b8468c8ddb0711b3533
   m_currentHash:
     serializedVersion: 2
-    Hash: ce5e154ab60515427a99a5bd23e28c9b
+    Hash: 08cd5dc4b7f80702260738ef435f0ae2
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -38,21 +38,22 @@ MonoBehaviour:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
   - {fileID: 11400000, guid: cc7be04f5a981784aaab8bcb862911de, type: 2}
+  - {fileID: 11400000, guid: 3178f7b0100f77d4487c3bed5b8c4ef2, type: 2}
   - {fileID: 11400000, guid: 770d668cd54e40749a809c4964459a07, type: 2}
   - {fileID: 11400000, guid: 943783ff212db8f4189477d965ed8d54, type: 2}
   - {fileID: 11400000, guid: e1a6fe9dff1287a49b82fff6f238539f, type: 2}
   - {fileID: 11400000, guid: 78b56ca52182eae4db6cc356cbf4c078, type: 2}
-  - {fileID: 11400000, guid: 68d0b11320e28b34792f34be795796af, type: 2}
   - {fileID: 11400000, guid: 44cc3c824e1c3324b8248aa6b3989bcd, type: 2}
   - {fileID: 11400000, guid: 1385c96722de9804fb975a2426915eb1, type: 2}
   - {fileID: 11400000, guid: 37330c44cb7844f44ac0d04881f3b625, type: 2}
+  - {fileID: 11400000, guid: 35db94111daaaac4b976426626b92810, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -103,6 +104,7 @@ MonoBehaviour:
     - SO/Equipment/Weapon
     - SO/Equipment/Armor
     - SO/Equipment/Accessory
+    - SO/Currency
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: a99d7912bbcc7ea47ababcc18ef0db18, type: 2}

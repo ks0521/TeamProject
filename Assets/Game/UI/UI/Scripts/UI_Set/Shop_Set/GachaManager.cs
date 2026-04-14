@@ -9,7 +9,7 @@ namespace Shop.Gacha
 {
     public class GachaManager : MonoBehaviour
     {
-        private GameDataProvider gameDataProvider;
+        private GameDataDictionaries _gameDataDictionaries;
         private RuntimeProgressData progressData;
         private EventHub hub;
         private ItemDropManager dropManager;
@@ -21,7 +21,7 @@ namespace Shop.Gacha
 
         private void OnEnable()
         {
-            gameDataProvider = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            _gameDataDictionaries = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
             progressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
@@ -314,13 +314,13 @@ namespace Shop.Gacha
         {
             List<EquipmentSO> result = new List<EquipmentSO>();
 
-            if (gameDataProvider == null) return result;
-            if (gameDataProvider.equipmentTable == null) return result;
-            if (gameDataProvider.equipmentTable.allEquipments == null) return result;
+            if (_gameDataDictionaries == null) return result;
+            if (_gameDataDictionaries.equipmentTable == null) return result;
+            if (_gameDataDictionaries.equipmentTable.allEquipments == null) return result;
 
-            for (int i = 0; i < gameDataProvider.equipmentTable.allEquipments.Count; i++)
+            for (int i = 0; i < _gameDataDictionaries.equipmentTable.allEquipments.Count; i++)
             {
-                EquipmentSO equipment = gameDataProvider.equipmentTable.allEquipments[i];
+                EquipmentSO equipment = _gameDataDictionaries.equipmentTable.allEquipments[i];
 
                 if (equipment == null) continue;
                 if (equipment.equipType != equipType) continue;

@@ -149,7 +149,7 @@ namespace Battle
                 if (stageManager == null) return false;
             }
 
-            if (!stageManager.TryGetTarget(this.transform, out var result))
+            if (!stageManager.TryGetTarget(transform, out var result))
             {
                 return false;
             }

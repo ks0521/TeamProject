@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CurrencyDictionary
   m_EditorClassIdentifier: 
   currencyList:
+  - {fileID: 11400000, guid: 0fecbedc4588e5349952d5696a0f97e0, type: 2}
   - {fileID: 11400000, guid: 1af0648ae34e79a429de91b4d140b187, type: 2}
   - {fileID: 11400000, guid: a33d451e9ce1def40bf67ed25b3f98a8, type: 2}
   - {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
