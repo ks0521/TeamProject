@@ -68,7 +68,9 @@ namespace UI.Skill_Set
             }
             EquipSkillEventSet();
         }
-        void SkillUseToMonster(int index) => eventHub.PlayerSkillUse(index);
+        void SkillUseToMonster(int index)
+         => eventHub.PlayerSkillUse(index);
+        // => plEquipSkillController.TryAtkSkillUseToMonster(index);
         public void OnDestroyFeat()
         {
             EquipSkillEventRemove();
@@ -102,9 +104,10 @@ namespace UI.Skill_Set
                 return;
             }
             if (!tbv.IsCooltimeMaskActiveState) tbv.CooltimeStart();
-            float cooltimeValue = tESkill.CurCooltime / tESkill.MaxCooltime;
-            tbv.CooltimeShowUpdate(cooltimeValue);
-
+            float curCooltime = tESkill.CurCooltime;
+            float cooltimeValue = curCooltime / tESkill.MaxCooltime;
+            tbv.CooltimeValueUpdate(cooltimeValue);
+            tbv.CurCooltimeTextUpdate(curCooltime);
         }
         void BtnCooltimeStartEvent(int index) => btnViewArr[index].CooltimeStart();
         void BtnCooltimeEndEvent(int index) => btnViewArr[index].CooltimeEnd();

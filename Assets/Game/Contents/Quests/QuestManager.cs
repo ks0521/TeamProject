@@ -1,5 +1,6 @@
 using Base.Data;
 using Base.Managers;
+using Base.Save;
 using Battle;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ namespace QuestSystem
         public QuestDataReader Data { get; private set; } //연결된 원본 데이터
         public int StartValue; //퀘스트 시작 시점의 값
         public int CurrentValue; //현재 진행 수치
+        public int currentStep; //반복 퀘스트의 현재 회차
         public QuestStatus questStatus;
         public bool isCompleted;
         public bool isLocked;
@@ -34,7 +36,7 @@ namespace QuestSystem
             this.isLocked = isLocked;
             //this.lockMessage = lockMessage;
             this.RuntimeTargetValue = data.targetValue;
-            this.RuntimeTargetID = data.targetID;
+            //this.RuntimeTargetID = data.targetID;
             this.RuntimeDescription = data.description;
         }
 
@@ -56,21 +58,6 @@ namespace QuestSystem
                 default: return "";
             }
         }
-        /*
-        public void UnlockQuest(int startValue, int curGlobalStat)
-        {
-            this.isLocked = false;
-            this.StartValue = startValue;
-
-            if (this.Data.isAbsoluteGoal)
-                this.CurrentValue = curGlobalStat;
-            else
-                this.CurrentValue = curGlobalStat - startValue;
-
-            if (this.CurrentValue >= this.RuntimeTargetValue)
-                this.isCompleted = true;
-        }
-        */
     }
 
     [System.Serializable]
@@ -97,7 +84,6 @@ namespace QuestSystem
         private QuestSO questSO;
         private List<ActiveQuest> activeQuests = new List<ActiveQuest>(); //진행 중
         private HashSet<int> completedQuestIds = new HashSet<int>(); //완료
-        //[SerializeField] private QuestUIManager questUIManager;
 
         //모든 누적 수치 기록
         private Dictionary<string, int> globalStats = new Dictionary<string, int>();
@@ -106,19 +92,7 @@ namespace QuestSystem
 
         [Header("퀘스트 데이터")]
         [SerializeField] private QuestDatabaseSO questDatabase;
-        //[SerializeField] private TextAsset questJsonFile;
 
-        [Header("튜토리얼용 오브젝트들")]
-        public Button autoHuntButton;
-        public Button bossMapButton;
-        public Button newContentButton;
-        public GameObject guideArrow;
-        public GameObject TutorialPanel; //튜토리얼 설명 텍스트가 있는 패널
-        public Text TutorialDescText;
-
-        //[SerializeField] private RewardItemRegistrySO itemDatabase;
-        //[SerializeField] private QuestRewardSO rewardDatabase;
-        //[SerializeField] private RewardPopupUI rewardPopup;
         [Header("보상 설정")]
         [SerializeField] private ItemDropManager itemDropManager;
         [SerializeField] private RewardPopupUI rewardPopup;
@@ -326,49 +300,45 @@ namespace QuestSystem
         }
         public void TryCompleteQuest(ActiveQuest quest, bool suppressPopup = false)
         {
-            //1. 실제 아이템 지급(팀원 시스템 호출)
             GiveRewardsToPlayer(quest.Data.rewardGroupID);
 
-            //2. 보상 팝업 표시(사용자 UI 시스템)
             if (!suppressPopup && rewardPopup != null)
             {
                 var rewards = GetRewardsByGroupID(quest.Data.rewardGroupID);
                 if (rewards.Count > 0) rewardPopup.ShowRewards(rewards);
             }
 
+            //퀘스트 완료 및 다음 퀘스트 처리 구간
             QuestCategory currentCategory = quest.Data.CategoryEnum;
             int qID = quest.Data.questID;
 
-            if (quest.Data.isInfinite) //무한 퀘스트(업적 등)일 때
+            if (currentCategory == QuestCategory.Recurring)
             {
-                // 1. 단계를 올립니다. (RefreshQuests가 이 값을 보고 다음 수치를 계산함)
+                questStartPoints[qID] += quest.RuntimeTargetValue;
+            }
+            else if (quest.Data.isInfinite)
+            {
+                //회차 누적(RefreshQuests가 이 값을 보고 다음 수치를 계산함)
                 if (!questSeriesSteps.ContainsKey(qID)) questSeriesSteps[qID] = 1;
 
-                // 2. 시작점 전진 (상대적 목표일 경우 초과분 이월)
+                //시작점 전진(상대적 목표일 경우 초과분 이월)
                 if (!quest.Data.isAbsoluteGoal)
                 {
                     questStartPoints[qID] += quest.RuntimeTargetValue;
                 }
-                // [핵심] 무한 퀘스트는 completedQuestIds.Add(qID)를 하지 않습니다!
-                // 그래야 RefreshQuests에서 "아직 완료 안 된 녀석"으로 인식되어 다시 생성됩니다.
+                //무한 퀘스트는 completedQuestIds.Add(qID)를 하지 않음
                 questSeriesSteps[qID]++;
                 Debug.Log($"<color=cyan>무한 퀘스트: {questSeriesSteps[qID]}단계로 진입</color>");
             }
-            else if (currentCategory == QuestCategory.Recurring && !quest.Data.isAbsoluteGoal)
+            else //선형, 데일리, 일반 업적: 완료 후 삭제
             {
-                //일반 순환 퀘스트 처리(고정 수치만큼 전진)
-                questStartPoints[qID] += quest.Data.targetValue;
-            }
-            else
-            {
-                //선형, 데일리, 일반 업적: 완료 후 삭제
                 completedQuestIds.Add(qID);
             }
 
-            if (qID == 102)
+            if(currentCategory == QuestCategory.Recurring)
             {
-                completedQuestIds.Remove(101);
-                completedQuestIds.Remove(102);
+                completedQuestIds.Remove(quest.Data.nextQuestID);
+                completedQuestIds.Add(quest.Data.questID);
             }
 
             //활성 리스트에서 제거
@@ -381,9 +351,10 @@ namespace QuestSystem
             eventHub.QuestCompleted(quest.Data, isAllCleared);
 
             RefreshQuests();
+            EventHub.QuestProgressUpdated();
             FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
             SaveProgress();
-            EventHub.QuestProgressUpdated();
+            
         }
 
         //rewardGroupID에 따른 보상 목록 반환
@@ -454,19 +425,17 @@ namespace QuestSystem
 
             foreach (var data in questDatabase.allQuests)
             {
-                if (completedQuestIds.Contains(data.questID)) continue;
+                //순환형 퀘스트는 무조건 통과
+                if (data.CategoryEnum != QuestCategory.Recurring && completedQuestIds.Contains(data.questID)) continue;
 
                 if (data.CategoryEnum == QuestCategory.Daily)
                 {
-                    if (currentDailyID == 0)
-                    {
-                        PickRandomDailyQuest();
-                    }
+                    if (currentDailyID == 0) PickRandomDailyQuest();
                     //뽑히지 않은 퀘스트는 무시
                     if (data.questID != currentDailyID) continue;
                 }
 
-                if (data.prevQuestID == 0 || completedQuestIds.Contains(data.prevQuestID))
+                if (IsQuestUnlocked(data))
                 {
                     //해당 ID의 퀘스트가 리스트에 있다면 먼저 제거(상태 갱신용),
                     //이후 현재 진행해야 할 단계 생성 (InProgress)
@@ -496,7 +465,10 @@ namespace QuestSystem
         {
             //절대 목표는 전체 통계값 그대로 사용, 상대 목표는 (현재 - 시작점)
             if (quest.Data.isAbsoluteGoal) return currentGlobalStat;
-            return currentGlobalStat - quest.StartValue;
+
+            int startPoint = questStartPoints.ContainsKey(quest.Data.questID) ? questStartPoints[quest.Data.questID] : 0;
+            int resultValue = currentGlobalStat - startPoint;
+            return resultValue < 0 ? 0 : resultValue;
         }
         void CheckCompleteCondition()
         {
@@ -511,17 +483,18 @@ namespace QuestSystem
         }
         ActiveQuest CreateQuestObject(QuestDataReader data, bool isLocked)
         {
-            string statKey = $"{data.goalType}_{data.targetID}";
+            string statKey = data.goalType.ToString();
             int currentGlobalStat = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
 
             if (!questStartPoints.ContainsKey(data.questID))
                 questStartPoints[data.questID] = data.isAbsoluteGoal ? 0 : currentGlobalStat;
 
             ActiveQuest newQuest = new ActiveQuest(data, questStartPoints[data.questID], isLocked);
-            //유저가 깨야 할 단계
+            //유저가 깨야 할 단계, 프리팹에 표시할 단계
             int currentStep = questSeriesSteps.ContainsKey(data.questID) ? questSeriesSteps[data.questID] : 1;
-            //프리팹에 표시할 단계
+
             int displayStep = isLocked ? currentStep + 1 : currentStep;
+            newQuest.currentStep = currentStep; //회차 저장
 
             if (data.isInfinite)
             {
@@ -569,7 +542,26 @@ namespace QuestSystem
 
             return newQuest;
         }
+        bool IsQuestUnlocked(QuestDataReader data)
+        {
+            //순환형은 완료 기록이 없어야만 생성
+            //if (data.CategoryEnum == QuestCategory.Recurring && completedQuestIds.Contains(data.prevQuestID)) return false;
+            //선행 퀘스트가 없거나, 완료 기록이 없으면 생성
+            if (data.prevQuestID == 0) return true;
+            if (completedQuestIds.Contains(data.prevQuestID)) return true;
 
+            //선행 퀘스트가 '무한 퀘스트'일 경우의 비교 로직
+            //선행 퀘스트의 회차가 내 퀘스트의 회차보다 크면 해금
+            if (questSeriesSteps.ContainsKey(data.prevQuestID))
+            {
+                int prevQuestStep = questSeriesSteps[data.prevQuestID];
+                int myStep = questSeriesSteps.ContainsKey(data.questID) ? questSeriesSteps[data.questID] : 1;
+
+                if (prevQuestStep > myStep) return true;
+            }
+
+            return false;
+        }
         public void ResetDailyQuests()
         {
             activeQuests.RemoveAll(q => q.Data.CategoryEnum == QuestCategory.Daily);
@@ -606,6 +598,8 @@ namespace QuestSystem
 
 #if UNITY_EDITOR
         private int _debugLevel = 1;
+        private int _testChapter = 1;
+        private int _testStage = 0;
         //Pull Request하기 전에 PlayerRuntimeStatus를 Player로 바꿀 것
         int GetCurrentPlayerLevel() //삭제 예정인 인스턴스에 의존하고 있음
         {
@@ -632,6 +626,26 @@ namespace QuestSystem
             {
                 Debug.Log("<color=orange>[Test] 몬스터 100마리 사냥 조작</color>");
                 OnActivity(GoalType.Hunt, 901, 100);
+            }
+            if (Input.GetKeyDown(KeyCode.PageUp))
+            {
+                if (eventHub != null)
+                {
+                    _testStage++;
+                    if (_testStage > 5)
+                    {
+                        _testChapter++;
+                        _testStage = 1;
+                    }
+                    StageSO dummyStage = ScriptableObject.CreateInstance<StageSO>();
+                    dummyStage.chapter = _testChapter;
+                    dummyStage.stage = _testStage;
+
+                    Debug.Log($"<color=orange>[테스트] 가짜 스테이지 클리어 신호 발사! (챕터: {dummyStage.chapter}, 스테이지: {dummyStage.stage})</color>");
+
+                    eventHub.StageCleared(dummyStage);
+                    Destroy(dummyStage);
+                }
             }
         }
 #endif

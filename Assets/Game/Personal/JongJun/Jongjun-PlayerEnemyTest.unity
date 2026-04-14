@@ -5485,7 +5485,7 @@ PrefabInstance:
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
       propertyPath: rewardTableMaps.Array.size
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
@@ -5515,17 +5515,29 @@ PrefabInstance:
         type: 3}
       propertyPath: rewardTableMaps.Array.data[4].table
       value: 
-      objectReference: {fileID: 11400000, guid: 04388a6c6021eac42b33c1788731be76,
+      objectReference: {fileID: 11400000, guid: 80ac03304f605954aa0a3a96588e3f89,
         type: 2}
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
       propertyPath: rewardTableMaps.Array.data[5].table
       value: 
-      objectReference: {fileID: 11400000, guid: 25ab7ce6f7ef76a4ea959f9f4e3238a8,
+      objectReference: {fileID: 11400000, guid: 403fcd633a620c2479a4e12600a622d8,
         type: 2}
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
       propertyPath: rewardTableMaps.Array.data[6].table
+      value: 
+      objectReference: {fileID: 11400000, guid: 04388a6c6021eac42b33c1788731be76,
+        type: 2}
+    - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
+        type: 3}
+      propertyPath: rewardTableMaps.Array.data[7].table
+      value: 
+      objectReference: {fileID: 11400000, guid: 25ab7ce6f7ef76a4ea959f9f4e3238a8,
+        type: 2}
+    - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
+        type: 3}
+      propertyPath: rewardTableMaps.Array.data[8].table
       value: 
       objectReference: {fileID: 11400000, guid: 25ab7ce6f7ef76a4ea959f9f4e3238a8,
         type: 2}
@@ -5552,16 +5564,26 @@ PrefabInstance:
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
       propertyPath: rewardTableMaps.Array.data[4].groupID
-      value: 103
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
       propertyPath: rewardTableMaps.Array.data[5].groupID
-      value: 1001
+      value: 102
       objectReference: {fileID: 0}
     - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
         type: 3}
       propertyPath: rewardTableMaps.Array.data[6].groupID
+      value: 103
+      objectReference: {fileID: 0}
+    - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
+        type: 3}
+      propertyPath: rewardTableMaps.Array.data[7].groupID
+      value: 1001
+      objectReference: {fileID: 0}
+    - target: {fileID: 893928051606349188, guid: 643b118586742bf41bb5354361a9aa83,
+        type: 3}
+      propertyPath: rewardTableMaps.Array.data[8].groupID
       value: 1002
       objectReference: {fileID: 0}
     - target: {fileID: 2392290065038065326, guid: 643b118586742bf41bb5354361a9aa83,
