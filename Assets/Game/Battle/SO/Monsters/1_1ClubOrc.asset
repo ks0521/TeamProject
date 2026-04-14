@@ -22,5 +22,5 @@ MonoBehaviour:
     maxHp: 10
     def: 0
     atkSpeed: 1
-    moveSpeed: 1
+    moveSpeed: 2
     atkRange: 0
