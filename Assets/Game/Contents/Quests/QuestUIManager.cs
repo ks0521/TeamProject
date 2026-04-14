@@ -78,7 +78,7 @@ public class QuestUIManager : MonoBehaviour, IManager
             if (dot != null) dot.gameObject.SetActive(hasRedDot);
         }
     }
-    
+
     //왼편의 퀘스트 박스 프리팹 목록을 갱신
     public void RefreshQuestBox()
     {
@@ -111,9 +111,9 @@ public class QuestUIManager : MonoBehaviour, IManager
             if (boxScript != null)
             {
                 boxScript.Setup(quest, this);
+                boxScript.RefreshVisuals();
                 instantiatedBoxes.Add(boxScript);
             }
-            boxScript.RefreshVisuals();
         }
         UpdateReceiveAllButtonState();
 
@@ -166,7 +166,7 @@ public class QuestUIManager : MonoBehaviour, IManager
         receiveButton.interactable = quest.isCompleted;
 
         //박스 하이라이트
-        foreach(var box in instantiatedBoxes)
+        foreach (var box in instantiatedBoxes)
         {
             box.SetHighlight(box.GetQuest() == quest);
         }
@@ -242,72 +242,58 @@ public class QuestUIManager : MonoBehaviour, IManager
     {
         if (questManager == null) return;
 
-        List<DropReward> dropRewards = new List<DropReward>(); //팀원의 원본 데이터 리스트
-        List<RewardData> uniqueRewards = new List<RewardData>();
-
         //재화 합산용 딕셔너리
         Dictionary<CurrencyType, RewardData> totalCurrencies = new Dictionary<CurrencyType, RewardData>();
+        List<RewardData> uniqueRewards = new List<RewardData>();
 
-        bool checkAgain = true;
-        int safetyCounter = 0; //무한루프 방지용
+        //완료 가능한 퀘스트 카테고리 추출
+        var targetQuests = questManager.GetActiveQuests()
+        .Where(q => q.isCompleted)
+        .ToList();
 
-        while (checkAgain)
+        foreach (var q in targetQuests)
         {
-            //완료 가능한 퀘스트 카테고리 추출
-            var targetQuests = questManager.GetActiveQuests()
-            .Where(q => q.Data.CategoryEnum == (QuestCategory)currentTabIndex && q.isCompleted)
-            .ToList();
+            int completableCount = q.Data.isInfinite ? (q.CurrentValue / q.RuntimeTargetValue) : 1;
+            if (completableCount < 1) completableCount = 1;
 
-            if (targetQuests.Count > 0)
+            for (int i = 0; i < completableCount; i++)
             {
-                foreach (var q in targetQuests)
+                // i회차 단계의 보상을 계산하기 위한 가상 회차
+                int stepForThisLoop = q.currentStep + i;
+                var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
+
+                foreach (var r in rewards)
                 {
-                    var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
-
-                    foreach (var r in rewards) //장비(EquipmentSO)인지 확인
+                    bool isEquipment = r.originalSO is Growth.Equipment.EquipmentSO;
+                    if (isEquipment) uniqueRewards.Add(r);
+                    else
                     {
-                        bool isEquipment = r.originalSO is Growth.Equipment.EquipmentSO;
+                        // 재화는 회차(stepForThisLoop)만큼 곱함
+                        int addedAmount = r.amount * stepForThisLoop;
 
-                        if (isEquipment)
+                        if (totalCurrencies.ContainsKey(r.currencyType))
                         {
-                            //장비는 합치지 않고 무조건 리스트에 추가(개별 프리팹 생성)
-                            uniqueRewards.Add(r);
+                            totalCurrencies[r.currencyType].amount += addedAmount;
                         }
                         else
                         {
-                            CurrencyType cType = r.currencyType;
-                            //재화는 딕셔너리에 합산
-                            if (totalCurrencies.ContainsKey(cType))
+                            totalCurrencies.Add(r.currencyType, new RewardData
                             {
-                                totalCurrencies[cType].amount += r.amount;
-                            }
-                            else
-                            {
-                                //새로운 재화 등록
-                                RewardData newData = new RewardData
-                                {
-                                    itemName = r.itemName,
-                                    amount = r.amount,
-                                    icon = r.icon,
-                                    description = r.description,
-                                    originalSO = r.originalSO,
-                                    currencyType = cType
-                                };
-                                totalCurrencies.Add(cType, newData);
-                            }
+                                itemName = r.itemName,
+                                amount = addedAmount,
+                                icon = r.icon,
+                                description = r.description,
+                                originalSO = r.originalSO,
+                                currencyType = r.currencyType
+                            });
                         }
                     }
-                    //true: 보상이 합산된 팝업
-                    questManager.TryCompleteQuest(q, true);
                 }
-                //다음 퀘스트가 초과분만으로 완료될 수 있는지 체크
-                checkAgain = true;
-                safetyCounter++;
-                //무한루프 방지용
-                if (safetyCounter > 999) checkAgain = false;
+                // 실제 데이터 갱신 (TryCompleteQuest 내부에서 다음 단계로 넘김)
+                questManager.TryCompleteQuest(q, true);
             }
-            else checkAgain = false;    
         }
+
         List<RewardData> finalList = new List<RewardData>();
         finalList.AddRange(totalCurrencies.Values);
         finalList.AddRange(uniqueRewards);
@@ -332,9 +318,14 @@ public class QuestUIManager : MonoBehaviour, IManager
         //오른쪽 상세창 수치 및 버튼 상태 갱신
         if (currentSelectedQuest != null)
         {
-            questProgress.text = $"{currentSelectedQuest.CurrentValue} / {currentSelectedQuest.RuntimeTargetValue}";
-            receiveButton.interactable = currentSelectedQuest.isCompleted;
-            questStatus.text = currentSelectedQuest.isCompleted ? "<color=green>완료 가능</color>" : "<color=white>진행 중</color>";
+            var updatedQuest = questManager.GetActiveQuests().FirstOrDefault(q => q.Data.questID == currentSelectedQuest.Data.questID);
+
+            if (updatedQuest != null)
+            {
+                currentSelectedQuest = updatedQuest; //최신 객체로 갱신
+                questProgress.text = $"{currentSelectedQuest.CurrentValue} / {currentSelectedQuest.RuntimeTargetValue}";
+                questStatus.text = currentSelectedQuest.isCompleted ? "<color=green>완료 가능</color>" : "<color=white>진행 중</color>";
+            }
         }
 
         //레드닷, 모두 완료 버튼 상태 갱신
