@@ -7,11 +7,16 @@ using UnityEngine.UI;
 
 public class QuestBoxUI : MonoBehaviour
 {
+    [Header("프리팹 기본 구성")]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private TextMeshProUGUI progressText;
     [SerializeField] private Image background; // 하이라이트용 배경
     [SerializeField] private GameObject redDot; // 박스 내부 레드닷
+
+    //[Header("잠금 표시")]
+    //[SerializeField] private GameObject hider;
+    //[SerializeField] private TextMeshProUGUI lockText;
 
     private Color highlightColor;
     private Color normalColor;
@@ -34,6 +39,7 @@ public class QuestBoxUI : MonoBehaviour
         titleText.text = quest.RuntimeDescription;
         progressText.text = $"{quest.CurrentValue} / {quest.RuntimeTargetValue}";
 
+        GetComponent<Button>().onClick.RemoveAllListeners();
         GetComponent<Button>().onClick.AddListener(() => _uiManager.SelectQuest(_quest));
 
         if (redDot != null) RefreshVisuals();
@@ -41,6 +47,26 @@ public class QuestBoxUI : MonoBehaviour
     public void RefreshVisuals()
     {
         if (_quest == null) return;
+        /*
+        if (_quest.isLocked)
+        {
+            if (hider != null) hider.SetActive(true);
+            if (lockText != null) lockText.text = _quest.lockMessage;
+            GetComponent<Button>().interactable = false; //클릭 방지
+        }
+        else
+        {
+            if (hider != null) hider.SetActive(false);
+
+            GetComponent<Button>().interactable = true;
+
+            if (titleText != null) titleText.text = _quest.RuntimeDescription;
+            if (progressText != null) progressText.text = $"{_quest.CurrentValue} / {_quest.RuntimeTargetValue}";
+            if (statusText != null) statusText.text = $"({_quest.GetStatusText()})";
+            if (redDot != null) redDot.SetActive(_quest.isCompleted);
+        }
+        */
+        GetComponent<Button>().interactable = true;
 
         //진행도 텍스트 갱신 (예: 10/100)
         if (progressText != null)

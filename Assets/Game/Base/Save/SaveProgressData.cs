@@ -37,13 +37,7 @@ namespace Base.Save
     {
         public List<EquipmentEntry> equipmentEntries;
     }
-    /// <summary> 현재 장착중인 장비 </summary>
-    [Serializable]public class PlayerEquipmentState
-    {
-        public int equippedWeponKey; //장비의 키를 저장
-        public int equippedArmorKey;
-        public int equippedAccessoryKey;
-    }
+    
     /// <summary> 플레이어 스탯 업그레이드 상태</summary>
     [Serializable]public class PlayerStatUpgradeState
     {
@@ -77,5 +71,4 @@ namespace Base.Save
         public int key; //스킬 키
         public int enhancementCount; //강화 수치
     }
-    
 }
