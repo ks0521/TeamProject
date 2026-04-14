@@ -41,13 +41,15 @@ namespace UI.Skill_Set
             // pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
             hub = GameManager.Instance.GetGameSystem<EventHub>();
 
-            skillTreePresenter = GetComponentInChildren<SkillTreePresenter>();
-            skillDetailPresenter = GetComponentInChildren<SkillDetailPresenter>(true);
-            skillEquipChangePresenter = GetComponentInChildren<SkillEquipChangePresenter>(true);
+            // skillTreePresenter = GetComponentInChildren<SkillTreePresenter>();
+            // skillDetailPresenter = GetComponentInChildren<SkillDetailPresenter>(true);
+            // skillEquipChangePresenter = GetComponentInChildren<SkillEquipChangePresenter>(true);
 
             UIPresenterInitData initData = new UIPresenterInitData(skillMgr, hub);
 
             skillTreePresenter.Init(initData);
+            skillTreePresenter.LvResetBtnInteractable(skillMgr.IsSkillResetPossible);
+            // Debug.Log($"skillMgr.IsSkillResetPossible 값 : {skillMgr.IsSkillResetPossible}");
             skillTreePresenter.SetSkillPointText(skillMgr.PlayerSkillPoint);
 
             skillDetailPresenter.Init(initData);
@@ -61,7 +63,8 @@ namespace UI.Skill_Set
         void AllPresenterAddListner()
         {
             hub.OnSkillLevelChange += SkillLevelUpdate;
-            
+            hub.OnLevelChange += LockImgSet;
+
             skillTreePresenter.BtnEventAddListner(SkillDetailSet, SkillReset);
 
             skillDetailPresenter.BtnEventAddListner(
@@ -79,26 +82,59 @@ namespace UI.Skill_Set
         }
         public void OnDestroyFeat()
         {
+            hub.OnSkillLevelChange -= SkillLevelUpdate;
+            hub.OnLevelChange -= LockImgSet;
+
             skillTreePresenter.OnDestroyFeat();
             skillDetailPresenter.OnDestroyFeat();
             skillEquipChangePresenter.OnDestroyFeat();
         }
         int showSkillKey;
+        void LockImgSet(int plLv)
+        {
+            var skillTreeBtnSetList = skillTreePresenter.SkillTreeUISetList;
+            for (int i = 0; i < skillTreeBtnSetList.Count; i++)
+            {
+                int skillKey = skillTreeBtnSetList[i].SkillKey;
+                bool isUnlock = skillMgr.IsSkillUnlock(skillKey);
+                skillTreePresenter.SetSkillTreeBtnLockImg(skillKey, isUnlock);
+                if (showSkillKey == skillKey) skillDetailPresenter.SkillLockImageSet(isUnlock);
+            }
+        }
         void SkillDetailSet(int key)
         {
             showSkillKey = key;
             skillDetailPresenter.SkillDetailDataSetToSkillChange(key);
         }
-        void SkillLevelOneUp(int key) => hub.SkillLevelOneUpInput(key);
-        void SkillLevelMaxUp(int key) => hub.SkillLevelMaxUpInput(key);
+        void SkillLvUpBtnInteractable(int key)
+        {
+            bool isInteractable = skillMgr.TryGetSkillSO(key, out var so) && skillMgr.IsSkillLvUpPossibe(so);
+            skillDetailPresenter.SkillLvUpBtnInteractable(isInteractable);
+            skillTreePresenter.LvResetBtnInteractable(skillMgr.IsSkillResetPossible);
+        }
+        void SkillLevelOneUp(int key)
+        {
+            hub.SkillLevelOneUpInput(key);
+            SkillLvUpBtnInteractable(key);
+        }
+        void SkillLevelMaxUp(int key)
+        {
+            hub.SkillLevelMaxUpInput(key);
+            SkillLvUpBtnInteractable(key);
+        }
         void SkillLevelUpdate(Skill skill)
         {
             int key = skill.SkillData.key;
+
             skillTreePresenter.SetSkillPointText(skillMgr.PlayerSkillPoint);
             skillTreePresenter.SkillLevelTextChange(key, skill.CurLv, skill.MaxLv);
             skillDetailPresenter.SkillDetailDataSetToSkillLvEnhance(key);
         }
-        void SkillReset() => hub.SkillLevelResetInput();
+        void SkillReset()
+        {
+            hub.SkillLevelResetInput();
+            skillTreePresenter.LvResetBtnInteractable(skillMgr.IsSkillResetPossible);
+        }
         void SkillEquipChangePopupShow()
         {
             skillEquipChangePresenter.SkillEquipChangePopupShow(showSkillKey);

@@ -28,6 +28,18 @@ namespace Growth.Skill
             sr.transform.localScale = new Vector3(scale, scale, 1f);
         }
     }
+    public struct NeedsDataFromEquipSkillController
+    {
+        public SkillManager skillMgr;
+        public Character cha;
+        public EventHub hub;
+        public NeedsDataFromEquipSkillController(SkillManager skillMgr, Character cha, EventHub hub)
+        {
+            this.skillMgr = skillMgr;
+            this.cha = cha;
+            this.hub = hub;
+        }
+    }
     public abstract class EquipSkillController : MonoBehaviour
     {
         // test
@@ -66,6 +78,7 @@ namespace Growth.Skill
         }
         public virtual void PriorityUpdate(int index, Priority pri)
         {
+            if(index < 0 || 6 <= index) return;
             equipSkillArr[index].priority = pri;
         }
         [SerializeField] Vector2 testAreaOffset;
@@ -76,7 +89,7 @@ namespace Growth.Skill
             tss.FitSpriteToSize(sr);
         }
         public void SkillEquip(int slotIndex, int skillKey) => SkillEquipByKey(slotIndex, skillKey);
-        protected bool IsThisSlotEquipped(int slotIndex, int skillKey)
+        public bool IsThisSlotEquipped(int slotIndex, int skillKey)
         {
             if (equipSkillArr[slotIndex].EquippedSkillKey == skillKey)
             {
@@ -85,7 +98,32 @@ namespace Growth.Skill
             }
             return false;
         }
-        protected bool IsOtherSlotEquipped(int slotIndex, int skillKey, out int otherEquippedSlotIndex)
+        public bool IsThisSkillEquippedOtherSlot(ActiveSkill aSkill)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (!equipSkillArr[i].isEquipped) continue;
+                else if (equipSkillArr[i].Skill == aSkill) return true;
+                // else if (equipSkillArr[i].EquippedSkillKey == aSkill.SkillData.key) return true;
+            }
+            return false;
+        }
+        public bool IsThisSkillEquippedOtherSlot(ActiveSkill aSkill, out int equippedSlotIndex)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (!equipSkillArr[i].isEquipped) continue;
+                else if (equipSkillArr[i].Skill == aSkill)
+                // else if (equipSkillArr[i].EquippedSkillKey == aSkill.SkillData.key)
+                {
+                    equippedSlotIndex = i;
+                    return true;
+                }
+            }
+            equippedSlotIndex = -1;
+            return false;
+        }
+        public bool IsOtherSlotEquipped(int slotIndex, int skillKey, out int otherEquippedSlotIndex)
         {
             otherEquippedSlotIndex = -1;
             for (int i = 0; i < 6; i++)
@@ -162,29 +200,40 @@ namespace Growth.Skill
             eventHub.CastingStarted();
             float alphaValue = 100f / 255f;
             if (sr != null) sr.color = new Color(0, 0, 1f, alphaValue);
+            var ct = this.GetCancellationTokenOnDestroy();
 
             float baseCastingTime = equipSkillArr[index].Skill.ActiveSkillData.castingTime;
             float curCastingTime = baseCastingTime;
             float castingTimeValue = 1f;
 
-            while (skillFireTimeValue < castingTimeValue)
+            // while (skillFireTimeValue < castingTimeValue)
+            // {
+            //     castingTimeValue = curCastingTime / baseCastingTime;
+            //     curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
+            //     await UniTask.Yield(this.GetCancellationTokenOnDestroy());
+            //     if (this == null) return;
+            // }
+            
+
+            while (0 < castingTimeValue)
             {
                 castingTimeValue = curCastingTime / baseCastingTime;
-                curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
-                await UniTask.Yield(this.GetCancellationTokenOnDestroy());
-                if (this == null) return;
+                curCastingTime -= Time.deltaTime;
+                await UniTask.DelayFrame(1, PlayerLoopTiming.Update, ct);
             }
 
             if (sr != null) sr.color = new Color(0, 1f, 0, alphaValue);
             equipSkillArr[index].SkillUse(cha);
 
-            while (0 < castingTimeValue)
-            {
-                castingTimeValue = curCastingTime / baseCastingTime;
-                curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
-                await UniTask.Yield(this.GetCancellationTokenOnDestroy());
-                if (this == null) return;
-            }
+            await UniTask.Delay(TimeSpan.FromSeconds(1), DelayType.DeltaTime, PlayerLoopTiming.Update, ct);
+            // curCastingTime = 1;
+            // while (0 < castingTimeValue)
+            // {
+            //     castingTimeValue = curCastingTime / baseCastingTime;
+            //     curCastingTime -= Time.deltaTime; // * owner의 캐스팅 시간 감소 속도
+            //     await UniTask.Yield(this.GetCancellationTokenOnDestroy());
+            //     if (this == null) return;
+            // }
 
             if (sr != null) sr.color = new Color(1f, 0, 0, alphaValue);
 
@@ -220,7 +269,7 @@ namespace Growth.Skill
             }
             mon = null;
             return false;
-            
+
             // if (!OverlapChecker.TryGetNearTargetCharacter(
             //     plPos, aSkill.ActiveSkillData.range, owner.TargetLayer, out var cha))
             // {

@@ -9,6 +9,7 @@ namespace Growth.Skill
 {
     public class SkillPool : MonoBehaviour
     {
+        private SkillManager skillMgr;
         [SerializeField] private SkillSO[] allSkillData;
         // private Skill[] allSkillArr;
         public Skill[] AllSkillArr { get; private set; }
@@ -18,8 +19,10 @@ namespace Growth.Skill
         public int PassiveSkillCnt => passiveSkillDic.Count;
         public Dictionary<int, int> skillSaveDic;
         public bool TestTryGetSaveSkill(int saveSkillIndex, out int saveSkillKey) => skillSaveDic.TryGetValue(saveSkillIndex, out saveSkillKey);
-        public void Init(IReadOnlyList<SkillSO> allSkillArr, Dictionary<int, int> skillLvDic)
+        public void Init(SkillManager skillMgr)
         {
+            this.skillMgr = skillMgr;
+            var allSkillArr = skillMgr.AllSkillSOList;
             int cnt = allSkillData.Length;
             AllSkillArr = new Skill[cnt];
             Player pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
@@ -27,7 +30,7 @@ namespace Growth.Skill
             for (int i = 0; i < allSkillArr.Count; i++)
             {
                 var so = allSkillArr[i];
-                PlayerSkillLevelProvider lvProvider = new PlayerSkillLevelProvider(skillLvDic, so.key);
+                PlayerSkillLevelProvider lvProvider = new PlayerSkillLevelProvider(skillMgr, so.key);
                 // if (allSkillData[i] is ActiveSkillSO aso)
                 if (so is ActiveSkillSO aso)
                 {
