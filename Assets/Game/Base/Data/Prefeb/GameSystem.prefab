@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6697774184834411132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7086474558444146970}
+  - component: {fileID: 7776749893990273560}
+  m_Layer: 0
+  m_Name: OfflineReward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7086474558444146970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6697774184834411132}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8270932434667603848}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7776749893990273560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6697774184834411132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 376e00ae7be396f4991e37c15567af35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drops: []
 --- !u!1 &8806905213126057016
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,6 +88,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3965107922762191140}
     m_Modifications:
+    - target: {fileID: 297680042744003651, guid: 8ec31cade92200846bc27032b399084e,
+        type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 1564956497993801449, guid: e3b71b414fc22384a9ccda11983cbd59,
+        type: 3}
     - target: {fileID: 2757982746121243604, guid: 8ec31cade92200846bc27032b399084e,
         type: 3}
       propertyPath: m_Name
@@ -179,7 +230,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4171080201829896800, guid: d682e93b5c761f1478124e87ae0814cb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7086474558444146970}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d682e93b5c761f1478124e87ae0814cb, type: 3}
 --- !u!4 &8270932434667603848 stripped

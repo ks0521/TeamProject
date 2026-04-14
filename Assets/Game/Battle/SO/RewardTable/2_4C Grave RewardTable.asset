@@ -17,24 +17,24 @@ MonoBehaviour:
     currencyType: 0
     currencySO: {fileID: 11400000, guid: 1af0648ae34e79a429de91b4d140b187, type: 2}
     itemSO: {fileID: 0}
-    amount: 0
+    amount: 2400
   - rewardType: 1
     currencyType: 1
     currencySO: {fileID: 11400000, guid: a33d451e9ce1def40bf67ed25b3f98a8, type: 2}
     itemSO: {fileID: 0}
-    amount: 0
+    amount: 17000
   - rewardType: 1
     currencyType: 2
     currencySO: {fileID: 11400000, guid: c79a5913888d92244b328e263e00e56e, type: 2}
     itemSO: {fileID: 0}
-    amount: 0
+    amount: 20000
   - rewardType: 0
     currencyType: 0
     currencySO: {fileID: 0}
     itemSO: {fileID: 11400000, guid: 464fd3c7130fd6a4585318df653bc368, type: 2}
-    amount: 0
+    amount: 5
   - rewardType: 1
     currencyType: 2
     currencySO: {fileID: 0}
     itemSO: {fileID: 11400000, guid: 464fd3c7130fd6a4585318df653bc368, type: 2}
-    amount: 0
+    amount: 5
