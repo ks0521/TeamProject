@@ -84,7 +84,7 @@ public class QuestUIManager : MonoBehaviour, IManager
     {
         if (questBoxPrefab == null || questListContainer == null) return;
 
-        // 1. 기존에 생성된 박스 제거
+        //기존에 생성된 박스는 제거
         foreach (var box in instantiatedBoxes)
         {
             if (box != null)
@@ -97,14 +97,14 @@ public class QuestUIManager : MonoBehaviour, IManager
 
         if (questManager == null) return;
 
-        // 2. 현재 선택된 카테고리의 퀘스트만 가져오기(LINQ 활용)
+        //현재 선택된 카테고리의 퀘스트만 가져오기(LINQ 활용)
         QuestCategory currentCategory = (QuestCategory)currentTabIndex;
         var filteredQuests = questManager.GetActiveQuests()
             .Where(q => q.Data.CategoryEnum == currentCategory)
             .OrderBy(q => q.Data.questID)
             .ToList();
 
-        // 3. 프리팹 생성 및 데이터 주입
+        //프리팹 생성 및 데이터 주입
         foreach (var quest in filteredQuests)
         {
             QuestBoxUI boxScript = GetBoxFromPool();
@@ -116,15 +116,13 @@ public class QuestUIManager : MonoBehaviour, IManager
             boxScript.RefreshVisuals();
         }
         UpdateReceiveAllButtonState();
-        // 4. 리스트가 갱신되면 첫 번째 퀘스트를 자동으로 선택해줌 (상세창 공백 방지)
+
+        //리스트가 갱신되면 1번째 퀘스트를 자동으로 선택해줌
         if (instantiatedBoxes.Count > 0)
         {
             SelectQuest(filteredQuests.First());
         }
-        else
-        {
-            ClearDetails();
-        }
+        else ClearDetails();
     }
     void ClearDetails()
     {
@@ -145,9 +143,8 @@ public class QuestUIManager : MonoBehaviour, IManager
             questBoxPool.RemoveAt(0);
             box.gameObject.SetActive(true);
         }
-        else
+        else //풀이 비어있다면 새로 생성
         {
-            //풀이 비어있다면 새로 생성
             GameObject go = Instantiate(questBoxPrefab, questListContainer);
             box = go.GetComponent<QuestBoxUI>();
         }
@@ -174,7 +171,7 @@ public class QuestUIManager : MonoBehaviour, IManager
             box.SetHighlight(box.GetQuest() == quest);
         }
 
-        // 보상 아이템 목록 갱신 (추후 보상 시스템 연동)
+        //보상 아이템 목록 갱신
         RefreshRewardIcons(quest.Data.rewardGroupID);
     }
     //모두 완료 버튼 활성화 여부 체크
@@ -183,8 +180,6 @@ public class QuestUIManager : MonoBehaviour, IManager
         if (receiveAllButton == null) return;
         QuestCategory currentCat = (QuestCategory)currentTabIndex;
 
-        //리스트 내의 퀘스트 중 하나라도 isCompleted가 true라면 버튼 활성화
-        //bool canReceiveAny = currentQuests.Any(q => q.isCompleted);
         bool canReceive = questManager.GetActiveQuests()
            .Any(q => q.Data.CategoryEnum == currentCat && q.isCompleted);
         receiveAllButton.interactable = canReceive;
@@ -203,20 +198,16 @@ public class QuestUIManager : MonoBehaviour, IManager
 
         foreach (var data in rewards)
         {
-            // rewardItemPrefab은 아까 팝업에서 쓴 것과 같은 프리팹을 쓰면 됩니다.
             GameObject go = Instantiate(rewardItemPrefab, rewardContainer);
 
-            // [중요] 좌표 및 스케일 초기화 (위치 이탈 방지)
+            //좌표 및 스케일 초기화(위치 이탈 방지)
             RectTransform rt = go.GetComponent<RectTransform>();
             rt.localPosition = Vector3.zero;
             rt.localScale = Vector3.one;
 
-            // 데이터 주입
+            //데이터 주입
             RewardBoxUI boxUI = go.GetComponent<RewardBoxUI>();
-            if (boxUI != null)
-            {
-                boxUI.Setup(data);
-            }
+            if (boxUI != null) boxUI.Setup(data);
         }
     }
 
@@ -279,20 +270,20 @@ public class QuestUIManager : MonoBehaviour, IManager
 
                         if (isEquipment)
                         {
-                            // 장비는 합치지 않고 무조건 리스트에 추가 (개별 프리팹 생성됨)
+                            //장비는 합치지 않고 무조건 리스트에 추가(개별 프리팹 생성)
                             uniqueRewards.Add(r);
                         }
                         else
                         {
                             CurrencyType cType = r.currencyType;
-                            // 재화라면 딕셔너리에 합산
+                            //재화는 딕셔너리에 합산
                             if (totalCurrencies.ContainsKey(cType))
                             {
                                 totalCurrencies[cType].amount += r.amount;
                             }
                             else
                             {
-                                // 새로운 재화 등록 (기존 r 객체를 직접 쓰면 참조 문제로 수치가 꼬일 수 있어 새로 생성 권장)
+                                //새로운 재화 등록
                                 RewardData newData = new RewardData
                                 {
                                     itemName = r.itemName,
@@ -313,7 +304,7 @@ public class QuestUIManager : MonoBehaviour, IManager
                 checkAgain = true;
                 safetyCounter++;
                 //무한루프 방지용
-                if (safetyCounter > 255) checkAgain = false;
+                if (safetyCounter > 999) checkAgain = false;
             }
             else checkAgain = false;    
         }
@@ -332,13 +323,13 @@ public class QuestUIManager : MonoBehaviour, IManager
     //실시간 데이터 동기화
     void RealtimeRefreshVisuals()
     {
-        // 1. 왼쪽 리스트 박스들 수치 갱신
+        //왼쪽 박스들의 수치 갱신
         foreach (var box in instantiatedBoxes)
         {
             if (box != null) box.RefreshVisuals();
         }
 
-        // 2. 오른쪽 상세창 수치 및 버튼 상태 갱신
+        //오른쪽 상세창 수치 및 버튼 상태 갱신
         if (currentSelectedQuest != null)
         {
             questProgress.text = $"{currentSelectedQuest.CurrentValue} / {currentSelectedQuest.RuntimeTargetValue}";
@@ -346,7 +337,7 @@ public class QuestUIManager : MonoBehaviour, IManager
             questStatus.text = currentSelectedQuest.isCompleted ? "<color=green>완료 가능</color>" : "<color=white>진행 중</color>";
         }
 
-        // 3. 책갈피 알림(레드닷) 및 모두 완료 버튼 상태 갱신
+        //레드닷, 모두 완료 버튼 상태 갱신
         UpdateTabVisuals();
         UpdateReceiveAllButtonState();
     }
