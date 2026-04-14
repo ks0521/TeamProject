@@ -51,6 +51,8 @@ namespace Base.Managers
             }
         }
 
+        
+        //로딩 간단하게 하기 -> 메인씬에 로딩창 띄워놓고 완료되면 화면끄기 / 아예 캔버스 제거
         private void Start()
         {
             //시작시 IManager붙은 컴포넌트 전부 찾고 GetOrder순 정렬
