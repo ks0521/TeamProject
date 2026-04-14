@@ -45,7 +45,7 @@ namespace Base.Managers
         private RuntimeProgressData progress; //축약용 프로퍼티
         private ProgressManager progressManager;
         private MonsterPoolManager monsterPool; //몬스터 풀
-        private GameDataProvider datahub;
+        private GameDataDictionaries datahub;
         private EventHub eventHub; //이벤트 허브
         private Stage stage; //스테이지 객체
         private StageRule stageRule; // 현재 진행중인 스테이지 규약
@@ -57,7 +57,7 @@ namespace Base.Managers
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             monsterPool = GameManager.Instance.GetGameSystem<MonsterPoolManager>();
-            datahub = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            datahub = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
             progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
             stageProgress = GetStageProgress();
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);

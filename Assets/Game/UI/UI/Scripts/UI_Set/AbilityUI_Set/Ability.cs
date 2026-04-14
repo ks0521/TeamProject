@@ -13,7 +13,7 @@ namespace UI.Ability_Set
         private StatUpgradeManager manager;
         private ProgressManager progressManager;
         private EventHub hub;
-        private GameDataProvider gameDB;
+        private GameDataDictionaries gameDB;
         private RuntimeStatus _data;
 
         [Header("스텟 UI 목록")]
@@ -40,7 +40,7 @@ namespace UI.Ability_Set
             manager = GameManager.Instance.GetGameSystem<StatUpgradeManager>();
             progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
             hub = GameManager.Instance.GetGameSystem<EventHub>();
-            gameDB = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            gameDB = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
             _data = GameManager.Instance.GetGameSystem<RuntimeStatus>();
 
             BindAllButtons();
