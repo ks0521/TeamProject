@@ -199,9 +199,9 @@ namespace UI.ChapterStage_Set
         public void UpdateStageChange(StageSO stageSo)
         {
             var popup = GameManager.Instance.GetGameSystem<UI.Scripts.PopupManager>();
-            popup.CloseBossUI();
-            popup.CloseMonsterKill();
-            popup.CloseTimer();
+            popup.CloseStagePopup(Popup.PopupSO.StagePopupType.Boss);
+            popup.CloseStagePopup(Popup.PopupSO.StagePopupType.monKill);
+            popup.CloseStagePopup(Popup.PopupSO.StagePopupType.timer);
 
             if (stageSo.stageType == StageType.Normal)
             {
@@ -209,14 +209,16 @@ namespace UI.ChapterStage_Set
             }
             if (stageSo.stageType == StageType.Challenge)
             {
-                popup.OpenTimer();
-                popup.OpenMonsterKill();
+                popup.OpenStagePopup(Popup.PopupSO.StagePopupType.timer);
+                popup.OpenStagePopup(Popup.PopupSO.StagePopupType.monKill);
+               
                 return;
             }
             if (stageSo.stageType == StageType.Boss)
             {
-                popup.OpenTimer();
-                popup.OpenBossUI();
+                popup.OpenStagePopup(Popup.PopupSO.StagePopupType.timer);
+                popup.OpenStagePopup(Popup.PopupSO.StagePopupType.Boss);
+
                 return;
             }
         }
