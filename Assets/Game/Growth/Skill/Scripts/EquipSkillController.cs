@@ -195,7 +195,7 @@ namespace Growth.Skill
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
         {
-            Debug.Log("캐스팅 시작");
+            //Debug.Log("캐스팅 시작");
             IsCasting = true;
             eventHub.CastingStarted();
             float alphaValue = 100f / 255f;
@@ -239,18 +239,18 @@ namespace Growth.Skill
 
             IsCasting = false;
             eventHub.CastingEnd();
-            Debug.Log("캐스팅 완료");
+            //Debug.Log("캐스팅 완료");
         }
         bool CheckSkillUsePossible(int index)
         {
             if (!equipSkillArr[index].IsSkillUsePossible)
             {
-                Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
+                //Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
                 return false;
             }
             else if (IsCasting)
             {
-                Debug.LogWarning("캐스팅중");
+                //Debug.LogWarning("캐스팅중");
                 return false;
             }
             else return true;
@@ -304,12 +304,12 @@ namespace Growth.Skill
             if (!CheckSkillUsePossible(index)) return false;
             else if (TryGetMonsterTargetToAtk(index, out Monster mon))
             {
-                Debug.Log("몬스터 찾음");
+                //Debug.Log("몬스터 찾음");
                 SkillRangeChange(equipSkillArr[index].Skill.ActiveSkillData.range);
                 AtkSkillUse(index, mon);
                 return true;
             }
-            Debug.Log("몬스터 찾지 못함");
+            //Debug.Log("몬스터 찾지 못함");
             return false;
         }
     }
