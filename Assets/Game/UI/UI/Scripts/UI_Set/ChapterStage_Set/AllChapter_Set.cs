@@ -1,8 +1,10 @@
 using Base.Data;
 using Base.Managers;
 using Battle;
+using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
 
 namespace UI.ChapterStage_Set
@@ -48,8 +50,8 @@ namespace UI.ChapterStage_Set
             AllChapter();
             SelectCurrentStage();
             BindButton();
-            
-            
+
+
             enter.interactable = false;
             if (hub != null)
             {
@@ -85,7 +87,7 @@ namespace UI.ChapterStage_Set
 
             if (reward != null)
             {
-                reward.SetReward(stageEntry);
+                SelectReward(stageEntry);
             }
             if (stageMon != null)
             {
@@ -94,6 +96,63 @@ namespace UI.ChapterStage_Set
             if (enter != null)
             {
                 enter.interactable = true;
+            }
+        }
+
+        void SelectReward(StageEntry entry)
+        {
+            reward.SetReward();
+            int currentSlot = 0;
+
+            if (stageEntry.stageSO.stageType == Battle.StageType.Normal)
+            {
+                var dropTable = stageEntry.stageSO.dropTable;
+
+                foreach (var reward in dropTable.dropList)
+                {
+                    switch (reward.rewardType)
+                    {
+                        case DropRewardType.Currency:
+                            this.reward.SetSlot(
+                                currentSlot, reward.currencySO.icon,
+                                reward.minAmount == reward.maxAmount ? $"{reward.maxAmount}" : $"{reward.minAmount}~{reward.maxAmount}",
+                                dropTable.rewardExp.ToString());
+                            break;
+
+                        case DropRewardType.Item:
+                            this.reward.SetSlot(
+                                currentSlot, reward.itemSO.icon,
+                                reward.minAmount == reward.maxAmount ? $"{reward.maxAmount}" : $"{reward.minAmount}~{reward.maxAmount}");
+                            break;
+                    }
+                    currentSlot++;
+                }
+            }
+            else
+            {
+                var rewardTable = stageEntry.stageSO.rewardTable;
+
+                foreach (var reward in rewardTable.rewardList)
+                {
+                    switch (reward.rewardType)
+                    {
+                        case DropRewardType.Currency:
+                            this.reward.SetSlot(
+                                currentSlot,
+                                reward.currencySO.icon,
+                                reward.amount.ToString());
+                            break;
+
+                        case DropRewardType.Item:
+                            this.reward.SetSlot(
+                                currentSlot,
+                                reward.itemSO.icon,
+                                reward.amount.ToString()
+                                );
+                            break;
+                    }
+                    currentSlot++;
+                }
             }
         }
         void EventChain(StageSO stage)//이벤트 연결용
@@ -211,7 +270,7 @@ namespace UI.ChapterStage_Set
             {
                 popup.OpenStagePopup(Popup.PopupSO.StagePopupType.timer);
                 popup.OpenStagePopup(Popup.PopupSO.StagePopupType.monKill);
-               
+
                 return;
             }
             if (stageSo.stageType == StageType.Boss)
