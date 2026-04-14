@@ -68,7 +68,10 @@ public class ClearReward : MonoBehaviour
         if (slot < rewardText.Length && rewardText[slot] != null)
         {
             rewardText[slot].text = valueText;
-            Debug.LogError(rewardText[slot].text);
+            if (rewardText[slot].text == null)
+            {
+                Debug.LogError(rewardText[slot].text);
+            }
         }
 
         slot++;
