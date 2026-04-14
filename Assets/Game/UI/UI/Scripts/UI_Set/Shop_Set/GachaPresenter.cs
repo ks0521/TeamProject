@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UI.Scripts;
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 public class GachaPresenter : MonoBehaviour
@@ -17,7 +18,7 @@ public class GachaPresenter : MonoBehaviour
     [SerializeField] private GachaView[] gachaView;
     [SerializeField] private ProbabilityTable problemTable;
     [SerializeField] private GameObject gachaResult;
-    [SerializeField] private Transform transform;
+    [SerializeField] private Transform gachaTransform;
 
     [Header("가챠 결과 화면")]
     [SerializeField] private GameObject gachaPanel;
@@ -79,7 +80,7 @@ public class GachaPresenter : MonoBehaviour
         currentTableLevel = gachaManager.GetGachaLevel(type);
         
 
-        tableInstance = Instantiate(problemTable.gameObject, transform);
+        tableInstance = Instantiate(problemTable.gameObject, gachaTransform);
         ProbabilityTable tableUI = tableInstance.GetComponent<ProbabilityTable>();
         tableUI.BindButtons(OnClickNextTableLevel, OnClickPrevTableLevel);
 
@@ -96,7 +97,7 @@ public class GachaPresenter : MonoBehaviour
 
         if (results != null && results.Count > 0)
         {
-            GameObject prefab = Instantiate(gachaPanel.gameObject, transform);
+            GameObject prefab = Instantiate(gachaPanel.gameObject, gachaTransform);
 
             gachaResultInstance = prefab.GetComponent<GachaResult>();
             gachaResultInstance.Show(results);
