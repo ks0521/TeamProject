@@ -15,6 +15,7 @@ MonoBehaviour:
   key: 1003
   skillName: Electric Ball
   maxLv: 5
+  unlockPlayerLv: 10
   description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC (\uC804\uAE30 \uC18D\uC131)
     \uB2E8\uC77C \uACF5\uACA9"
   skillIcon: {fileID: -2895734620076278133, guid: a4ce094c050bd4387bb4ca527872a97e,

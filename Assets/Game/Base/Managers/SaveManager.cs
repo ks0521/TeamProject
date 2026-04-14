@@ -87,6 +87,7 @@ namespace Base.Managers
                 },
                 skillProgress = new PlayerSkillState()
                 {
+                    skillSlots = new int[6],
                     skillProgressState = new()
                 },
                 lastSession = new LastSessionTime()

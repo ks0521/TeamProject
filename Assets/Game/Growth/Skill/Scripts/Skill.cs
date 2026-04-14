@@ -13,18 +13,20 @@ namespace Growth.Skill
     }
     public class PlayerSkillLevelProvider : ISkillLevelProvider
     {
-        private Dictionary<int, int> skillLevelSaveData;
+        private SkillManager skillMgr;
         private int curSkillKey;
-        public PlayerSkillLevelProvider(Dictionary<int, int> skillLevelSaveData, int curSkillKey)
+        public PlayerSkillLevelProvider(SkillManager skillMgr, int curSkillKey)
         {
-            this.skillLevelSaveData = skillLevelSaveData;
+            // this.skillLevelSaveData = skillLevelSaveData;
+            this.skillMgr = skillMgr;
             this.curSkillKey = curSkillKey;
         }
         public int GetCurSkillLevel()
         {
-            if (!skillLevelSaveData.TryGetValue(curSkillKey, out int curLv))
+            // if (!skillLevelSaveData.TryGetValue(curSkillKey, out int curLv))
+            if(!skillMgr.TryGetSkillLevel(curSkillKey, out int curLv))
             {
-                skillLevelSaveData.Add(curSkillKey, 0);
+                // skillLevelSaveData.Add(curSkillKey, 0);
                 return 0;
             }
             
@@ -36,9 +38,6 @@ namespace Growth.Skill
         public abstract SkillSO SkillData { get; }
         [SerializeField] protected Character owner;
         public Character Owner => owner;
-        // curLv -> SkillManager에서 받은 Dictionary로 받도록 변경
-        // [SerializeField] protected int curLv;
-        // public int CurLv => curLv;
         protected ISkillLevelProvider lvProvider;
         public int CurLv => lvProvider.GetCurSkillLevel();
         public int MaxLv => SkillData.maxLv;
