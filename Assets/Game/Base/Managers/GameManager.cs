@@ -38,7 +38,17 @@ namespace Base.Managers
             //초기화 및 도감추가만 우선적으로 시행
             gameSystems = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include,FindObjectsSortMode.None).OfType<IGameSystem>().ToList();
             foreach (IGameSystem gameSystem in gameSystems)
-                dic.Add(gameSystem.GetType(), gameSystem);
+            {
+                Type type = gameSystem.GetType();
+
+                if (dic.ContainsKey(type))
+                {
+                    Debug.LogError($"중복 IGameSystem 타입 감지: {type.Name} / 새 오브젝트: {((MonoBehaviour)gameSystem).name}");
+                    continue;
+                }
+
+                dic.Add(type, gameSystem);
+            }
         }
 
         private void Start()

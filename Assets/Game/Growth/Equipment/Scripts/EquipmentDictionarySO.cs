@@ -32,7 +32,7 @@ namespace Growth.Equipment
         public IReadOnlyList<EquipmentSO> GetEquipListByType(EquipType type)
         {
             if(equipmentsTypeDic == null) MakeDictionary();
-            Debug.Log($"{type} 형식의 장비 개수 : {equipmentsTypeDic[type].Count}");
+            //Debug.Log($"{type} 형식의 장비 개수 : {equipmentsTypeDic[type].Count}");
             return equipmentsTypeDic[type];
         }
 

@@ -15,4 +15,5 @@ MonoBehaviour:
   chapter: 1
   stage: 5
   rewardExp: 10
+  expSO: {fileID: 11400000, guid: 1af0648ae34e79a429de91b4d140b187, type: 2}
   dropList: []
