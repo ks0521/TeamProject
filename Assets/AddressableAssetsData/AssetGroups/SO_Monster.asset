@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SO_Monster
+  m_EditorClassIdentifier: 
+  m_GroupName: SO_Monster
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 8e72c29754d9fa44b87e3c8c553a9591
+  m_SerializeEntries:
+  - m_GUID: 0f051a10a052da840936fdb0e38baf12
+    m_Address: 1_3StoneAxeOrc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2362faff452f0f044bedae8d451e8aff
+    m_Address: 1_2StoneAxeOrc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30e92d598315ad74c8b935852c13495f
+    m_Address: 1_4IronAxeOrc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a4d8613ee3cd954ba795ea77afb16ee
+    m_Address: 2_5Skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42928885a97f57f458d12eb14b974bd4
+    m_Address: 1_2ClubOrc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47adbe080170bd848852a9074c4c1032
+    m_Address: 1_4StoneAxeOrc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c42ff8d968e29c46bc406c3f1c1d9c1
+    m_Address: 1_5_B_OrcKing
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 815629df0fee5c54daa4408678a00052
+    m_Address: 1_1ClubOrc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb242ba699de41d45beb4236fb5c9d0f
+    m_Address: 2_4Skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf99d5ff1ea38d946b0e3e59f5c52fea
+    m_Address: 2_2Skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d92f0b1744b7d4642b2f2b6fa3615a95
+    m_Address: 2_1Skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f45d67fe4d0d1554ba71911355f02c86
+    m_Address: 2_3Skeleton
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Monster
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 2db874af9c2711946b3a221dcbda718d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: cac3d71b81e985c4b92cfd42445a888b, type: 2}
+    - {fileID: 11400000, guid: 35b8e5db16fc1004fae9124f05ee3bec, type: 2}

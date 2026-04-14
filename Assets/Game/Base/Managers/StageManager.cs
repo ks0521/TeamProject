@@ -31,10 +31,8 @@ namespace Base.Managers
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
     public class StageManager : MonoBehaviour, IManager
     {
-        #if UNITY_EDITOR
-        public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
-        public bool BlockProceed; //테스트용으로 클리어해도 스테이지 넘어가지 않게 고정
-        #endif
+        public bool BlockSpawning; //특정 이벤트로 몬스터 스폰 막고싶은 때 사용
+        public bool BlockProceed; //특정 이벤트로 스테이지 변경 막고싶을 때 사용
         
         public StageSO CurrentStageSo => currentStageSO;
         public List<Monster> Monsters => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
