@@ -5,18 +5,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//퀘스트 박스 프리팹이 어떻게 노출될 것인지를 결정
 public class QuestBoxUI : MonoBehaviour
 {
     [Header("프리팹 기본 구성")]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private TextMeshProUGUI progressText;
-    [SerializeField] private Image background; // 하이라이트용 배경
-    [SerializeField] private GameObject redDot; // 박스 내부 레드닷
+    [SerializeField] private Image background; //하이라이트용 배경
+    [SerializeField] private GameObject redDot; //박스 내부 레드닷
 
-    //[Header("잠금 표시")]
-    //[SerializeField] private GameObject hider;
-    //[SerializeField] private TextMeshProUGUI lockText;
+    [Header("잠금 표시")]
+    [SerializeField] private GameObject hider;
+    [SerializeField] private TextMeshProUGUI lockText;
 
     private Color highlightColor;
     private Color normalColor;
@@ -36,9 +37,6 @@ public class QuestBoxUI : MonoBehaviour
         _quest = quest;
         _uiManager = uiManager;
 
-        titleText.text = quest.RuntimeDescription;
-        progressText.text = $"{quest.CurrentValue} / {quest.RuntimeTargetValue}";
-
         GetComponent<Button>().onClick.RemoveAllListeners();
         GetComponent<Button>().onClick.AddListener(() => _uiManager.SelectQuest(_quest));
 
@@ -47,35 +45,31 @@ public class QuestBoxUI : MonoBehaviour
     public void RefreshVisuals()
     {
         if (_quest == null) return;
-        /*
-        if (_quest.isLocked)
+        
+        if (_quest.isLocked) //잠긴 퀘스트
         {
-            if (hider != null) hider.SetActive(true);
+            hider.SetActive(true);
+            GetComponent<Button>().interactable = false; //클릭 차단
             if (lockText != null) lockText.text = _quest.lockMessage;
-            GetComponent<Button>().interactable = false; //클릭 방지
-        }
-        else
-        {
-            if (hider != null) hider.SetActive(false);
 
+            if (titleText != null) titleText.text = _quest.RuntimeDescription;
+            if (progressText != null) progressText.text = "";
+            if (statusText != null) statusText.text = $"({_quest.GetStatusText()})";
+            if (redDot != null) redDot.SetActive(false);
+
+            return; //잠겼다면 여기서 로직 종료
+        }
+        else //진행 중인 퀘스트(isLocked == false)
+        {
+            hider.SetActive(false);
             GetComponent<Button>().interactable = true;
 
             if (titleText != null) titleText.text = _quest.RuntimeDescription;
-            if (progressText != null) progressText.text = $"{_quest.CurrentValue} / {_quest.RuntimeTargetValue}";
+            if (progressText != null)
+                progressText.text = $"{_quest.CurrentValue} / {_quest.RuntimeTargetValue}";
             if (statusText != null) statusText.text = $"({_quest.GetStatusText()})";
             if (redDot != null) redDot.SetActive(_quest.isCompleted);
         }
-        */
-        GetComponent<Button>().interactable = true;
-
-        //진행도 텍스트 갱신 (예: 10/100)
-        if (progressText != null)
-            progressText.text = $"{_quest.CurrentValue} / {_quest.RuntimeTargetValue}";
-        //퀘스트 진행 상태
-        if (statusText != null) statusText.text = $"({_quest.GetStatusText()})";
-        //완료 여부에 따른 레드닷 표시
-        if (redDot != null)
-            redDot.SetActive(_quest.isCompleted);
     }
 
     public void SetHighlight(bool isSelected)
