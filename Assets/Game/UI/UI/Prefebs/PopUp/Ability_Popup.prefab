@@ -12052,6 +12052,7 @@ GameObject:
   - component: {fileID: 2563283302222648199}
   - component: {fileID: 5214374676729383615}
   - component: {fileID: 2998639693094265932}
+  - component: {fileID: 5305857162573231927}
   m_Layer: 5
   m_Name: Close_Button
   m_TagString: Untagged
@@ -12066,7 +12067,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5324754853689050997}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12161,6 +12162,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5305857162573231927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5324754853689050997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 893d3ecb99e265547b91bc46b4bab0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5359196935046132881
 GameObject:
   m_ObjectHideFlags: 0
