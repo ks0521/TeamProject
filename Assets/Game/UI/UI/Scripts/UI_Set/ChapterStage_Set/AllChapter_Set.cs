@@ -13,8 +13,7 @@ namespace UI.ChapterStage_Set
     {
 
 
-        [Header("스테이지 매니저")]
-        [SerializeField] StageManager stageManager;
+        
 
         [Header("챕터")]
         [SerializeField] Chapter_Set[] chapter;
@@ -35,6 +34,7 @@ namespace UI.ChapterStage_Set
 
         [SerializeField] StageMonster_Set stageMon;
         [SerializeField] Reward_Set reward;
+        StageManager stageManager;
 
         [SerializeField] private StageEntry stageEntry;
         private EventHub hub;
@@ -104,7 +104,7 @@ namespace UI.ChapterStage_Set
             reward.SetReward();
             int currentSlot = 0;
 
-            if (stageEntry.stageSO.stageType == Battle.StageType.Normal)
+            if (stageEntry.stageSO.stageType == StageType.Normal)
             {
                 var dropTable = stageEntry.stageSO.dropTable;
 

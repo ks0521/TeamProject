@@ -34,6 +34,9 @@ MonoBehaviour:
   - popupType: 8
     popupPrefab: {fileID: 1099741809834494949, guid: 814ac12035591964992cd07caf8f9019,
       type: 3}
+  - popupType: 9
+    popupPrefab: {fileID: 102101936530179646, guid: 82a1fce18fce3574b97f8b699518e678,
+      type: 3}
   eventPopupList:
   - eventPopupType: 0
     popupPrefab: {fileID: 167152665120292641, guid: ecdff62cc6ccfab44abd1d9816584ebd,
