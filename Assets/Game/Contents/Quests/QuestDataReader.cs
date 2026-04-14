@@ -17,6 +17,7 @@ public class QuestDataReader
     public int targetID;
     public int targetValue;
     public int prevQuestID;
+    public int nextQuestID;
     public int rewardGroupID;
     public int valueModifier;
     public bool isInfinite;

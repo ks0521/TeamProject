@@ -373,12 +373,13 @@ namespace QuestSystem
                 completedQuestIds.Add(qID);
             }
 
-            if (qID == 102)
-            {
-                completedQuestIds.Remove(101);
-                completedQuestIds.Remove(102);
-            }
 
+            if (currentCategory == QuestCategory.Recurring)
+            {
+                completedQuestIds.Remove(quest.Data.nextQuestID);
+                completedQuestIds.Add(quest.Data.questID);
+            }
+            
             //활성 리스트에서 제거
             activeQuests.Remove(quest);
             bool isAllCleared = false;
