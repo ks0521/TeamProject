@@ -97,15 +97,21 @@ namespace UI.Skill_Set
         [SerializeField, Tooltip("장착 스킬 우선순위 변경 버튼")] private Button priorityChangeBtn;
         public void SkillDetailViewSetToSkillChange(SkillDetailViewNeedsNameAndImage niData, SkillDetailViewNeedsStatData statData)
         {
+            bool isUnlock = niData.isUnlock;
+            SkillLockImgSet(isUnlock);
             SkillNameChange(niData.name);
             SkillImgChange(niData.sp);
 
-            SkillDetailViewSetToLvEnhance(statData);
+            SkillDetailViewSetToLvChange(statData, isUnlock);
         }
-        public void SkillDetailViewSetToLvEnhance(SkillDetailViewNeedsStatData statData)
+        public void SkillDetailViewSetToLvChange(SkillDetailViewNeedsStatData statData, bool isUnlock)
         {
+            int curLv = statData.curLv;
+            int maxLv = statData.maxLv;
+            SkillLevelUpBtnInteractable(isUnlock && curLv < maxLv);
+            EquipBtnInteractable(0 < curLv);
+            SkillLevelChange(curLv, maxLv);
             SkillDetailViewUIShowAndHide(statData.isActiveSkill);
-            SkillLevelChange(statData.curLv, statData.maxLv);
             SkillStatValueTextChange(statData.skillValueText);
             SkillCooltimeChange(statData.cooltimeValue);
             SkillDescriptionChange(statData.description);
@@ -125,17 +131,22 @@ namespace UI.Skill_Set
                 priorityChangeBtn.gameObject.SetActive(false);
             }
         }
+        public void SkillLevelUpBtnInteractable(bool isBtnClickPossible)
+        {
+            lvUpBtn.interactable = isBtnClickPossible;
+            lvUpMaxBtn.interactable = isBtnClickPossible;
+        }
+        public void EquipBtnInteractable(bool isBtnClickPossible)
+        {
+            equipBtn.interactable = isBtnClickPossible;
+        }
+        public void SkillLockImgSet(bool isUnlock) => lockImg.gameObject.SetActive(!isUnlock);
         public void SkillImgChange(Sprite sp) => skillImg.sprite = sp;
         public void SkillNameChange(string skillName) => nameText.text = skillName;
         public void SkillLevelChange(int curLv, int maxLv) => levelText.text = $"{curLv} / {maxLv}";
         public void SkillStatValueTextChange(string valueText) => skillValueText.text = valueText;
         public void SkillCooltimeChange(float cooltime) => skillCooltimeText.text = $"쿨타임 : {cooltime}초";
         public void SkillDescriptionChange(string skillDescription) => skillDescriptionText.text = skillDescription;
-        public void SkillLevelUpBtnInteractable(bool isInteractable)
-        {
-            lvUpBtn.interactable = isInteractable;
-            lvUpMaxBtn.interactable = isInteractable;
-        }
         public void BtnEventAddListner(Action lvOneUpFunc, Action maxLvUpFunc, Action equipFunc)
         {
             lvUpBtn.onClick.AddListener(() => lvOneUpFunc());

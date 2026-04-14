@@ -7,7 +7,8 @@ namespace Base.Utils
 {
     // 행동 트리(Behaviour Tree) 제작 Base
 
-    public enum NodeState {
+    public enum NodeState
+    {
         /// <summary> 다음 Frame에 현재 Node 재실행 </summary>
         Run,
         /// <summary> 현재 Node 성공 처리, (Selector) Success 반환 후 멈춤, (Sequence) 바로 다음 Node 실행 </summary>
@@ -25,12 +26,24 @@ namespace Base.Utils
         public abstract NodeState Evaluate();
     }
 
+    public class ConditionNode : Node
+    {
+        public Func<bool> condition;
+        public override void DestroyFeat() => condition = null;
+        public ConditionNode(Func<bool> condition) => this.condition = condition;
+        public override NodeState Evaluate()
+        {
+            if (condition == null) return NodeState.Fail;
+            return condition.Invoke() ? NodeState.Success : NodeState.Fail;
+        }
+    }
     /// <summary> 실제 실행을 담당하는 Node </summary>
     public class ActionNode : Node
     {
         /// <summary> 해당 Action Node에서 실행할 기능, 실행 시 NodeState 반환 </summary>
         Func<NodeState> action;
-        public void AddActionNode(Func<NodeState> action) => this.action = action;
+        // public void AddAction(Func<NodeState> action) => this.action = action;
+        public ActionNode(Func<NodeState> action) => this.action = action;
         /// <summary> action에 저장된 함수에 대한 참조를 해제 </summary>
         public override void DestroyFeat() => action = null;
         /// <summary> Action Node 실행 기능 </summary>
@@ -45,14 +58,14 @@ namespace Base.Utils
         /// <summary> 객체 파괴 시 내부 Node의 Destroy 기능 실행 </summary>
         public override void DestroyFeat()
         {
-            foreach (Node node in nodes)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                node.DestroyFeat();
+                nodes[i].DestroyFeat();
             }
         }
         /// <summary> Selector 로 확인할 Node 추가 </summary>
         /// <param name="node">Action/Selector/Sequence Node</param>
-        public void AddSelectorNode(Node node)
+        public void AddNode(Node node)
         {
             nodes.Add(node);
             //Debug.Log($"SelectorNode에 Node 추가{nodes.Count}");
@@ -85,14 +98,14 @@ namespace Base.Utils
         /// <summary> 객체 파괴 시 내부 Node의 Destroy 기능 실행 </summary>
         public override void DestroyFeat()
         {
-            foreach (Node node in nodes)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                node.DestroyFeat();
+                nodes[i].DestroyFeat();
             }
         }
         /// <summary> Sequence 로 확인할 Node 추가 </summary>
         /// <param name="node">Action/Selector/Sequence Node</param>
-        public void AddSequenceNode(Node node)
+        public void AddNode(Node node)
         {
             nodes.Add(node);
             //Debug.Log($"SequenceNode에 Node 추가{nodes.Count}");
