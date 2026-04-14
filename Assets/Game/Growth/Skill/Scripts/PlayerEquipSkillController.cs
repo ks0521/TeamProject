@@ -19,12 +19,12 @@ namespace Growth.Skill
         /// <summary> EquipSkill의 쿨타임 시점에 실행될 함수, 
         /// IsCooltime 이후에 실행될 것이기 때문에 해당 시점을 기준으로 AutoSkillCnt Update </summary>
         /// <param name="index">스킬 index</param>
-        void AutoSkillUseCntUpdate(int index)
-        {
-            if (equipSkillArr == null) return;
-            EquipSkill eSkill = equipSkillArr[index];
-            // AutoSkillUseCntUpdateFeat(eSkill);
-        }
+        // void AutoSkillUseCntUpdate(int index)
+        // {
+        //     if (equipSkillArr == null) return;
+        //     EquipSkill eSkill = equipSkillArr[index];
+        //     AutoSkillUseCntUpdateFeat(eSkill);
+        // }
         // void AutoSkillUseCntUpdateFeat(EquipSkill eSkill)
         // {
         //     if (eSkill == null) return;
@@ -46,7 +46,7 @@ namespace Growth.Skill
         private void OnDestroy()
         {
             EquipSkillSlotEventUnsbuscribe();
-            UnsubscribeUseSkillPossibleCntAll();
+            EventUnsubscribe();
             autoSkillController.DestroyFeat();
         }
         public TargetDetectorUsingCircleCollider2D td;
@@ -57,6 +57,7 @@ namespace Growth.Skill
                 OwnerSet(pl);
                 td = GetComponent<TargetDetectorUsingCircleCollider2D>();
                 eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+                EventSubscribe();
                 skillMgr = GameManager.Instance.GetGameSystem<SkillManager>();
                 skillObjPool = new SkillObjectPool();
                 // SkillEquipInit();
@@ -158,7 +159,7 @@ namespace Growth.Skill
         {
             base.SkillEquipFeat(slotIndex, targetSkill, isInit);
             eventHub.SkillEquipComplete(slotIndex, targetSkill);
-            if (!isInit) AutoSkillUseCntUpdate(slotIndex);
+            // if (!isInit) AutoSkillUseCntUpdate(slotIndex);
         }
         public override void PriorityUpdate(int index, Priority pri)
         {
@@ -172,21 +173,21 @@ namespace Growth.Skill
             // AutoSkillUseCntUpdateFeat(eSkill);
             // UnequipUpdateToEquipSkillChecker(index);
         }
-        void SkillUse(int index) => TryAtkSkillUseToMonster(index);
+        void SkillUse(int index){Debug.Log($"버튼 입력으로 {index} slot 스킬 사용 시도");TryAtkSkillUseToMonster(index);}
         // public void UnequipUpdateToEquipSkillChecker(int index) => autoSkillController.UnequipUpdate(index);
          //eSkillCheckerSet.SkillUnequipUpdate(index);
 
-        public void SubscribeUseSkillPossibleCntAll()
+        public void EventSubscribe()
         {
             eventHub.OnPlayerSkillUse += SkillUse;
-            eventHub.OnSkillUsed += AutoSkillUseCntUpdate;
-            eventHub.OnSkillCoolEnd += AutoSkillUseCntUpdate;
+            // eventHub.OnSkillUsed += AutoSkillUseCntUpdate;
+            // eventHub.OnSkillCoolEnd += AutoSkillUseCntUpdate;
         }
-        public void UnsubscribeUseSkillPossibleCntAll()
+        public void EventUnsubscribe()
         {
             eventHub.OnPlayerSkillUse -= SkillUse;
-            eventHub.OnSkillUsed -= AutoSkillUseCntUpdate;
-            eventHub.OnSkillCoolEnd -= AutoSkillUseCntUpdate;
+            // eventHub.OnSkillUsed -= AutoSkillUseCntUpdate;
+            // eventHub.OnSkillCoolEnd -= AutoSkillUseCntUpdate;
         }
     }
 }
