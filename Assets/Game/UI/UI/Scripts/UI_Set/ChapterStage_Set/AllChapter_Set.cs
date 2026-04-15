@@ -173,7 +173,7 @@ namespace UI.ChapterStage_Set
         }
         void ShowChapter()
         {
-            chapterName.text = currentChapter.ToString();
+            chapterName.text = $"Chapter : {currentChapter + 1}";
 
             if (chapter == null || chapter.Length == 0)//배열 확인용
             {
