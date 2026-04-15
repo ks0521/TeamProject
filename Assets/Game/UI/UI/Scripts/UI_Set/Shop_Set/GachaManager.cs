@@ -463,23 +463,13 @@ namespace Shop.Gacha
                 EquipRarity equipRarity = GetRandomRarity(configSO, currentLevel);
                 EquipQuality equipQuality = GetRandomQuality(configSO);
 
-                EquipmentSO selectedEquipment = null;
-
-                for (int z = 0; z < typeEquipments.Count; z++)
+                if (_gameDataDictionaries.equipmentTable.TryPickupItem(equipType, equipRarity, equipQuality, out EquipmentSO selected))
                 {
-                    EquipmentSO equipment = typeEquipments[z];
-
-                    if (equipment == null) continue;
-                    if (equipment.rarity != equipRarity) continue;
-                    if (equipment.quality != equipQuality) continue;
-
-                    selectedEquipment = equipment;
-                    break;
+                    results.Add(selected);
                 }
-
-                if (selectedEquipment != null)
+                else
                 {
-                    results.Add(selectedEquipment);
+                    Debug.LogWarning($"[Gacha] {equipType}+{equipRarity}+{equipQuality} 데이터 없음 — SO를 추가해주세요");
                 }
             }
 
