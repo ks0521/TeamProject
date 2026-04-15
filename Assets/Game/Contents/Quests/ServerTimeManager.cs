@@ -130,7 +130,7 @@ public class ServerTimeManager : MonoBehaviour, IManager
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Home)) //8시간씩 미래로 이동
+        if (Input.GetKeyDown(KeyCode.F12)) //8시간씩 미래로 이동
         {
             Test_AddHours(8f);
         }

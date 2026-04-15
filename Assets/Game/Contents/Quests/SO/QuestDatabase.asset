@@ -87,10 +87,10 @@ MonoBehaviour:
     isAbsoluteGoal: 0
   - questID: 103
     category: 1
-    description: "[\uC21C\uD658]\uBAAC\uC2A4\uD130 100\uB9C8\uB9AC \uC0AC\uB0E5"
+    description: "[\uC21C\uD658]\uBAAC\uC2A4\uD130 10\uB9C8\uB9AC \uC0AC\uB0E5"
     questStatus: 1
     goalType: 0
-    targetValue: 100
+    targetValue: 10
     prevQuestID: 102
     nextQuestID: 101
     rewardGroupID: 103
@@ -99,10 +99,10 @@ MonoBehaviour:
     isAbsoluteGoal: 0
   - questID: 111
     category: 1
-    description: "[\uBC18\uBCF5]\uBAAC\uC2A4\uD130 200\uB9C8\uB9AC \uC0AC\uB0E5"
+    description: "[\uBC18\uBCF5]\uBAAC\uC2A4\uD130 20\uB9C8\uB9AC \uC0AC\uB0E5"
     questStatus: 1
     goalType: 0
-    targetValue: 200
+    targetValue: 20
     prevQuestID: 11
     nextQuestID: 0
     rewardGroupID: 111
@@ -111,10 +111,10 @@ MonoBehaviour:
     isAbsoluteGoal: 0
   - questID: 901
     category: 2
-    description: "[\uC77C\uC77C]\uBAAC\uC2A4\uD130 300\uB9C8\uB9AC \uC0AC\uB0E5"
+    description: "[\uC77C\uC77C]\uBAAC\uC2A4\uD130 50\uB9C8\uB9AC \uC0AC\uB0E5"
     questStatus: 0
     goalType: 0
-    targetValue: 300
+    targetValue: 50
     prevQuestID: 0
     nextQuestID: 0
     rewardGroupID: 901

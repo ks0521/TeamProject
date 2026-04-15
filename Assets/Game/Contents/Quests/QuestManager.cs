@@ -130,11 +130,14 @@ namespace QuestSystem
                 eventHub.OnLevelChange -= HandleLevelChange;
                 eventHub.OnSkillUsed -= HandleSkillUsed;
                 eventHub.OnClearStage -= HandleStageClear;
+                eventHub.OnMonsterKill  -= HandleMonsterKill; // 추가
 
                 // 2. 새로운 함수 구독
                 eventHub.OnLevelChange += HandleLevelChange;
                 eventHub.OnSkillUsed += HandleSkillUsed;
                 eventHub.OnClearStage += HandleStageClear;
+                eventHub.OnMonsterKill  += HandleMonsterKill; // 추가
+
 
                 EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
                 RefreshQuests(); //초기 퀘스트
@@ -155,6 +158,11 @@ namespace QuestSystem
             {
                 OnActivity(GoalType.StageClear, stageSO.chapter, 1);
             }
+        }
+        private void HandleMonsterKill(Battle.MonsterSO monsterSO)
+        {
+            // monsterSO.key 로 특정 몬스터 처치, 0 키는 OnActivity 내부에서 합산
+            OnActivity(GoalType.Hunt, monsterSO.key, 1);
         }
 
         public int GetOrder() => 300;
@@ -848,6 +856,7 @@ namespace QuestSystem
             eventHub.OnLevelChange -= (level) => OnActivity(GoalType.LevelUp, 0, level);
             eventHub.OnSkillUsed -= (skillID) => OnActivity(GoalType.SkillUse, skillID, 1);
             eventHub.OnClearStage -= (stageSO) => OnActivity(GoalType.StageClear, stageSO.stageKey, 1);
+            eventHub.OnMonsterKill  -= HandleMonsterKill; // 추가
             EventHub.OnNewDayStarted -= (dateStr) => ResetDailyQuests();
         }
     }

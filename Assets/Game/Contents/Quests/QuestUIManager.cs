@@ -263,6 +263,7 @@ private void ClearRewardIcons()
             box = questBoxPool[0];
             questBoxPool.RemoveAt(0);
             box.gameObject.SetActive(true);
+            box.transform.SetAsLastSibling();
         }
         else //풀이 비어있다면 새로 생성
         {
