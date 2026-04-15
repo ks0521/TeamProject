@@ -102,6 +102,7 @@ namespace Battle
                         anim.runtimeAnimatorController = existingOverride.runtimeAnimatorController;
                     }
                 }
+
                 spumController.OverrideControllerInit();
             }
         }
@@ -162,7 +163,8 @@ namespace Battle
 
         public virtual void Hit(float damage, HitType type)
         {
-            float resultDmg = Mathf.Max(1, (damage - CurrentBattleStat.def)*(1-CurrentTotalStat.extra.damageReduceRate));
+            float resultDmg = Mathf.Max(1,
+                (damage - CurrentBattleStat.def) * (1 - CurrentTotalStat.extra.damageReduceRate));
             // Hp -= damage - CurrentBattleStat.def;
             SendHitSignal(resultDmg, type);
             Hp -= resultDmg;
@@ -195,7 +197,7 @@ namespace Battle
                 spumController.PlayAnimation(PlayerState.ATTACK, 0);
             }
 
-            float resultDmg = CurrentBattleStat.atk;
+            float resultDmg = CurrentBattleStat.atk * (1 + CurrentTotalStat.extra.damageDealtRate);
             if (IsCriticalChance())
             {
                 type = HitType.Critical;
@@ -204,7 +206,7 @@ namespace Battle
                 //Debug.Log("크리티컬!");
             }
 
-            //resultDmg *= Random.Range(0.9f, 1.1f);
+            resultDmg *= Random.Range(0.9f, 1.1f);
             hitTarget.Hit(resultDmg, type);
         }
 
@@ -216,16 +218,18 @@ namespace Battle
             //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
 
             //float resultDmg = CurrentBattleStat.atk * (1 + multiplier);
-            float resultDmg = CurrentBattleStat.atk * multiplier;
+            float resultDmg = CurrentBattleStat.atk * multiplier * (1+CurrentTotalStat.extra.damageDealtRate);
             if (IsCriticalChance())
             {
                 type = HitType.Critical;
                 resultDmg *= CurrentBattleStat.critDamage;
                 // Debug.Log("크리티컬!");
             }
+
             resultDmg *= Random.Range(0.95f, 1.05f);
             hitTarget.Hit(resultDmg, type);
         }
+
         protected void UpdateFacing(float horizontalDir)
         {
             if (uniRoot == null) return;
@@ -245,7 +249,7 @@ namespace Battle
             if (isAtkCooltime) return;
             //Debug.Log("공격 쿨타임 시작");
             isAtkCooltime = true;
-            float curAtkCooltime = CurrentBattleStat.atkSpeed; 
+            float curAtkCooltime = CurrentBattleStat.atkSpeed;
             while (curAtkCooltime > 0)
             {
                 //Debug.Log($"{curAtkCooltime}");

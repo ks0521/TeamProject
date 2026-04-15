@@ -56,6 +56,7 @@ public class StatusCalculator : MonoBehaviour, IManager
         runtimeStatus.finalStatus =
             statIncreaseCache + equipOwnIncreaseCache + equipUsingIncreaseCache + skillIncreaseCache;
         runtimeStatus.finalStatus.battle.atk *= (1f + runtimeStatus.finalStatus.battle.atkRate);
+        runtimeStatus.finalStatus.battle.maxHp *= (1f + runtimeStatus.finalStatus.battle.maxHpRate);
         runtimeStatus.finalStatus.battle.critChance = Mathf.Clamp01(runtimeStatus.finalStatus.battle.critChance);
         runtimeStatus.finalStatus.battle.moveSpeed = Mathf.Clamp(runtimeStatus.finalStatus.battle.moveSpeed,0.2f,8f);
         runtimeStatus.finalStatus.extra.damageReduceRate = Mathf.Clamp(runtimeStatus.finalStatus.extra.damageReduceRate,-5f,0.98f);
@@ -272,7 +273,7 @@ public class StatusCalculator : MonoBehaviour, IManager
         foreach (var skillKey in progress.skillProgress.skillProgressState.Keys)
         {
             SkillSO skill = dic.SkillTable.GetSO(skillKey);
-            if (skill is not PassiveSkillSO || skill == null) continue;
+            if (skill == null || skill is not PassiveSkillSO ) continue;
             skillIncreaseCache +=
                 ((PassiveSkillSO)skill).ResultAddStat(progress.skillProgress.skillProgressState[skillKey]);
         }
