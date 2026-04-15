@@ -15,6 +15,7 @@ MonoBehaviour:
   key: 1006
   skillName: Lightning
   maxLv: 5
+  unlockPlayerLv: 30
   description: "\uC801 \uC704\uCE58\uB97C \uC911\uC2EC\uC73C\uB85C \uC881\uC740 \uBC94\uC704\uC5D0
     (\uC804\uAE30 \uC18D\uC131) Lightning\uC744 \uC18C\uD658\uD558\uC5EC \uD574\uB2F9
     \uBC94\uC704\uC5D0 \uB370\uBBF8\uC9C0\uB97C \uC8FC\uB294 \uC2A4\uD0AC"

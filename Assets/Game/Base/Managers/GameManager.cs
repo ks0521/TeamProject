@@ -51,7 +51,24 @@ namespace Base.Managers
             }
         }
 
+        
+        //로딩 간단하게 하기 -> 메인씬에 로딩창 띄워놓고 완료되면 화면끄기 / 아예 캔버스 제거
         private void Start()
+        {
+            //시작시 IManager붙은 컴포넌트 전부 찾고 GetOrder순 정렬
+            // gameSystems.Sort((x, y) => x.GetOrder().CompareTo(y.GetOrder()));
+            // foreach (IGameSystem gameSystem in gameSystems)
+            // {
+            //     if (gameSystem is not IManager manager)
+            //     {
+            //         Debug.Log($"{gameSystem} 시스템 추가");
+            //         continue;
+            //     }
+            //     Debug.Log($"{manager} 초기화");
+            //     manager.Init();
+            // }
+        }
+        public void InitAllManagers()
         {
             //시작시 IManager붙은 컴포넌트 전부 찾고 GetOrder순 정렬
             gameSystems.Sort((x, y) => x.GetOrder().CompareTo(y.GetOrder()));
@@ -66,7 +83,6 @@ namespace Base.Managers
                 manager.Init();
             }
         }
-
         /// <summary> IGameSystem 붙은 컴포넌트 가져오기</summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>찾으려는 컴포넌트</returns>

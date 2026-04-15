@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Base.Save
@@ -42,7 +43,7 @@ namespace Base.Save
     //플레이어 스킬 획득 상황
     [Serializable]public class RuntimeSkillData
     {
-        public List<int> skillSlots; //스킬슬롯에 저장된 스킬리스트
+        public int[] skillSlots; //스킬슬롯에 저장된 스킬리스트
         //key : 스킬 키, value : 스킬 레벨
         public Dictionary<int, int> skillProgressState; //찍힌 스킬
     }
