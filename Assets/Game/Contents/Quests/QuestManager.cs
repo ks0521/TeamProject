@@ -127,7 +127,7 @@ namespace QuestSystem
 
         public void Init()
         {
-            eventHub = FindObjectOfType<Base.Data.EventHub>();
+            eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             player = GameManager.Instance.GetGameSystem<PlayerManager>().GetComponent<Player>();
 
             if (eventHub != null)
@@ -305,7 +305,8 @@ namespace QuestSystem
             if (!suppressPopup && rewardPopup != null)
             {
                 var rewards = GetRewardsByGroupID(quest.Data.rewardGroupID);
-                if (rewards.Count > 0) rewardPopup.ShowRewards(rewards);
+                //if (rewards.Count > 0) rewardPopup.ShowRewards(rewards);
+                if (rewards.Count > 0) eventHub.QuestReward(rewards);
             }
 
             //퀘스트 완료 및 다음 퀘스트 처리 구간
