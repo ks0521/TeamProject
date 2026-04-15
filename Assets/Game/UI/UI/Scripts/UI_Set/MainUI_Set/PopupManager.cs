@@ -43,6 +43,7 @@ namespace UI.Scripts
         [SerializeField] private Button dungeonBtn;
         [SerializeField] private Button settingBtn;
         [SerializeField] private Button shopBtn;
+        [SerializeField] private Button questBtn;
 
         private EventHub hub;
         private Stack<GameObject> popupStack = new();
@@ -104,6 +105,7 @@ namespace UI.Scripts
             dungeonBtn.onClick.RemoveAllListeners();
             settingBtn.onClick.RemoveAllListeners();
             shopBtn.onClick.RemoveAllListeners();
+            questBtn.onClick.RemoveAllListeners();
 
             abilityBtn.onClick.AddListener(() => OpenPopup(PopupType.ability));
             equipmentBtn.onClick.AddListener(() => OpenPopup(PopupType.equipment));
@@ -111,6 +113,7 @@ namespace UI.Scripts
             chapterBtn.onClick.AddListener(() => OpenPopup(PopupType.stage));
             shopBtn.onClick.AddListener(() => OpenPopup(PopupType.shop));
             settingBtn.onClick.AddListener(() => OpenPopup(PopupType.setting));
+            questBtn.onClick.AddListener(() => OpenPopup(PopupType.quest));
         }//버튼에 함수 넣기
 
 
