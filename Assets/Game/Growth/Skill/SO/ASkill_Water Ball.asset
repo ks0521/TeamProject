@@ -20,7 +20,7 @@ MonoBehaviour:
     \uACF5\uACA9"
   skillIcon: {fileID: 7215105689423546514, guid: 7f0334fbcb82d4dea9084d6f5a2ab8d3,
     type: 3}
-  SoE: 0
+  SoE: 1
   Targeting: 1
   baseDamage: 1.5
   incDamagePerLevel: 0.3
@@ -28,6 +28,7 @@ MonoBehaviour:
   range: 3
   coolDown: 2
   speed: 3
-  effectArea: 2
+  effectArea: 1.5
   skillSound: {fileID: 8300000, guid: 273c7e018f039b7469d238fbb46d1751, type: 3}
-  skillObj: {fileID: 215724110754101800, guid: f2c3298bd8b151443b0f6d406f40d575, type: 3}
+  skillObj: {fileID: 6572520847690607571, guid: f2c3298bd8b151443b0f6d406f40d575,
+    type: 3}
