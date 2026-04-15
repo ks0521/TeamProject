@@ -69,7 +69,7 @@ public class QuestBoxUI : MonoBehaviour
             {
                 //값이 음수가 나오는 상황 방지
                 int displayValue = _quest.CurrentValue < 0 ? 0 : _quest.CurrentValue;
-                progressText.text = $"{_quest.CurrentValue} / {_quest.RuntimeTargetValue}";
+                progressText.text = $"{displayValue} / {_quest.RuntimeTargetValue}";
             }
             if (statusText != null) statusText.text = $"({_quest.GetStatusText()})";
             if (redDot != null) redDot.SetActive(_quest.isCompleted);
