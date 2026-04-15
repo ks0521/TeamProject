@@ -229,6 +229,31 @@ public class SkillManager : MonoBehaviour, IManager
         }
         return false;
     }
+    public bool TryGetEquipSkillBySlotNum(int slotNum, out EquipSkill eSkill)
+    {
+        eSkill = null;
+        if(slotNum < 0 || 6 <= slotNum) return false;
+        eSkill = PlayerEquipSkillList[slotNum];
+        return true;
+    }
+    public bool TryGetEquipSkillByKey(int skillKey, out EquipSkill eSkill, out int skillSlotIndex)
+    {
+        eSkill = null;
+        skillSlotIndex = -1;
+        for(int i = 0; i < 6; i++)
+        {
+            var curESkill = PlayerEquipSkillList[i];
+            if(!TryGetActiveSkill(skillKey, out var aSkill) && skillKey == curESkill.EquippedSkillKey)
+            {
+                eSkill = curESkill;
+                skillSlotIndex = i;
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool TryGetEquipSkillByKey(int skillKey, out EquipSkill eSkill) => 
+    TryGetEquipSkillByKey(skillKey, out eSkill, out int num);
     public bool TryGetSkillPriority(int slotNum, out Priority pri)
     {
         pri = Priority.Low;
@@ -238,7 +263,7 @@ public class SkillManager : MonoBehaviour, IManager
         pri = PlayerEquipSkillList[slotNum].priority;
         return true;
     }
-    public bool TryChangeSkillPriority(int slotNum, Priority pri)
+    public bool TryChangeEquipSkillPriority(int slotNum, Priority pri)
     {
         if (slotNum < 0 || 6 <= slotNum) return false;
         var curESkill = PlayerEquipSkillList[slotNum];
@@ -246,7 +271,22 @@ public class SkillManager : MonoBehaviour, IManager
         curESkill.priority = pri;
         return true;
     }
+    public void ChangeEquipSkillPriority(int slotNum, Priority pri) => TryChangeEquipSkillPriority(slotNum, pri);
 
+    public bool TryGetSkillKeyByEquipSkill(EquipSkill eSkill, out int skillKey)
+    {
+        skillKey = -1;
+        if(!eSkill.isEquipped)return false;
+        skillKey = eSkill.EquippedSkillKey;
+        return true;
+    }
+    public bool TryGetSkillKeyByEquipSkill(int slotNum, out int skillKey)
+    {
+        skillKey = -1;
+        if(slotNum < 0 || 6 <= slotNum)return false;
+        skillKey = PlayerEquipSkillList[slotNum].EquippedSkillKey;
+        return true;
+    }
     public void SkillInit()
     {
         progress.playerInfo.skillPoint = progress.playerInfo.maxSkillPoint;
@@ -308,6 +348,8 @@ public class SkillManager : MonoBehaviour, IManager
 
         eventHub.OnSkillEquipComplete += SkillEquipSave;
         eventHub.OnSkillUnset += SkillUnequipSave;
+
+        eventHub.OnEquipSkillPriorityChange += ChangeEquipSkillPriority;
     }
     void OnDestroy()
     {
@@ -324,5 +366,7 @@ public class SkillManager : MonoBehaviour, IManager
 
         eventHub.OnSkillEquipComplete -= SkillEquipSave;
         eventHub.OnSkillUnset -= SkillUnequipSave;
+        
+        eventHub.OnEquipSkillPriorityChange -= ChangeEquipSkillPriority;
     }
 }

@@ -1,4 +1,5 @@
 using Base.Utils;
+using Growth.Skill;
 using System;
 using TMPro;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace UI.Skill_Set
         struct EquipSkillPopupBtnSet
         {
             public Button btn;
+            public Button priBtn;
             public TextMeshProUGUI priText;
             public Image img;
         }
@@ -44,7 +46,7 @@ namespace UI.Skill_Set
                 return;
             }
             var curEquipSkillBtnSet = equipSkillBtnSet[index];
-            curEquipSkillBtnSet.btn.image.color = col;
+            curEquipSkillBtnSet.priBtn.image.color = col;
             curEquipSkillBtnSet.priText.text = priValue;
         }
         public void SkillSlotBtnImgUnset(int index) => equipSkillBtnSet[index].img.SkillImgUnsetting();
@@ -53,12 +55,14 @@ namespace UI.Skill_Set
             if (slotIndex < 0 || 6 <= slotIndex) return;
             equipSkillBtnSet[slotIndex].btn.onClick.AddListener(() => func());
         }
-        public void BtnEventAddListner(Action<int> func)
+        public void BtnEventAddListner(Action<int> func, Action<int> equipSkillPriorityChangeFunc)
         {
             for (int i = 0; i < 6; i++)
             {
                 int index = i;
-                equipSkillBtnSet[i].btn.onClick.AddListener(() => func(index));
+                var curESkillBtnSet = equipSkillBtnSet[index];
+                curESkillBtnSet.btn.onClick.AddListener(() => func(index));
+                curESkillBtnSet.priBtn.onClick.AddListener(() => equipSkillPriorityChangeFunc(index));
             }
             closeBtn.onClick.AddListener(() => gameObject.SetActive(false));
         }
