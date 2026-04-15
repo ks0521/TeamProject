@@ -6,14 +6,13 @@ using Base.Data;
 using Base.Managers;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Unity.VisualScripting;
 // using System.Numerics;
 
 namespace UI.Scripts
 {
     public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
     {
-        [SerializeField] Canvas canvas;
+        Canvas canvas;
         [SerializeField] RectTransform joystickBg;
         [SerializeField] RectTransform joystickHandle;
         private float radius;
@@ -31,6 +30,7 @@ namespace UI.Scripts
         public void Init()
         {
             hub = GameManager.Instance.GetGameSystem<EventHub>();
+            canvas = GetComponentInParent<Canvas>();
             radius = joystickBg.rect.width * 0.5f;
         }
 

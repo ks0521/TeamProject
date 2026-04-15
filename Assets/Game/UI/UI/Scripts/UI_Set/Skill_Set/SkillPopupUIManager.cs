@@ -38,18 +38,12 @@ namespace UI.Skill_Set
         public void Init()
         {
             skillMgr = GameManager.Instance.GetGameSystem<SkillManager>();
-            // pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
             hub = GameManager.Instance.GetGameSystem<EventHub>();
-
-            // skillTreePresenter = GetComponentInChildren<SkillTreePresenter>();
-            // skillDetailPresenter = GetComponentInChildren<SkillDetailPresenter>(true);
-            // skillEquipChangePresenter = GetComponentInChildren<SkillEquipChangePresenter>(true);
 
             UIPresenterInitData initData = new UIPresenterInitData(skillMgr, hub);
 
             skillTreePresenter.Init(initData);
             skillTreePresenter.LvResetBtnInteractable(skillMgr.IsSkillResetPossible);
-            // Debug.Log($"skillMgr.IsSkillResetPossible 값 : {skillMgr.IsSkillResetPossible}");
             skillTreePresenter.SetSkillPointText(skillMgr.PlayerSkillPoint);
 
             skillDetailPresenter.Init(initData);
@@ -64,19 +58,69 @@ namespace UI.Skill_Set
         {
             hub.OnSkillLevelChange += SkillLevelUpdate;
             hub.OnLevelChange += LockImgSet;
+            hub.OnEquipSkillPriorityChange += PriorityChange;
 
             skillTreePresenter.BtnEventAddListner(SkillDetailSet, SkillReset);
 
             skillDetailPresenter.BtnEventAddListner(
                 () => SkillLevelOneUp(showSkillKey),
                 () => SkillLevelMaxUp(showSkillKey),
-                SkillEquipChangePopupShow);
+                SkillEquipChangePopupShow,
+                SkillPriorityChangeInSkillDetailView);
 
             skillEquipChangePresenter.BtnEventAddListner();
         }
+        void SkillPriorityChangeInSkillDetailView()
+        {
+            var eSkill = skillMgr.PlayerEquipSkillList[showSkillKey];
+            if (!eSkill.isEquipped) return;
+
+            Priority changePri = Priority.Low;
+
+            switch (eSkill.priority)
+            {
+                case Priority.High:
+                    changePri = Priority.Low;
+                    break;
+                case Priority.Mid:
+                    changePri = Priority.High;
+                    break;
+                case Priority.Low:
+                    changePri = Priority.Mid;
+                    break;
+            }
+            PriorityChange(showSkillKey, changePri);
+        }
+        void PriorityChange(int slotNum, Priority pri)
+        {
+            skillMgr.PlayerEquipSkillList[slotNum].priority = pri;
+            skillMgr.TryChangeSkillPriority(slotNum, pri);
+            if (slotNum == showSkillKey) skillDetailPresenter.SkillPriorityBtnChange(pri);
+            if (skillEquipChangePresenter.gameObject.activeSelf) skillEquipChangePresenter.SkillPriorityChange(slotNum, pri);
+        }
+        void SkillPriorityChangeInEquipChangeView(int slotNum)
+        {
+            var eSkill = skillMgr.PlayerEquipSkillList[slotNum];
+            if (!eSkill.isEquipped) return;
+
+            Priority changePri = Priority.Low;
+
+            switch (eSkill.priority)
+            {
+                case Priority.High:
+                    changePri = Priority.Low;
+                    break;
+                case Priority.Mid:
+                    changePri = Priority.High;
+                    break;
+                case Priority.Low:
+                    changePri = Priority.Mid;
+                    break;
+            }
+            PriorityChange(showSkillKey, changePri);
+        }
         void OnDestroy()
         {
-            hub.OnSkillLevelChange -= SkillLevelUpdate;
             Debug.Log("DestroyFeat");
             OnDestroyFeat();
         }
@@ -84,6 +128,7 @@ namespace UI.Skill_Set
         {
             hub.OnSkillLevelChange -= SkillLevelUpdate;
             hub.OnLevelChange -= LockImgSet;
+            hub.OnEquipSkillPriorityChange -= PriorityChange;
 
             skillTreePresenter.OnDestroyFeat();
             skillDetailPresenter.OnDestroyFeat();
