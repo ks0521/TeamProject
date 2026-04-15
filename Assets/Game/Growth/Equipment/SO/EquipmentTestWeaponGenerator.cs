@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using Growth.Equipment;
 using UnityEditor;
@@ -141,3 +142,4 @@ public static class EquipmentTestWeaponGenerator
         return Mathf.Round(value * 1000f) / 1000f;
     }
 }
+#endif

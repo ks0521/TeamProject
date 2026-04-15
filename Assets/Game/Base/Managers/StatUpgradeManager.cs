@@ -17,7 +17,7 @@ namespace Base.Managers
         public void Init()
         {
             
-            statUpgradeConfig = GameManager.Instance.GetGameSystem<GameDataProvider>().statusTable;
+            statUpgradeConfig = GameManager.Instance.GetGameSystem<GameDataDictionaries>().statusTable;
             calculator = GameManager.Instance.GetGameSystem<StatusCalculator>();
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;

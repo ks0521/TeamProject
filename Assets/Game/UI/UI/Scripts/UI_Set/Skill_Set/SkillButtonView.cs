@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Base.Utils;
+using TMPro;
 
 namespace UI.Skill_Set
 {
@@ -11,6 +12,7 @@ namespace UI.Skill_Set
         [SerializeField] private Button btn;
         [SerializeField] private Image cooltimeMask;
         [SerializeField] private Image skillImg;
+        [SerializeField] private TextMeshProUGUI cooltimeTxt;
         // 0 : 기본, 1 : 선택됨
         // [SerializeField] private Sprite[] borderArr;
         public bool IsCooltimeMaskActiveState => cooltimeMask.gameObject.activeSelf;
@@ -45,6 +47,10 @@ namespace UI.Skill_Set
         public void ButtonEventSubscribe(Action func) => btn.onClick.AddListener(() => func());
         public void ButtonEventUnsubscribe() => btn.onClick.RemoveAllListeners();
         // public void BtnImageUpdate(float value) => btn.image.fillAmount = value;
-        public void CooltimeShowUpdate(float value) => cooltimeMask.fillAmount = value;
+        public void CooltimeValueUpdate(float value) => cooltimeMask.fillAmount = value;
+        public void CurCooltimeTextUpdate(float curCooltime)
+        {
+            if (cooltimeTxt != null) cooltimeTxt.text = ((int)curCooltime + 1).ToString();
+        }
     }
 }

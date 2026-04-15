@@ -78,7 +78,7 @@ namespace Growth.Skill
         }
         public virtual void PriorityUpdate(int index, Priority pri)
         {
-            if(index < 0 || 6 <= index) return;
+            if (index < 0 || 6 <= index) return;
             equipSkillArr[index].priority = pri;
         }
         [SerializeField] Vector2 testAreaOffset;
@@ -195,7 +195,7 @@ namespace Growth.Skill
         }
         async UniTaskVoid CastingStartTask(int index, Character cha)
         {
-            Debug.Log("캐스팅 시작");
+            //Debug.Log("캐스팅 시작");
             IsCasting = true;
             eventHub.CastingStarted();
             float alphaValue = 100f / 255f;
@@ -213,7 +213,7 @@ namespace Growth.Skill
             //     await UniTask.Yield(this.GetCancellationTokenOnDestroy());
             //     if (this == null) return;
             // }
-            
+
 
             while (0 < castingTimeValue)
             {
@@ -239,18 +239,18 @@ namespace Growth.Skill
 
             IsCasting = false;
             eventHub.CastingEnd();
-            Debug.Log("캐스팅 완료");
+            //Debug.Log("캐스팅 완료");
         }
         bool CheckSkillUsePossible(int index)
         {
             if (!equipSkillArr[index].IsSkillUsePossible)
             {
-                Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
+                //Debug.LogWarning($"{index}번 자리에 장착된 스킬 없음 or 쿨타임");
                 return false;
             }
             else if (IsCasting)
             {
-                Debug.LogWarning("캐스팅중");
+                //Debug.LogWarning("캐스팅중");
                 return false;
             }
             else return true;
@@ -258,30 +258,42 @@ namespace Growth.Skill
         }
         public bool TryGetMonsterTargetToAtk(int skillIndex, out Monster mon)
         {
-            ActiveSkill aSkill = equipSkillArr[skillIndex].Skill;
-            Vector2 plPos = owner.transform.position;
-            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos, aSkill.ActiveSkillData.range, owner.TargetLayer);
-            // Debug.Log(owner.TargetLayer.ToString());
-            if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
-            {
-                mon = targetCol.GetComponent<Monster>();
-                return mon != null;
-            }
             mon = null;
-            return false;
 
-            // if (!OverlapChecker.TryGetNearTargetCharacter(
-            //     plPos, aSkill.ActiveSkillData.range, owner.TargetLayer, out var cha))
+            Vector2 plPos = owner.transform.position;
+
+            int getNearMonCnt = OverlapChecker.GetCircleTargetsCount(plPos,
+            equipSkillArr[skillIndex].Skill.ActiveSkillData.range, owner.TargetLayer);
+
+            // if (OverlapChecker.TryGetNearTarget(plPos, getNearMonCnt, out Collider2D targetCol))
             // {
-            //     // Debug.LogWarning("몬스터 찾지 못함");
-            //     mon = null;
+            //     mon = targetCol.GetComponent<Monster>();
+            //     return mon != null;
             // }
-            // else if (cha is Monster tMon)
-            // {
-            //     mon = tMon;
-            // }
-            // else mon = null;
-            // return mon == null;
+            // mon = null;
+            // return false;
+            if(getNearMonCnt <= 0) return false;
+
+            var monsters = OverlapChecker.GetTargetColArr;
+            float curMinDis = float.MaxValue;
+
+            for (int i = 0; i < getNearMonCnt; i++)
+            {
+                if (!monsters[i].gameObject.activeSelf) continue;
+
+                var tMon = monsters[i].GetComponent<Monster>();
+                if (tMon.IsDead) continue;
+
+                Vector2 monPos = tMon.transform.position;
+                float tMinDis = (monPos - plPos).sqrMagnitude;
+                
+                if (tMinDis < curMinDis)
+                {
+                    curMinDis = tMinDis;
+                    mon = tMon;
+                }
+            }
+            return mon != null;
         }
         public void AtkSkillUse(int index, Monster mon)
         {
@@ -292,12 +304,12 @@ namespace Growth.Skill
             if (!CheckSkillUsePossible(index)) return false;
             else if (TryGetMonsterTargetToAtk(index, out Monster mon))
             {
-                Debug.Log("몬스터 찾음");
+                //Debug.Log("몬스터 찾음");
                 SkillRangeChange(equipSkillArr[index].Skill.ActiveSkillData.range);
                 AtkSkillUse(index, mon);
                 return true;
             }
-            Debug.Log("몬스터 찾지 못함");
+            //Debug.Log("몬스터 찾지 못함");
             return false;
         }
     }
