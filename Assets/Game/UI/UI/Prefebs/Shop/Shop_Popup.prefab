@@ -21902,7 +21902,7 @@ MonoBehaviour:
     type: 3}
   gachaResult: {fileID: 5967191938277756920, guid: 228d6674800c9164c804fff18d3f0ad6,
     type: 3}
-  transform: {fileID: 2391850229821846602}
+  gachaTransform: {fileID: 2391850229821846602}
   gachaPanel: {fileID: 5967191938277756920, guid: 228d6674800c9164c804fff18d3f0ad6,
     type: 3}
 --- !u!1 &6446357159795634417
