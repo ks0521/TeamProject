@@ -2,6 +2,7 @@ using Base.Data;
 using Base.Managers;
 using Base.Save;
 using QuestSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,21 +40,31 @@ public class QuestUIManager : MonoBehaviour, IManager
     [Header("업적 점수")]
     [SerializeField] private TextMeshProUGUI fameText;
 
-    private QuestManager questManager;
-    private EventHub eventHub;
+    [SerializeField]private QuestManager questManager;
+    [SerializeField]private EventHub eventHub;
     private RuntimeProgressData runtimeProgress;
     private List<QuestBoxUI> instantiatedBoxes = new List<QuestBoxUI>();
     private List<QuestBoxUI> questBoxPool = new List<QuestBoxUI>(); //미사용 퀘스트 박스 프리팹 보관용
     private ActiveQuest currentSelectedQuest;
 
-    public void Init()
+    private void OnEnable()
     {
-        questManager = FindObjectOfType<QuestManager>();
-        eventHub = FindObjectOfType<EventHub>();
+        questManager = GameManager.Instance.GetGameSystem<QuestManager>();
+        eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         OnClickBookmark(0);
         if (eventHub != null) eventHub.OnCurrencyChange += HandleFameChange;
         EventHub.OnQuestProgressUpdated += RealtimeRefreshVisuals;
         UpdateFameDisplay(GetCurrentFame());
+    }
+
+    public void Init()
+    {
+        // questManager = GameManager.Instance.GetGameSystem<QuestManager>();
+        // eventHub = GameManager.Instance.GetGameSystem<EventHub>();
+        // OnClickBookmark(0);
+        // if (eventHub != null) eventHub.OnCurrencyChange += HandleFameChange;
+        // EventHub.OnQuestProgressUpdated += RealtimeRefreshVisuals;
+        // UpdateFameDisplay(GetCurrentFame());
     }
     public int GetOrder() => 340;
 

@@ -428,7 +428,7 @@ namespace QuestSystem
             }
         }
 
-        void RefreshQuests()
+        public void RefreshQuests()
         {
             bool isChanged = false;
             //저장된 일퀘 ID 호출(없다면 0으로)
