@@ -169,7 +169,7 @@ namespace UI.Skill_Set
                     return ($"최대체력 + {value * 100}%");
                 // 방어력 비율 감소
                 case nameof(StatIncrease.def):
-                    return ($"방어력 + {value * 100}%");
+                    return ($"방어력 + {value}");
                 // 받는 피해 비율 감소
                 case nameof(StatIncrease.damageReduction):
                     return ($"피해감소율 + {value * 100}%");

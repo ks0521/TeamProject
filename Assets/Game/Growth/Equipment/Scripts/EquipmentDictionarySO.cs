@@ -61,6 +61,11 @@ namespace Growth.Equipment
         /// <returns>해당하는 아이템 SO</returns>
         public bool TryPickupItem(EquipType type, EquipRarity rarity, EquipQuality quality, out EquipmentSO result)
         {
+            if (equipmentsDic == null)
+            {
+                MakeDictionary();
+                Debug.Log("딕셔너리를 생성했습니다. ");
+            }
             if (!equipmentPickupDic.TryGetValue((type, rarity, quality), out EquipmentSO so))
             {
                 result = null;
