@@ -275,7 +275,7 @@ public class SkillManager : MonoBehaviour, IManager
 
     public void Init()
     {
-        skillTable = GameManager.Instance.GetGameSystem<GameDataProvider>().SkillTable;
+        skillTable = GameManager.Instance.GetGameSystem<GameDataDictionaries>().SkillTable;
         _progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         progress = _progressManager.progress;

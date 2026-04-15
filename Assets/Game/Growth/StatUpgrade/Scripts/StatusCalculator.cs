@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class StatusCalculator : MonoBehaviour, IManager
 {
-    [SerializeField] private GameDataProvider dic;
+    [SerializeField] private GameDataDictionaries dic;
     [SerializeField] private EventHub eventHub;
     [SerializeField] private RuntimeStatus runtimeStatus; //계산된 값을 저장하는 공간
     [SerializeField] private ProgressManager progressManager;
@@ -23,19 +23,11 @@ public class StatusCalculator : MonoBehaviour, IManager
     [SerializeField] private TotalStat equipUsingIncreaseCache; //장비 장착효과
     [SerializeField] private TotalStat skillIncreaseCache;
 
-    private void Awake()
-    {
-        Debug.Log($"StatusCalculator Awake : {gameObject.name} / {GetInstanceID()}");
-    }
-    private void Reset()
-    {
-        Debug.Log($"StatusCalculator Reset : {gameObject.name}");
-    }
     public void Init()
     {
         runtimeStatus = GameManager.Instance.GetGameSystem<RuntimeStatus>();
         progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
-        dic = GameManager.Instance.GetGameSystem<GameDataProvider>();
+        dic = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
 
         BindAll();
