@@ -28,13 +28,13 @@ MonoBehaviour:
   - popupType: 5
     popupPrefab: {fileID: 3935247060243164817, guid: 1aca20c9f88fddb4f95f71875de5818b,
       type: 3}
-  - popupType: 7
+  - popupType: 8
     popupPrefab: {fileID: 4638266311165933655, guid: 7401f36b17b6c0b49a14191aa820bfc9,
       type: 3}
-  - popupType: 8
+  - popupType: 9
     popupPrefab: {fileID: 1099741809834494949, guid: 814ac12035591964992cd07caf8f9019,
       type: 3}
-  - popupType: 9
+  - popupType: 10
     popupPrefab: {fileID: 102101936530179646, guid: 82a1fce18fce3574b97f8b699518e678,
       type: 3}
   eventPopupList:
