@@ -8815,6 +8815,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Audio Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 3469953128347325788, guid: 9440bd8e2403faa40b49430d0ca0b83f,
+        type: 3}
+      propertyPath: bgmField
+      value: 
+      objectReference: {fileID: 8300000, guid: 5f8a0454555c6c84c94c9cc0837bae91, type: 3}
     - target: {fileID: 5897202182512123777, guid: 9440bd8e2403faa40b49430d0ca0b83f,
         type: 3}
       propertyPath: _questManager
