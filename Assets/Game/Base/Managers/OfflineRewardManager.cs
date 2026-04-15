@@ -31,7 +31,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
     {
         int sec = (DateTime.Now - time).Seconds;
         if (sec > 28800) sec = 28800; //8시간 (8 * 60 * 60 ) 한도
-        int offlineKillCount = (int)(sec / 60f * 50);
+        int offlineKillCount = (int)(sec / 60f * 40);
         if (offlineKillCount <= 0)
         {
             Debug.Log("처치한 보상이 없습니다. ");

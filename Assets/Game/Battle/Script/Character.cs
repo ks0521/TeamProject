@@ -244,11 +244,11 @@ namespace Battle
             if (isAtkCooltime) return;
             //Debug.Log("공격 쿨타임 시작");
             isAtkCooltime = true;
-            float curAtkCooltime = 1; // 공격 쿨타임 추가?
+            float curAtkCooltime = CurrentBattleStatStat.atkSpeed; 
             while (curAtkCooltime > 0)
             {
                 //Debug.Log($"{curAtkCooltime}");
-                curAtkCooltime -= Time.deltaTime * CurrentBattleStatStat.atkSpeed;
+                curAtkCooltime -= Time.deltaTime;
                 await UniTask.Yield();
                 if (this == null) return;
             }
