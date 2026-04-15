@@ -25,6 +25,7 @@ namespace UI.Skill_Set
             foreach (EquipSkillPopupBtnSet btnSet in equipSkillBtnSet)
             {
                 btnSet.btn.onClick.RemoveAllListeners();
+                btnSet.priBtn.onClick.RemoveAllListeners();
             }
             closeBtn.onClick.RemoveAllListeners();
         }
@@ -46,15 +47,14 @@ namespace UI.Skill_Set
                 return;
             }
             var curEquipSkillBtnSet = equipSkillBtnSet[index];
-            curEquipSkillBtnSet.priBtn.image.color = col;
+            var priBtn = curEquipSkillBtnSet.priBtn;
+
+            priBtn.gameObject.SetActive(true);
+            priBtn.image.color = col;
             curEquipSkillBtnSet.priText.text = priValue;
         }
+        public void SkillPriorityBtnUnset(int index) => equipSkillBtnSet[index].priBtn.gameObject.SetActive(false);
         public void SkillSlotBtnImgUnset(int index) => equipSkillBtnSet[index].img.SkillImgUnsetting();
-        public void EquipSlotSelectBtnEventSubscribe(int slotIndex, Action func)
-        {
-            if (slotIndex < 0 || 6 <= slotIndex) return;
-            equipSkillBtnSet[slotIndex].btn.onClick.AddListener(() => func());
-        }
         public void BtnEventAddListner(Action<int> func, Action<int> equipSkillPriorityChangeFunc)
         {
             for (int i = 0; i < 6; i++)
