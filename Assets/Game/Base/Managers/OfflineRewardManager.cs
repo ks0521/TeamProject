@@ -10,6 +10,7 @@ using UnityEngine;
 public class OfflineRewardManager : MonoBehaviour,IManager
 {
     private RuntimeProgressData progress;
+    private RuntimeStatus status;
     private ItemDropManager dropManager;
     private GameDataDictionaries dic;
     private StageManager stage;
@@ -18,6 +19,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
     [SerializeField] private List<DropReward> drops;
     public void Init()
     {
+        status = GameManager.Instance.GetGameSystem<RuntimeStatus>();
         progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         dic = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
@@ -43,7 +45,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
             stage : stageProgress.nextChallengeStage - 1 ,
             stageType : StageType.Normal);
         Debug.Log($"{maxStage.chapter} - {maxStage.stage} Reward : {offlineKillCount}마리 처치");
-        drops = maxStage.dropTable.GetDroppedItems(offlineKillCount, 0f);
+        drops = maxStage.dropTable.GetDroppedItems(offlineKillCount, status.finalStatus.reward.itemDropRate);
         string rewardContext = $"{DateTime.Now - time :hh\\:mm\\:ss} 자동사냥 완료";
         Debug.Log(rewardContext);
         dropManager.GetRewards(drops);
@@ -52,7 +54,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
     
     public void AutoClearReward(int sec)
     {
-        int offlineKillCount = (int)(sec / 60f * 50);
+        int offlineKillCount = (int)(sec / 60f * 40);
         if (offlineKillCount <= 0)
         {
             Debug.Log("소탕 시간이 너무 짧습니다. ");
@@ -64,7 +66,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
             stage : stageProgress.nextChallengeStage - 1 ,
             stageType : StageType.Normal);
         Debug.Log($"{maxStage.chapter} - {maxStage.stage} Reward : {offlineKillCount}마리 처치");
-        drops = maxStage.dropTable.GetDroppedItems(offlineKillCount, 0f);
+        drops = maxStage.dropTable.GetDroppedItems(offlineKillCount, status.finalStatus.reward.itemDropRate);
         dropManager.GetRewards(drops);
     }
     public int GetOrder() => 600; //UI 프리팹 초기화 된 뒤에 실행되어야 함
