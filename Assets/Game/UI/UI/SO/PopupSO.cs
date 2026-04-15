@@ -19,7 +19,8 @@ namespace UI.Popup
 
         public enum PopupType
         {
-            None, ability, equipment, skill, stage, shop , dungeon , setting , end , info
+            None, ability, equipment, skill, stage, shop , dungeon,
+            quest, setting , end , info
         }
 
         public enum EventPopupType
