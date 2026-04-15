@@ -32,7 +32,7 @@ public class Stage
         stageSO = stage;
         canSpawning = false;
         SpawnTypeSelect(stageSO.spawnType);
-        Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 초기화");
+        Debug.Log($"Chapter.{stageSO.chapter} Stage {stageSO.stage} 초기화");
     }
 
     void SpawnTypeSelect(SpawnType spawnType)
@@ -56,7 +56,7 @@ public class Stage
     public void Enter()
     {
         canSpawning = true;
-        Debug.Log($"Chapter.{stageSO.stage} Stage {stageSO.chapter} 시작");
+        Debug.Log($"Chapter.{stageSO.chapter} Stage {stageSO.stage} 시작");
     }
     #endregion
     #region 스폰 타입

@@ -143,23 +143,29 @@ namespace Base.Manager
         /// <param name="equipment"></param>
         public void Equip(EquipmentSO equipment)
         {
-            if (equipItem == equipment)
-            {
-                Debug.Log("이미 장착중인 아이템입니다 ");
-                return;
-            }
-
             switch (equipment.equipType)
             {
                 case EquipType.Weapon:
+                    if (runtimeData.equipment.equippedWeponKey == equipment.key)
+                    {
+                        return;
+                    }
                     Debug.Log("무기 장착");
                     runtimeData.equipment.equippedWeponKey = equipment.key;
                     break;
                 case EquipType.Armor:
+                    if (runtimeData.equipment.equippedArmorKey == equipment.key)
+                    {
+                        return;
+                    }
                     Debug.Log("방어구 장착");
                     runtimeData.equipment.equippedArmorKey = equipment.key;
                     break;
                 case EquipType.Accessory:
+                    if (runtimeData.equipment.equippedAccessoryKey == equipment.key)
+                    {
+                        return;
+                    }
                     Debug.Log("장신구 장착");
                     runtimeData.equipment.equippedAccessoryKey = equipment.key;
                     break;
