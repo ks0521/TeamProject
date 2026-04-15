@@ -15,7 +15,7 @@ MonoBehaviour:
   key: 1001
   skillName: Fire Ball
   maxLv: 5
-  unlockPlayerLv: 5
+  unlockPlayerLv: 2
   description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC \uC8FC\uBCC0\uC5D0 (\uBD88
     \uC18D\uC131) \uBC94\uC704 \uACF5\uACA9"
   skillIcon: {fileID: -3230184898852940645, guid: d6238278334294d9db4a20082dae319c,

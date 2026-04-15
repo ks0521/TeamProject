@@ -43858,7 +43858,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -715, y: 125}
+  m_AnchoredPosition: {x: -715, y: 0}
   m_SizeDelta: {x: 600, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1546552432070814793
@@ -43926,6 +43926,7 @@ MonoBehaviour:
   levelText: {fileID: 8975724175445809612}
   ownedEffectText: {fileID: 2452422251678793387}
   equipEffectText: {fileID: 6933678773003609881}
+  equipText: {fileID: 6498988690399790149}
   equipButton: {fileID: 7804079096035677442}
   enhanceButton: {fileID: 2649123957001053443}
   combineButton: {fileID: 4984243579003434567}

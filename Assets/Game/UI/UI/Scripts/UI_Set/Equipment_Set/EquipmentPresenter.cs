@@ -19,7 +19,7 @@ namespace UI.Equipment
     public enum EquipmentButtonState
     {
         None = 0,
-        Equip = 1 << 0, //장비 보유여부에 따른 장착버튼 활성화 상태
+        CanEquip = 1 << 0, //장비 보유여부에 따른 장착버튼 활성화 상태
         Enhance = 1 << 1,
         Combine = 1 << 2,
         Equipped = 1<< 3 //현재 장비 장착에 따른 장착버튼 활성화 상태    
@@ -223,15 +223,14 @@ namespace UI.Equipment
 
             //장착가능은 1<<0, 강화가능은 1<<1, 합성가능은 1<<2이며, 이 값든은 state에 OR연산되어 비트연산자로 작동합니다. 
             if (lastCatalog.state.isDiscovered)
-                state |= EquipmentButtonState.Equip;
+                state |= EquipmentButtonState.CanEquip;
             if (equipmentManager.CanEnhanceEquipment(lastCatalog.equipment))
                 state |= EquipmentButtonState.Enhance;
             if (equipmentManager.CanEquipmentCombine(lastCatalog.key))
                 state |= EquipmentButtonState.Combine;
-            // if(현재 viewer에 들어가있는 키 == equippedKey)
-            // {
-            //     state |= EquipmentButtonState.Equipped;
-            // }
+            if(equippedKey == selectedCatalog.key)
+                state |= EquipmentButtonState.Equipped;
+            
             detailView.ApplyButtonState(state);
         }
 
