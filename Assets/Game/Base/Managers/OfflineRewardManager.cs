@@ -29,7 +29,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
 
     public void OfflineKillReward()
     {
-        int sec = (DateTime.Now - time).Seconds;
+        int sec = (int)(DateTime.Now - time).TotalSeconds;
         if (sec > 28800) sec = 28800; //8시간 (8 * 60 * 60 ) 한도
         int offlineKillCount = (int)(sec / 60f * 40);
         if (offlineKillCount <= 0)
