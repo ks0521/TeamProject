@@ -1,5 +1,9 @@
+using Base.Data;
+using Base.Managers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //보상 수령 창과 프리팹 담당
@@ -8,10 +12,21 @@ public class RewardPopupUI : MonoBehaviour
     [SerializeField] private GameObject rewardBoxPrefab;
     [SerializeField] private Transform contentArea;
     [SerializeField] private GameObject popupPanel;
+    
+    private void Start()
+    {
+        GameManager.Instance.GetGameSystem<EventHub>().OnQuestReward += ShowRewards;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.GetGameSystem<EventHub>().OnQuestReward -= ShowRewards;
+    }
 
     // 보상 창 열기 (QuestManager 등에서 호출)
     public void ShowRewards(List<RewardData> rewards)
     {
+        
         //기존의 박스 제거(나중에 오브젝트 풀링으로 변경?)
         foreach (Transform child in contentArea)
         {

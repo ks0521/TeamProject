@@ -7,6 +7,7 @@ namespace Battle
     [CreateAssetMenu(menuName = "Game/Battle/Monster")]
     public class MonsterSO : ScriptableObject
     {
+        public Sprite icon; //몬스터 사진
         public GameObject prefeb; //몬스터 프리팹
         public int key; //몬스터 키
         [FormerlySerializedAs("battleStat")] public Base.Data.BattleStat battleStatStat; //전투스탯
