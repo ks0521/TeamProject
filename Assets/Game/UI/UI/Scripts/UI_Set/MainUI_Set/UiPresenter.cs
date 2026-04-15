@@ -5,6 +5,8 @@ using Battle;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+
 namespace UI.Scripts
 {
     public class UiPresenter : MonoBehaviour, IManager
@@ -19,6 +21,7 @@ namespace UI.Scripts
 
         [SerializeField] MainUIStage_Set stageText;
         [SerializeField] Auto_Set autoButton;
+        [SerializeField] private Button autoToggle;
         // [SerializeField] Skill_Set skillIcons;
 
 
@@ -51,7 +54,7 @@ namespace UI.Scripts
 
             hub.OnBossSpawned += ReFreshBoss;
             hub.OnSkillAutoToggle += autoButton.SetAutoBattle;
-
+            autoToggle.onClick.AddListener(()=>hub.SkillAutoToggleInput());
             //스킬 부분 미구현
             //자동전투 버튼 미구현
         }

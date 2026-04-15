@@ -211,7 +211,7 @@ namespace Battle
         {
             if (hitTarget == null || target.isDead || !canAtk || isDead) return;
             HitType type = HitType.Normal;
-            AtkCooltimeTask().Forget();
+            //AtkCooltimeTask().Forget();
             //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");
 
             //float resultDmg = CurrentBattleStat.atk * (1 + multiplier);
@@ -241,13 +241,14 @@ namespace Battle
 
         async UniTaskVoid AtkCooltimeTask()
         {
+            if (isAtkCooltime) return;
             //Debug.Log("공격 쿨타임 시작");
             isAtkCooltime = true;
-            float curAtkCooltime = 1; // 공격 쿨타임 추가?
+            float curAtkCooltime = CurrentBattleStatStat.atkSpeed; 
             while (curAtkCooltime > 0)
             {
                 //Debug.Log($"{curAtkCooltime}");
-                curAtkCooltime -= Time.deltaTime * CurrentBattleStatStat.atkSpeed;
+                curAtkCooltime -= Time.deltaTime;
                 await UniTask.Yield();
                 if (this == null) return;
             }

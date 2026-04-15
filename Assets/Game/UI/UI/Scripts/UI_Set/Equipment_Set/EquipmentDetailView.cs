@@ -28,6 +28,7 @@ namespace UI.Equipment
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private TextMeshProUGUI ownedEffectText;
         [SerializeField] private TextMeshProUGUI equipEffectText;
+        [SerializeField] private TextMeshProUGUI equipText;
 
         [Header("버튼")]
         [SerializeField] private Button equipButton;
@@ -73,7 +74,19 @@ namespace UI.Equipment
         public void ApplyButtonState(EquipmentButtonState state)
         {
             //Debug.Log($"DetailView 갱신 결과 : {(int)state}");
-            equipButton.interactable = (state & EquipmentButtonState.Equip) != 0;
+            if ((state & EquipmentButtonState.Equipped) != 0)
+            {
+                //장착중이면 장착 표시
+                equipButton.interactable = false;
+                equipText.text = "장착중";
+            }
+            else
+            {
+                //장착중이 아니면 장착가능한지(보유중인지) 확인
+                //equipButton.interactable = true;
+                equipText.text = "장착하기";
+                equipButton.interactable = (state & EquipmentButtonState.CanEquip) != 0;
+            }
             enhanceButton.interactable = (state & EquipmentButtonState.Enhance) != 0;
             combineButton.interactable = (state & EquipmentButtonState.Combine) != 0;
         }
