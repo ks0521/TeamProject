@@ -17,7 +17,7 @@ public class MonsterUIPresenter : MonoBehaviour
     {
         if (monster.monsterSO == null)
             return;
-        hpBar.RefreshHp(monster.Hp, monster.CurrentBattleStatStat.maxHp);
+        hpBar.RefreshHp(monster.Hp, monster.CurrentBattleStat.maxHp);
         monster.OnMonsterHpChanged += hpBar.RefreshHp;
     }
 
