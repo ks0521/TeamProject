@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SO_Currency
+  m_EditorClassIdentifier: 
+  m_GroupName: SO_Currency
+  m_Data:
+    m_SerializedData: []
+  m_GUID: e564c829cd316d24ebe436a73f7a209f
+  m_SerializeEntries:
+  - m_GUID: ae82366ca5ce8494eb74069c9e1fabc7
+    m_Address: SO
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    - SO/Currency
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 2db874af9c2711946b3a221dcbda718d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f60e7ace16be17b4daa65537e29381d9, type: 2}
+    - {fileID: 11400000, guid: 42157a54be9eb9548af052dabe5debd4, type: 2}

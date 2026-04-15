@@ -1,4 +1,5 @@
 using Base.Managers;
+using Growth.Skill;
 using UnityEngine;
 
 namespace Battle
@@ -16,6 +17,8 @@ namespace Battle
         }
         public void Init()
         {
+            player.enabled = true;
+            GetComponentInChildren<PlayerEquipSkillController>().enabled = true;
             player.Init();
         }
 

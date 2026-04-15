@@ -22,7 +22,7 @@ namespace Growth.Skill
         {
             DisableProjectile();
             EnableEffect();
-            SkillAtk(target);
+            // SkillAtk(target);
             if (launcher.ActiveSkillData.effectArea == 0)
             {
                 Debug.LogWarning($"{gameObject.name}의 range 값이 0입니다.");

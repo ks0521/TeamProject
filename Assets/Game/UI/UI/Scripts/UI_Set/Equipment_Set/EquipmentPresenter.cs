@@ -172,7 +172,7 @@ namespace UI.Equipment
                 return;
             }
             //int minLength = equipmentCatalogs.Count < slots.Length ? equipmentCatalogs.Count : slots.Length
-
+            equipmentCatalogs.Sort((x, y) => x.key.CompareTo(y.key));
             for (int i = 0; i < equipmentCatalogs.Count; i++)
             {
                 EquipmentCatalog curCatalog = equipmentCatalogs[i]; //람다 캡쳐문제가 발생해서 매번 변수선언 해줬습니다
