@@ -119,11 +119,6 @@ namespace QuestSystem
         private const string SelectedDailyKey = "SelectedDailyQuestID";
         private int currentDailyID = 0; //0이면 아직 선택 안 됨
 
-        void Awake()
-        {
-            Init();
-        }
-
         public void Init()
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
@@ -131,16 +126,16 @@ namespace QuestSystem
 
             if (eventHub != null)
             {
-                eventHub.OnLevelChange += (level) => OnActivity(GoalType.LevelUp, 0, level);
-                eventHub.OnSkillUsed += (skillID) => OnActivity(GoalType.SkillUse, skillID, 1);
-                eventHub.OnClearStage += (stageSO) =>
-                {
-                    //5번째 스테이지를 클리어했을 때만 퀘스트 진행
-                    if (stageSO.stage == 5)
-                    {
-                        OnActivity(GoalType.StageClear, stageSO.chapter, 1);
-                    }
-                };
+                // 1. 기존 구독 해지 (안전한 초기화)
+                eventHub.OnLevelChange -= HandleLevelChange;
+                eventHub.OnSkillUsed -= HandleSkillUsed;
+                eventHub.OnClearStage -= HandleStageClear;
+
+                // 2. 새로운 함수 구독
+                eventHub.OnLevelChange += HandleLevelChange;
+                eventHub.OnSkillUsed += HandleSkillUsed;
+                eventHub.OnClearStage += HandleStageClear;
+
                 EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
                 RefreshQuests(); //초기 퀘스트
                 EventHub.QuestProgressUpdated();
@@ -148,6 +143,15 @@ namespace QuestSystem
             //if (questJsonFile != null) questDatabase.LoadFromJson(questJsonFile.text);
             LoadProgress();
             RefreshQuests();
+        }
+        private void HandleLevelChange(int level) => OnActivity(GoalType.LevelUp, 0, level);
+        private void HandleSkillUsed(int skillID) => OnActivity(GoalType.SkillUse, skillID, 1);
+        private void HandleStageClear(StageSO stageSO)
+        {
+            if (stageSO.stage == 5)
+            {
+                OnActivity(GoalType.StageClear, stageSO.chapter, 1);
+            }
         }
 
         public int GetOrder() => 300;
@@ -247,8 +251,7 @@ namespace QuestSystem
         //퀘스트 진척량이 누적될 때 호출(UpdateQuest 대신 사용)
         public void OnActivity(GoalType type, int targetID, int amount)
         {
-            //GoalType을 퀘스트의 식별자로 사용
-            string statKey = type.ToString();
+            string statKey = $"{type}_0"; //$"{type}_{targetID}";
             if (!globalStats.ContainsKey(statKey)) globalStats[statKey] = 0;
 
             if (type == GoalType.LevelUp)
@@ -256,6 +259,7 @@ namespace QuestSystem
             else
                 globalStats[statKey] += amount; //사냥, 스킬 등은 누적
 
+            /*
             //아무 스킬 시전에도 대응하려고 만든 부분
             if (targetID != 0)
             {
@@ -265,30 +269,29 @@ namespace QuestSystem
                 if (type == GoalType.LevelUp) globalStats[allKey] = amount;
                 else globalStats[allKey] += amount;
             }
+            */
 
-            UpdateActiveQuestsProgress(type);
+            UpdateActiveQuestsProgress(type, targetID);
         }
+        
         //모든 활성 퀘스트의 수치를 globalStats 기준으로 새로고침하는 함수
-        void UpdateActiveQuestsProgress(GoalType type)
+        void UpdateActiveQuestsProgress(GoalType type, int targetID)
         {
             foreach (var quest in activeQuests)
             {
                 if (quest.Data.GoalTypeEnum != type) continue;
 
-                //int requiredID = quest.RuntimeTargetID;
-                //if (requiredID != 0 && requiredID != targetID) continue;
+                int requiredID = quest.RuntimeTargetID;
+                if (requiredID != 0 && requiredID != targetID) continue;
 
-                string statKey = type.ToString();
-                if (quest.Data.isInfinite || quest.Data.CategoryEnum == QuestCategory.Recurring)
-                {
-                    //반복or무한 퀘스트는 키에 회차 추가
-                    statKey += $"_{quest.currentStep}";
-                }
-
+                //퀘스트가 특정 ID를 요구하면 해당 ID의 키를, 아니면 전체 합산 키(0)를 사용
+                string statKey = (quest.RuntimeTargetID != 0) ? $"{type}_{quest.RuntimeTargetID}" : $"{type}_0";
                 int totalProgress = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
                 int startPoint = questStartPoints.ContainsKey(quest.Data.questID) ? questStartPoints[quest.Data.questID] : 0;
-                //진척도 계산: 절대 누적치와 상대치 구분
-                quest.CurrentValue = quest.Data.isAbsoluteGoal ? totalProgress : totalProgress - startPoint;
+
+                //진척도 계산 및 음수 방지
+                int calculatedValue = quest.Data.isAbsoluteGoal ? totalProgress : (totalProgress - startPoint);
+                quest.CurrentValue = calculatedValue < 0 ? 0 : calculatedValue;
                 if (quest.CurrentValue >= quest.RuntimeTargetValue)
                 {
                     quest.isCompleted = true;
@@ -296,6 +299,7 @@ namespace QuestSystem
             }
             EventHub.QuestProgressUpdated();
         }
+        
         public void OnClickComplete(string categoryString)
         {
             QuestCategory category = (QuestCategory)System.Enum.Parse(typeof(QuestCategory), categoryString);
@@ -320,6 +324,8 @@ namespace QuestSystem
 
             if (currentCategory == QuestCategory.Recurring)
             {
+                completedQuestIds.Add(qID);
+                completedQuestIds.Remove(quest.Data.nextQuestID);
                 questStartPoints[qID] += quest.RuntimeTargetValue;
             }
             else if (quest.Data.isInfinite)
@@ -341,7 +347,7 @@ namespace QuestSystem
                 completedQuestIds.Add(qID);
             }
 
-            if(currentCategory == QuestCategory.Recurring)
+            if (currentCategory == QuestCategory.Recurring)
             {
                 completedQuestIds.Remove(quest.Data.nextQuestID);
                 completedQuestIds.Add(quest.Data.questID);
@@ -360,7 +366,6 @@ namespace QuestSystem
             EventHub.QuestProgressUpdated();
             FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
             SaveProgress();
-            
         }
 
         //rewardGroupID에 따른 보상 목록 반환
@@ -431,8 +436,10 @@ namespace QuestSystem
 
             foreach (var data in questDatabase.allQuests)
             {
-                //순환형 퀘스트는 무조건 통과
-                if (data.CategoryEnum != QuestCategory.Recurring && completedQuestIds.Contains(data.questID)) continue;
+                //완료된 퀘스트는 무조건 통과
+                if (completedQuestIds.Contains(data.questID)) continue; //data.CategoryEnum != QuestCategory.Recurring && 
+                // 이미 활성화된 퀘스트가 있으면 생성 안 함 (중복 방지)
+                if (activeQuests.Any(q => q.Data.questID == data.questID)) continue;
 
                 if (data.CategoryEnum == QuestCategory.Daily)
                 {
