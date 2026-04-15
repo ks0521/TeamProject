@@ -19,6 +19,8 @@ namespace Base.Data
         public void PopupOpened() => OnPopupOpened?.Invoke();
         public event Action OnPopupClosed; //팝업창 닫기
         public void PopupClosed() => OnPopupClosed?.Invoke();
+        public event Action<Vector2> OnDirectionChanged;
+        public void DirectionChanged(Vector2 dir) => OnDirectionChanged?.Invoke(dir);
         #endregion
 
         #region 스테이지 파트

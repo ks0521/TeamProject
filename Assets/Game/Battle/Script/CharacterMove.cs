@@ -28,28 +28,53 @@ namespace Battle
         [field: SerializeField] public bool IsLeftMove { get; private set; }
         //test
         public bool canMove;
+        enum InputState { None, Keyboard, Joystick, Auto }
+        private InputState inputState;
         public void Init(Rigidbody2D rb)
         {
             canMove = true;
             this.rb = rb;
         }
+        bool IsMovingCheck(Vector2 dir, float speed)
+        {
+            if (inputState == InputState.Keyboard) return true;
+            else if (dir.sqrMagnitude < 0.1f * 0.1f)
+            {
+                moveVelocity = Vector2.zero;
+                inputState = InputState.None;
+                return false;
+            }
+            IsLeftMove = dir.x < 0 ? true : false;
+            moveVelocity = dir * speed;
+            inputState = InputState.Joystick;
+            return true;
+        }
         bool IsMovingCheck(float x, float y, float speed)
         {
+            if (inputState == InputState.Joystick) return true;
             if (x == 0 && y == 0)
             {
                 moveVelocity = Vector2.zero;
+                inputState = InputState.None;
                 return false;
             }
             IsLeftMove = x < 0 ? true : false;
             moveVelocity = new Vector2(x, y) * speed;
+            inputState = InputState.Keyboard;
             return true;
         }
         public void UpdateMoveInput(float speed)
         {
-            if(!canMove)return;
+            if (!canMove) return;
             float x = Input.GetAxisRaw("Horizontal");
             float y = Input.GetAxisRaw("Vertical");
             IsInputMoving = IsMovingCheck(x, y, speed);
+        }
+        public void UpdateMoveInput(Vector2 dir, float speed)
+        {
+            if (!canMove) return;
+            IsInputMoving = IsMovingCheck(dir, speed);
+            Debug.Log($"UpdateMoveInput {IsInputMoving}");
         }
         public void VFixedMove()
         {
@@ -57,8 +82,9 @@ namespace Battle
         }
         public void VChaseMove(Transform targetTransform, float speed)
         {
-            if(!canMove)return;
+            if (!canMove) return;
             if (IsInputMoving) return;
+            inputState = InputState.Auto;
             Vector2 targetPos = targetTransform.position;
             Vector2 resultVec = targetPos - rb.position;
             float dis = resultVec.sqrMagnitude;
@@ -75,8 +101,9 @@ namespace Battle
         }
         public void VChaseMove(Vector2 dis)
         {
-            if(!canMove)return;
+            if (!canMove) return;
             if (IsInputMoving) return;
+            inputState = InputState.Auto;
             isAutoMoving = dis != Vector2.zero;
             if (isAutoMoving)
                 rb.velocity = dis;
@@ -85,9 +112,9 @@ namespace Battle
         }
         public void FixedMove()
         {
-            if(!canMove)return;
-            if (IsInputMoving)
-                rb.MovePosition(rb.position + moveVelocity * Time.deltaTime);
+            if (!canMove || !IsInputMoving) return;
+            rb.MovePosition(rb.position + moveVelocity * Time.deltaTime);
+            Debug.Log("fixedMove 움직임");
         }
         public void MoveStop()
         {
@@ -95,8 +122,9 @@ namespace Battle
         }
         public void ChaseMove(Vector2 targetDir, float speed)
         {
-            if(!canMove)return;
+            if (!canMove) return;
             if (IsInputMoving) return;
+            inputState = InputState.Auto;
             isAutoMoving = targetDir != Vector2.zero;
             if (isAutoMoving)
             {
@@ -106,8 +134,9 @@ namespace Battle
         }
         public void ChaseMove(Transform targetTransform, float speed)
         {
-            if(!canMove)return;
+            if (!canMove) return;
             if (IsInputMoving) return;
+            inputState = InputState.Auto;
             Vector2 autoMoveVelocity = Vector2.MoveTowards(rb.position, targetTransform.position, speed * Time.deltaTime);
             isAutoMoving = autoMoveVelocity != Vector2.zero;
             if (isAutoMoving)
