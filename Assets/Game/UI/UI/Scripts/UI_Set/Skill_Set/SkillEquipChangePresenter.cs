@@ -20,10 +20,13 @@ namespace UI.Skill_Set
             skillMgr = data.skillMgr;
             hub = data.hub;
             eSkillList = skillMgr.PlayerEquipSkillList;
+
+            EventSubscribe();
         }
         public void OnDestroyFeat()
         {
             BtnEventRemoveListner();
+            EventUnsubscribe();
         }
         public void EquipSkillShow(int targetSkillKey)
         {
@@ -33,19 +36,32 @@ namespace UI.Skill_Set
 
             for (int i = 0; i < 6; i++)
             {
-                int curKey = eSkillList[i].EquippedSkillKey;
-                if(!skillMgr.TryGetActiveSkill(curKey, out var tASkill))
+                int index = i;
+                int curKey = eSkillList[index].EquippedSkillKey;
+                EquipSkillPriorityBtnSet(index, curKey);
+                if (!skillMgr.TryGetActiveSkill(curKey, out var tASkill))
                 {
-                    Debug.LogWarning($"{i}번 슬롯에 스킬 없음");
-                    skillEquipChangePopupView.SkillSlotBtnImgUnset(i);
+                    Debug.LogWarning($"{index}번 슬롯에 스킬 없음");
+                    skillEquipChangePopupView.SkillSlotBtnImgUnset(index);
                     continue;
                 }
                 var data = tASkill.ActiveSkillData;
-                skillEquipChangePopupView.SkillSlotBtnImgSet(i, data.skillIcon);
+                skillEquipChangePopupView.SkillSlotBtnImgSet(index, data.skillIcon);
             }
         }
-        public void EquipSkillPriorityChange(int slotNum, Priority pri)
+        public void SkillEquipChangePopupShow(int key)
         {
+            gameObject.SetActive(true);
+            EquipSkillShow(key);
+        }
+        public void SkillEquipChangeSelect(int slotIndex)
+        {
+            hub.SkillEquip(slotIndex, targetSkillKey);
+            gameObject.SetActive(false);
+        }
+        public void EquipSkillPriorityBtnSet(int slotNum, Priority pri)
+        {
+            if (!skillMgr.PlayerEquipSkillList[slotNum].isEquipped) return;
             Color changeCol = Color.white;
             string changeTxt = "";
             switch (pri)
@@ -65,20 +81,39 @@ namespace UI.Skill_Set
             }
             skillEquipChangePopupView.SkillPriorityBtnSet(slotNum, changeCol, changeTxt);
         }
-        public void SkillEquipChangePopupShow(int key)
+        public void EquipSkillPriorityBtnUnset(int slotNum)
         {
-            gameObject.SetActive(true);
-            EquipSkillShow(key);
+            skillEquipChangePopupView.SkillPriorityBtnUnset(slotNum);
         }
-        public void SkillEquipChangeSelect(int slotIndex)
+        public void EquipSkillPriorityBtnSet(int slotNum, int skillKey)
         {
-            hub.SkillEquip(slotIndex, targetSkillKey);
-            gameObject.SetActive(false);
+            if (slotNum < 0 || 6 <= slotNum) return;
+            var eSkill = skillMgr.PlayerEquipSkillList[slotNum];
+            if (eSkill.isEquipped && eSkill.EquippedSkillKey == skillKey)
+            {
+                EquipSkillPriorityBtnSet(slotNum, eSkill.priority);
+                Debug.Log($"SkillEquipList : {slotNum}에 스킬 있음 & 동일, priority change");
+            }
+            else
+            {
+                EquipSkillPriorityBtnUnset(slotNum);
+                Debug.LogWarning($"SkillEquipList : {slotNum}에 스킬 없음 or 맞지 않음, priority unset");
+            }
+        }
+        void EventSubscribe()
+        {
+            hub.OnEquipSkillPriorityChange += EquipSkillPriorityBtnSet;
+            hub.OnSkillUnset += EquipSkillPriorityBtnUnset;
         }
         public void BtnEventAddListner(Action<int> equipSkillPriorityChangeFunc)
         {
             skillEquipChangePopupView.BtnEventAddListner(SkillEquipChangeSelect, equipSkillPriorityChangeFunc);
         }
-        void BtnEventRemoveListner() => skillEquipChangePopupView.BtnEventRemoveAllListner();
+        void EventUnsubscribe()
+        {
+            hub.OnEquipSkillPriorityChange -= EquipSkillPriorityBtnSet;
+            hub.OnSkillUnset -= EquipSkillPriorityBtnUnset;
+        }
+        void BtnEventRemoveListner() { skillEquipChangePopupView.BtnEventRemoveAllListner(); }
     }
 }

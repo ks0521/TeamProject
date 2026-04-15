@@ -32,11 +32,40 @@ namespace UI.Skill_Set
             BtnEventRemoveListner();
         }
         void BtnEventRemoveListner() => skillDetailView.BtnEventRemoveAllListner();
+        public void SkillPriorityBtnSet(Priority pri)
+        {
+            Color changeCol = Color.white;
+            string changeTxt = "";
+            switch (pri)
+            {
+                case Priority.High:
+                    changeCol = Color.red;
+                    changeTxt = "High";
+                    break;
+                case Priority.Mid:
+                    changeCol = Color.blue;
+                    changeTxt = "Mid";
+                    break;
+                case Priority.Low:
+                    changeCol = Color.yellow;
+                    changeTxt = "Low";
+                    break;
+            }
+
+            skillDetailView.SkillPriorityBtnSet(changeCol, changeTxt);
+        }
+        public void SkillPriorityBtnUnset() => skillDetailView.SkillPriorityBtnUnset();
+        void SkillPriorityBtnChange(int key)
+        {
+            skillMgr.TryGetSkillPriorityByKey(key, out var pri);
+            SkillPriorityBtnSet(pri);
+        }
         public void SkillDetailDataSetToSkillChange(int key)
         {
             gameObject.SetActive(true);
             if (!skillMgr.TryGetSkillSO(key, out var so)) return;
             SkillDetailDataSetToSkillChange(so);
+            if(skillMgr.IsSkillEquippedByKey(key)) SkillPriorityBtnChange(key);
         }
         public void SkillDetailDataSetToSkillChange(SkillSO so)
         {
@@ -83,28 +112,6 @@ namespace UI.Skill_Set
 
         }
         StringBuilder sb = new StringBuilder();
-        public void SkillPriorityBtnChange(Priority pri)
-        {
-            Color changeCol = Color.white;
-            string changeTxt = "";
-            switch (pri)
-            {
-                case Priority.High:
-                    changeCol = Color.red;
-                    changeTxt = "High";
-                    break;
-                case Priority.Mid:
-                    changeCol = Color.blue;
-                    changeTxt = "Mid";
-                    break;
-                case Priority.Low:
-                    changeCol = Color.yellow;
-                    changeTxt = "Low";
-                    break;
-            }
-
-            skillDetailView.SkillPriorityChange(changeCol, changeTxt);
-        }
         public void SkillLvUpBtnInteractable(bool isSkillLvUpPossible) => skillDetailView.SkillLevelUpBtnInteractable(isSkillLvUpPossible);
         public void SkillLockImageSet(bool isUnlock) => skillDetailView.SkillLockImgSet(isUnlock);
         public void SkillStatValueTextBuild(string contents, bool isEnter)
