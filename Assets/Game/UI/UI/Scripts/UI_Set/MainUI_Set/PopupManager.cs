@@ -43,7 +43,7 @@ namespace UI.Scripts
         [SerializeField] private Button dungeonBtn;
         [SerializeField] private Button settingBtn;
         [SerializeField] private Button shopBtn;
-
+        //ontoggleskillinput 호출하면 설정 바뀜 
         private EventHub hub;
         private Stack<GameObject> popupStack = new();
         public Stack<GameObject> PopupStack => popupStack;
@@ -111,6 +111,7 @@ namespace UI.Scripts
             chapterBtn.onClick.AddListener(() => OpenPopup(PopupType.stage));
             shopBtn.onClick.AddListener(() => OpenPopup(PopupType.shop));
             settingBtn.onClick.AddListener(() => OpenPopup(PopupType.setting));
+            
         }//버튼에 함수 넣기
 
 

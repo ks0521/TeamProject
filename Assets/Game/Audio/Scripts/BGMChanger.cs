@@ -28,6 +28,7 @@ public class BGMChanger : MonoBehaviour
 
     void Update()
     {
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))
         {
             mapType = MapType.Field;
@@ -38,6 +39,7 @@ public class BGMChanger : MonoBehaviour
             mapType = MapType.Forest;
             ChangeMap(mapType);
         }
+        #endif
     }
 
     public void ChangeMap(MapType currentMap)
