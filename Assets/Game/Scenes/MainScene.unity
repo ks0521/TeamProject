@@ -224,6 +224,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1849064246}
+    - targetCorrespondingSourceObject: {fileID: 3493615356997548616, guid: 01b6924ad040f104498f05300785300d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1849064247}
   m_SourcePrefab: {fileID: 100100000, guid: 01b6924ad040f104498f05300785300d, type: 3}
 --- !u!114 &529643669 stripped
 MonoBehaviour:
@@ -1041,6 +1045,18 @@ MonoBehaviour:
   itemDropManager: {fileID: 0}
   rewardPopup: {fileID: 0}
   rewardTableMaps: []
+--- !u!114 &1849064247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849064244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3201067f2a312b949bf1e9e80f2d02b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2076782349
 GameObject:
   m_ObjectHideFlags: 0

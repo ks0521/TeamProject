@@ -123,6 +123,10 @@ namespace QuestSystem
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             player = GameManager.Instance.GetGameSystem<PlayerManager>().GetComponent<Player>();
+            LoadProgress();
+            
+            currentDailyID = PlayerPrefs.GetInt(SelectedDailyKey, 0);
+            if (currentDailyID == 0) PickRandomDailyQuest();
 
             if (eventHub != null)
             {
@@ -140,13 +144,11 @@ namespace QuestSystem
 
 
                 EventHub.OnNewDayStarted += (dateStr) => ResetDailyQuests();
-                RefreshQuests(); //초기 퀘스트
-                EventHub.QuestProgressUpdated();
             }
 
             //if (questJsonFile != null) questDatabase.LoadFromJson(questJsonFile.text);
-            LoadProgress();
             RefreshQuests();
+            EventHub.QuestProgressUpdated();
         }
 
         private void HandleLevelChange(int level) => OnActivity(GoalType.LevelUp, 0, level);
@@ -484,11 +486,15 @@ namespace QuestSystem
             foreach (var data in questDatabase.allQuests)
             {
                 // 완료된 퀘스트는 패스
-                if (completedQuestIds.Contains(data.questID)) continue;
+                if (completedQuestIds.Contains(data.questID))
+                {
+                    activeQuests.RemoveAll(q => q.Data.questID == data.questID);
+                    continue;
+                }
                 // Daily 필터
                 if (data.CategoryEnum == QuestCategory.Daily)
                 {
-                    if (currentDailyID == 0) PickRandomDailyQuest();
+                    //if (currentDailyID == 0) PickRandomDailyQuest();
                     if (data.questID != currentDailyID) continue;
                 }
 
@@ -760,6 +766,7 @@ namespace QuestSystem
             //저장된 일퀘 초기화
             PlayerPrefs.DeleteKey(SelectedDailyKey);
             currentDailyID = 0;
+            
             PickRandomDailyQuest();
             RefreshQuests();
             EventHub.QuestProgressUpdated();
