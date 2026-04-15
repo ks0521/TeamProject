@@ -13,8 +13,6 @@ public class ClearReward : MonoBehaviour
     [SerializeField] Image[] rewardImg;
     [SerializeField] TextMeshProUGUI[] rewardText;
 
-    [SerializeField] Button checkButton;
-
     public void SetReward(List<DropReward> rewards, string titleText)
     {
         for (int i = 0; i < rewardImg.Length; i++)
