@@ -84,6 +84,8 @@ namespace Base.Data
         public void CastingStarted() => OnCastingStart?.Invoke();
         public event Action OnCastingEnd; //스킬 캐스팅 종료
         public void CastingEnd() => OnCastingEnd?.Invoke();
+        public event Action<int, Priority> OnEquipSkillPriorityChange;
+        public void EquipSkillPriorityChange(int slotNum, Priority pri) => OnEquipSkillPriorityChange?.Invoke(slotNum, pri);
         #endregion
 
         #region 재화 파트

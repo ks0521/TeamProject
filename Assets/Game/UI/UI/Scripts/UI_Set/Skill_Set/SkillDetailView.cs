@@ -33,8 +33,9 @@ namespace UI.Skill_Set
         public float cooltimeValue;
         public string description;
         public bool isActiveSkill;
+        public bool isEquipped;
         public SkillDetailViewNeedsStatData(int curLv, int maxLv,
-        string skillValueText, float cooltimeValue, string description, bool isActiveSkill)
+        string skillValueText, float cooltimeValue, string description, bool isActiveSkill, bool isEquipped)
         {
             this.curLv = curLv;
             this.maxLv = maxLv;
@@ -42,13 +43,15 @@ namespace UI.Skill_Set
             this.cooltimeValue = cooltimeValue;
             this.description = description;
             this.isActiveSkill = isActiveSkill;
+            this.isEquipped = isEquipped;
         }
-        public SkillDetailViewNeedsStatData(SkillSO so, string skillValueText, int curLv)
+        public SkillDetailViewNeedsStatData(SkillSO so, string skillValueText, int curLv, bool isEquipped)
         {
             maxLv = so.maxLv;
             description = so.description;
             this.curLv = curLv;
             this.skillValueText = skillValueText;
+            this.isEquipped = isEquipped;
             if (so is ActiveSkillSO aSO)
             {
                 cooltimeValue = aSO.coolDown;
@@ -60,12 +63,13 @@ namespace UI.Skill_Set
                 isActiveSkill = false;
             }
         }
-        public SkillDetailViewNeedsStatData(ActiveSkillSO so, string skillValueText, int curLv)
+        public SkillDetailViewNeedsStatData(ActiveSkillSO so, string skillValueText, int curLv, bool isEquipped)
         {
             maxLv = so.maxLv;
             description = so.description;
             cooltimeValue = so.coolDown;
             isActiveSkill = true;
+            this.isEquipped = isEquipped;
             this.curLv = curLv;
             this.skillValueText = skillValueText;
         }
@@ -75,6 +79,7 @@ namespace UI.Skill_Set
             description = so.description;
             cooltimeValue = 0;
             isActiveSkill = false;
+            isEquipped = false;
             this.curLv = curLv;
             this.skillValueText = skillValueText;
         }
@@ -95,6 +100,7 @@ namespace UI.Skill_Set
         [SerializeField, Tooltip("스킬 Max 레벨 업 버튼")] private Button lvUpMaxBtn;
         [SerializeField, Tooltip("스킬 장착 버튼")] private Button equipBtn;
         [SerializeField, Tooltip("장착 스킬 우선순위 변경 버튼")] private Button priorityChangeBtn;
+        [SerializeField, Tooltip("장착 스킬 우선순위 변경 버튼 텍스트")] private TextMeshProUGUI priorityText;
         public void SkillDetailViewSetToSkillChange(SkillDetailViewNeedsNameAndImage niData, SkillDetailViewNeedsStatData statData)
         {
             bool isUnlock = niData.isUnlock;
@@ -111,24 +117,25 @@ namespace UI.Skill_Set
             SkillLevelUpBtnInteractable(isUnlock && curLv < maxLv);
             EquipBtnInteractable(0 < curLv);
             SkillLevelChange(curLv, maxLv);
-            SkillDetailViewUIShowAndHide(statData.isActiveSkill);
+            SkillDetailViewUIShowAndHide(statData.isActiveSkill, statData.isEquipped);
             SkillStatValueTextChange(statData.skillValueText);
             SkillCooltimeChange(statData.cooltimeValue);
             SkillDescriptionChange(statData.description);
         }
-        public void SkillDetailViewUIShowAndHide(bool isActive)
+        public void SkillDetailViewUIShowAndHide(bool isActive, bool isEquipped)
         {
+            priorityChangeBtn.gameObject.SetActive(isEquipped);
             if (isActive)
             {
                 skillCooltimeText.gameObject.SetActive(true);
                 equipBtn.gameObject.SetActive(true);
-                priorityChangeBtn.gameObject.SetActive(true);
+                // priorityChangeBtn.gameObject.SetActive(true);
             }
             else
             {
                 skillCooltimeText.gameObject.SetActive(false);
                 equipBtn.gameObject.SetActive(false);
-                priorityChangeBtn.gameObject.SetActive(false);
+                // priorityChangeBtn.gameObject.SetActive(false);
             }
         }
         public void SkillLevelUpBtnInteractable(bool isBtnClickPossible)
@@ -140,6 +147,11 @@ namespace UI.Skill_Set
         {
             equipBtn.interactable = isBtnClickPossible;
         }
+        public void SkillPriorityChange(Color col, string priValue)
+        {
+            priorityChangeBtn.image.color = col;
+            priorityText.text = $"우선순위 : {priValue}";
+        }
         public void SkillLockImgSet(bool isUnlock) => lockImg.gameObject.SetActive(!isUnlock);
         public void SkillImgChange(Sprite sp) => skillImg.sprite = sp;
         public void SkillNameChange(string skillName) => nameText.text = skillName;
@@ -147,19 +159,19 @@ namespace UI.Skill_Set
         public void SkillStatValueTextChange(string valueText) => skillValueText.text = valueText;
         public void SkillCooltimeChange(float cooltime) => skillCooltimeText.text = $"쿨타임 : {cooltime}초";
         public void SkillDescriptionChange(string skillDescription) => skillDescriptionText.text = skillDescription;
-        public void BtnEventAddListner(Action lvOneUpFunc, Action maxLvUpFunc, Action equipFunc)
+        public void BtnEventAddListner(Action lvOneUpFunc, Action maxLvUpFunc, Action equipFunc, Action priorityChangeFunc)
         {
             lvUpBtn.onClick.AddListener(() => lvOneUpFunc());
             lvUpMaxBtn.onClick.AddListener(() => maxLvUpFunc());
             equipBtn.onClick.AddListener(() => equipFunc());
-            // priorityChangeBtn.onClick.AddListener(() => ());
+            priorityChangeBtn.onClick.AddListener(() => priorityChangeFunc());
         }
         public void BtnEventRemoveAllListner()
         {
             lvUpBtn.onClick.RemoveAllListeners();
             lvUpMaxBtn.onClick.RemoveAllListeners();
             equipBtn.onClick.RemoveAllListeners();
-            // priorityChangeBtn.onClick.RemoveAllListeners();
+            priorityChangeBtn.onClick.RemoveAllListeners();
         }
     }
 }
