@@ -6,16 +6,27 @@ using UnityEngine.Serialization;
 
 namespace Battle
 {
-    public enum StageType
-    {
-        Normal, Challenge, Boss, Locked
-    }
     [Serializable]
     public struct MonsterPreset
     {
         public MonsterSO monster;
-        [Header("몬스터 등장 비중")]public int weights;
+        [Header("몬스터 등장 비중")] public int weights;
     }
+
+    public enum ContentType
+    {
+        MainStage, Dungeon
+    }
+
+public enum StageType
+    {
+        Normal, Challenge, Boss, Locked
+    }
+    public enum DungeonType
+    {
+        None, Boss, Wave
+    }
+    [Serializable]
     //몬스터 생성 타입(무한, 보스단일, 웨이브 식)
     public enum SpawnType
     {
@@ -29,22 +40,23 @@ namespace Battle
     //보상 방식(아이템 필드 드랍, 클리어시 한번에)
     public enum RewardType
     {
-        ItemDrop, ClearReward
+        DropTable, RewardTable
     }
     
-    public enum DungeonKind
-    {
-        None, Boss, Wave
-    }
     [CreateAssetMenu(menuName = "Game/Battle/Stage")]
     public class StageSO : ScriptableObject
     {
-        [Header("식별자")]
         [Tooltip("스테이지 식별용 키")] public int stageKey; 
-        [Tooltip("스테이지 이름")][TextArea(2,5)]public string stageName; 
+        [Tooltip("스테이지 이름")][TextArea(2,5)]public string stageName;
+        [Tooltip("컨텐츠 식별자")] public ContentType contentType;
+        [Header("메인 스테이지")]
         [Tooltip("챕터")] public int chapter;
         [Tooltip("스테이지")] public int stage;
+        [Header("던전")] 
+        public int floor;
+        public DungeonType dungeonType;
         [Header("보상 정보")]
+        [Tooltip("보상 방식")]public RewardType rewardType;
         [Tooltip("드랍 테이블")] public DropTableSO dropTable; //일반스테이지
         [Tooltip("보상 테이블")] public RewardTableSO rewardTable; //도전 스테이지
         [Header("몬스터 생성 정보")]
@@ -53,7 +65,6 @@ namespace Battle
         [Tooltip("스폰 형식")]public SpawnType spawnType;
         [Header("클리어 정보")]
         [Tooltip("클리어 조건")]public ClearType clearType;
-        [Tooltip("보상 방식")]public RewardType rewardType;
         [Tooltip("제한시간")] public float deadLine;
         [Tooltip("목표 처치 수")] public int targetKillScore;
     }

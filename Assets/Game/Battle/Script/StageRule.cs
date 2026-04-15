@@ -50,7 +50,7 @@ public class NormalStageRule : StageRule
     {
         ++killScore;
         //몬스터 처치에 대한 기타 작동기전 구현
-        if (stage.rewardType == RewardType.ItemDrop)
+        if (stage.rewardType == RewardType.DropTable)
         {
             ItemDrop(monster);
         }
@@ -105,7 +105,7 @@ public class ChallengeStageRule : StageRule
     {
         if (isCleared) return;
         isCleared = true;
-        if (stage.rewardType == RewardType.ClearReward)
+        if (stage.rewardType == RewardType.RewardTable)
         {
             dropManager.GetRewards(stage.rewardTable.rewardList);
             eventHub.GetClearRewards(stage.rewardTable.rewardList,$"{stage.chapter} - {stage.stage} 스테이지 클리어");

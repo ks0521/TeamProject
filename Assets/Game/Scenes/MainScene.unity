@@ -200,6 +200,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01b6924ad040f104498f05300785300d, type: 3}
+--- !u!114 &529643669 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 549543900287243354, guid: b1968294c26f8574ab5183a5d4d9faca,
+    type: 3}
+  m_PrefabInstance: {fileID: 1472357564}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &642368373 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2276600136634685243, guid: 16deb5db349ee444c9ce87b35f9bb786,
@@ -475,6 +487,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3206116861317447806, guid: b1968294c26f8574ab5183a5d4d9faca,
+        type: 3}
+      propertyPath: autoToggle
+      value: 
+      objectReference: {fileID: 529643669}
     - target: {fileID: 3571765195649199507, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
       propertyPath: m_AnchorMax.y
