@@ -1,3 +1,4 @@
+using Growth.Skill;
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
@@ -47,6 +48,7 @@ namespace Base.Save
     [Serializable]public class PlayerSkillState
     {
         public int[] skillSlots; //나중에 스킬슬롯 객체 만들면 수정
+        public Priority[] skillSlotPriority; // 
         public List<SkillEntry> skillProgressState; //key : 스킬 키, value : 해당 스킬 레벨
     }
     

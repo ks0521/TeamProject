@@ -295,6 +295,7 @@ public class SkillManager : MonoBehaviour, IManager
         var curESkill = PlayerEquipSkillList[slotNum];
         if (!curESkill.isEquipped) return false;
         curESkill.priority = pri;
+        progress.skillProgress.skillSlotPriority[slotNum] = pri;
         return true;
     }
     public void ChangeEquipSkillPriority(int slotNum, Priority pri) => TryChangeEquipSkillPriority(slotNum, pri);
@@ -344,6 +345,14 @@ public class SkillManager : MonoBehaviour, IManager
 
         playerEquipSkillController.Init(pl);
         playerEquipSkillController.SkillEquipInit();
+        
+        var savedPriorities = progress.skillProgress.skillSlotPriority;
+        if (savedPriorities != null)
+        {
+            for (int i = 0; i < 6 && i < savedPriorities.Length; i++)
+                playerEquipSkillController.PriorityUpdate(i, savedPriorities[i]);
+        }
+
         PlayerEquipSkillList = playerEquipSkillController.EquipSkillList;
     }
     void InitResetPossibleCheck()
