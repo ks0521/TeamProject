@@ -28,8 +28,6 @@ namespace Base.Manager
     /// <summary> 플레이어가 가지고 있는 장비를 관리하고 장비 강화, 장착 시 스탯 변화등을 관리한다. </summary>
     public class EquipmentManager : MonoBehaviour, IManager
     {
-        public int NEED_COMBINE = 5;
-
         [SerializeField] private EquipmentSO equipItem;
         private GameDataDictionaries dictionarys;
         private RuntimeProgressData runtimeData;
@@ -224,8 +222,8 @@ namespace Base.Manager
         public bool TryEnhanceEquipment(EquipmentSO equipmentSo)
         {
             if (!CanEnhanceEquipment(equipmentSo)) return false;
-            EquipmentInventory[equipmentSo.key].enhancementLevel += 1;
             int cost = (EquipmentInventory[equipmentSo.key].enhancementLevel + 1) * equipmentSo.UpgradeNeedCost;
+            EquipmentInventory[equipmentSo.key].enhancementLevel += 1;
             runtimeData.currency.gold -= cost;
             eventHub.CurrencyChange(CurrencyType.GOLD, runtimeData.currency.gold);
             eventHub.EquipEnhanced(equipmentSo);

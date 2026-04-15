@@ -13,7 +13,8 @@ namespace Battle
         public const float MonsterAttackRange = 0.6f;
         public const float ApproachStopRange = 0.15f;
         protected override float AttackRange => MonsterAttackRange; 
-        public override Base.Data.BattleStat CurrentBattleStatStat => monsterSO.battleStatStat;
+        public override BattleStat CurrentBattleStat => monsterSO.battleStatStat;
+        public override TotalStat CurrentTotalStat => monsterSO.totalStat;
         private CancellationTokenSource monsterCts;
         public event Action<float, float> OnMonsterHpChanged; //내부이벤트로 허브등록 X
         public event Action<Monster> OnMonsterKilled; //연산용
@@ -23,11 +24,11 @@ namespace Battle
             protected set
             {
                 hp = value;
-                if (CurrentBattleStatStat.maxHp <= hp)
+                if (CurrentBattleStat.maxHp <= hp)
                 {
-                    hp = CurrentBattleStatStat.maxHp;
+                    hp = CurrentBattleStat.maxHp;
                 }
-                OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStatStat.maxHp);
+                OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
                 if (hp <= 0f)
                 {
                     OnDead();
@@ -108,7 +109,7 @@ namespace Battle
         public override void Hit(float damage, HitType type)
         {
             base.Hit(damage,type);
-            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStatStat.maxHp);
+            OnMonsterHpChanged?.Invoke(Hp,CurrentBattleStat.maxHp);
         }
         protected override void SendHitSignal(float resultDamage, HitType type)
         {
@@ -140,7 +141,7 @@ namespace Battle
             else
             {
                 state = CharacterState.Move;
-                cm.ChaseMove(target.transform, CurrentBattleStatStat.moveSpeed);
+                cm.ChaseMove(target.transform, CurrentBattleStat.moveSpeed);
                 if (spumController != null)
                 {
                     spumController.PlayAnimation(PlayerState.MOVE, 0);

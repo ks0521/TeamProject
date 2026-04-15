@@ -236,7 +236,12 @@ namespace Base.Managers
                     target = monster;
                 }
             }
-
+            //모든 타겟이 죽어있을 때의 예외값 처리
+            if (target == null || target.IsDead) 
+            {
+                target = null;
+                return false;
+            }
             return true;
         }
 
