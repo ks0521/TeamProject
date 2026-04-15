@@ -31,22 +31,29 @@ namespace Battle
     {
         ItemDrop, ClearReward
     }
+    
+    public enum DungeonKind
+    {
+        None, Boss, Wave
+    }
     [CreateAssetMenu(menuName = "Game/Battle/Stage")]
     public class StageSO : ScriptableObject
     {
-        [Header("공용")]
+        [Header("식별자")]
         [Tooltip("스테이지 식별용 키")] public int stageKey; 
         [Tooltip("스테이지 이름")][TextArea(2,5)]public string stageName; 
         [Tooltip("챕터")] public int chapter;
         [Tooltip("스테이지")] public int stage;
+        [Header("보상 정보")]
         [Tooltip("드랍 테이블")] public DropTableSO dropTable; //일반스테이지
         [Tooltip("보상 테이블")] public RewardTableSO rewardTable; //도전 스테이지
+        [Header("몬스터 생성 정보")]
         [Tooltip("몬스터 프리셋")] public List<MonsterPreset> preset;
         [Tooltip("스테이지 타입(일반 / 돌파 / 보스)")] public StageType stageType;
         [Tooltip("스폰 형식")]public SpawnType spawnType;
+        [Header("클리어 정보")]
         [Tooltip("클리어 조건")]public ClearType clearType;
         [Tooltip("보상 방식")]public RewardType rewardType;
-        [Header("스테이지 돌파 전용")] 
         [Tooltip("제한시간")] public float deadLine;
         [Tooltip("목표 처치 수")] public int targetKillScore;
     }
