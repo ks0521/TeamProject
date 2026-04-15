@@ -179,12 +179,12 @@ private void ClearRewardIcons()
     #region Old
 
     //퀘스트 분류 클릭
-    public void OnClickBookmark(int index)
-    {
-        currentTabIndex = index;
-        UpdateTabVisuals();
-        RefreshQuestBox();
-    }
+    // public void OnClickBookmark(int index)
+    // {
+    //     currentTabIndex = index;
+    //     UpdateTabVisuals();
+    //     RefreshQuestBox();
+    // }
     void UpdateTabVisuals()
     {
         for (int i = 0; i < questBookmarks.Count; i++)
@@ -201,50 +201,50 @@ private void ClearRewardIcons()
     }
 
     //왼편의 퀘스트 박스 프리팹 목록을 갱신
-    public void RefreshQuestBox()
-    {
-        if (questBoxPrefab == null || questListContainer == null) return;
-
-        //기존에 생성된 박스는 제거
-        foreach (var box in instantiatedBoxes)
-        {
-            if (box != null)
-            {
-                box.gameObject.SetActive(false);
-                questBoxPool.Add(box);
-            }
-        }
-        instantiatedBoxes.Clear();
-
-        if (questManager == null) return;
-
-        //현재 선택된 카테고리의 퀘스트만 가져오기(LINQ 활용)
-        QuestCategory currentCategory = (QuestCategory)currentTabIndex;
-        var filteredQuests = questManager.GetActiveQuests()
-            .Where(q => q.Data.CategoryEnum == currentCategory)
-            .OrderBy(q => q.Data.questID)
-            .ToList();
-
-        //프리팹 생성 및 데이터 주입
-        foreach (var quest in filteredQuests)
-        {
-            QuestBoxUI boxScript = GetBoxFromPool();
-            if (boxScript != null)
-            {
-                //boxScript.Setup(quest, this);
-                //boxScript.RefreshVisuals();
-                instantiatedBoxes.Add(boxScript);
-            }
-        }
-        UpdateReceiveAllButtonState();
-
-        //리스트가 갱신되면 1번째 퀘스트를 자동으로 선택해줌
-        if (instantiatedBoxes.Count > 0)
-        {
-            SelectQuest(filteredQuests.First());
-        }
-        else ClearDetails();
-    }
+    // public void RefreshQuestBox()
+    // {
+    //     if (questBoxPrefab == null || questListContainer == null) return;
+    //
+    //     //기존에 생성된 박스는 제거
+    //     foreach (var box in instantiatedBoxes)
+    //     {
+    //         if (box != null)
+    //         {
+    //             box.gameObject.SetActive(false);
+    //             questBoxPool.Add(box);
+    //         }
+    //     }
+    //     instantiatedBoxes.Clear();
+    //
+    //     if (questManager == null) return;
+    //
+    //     //현재 선택된 카테고리의 퀘스트만 가져오기(LINQ 활용)
+    //     QuestCategory currentCategory = (QuestCategory)currentTabIndex;
+    //     var filteredQuests = questManager.GetActiveQuests()
+    //         .Where(q => q.Data.CategoryEnum == currentCategory)
+    //         .OrderBy(q => q.Data.questID)
+    //         .ToList();
+    //
+    //     //프리팹 생성 및 데이터 주입
+    //     foreach (var quest in filteredQuests)
+    //     {
+    //         QuestBoxUI boxScript = GetBoxFromPool();
+    //         if (boxScript != null)
+    //         {
+    //             //boxScript.Setup(quest, this);
+    //             //boxScript.RefreshVisuals();
+    //             instantiatedBoxes.Add(boxScript);
+    //         }
+    //     }
+    //     UpdateReceiveAllButtonState();
+    //
+    //     //리스트가 갱신되면 1번째 퀘스트를 자동으로 선택해줌
+    //     if (instantiatedBoxes.Count > 0)
+    //     {
+    //         SelectQuest(filteredQuests.First());
+    //     }
+    //     else ClearDetails();
+    // }
     void ClearDetails()
     {
         questDescription.text = "진행 중인 퀘스트가 없습니다.";
@@ -274,27 +274,27 @@ private void ClearRewardIcons()
     }
 
     //클릭된 퀘스트 박스의 하이라이트 효과, 퀘스트 상세 정보 등
-    public void SelectQuest(ActiveQuest quest)
-    {
-        if (quest == null) return;
-        currentSelectedQuest = quest;
-
-        //우측의 상세 정보
-        questDescription.text = quest.RuntimeDescription;
-        questStatus.text = $"({quest.GetStatusText()})";
-        questProgress.text = $"{quest.CurrentValue} / {quest.RuntimeTargetValue}";
-
-        receiveButton.interactable = quest.isCompleted;
-
-        //박스 하이라이트
-        foreach (var box in instantiatedBoxes)
-        {
-            box.SetHighlight(box.GetQuest() == quest);
-        }
-
-        //보상 아이템 목록 갱신
-        RefreshRewardIcons(quest.Data.rewardGroupID);
-    }
+    // public void SelectQuest(ActiveQuest quest)
+    // {
+    //     if (quest == null) return;
+    //     currentSelectedQuest = quest;
+    //
+    //     //우측의 상세 정보
+    //     questDescription.text = quest.RuntimeDescription;
+    //     questStatus.text = $"({quest.GetStatusText()})";
+    //     questProgress.text = $"{quest.CurrentValue} / {quest.RuntimeTargetValue}";
+    //
+    //     receiveButton.interactable = quest.isCompleted;
+    //
+    //     //박스 하이라이트
+    //     foreach (var box in instantiatedBoxes)
+    //     {
+    //         box.SetHighlight(box.GetQuest() == quest);
+    //     }
+    //
+    //     //보상 아이템 목록 갱신
+    //     RefreshRewardIcons(quest.Data.rewardGroupID);
+    // }
     //모두 완료 버튼 활성화 여부 체크
     void UpdateReceiveAllButtonState()
     {
@@ -346,86 +346,86 @@ private void ClearRewardIcons()
     }
 
     //퀘스트 완료 버튼
-    public void OnClickQuestClear()
-    {
-        if (currentSelectedQuest != null && currentSelectedQuest.isCompleted)
-        {
-            questManager.TryCompleteQuest(currentSelectedQuest);
-
-            //데이터 변경 후 UI 갱신
-            RefreshQuestBox();
-            UpdateTabVisuals();
-        }
-    }
+    // public void OnClickQuestClear()
+    // {
+    //     if (currentSelectedQuest != null && currentSelectedQuest.isCompleted)
+    //     {
+    //         questManager.TryCompleteQuest(currentSelectedQuest);
+    //
+    //         //데이터 변경 후 UI 갱신
+    //         RefreshQuestBox();
+    //         UpdateTabVisuals();
+    //     }
+    // }
 
     //퀘스트 모두 완료 버튼(반복성 퀘스트 한번에 클리어 기능 포함)
-    public void OnClickQuestAllClear()
-    {
-        if (questManager == null) return;
-
-        //재화 합산용 딕셔너리
-        Dictionary<CurrencyType, RewardData> totalCurrencies = new Dictionary<CurrencyType, RewardData>();
-        List<RewardData> uniqueRewards = new List<RewardData>();
-
-        //완료 가능한 퀘스트 카테고리 추출
-        var targetQuests = questManager.GetActiveQuests()
-        .Where(q => q.isCompleted)
-        .ToList();
-
-        foreach (var q in targetQuests)
-        {
-            int completableCount = q.Data.isInfinite ? (q.CurrentValue / q.RuntimeTargetValue) : 1;
-            if (completableCount < 1) completableCount = 1;
-
-            for (int i = 0; i < completableCount; i++)
-            {
-                // i회차 단계의 보상을 계산하기 위한 가상 회차
-                int stepForThisLoop = q.currentStep + i;
-                var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
-
-                foreach (var r in rewards)
-                {
-                    bool isEquipment = r.originalSO is Growth.Equipment.EquipmentSO;
-                    if (isEquipment) uniqueRewards.Add(r);
-                    else
-                    {
-                        // 재화는 회차(stepForThisLoop)만큼 곱함
-                        int addedAmount = r.amount * stepForThisLoop;
-
-                        if (totalCurrencies.ContainsKey(r.currencyType))
-                        {
-                            totalCurrencies[r.currencyType].amount += addedAmount;
-                        }
-                        else
-                        {
-                            totalCurrencies.Add(r.currencyType, new RewardData
-                            {
-                                itemName = r.itemName,
-                                amount = addedAmount,
-                                icon = r.icon,
-                                description = r.description,
-                                originalSO = r.originalSO,
-                                currencyType = r.currencyType
-                            });
-                        }
-                    }
-                }
-                // 실제 데이터 갱신 (TryCompleteQuest 내부에서 다음 단계로 넘김)
-                questManager.TryCompleteQuest(q, true);
-            }
-        }
-
-        List<RewardData> finalList = new List<RewardData>();
-        finalList.AddRange(totalCurrencies.Values);
-        finalList.AddRange(uniqueRewards);
-
-        if (finalList.Count > 0 && rewardPopup != null)
-        {
-            rewardPopup.ShowRewards(finalList);
-        }
-        RefreshQuestBox();
-        UpdateTabVisuals();
-    }
+    // public void OnClickQuestAllClear()
+    // {
+    //     if (questManager == null) return;
+    //
+    //     //재화 합산용 딕셔너리
+    //     Dictionary<CurrencyType, RewardData> totalCurrencies = new Dictionary<CurrencyType, RewardData>();
+    //     List<RewardData> uniqueRewards = new List<RewardData>();
+    //
+    //     //완료 가능한 퀘스트 카테고리 추출
+    //     var targetQuests = questManager.GetActiveQuests()
+    //     .Where(q => q.isCompleted)
+    //     .ToList();
+    //
+    //     foreach (var q in targetQuests)
+    //     {
+    //         int completableCount = q.Data.isInfinite ? (q.CurrentValue / q.RuntimeTargetValue) : 1;
+    //         if (completableCount < 1) completableCount = 1;
+    //
+    //         for (int i = 0; i < completableCount; i++)
+    //         {
+    //             // i회차 단계의 보상을 계산하기 위한 가상 회차
+    //             int stepForThisLoop = q.currentStep + i;
+    //             var rewards = questManager.GetRewardsByGroupID(q.Data.rewardGroupID);
+    //
+    //             foreach (var r in rewards)
+    //             {
+    //                 bool isEquipment = r.originalSO is Growth.Equipment.EquipmentSO;
+    //                 if (isEquipment) uniqueRewards.Add(r);
+    //                 else
+    //                 {
+    //                     // 재화는 회차(stepForThisLoop)만큼 곱함
+    //                     int addedAmount = r.amount * stepForThisLoop;
+    //
+    //                     if (totalCurrencies.ContainsKey(r.currencyType))
+    //                     {
+    //                         totalCurrencies[r.currencyType].amount += addedAmount;
+    //                     }
+    //                     else
+    //                     {
+    //                         totalCurrencies.Add(r.currencyType, new RewardData
+    //                         {
+    //                             itemName = r.itemName,
+    //                             amount = addedAmount,
+    //                             icon = r.icon,
+    //                             description = r.description,
+    //                             originalSO = r.originalSO,
+    //                             currencyType = r.currencyType
+    //                         });
+    //                     }
+    //                 }
+    //             }
+    //             // 실제 데이터 갱신 (TryCompleteQuest 내부에서 다음 단계로 넘김)
+    //             questManager.TryCompleteQuest(q, true);
+    //         }
+    //     }
+    //
+    //     List<RewardData> finalList = new List<RewardData>();
+    //     finalList.AddRange(totalCurrencies.Values);
+    //     finalList.AddRange(uniqueRewards);
+    //
+    //     if (finalList.Count > 0 && rewardPopup != null)
+    //     {
+    //         rewardPopup.ShowRewards(finalList);
+    //     }
+    //     RefreshQuestBox();
+    //     UpdateTabVisuals();
+    // }
 
     //실시간 데이터 동기화
     void RealtimeRefreshVisuals()
