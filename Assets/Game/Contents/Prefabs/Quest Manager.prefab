@@ -7533,14 +7533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventHub: {fileID: 0}
-  questUIManager: {fileID: 209107819223805055}
   questDatabase: {fileID: 11400000, guid: 4622e25e6a8d26646b739592beb7b053, type: 2}
-  autoHuntButton: {fileID: 0}
-  bossMapButton: {fileID: 0}
-  newContentButton: {fileID: 0}
-  guideArrow: {fileID: 0}
-  TutorialPanel: {fileID: 0}
-  TutorialDescText: {fileID: 0}
   itemDropManager: {fileID: 0}
   rewardPopup: {fileID: 3225508117700050615}
   rewardTableMaps: []
