@@ -54,6 +54,17 @@ namespace Battle
             runtimeProgress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
             
             hub.OnDirectionChanged += JoystickMoveInput;
+            AutoRegen(this.GetCancellationTokenOnDestroy()).Forget();
+        }
+
+        private async UniTaskVoid AutoRegen(CancellationToken token)
+        {
+            while (true)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                await UniTask.WaitWhile(() => isDead, cancellationToken: token);
+                Hp += MaxHp / 100; //초당 1%회복
+            }
         }
         void OnDestroy()
         {

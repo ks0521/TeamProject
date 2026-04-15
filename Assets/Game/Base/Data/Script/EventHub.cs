@@ -127,6 +127,9 @@ namespace Base.Data
         #endregion
 
         #region 퀘스트
+
+        public event Action OnQuestDataChanged;
+        public void QuestDataChanged() => OnQuestDataChanged?.Invoke();
         public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
         public event Action OnBasicItemEquip;
