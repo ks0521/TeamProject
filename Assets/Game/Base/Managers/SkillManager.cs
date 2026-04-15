@@ -4,6 +4,7 @@ using Base.Save;
 using Battle;
 using Growth.Skill;
 using System.Collections.Generic;
+using UnityEditor.Build.Pipeline;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour, IManager
@@ -220,6 +221,32 @@ public class SkillManager : MonoBehaviour, IManager
         }
         eventHub.InitSkill();
     }
+    public bool IsSkillEquippedByKey(int skillKey)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (PlayerEquipSkillList[i].EquippedSkillKey == skillKey)
+                return true;
+        }
+        return false;
+    }
+    public bool TryGetSkillPriority(int slotNum, out Priority pri)
+    {
+        pri = Priority.Low;
+        if (slotNum < 0 || 6 <= slotNum) return false;
+        var curESkill = PlayerEquipSkillList[slotNum];
+        if (!curESkill.isEquipped) return false;
+        pri = PlayerEquipSkillList[slotNum].priority;
+        return true;
+    }
+    public bool TryChangeSkillPriority(int slotNum, Priority pri)
+    {
+        if (slotNum < 0 || 6 <= slotNum) return false;
+        var curESkill = PlayerEquipSkillList[slotNum];
+        if (!curESkill.isEquipped) return false;
+        curESkill.priority = pri;
+        return true;
+    }
 
     public void SkillInit()
     {
@@ -249,7 +276,7 @@ public class SkillManager : MonoBehaviour, IManager
         playerSkillPool = playerEquipSkillController.Pool;
 
         playerSkillPool.Init(this);
-        
+
         playerEquipSkillController.Init(pl);
         playerEquipSkillController.SkillEquipInit();
         PlayerEquipSkillList = playerEquipSkillController.EquipSkillList;

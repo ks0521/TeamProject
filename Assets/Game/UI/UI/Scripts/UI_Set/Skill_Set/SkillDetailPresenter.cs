@@ -23,9 +23,9 @@ namespace UI.Skill_Set
         {
             skillDetailView.SkillLevelUpBtnInteractable(isLevelUpBtnOn);
         }
-        public void BtnEventAddListner(Action lvOneUpFunc, Action lvMaxUpFunc, Action equipFunc)
+        public void BtnEventAddListner(Action lvOneUpFunc, Action lvMaxUpFunc, Action equipFunc, Action priorityChangeFunc)
         {
-            skillDetailView.BtnEventAddListner(lvOneUpFunc, lvMaxUpFunc, equipFunc);
+            skillDetailView.BtnEventAddListner(lvOneUpFunc, lvMaxUpFunc, equipFunc, priorityChangeFunc);
         }
         public void OnDestroyFeat()
         {
@@ -40,10 +40,6 @@ namespace UI.Skill_Set
         }
         public void SkillDetailDataSetToSkillChange(SkillSO so)
         {
-            // gameObject.SetActive(true);
-            // if (!skillMgr.TryGetSkillSO(key, out var so)) return;
-            
-            // int curLv = skillMgr.GetSkillLevel(so.key);
             skillMgr.TryGetSkillLevel(so, out int curLv);
             string value = null;
             SkillDetailViewNeedsNameAndImage niData = new(so, skillMgr.IsSkillUnlock(so));
@@ -52,7 +48,7 @@ namespace UI.Skill_Set
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
 
-                data = new SkillDetailViewNeedsStatData(aSO, value, curLv);
+                data = new SkillDetailViewNeedsStatData(aSO, value, curLv, skillMgr.IsSkillEquippedByKey(aSO.key));
             }
             else if (so is PassiveSkillSO pSO)
             {
@@ -69,15 +65,13 @@ namespace UI.Skill_Set
         }
         public void SkillDetailDataSetToSkillLvEnhance(SkillSO so)
         {
-            // if (!skillMgr.TryGetSkillSO(key, out var so)) return;
             string value = null;
             SkillDetailViewNeedsStatData statData = new();
-            // int curLv = skillMgr.GetSkillLevel(so.key);
             skillMgr.TryGetSkillLevel(so, out int curLv);
             if (so is ActiveSkillSO aSO)
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
-                statData = new SkillDetailViewNeedsStatData(aSO, value, curLv);
+                statData = new SkillDetailViewNeedsStatData(aSO, value, curLv, skillMgr.IsSkillEquippedByKey(aSO.key));
 
             }
             else if (so is PassiveSkillSO pSO)
@@ -89,6 +83,28 @@ namespace UI.Skill_Set
 
         }
         StringBuilder sb = new StringBuilder();
+        public void SkillPriorityBtnChange(Priority pri)
+        {
+            Color changeCol = Color.white;
+            string changeTxt = "";
+            switch (pri)
+            {
+                case Priority.High:
+                    changeCol = Color.red;
+                    changeTxt = "High";
+                    break;
+                case Priority.Mid:
+                    changeCol = Color.blue;
+                    changeTxt = "Mid";
+                    break;
+                case Priority.Low:
+                    changeCol = Color.yellow;
+                    changeTxt = "Low";
+                    break;
+            }
+
+            skillDetailView.SkillPriorityChange(changeCol, changeTxt);
+        }
         public void SkillLvUpBtnInteractable(bool isSkillLvUpPossible) => skillDetailView.SkillLevelUpBtnInteractable(isSkillLvUpPossible);
         public void SkillLockImageSet(bool isUnlock) => skillDetailView.SkillLockImgSet(isUnlock);
         public void SkillStatValueTextBuild(string contents, bool isEnter)
