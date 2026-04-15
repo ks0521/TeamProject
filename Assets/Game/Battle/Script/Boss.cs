@@ -334,12 +334,6 @@ public class Boss : Monster
         //if (Input.GetKeyDown(KeyCode.W)) UseMonsterSkill2Async().Forget();
         //if (Input.GetKeyDown(KeyCode.E)) UseMonsterSkill3Async().Forget();
 
-        //체력 40% = 돌진(30% 이상)과 화염 장막(50% 이하) 조건 모두 만족
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            hp = CurrentBattleStat.maxHp * 0.4f;
-            Debug.Log($"보스 체력: {Hp} / {CurrentBattleStat.maxHp}");
-        }
 
         if (currentSkill1CoolTime > 0) currentSkill1CoolTime = Mathf.Max(0, currentSkill1CoolTime - Time.deltaTime);
         if (currentSkill2CoolTime > 0) currentSkill2CoolTime = Mathf.Max(0, currentSkill2CoolTime - Time.deltaTime);
