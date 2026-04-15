@@ -56,6 +56,10 @@ public class StatusCalculator : MonoBehaviour, IManager
         runtimeStatus.finalStatus =
             statIncreaseCache + equipOwnIncreaseCache + equipUsingIncreaseCache + skillIncreaseCache;
         runtimeStatus.finalStatus.battle.atk *= (1f + runtimeStatus.finalStatus.battle.atkRate);
+        runtimeStatus.finalStatus.battle.critChance = Mathf.Clamp01(runtimeStatus.finalStatus.battle.critChance);
+        runtimeStatus.finalStatus.battle.moveSpeed = Mathf.Clamp(runtimeStatus.finalStatus.battle.moveSpeed,0.2f,8f);
+        runtimeStatus.finalStatus.extra.damageReduceRate = Mathf.Clamp(runtimeStatus.finalStatus.extra.damageReduceRate,-5f,0.98f);
+
     }
 
     /// <summary> 모든 성장수단 계산 후 런타임 스탯에 적용 </summary>
@@ -149,7 +153,7 @@ public class StatusCalculator : MonoBehaviour, IManager
             statIncreaseCache.battle.critChance =
                 runtimeStatus.baseStat.total.battle.critChance +
                 progress.statUpgrades.upgradeLevelsByType[StatusType.CritChance] * stat.increasePerEnhance;
-            Mathf.Clamp(runtimeStatus.FinalBattleStatStatus.critChance, 0f, 1f); //공격속도 증가 디버프 있을수도 있어서
+            statIncreaseCache.battle.critChance = Mathf.Clamp(statIncreaseCache.battle.critChance, 0f, 1f); 
         }
         else { Debug.LogWarning($"치명타 확률 SO 찾지 못함"); }
 
@@ -219,14 +223,14 @@ public class StatusCalculator : MonoBehaviour, IManager
             equipOwnIncreaseCache += (equip.ownedPerLevelIncrease * equipment.Value.enhancementLevel); //레벨당 상승하는 보유효과
         }
 
-        Debug.Log("장비 보유효과 전부 계산완료");
+        //Debug.Log("장비 보유효과 전부 계산완료");
         //무기
 
         Debug.Log(dic);
         equip = dic.equipmentTable.GetSO(progress.equipment.equippedWeponKey);
         if (equip == null)
         {
-            Debug.Log("장착한 무기 없음");
+            //Debug.Log("장착한 무기 없음");
         }
         else
         {
@@ -239,7 +243,7 @@ public class StatusCalculator : MonoBehaviour, IManager
         equip = dic.equipmentTable.GetSO(progress.equipment.equippedArmorKey);
         if (equip == null)
         {
-            Debug.Log("장착한 방어구 없음");
+            //Debug.Log("장착한 방어구 없음");
         }
         else
         {
@@ -252,7 +256,7 @@ public class StatusCalculator : MonoBehaviour, IManager
         equip = dic.equipmentTable.GetSO(progress.equipment.equippedAccessoryKey);
         if (equip == null)
         {
-            Debug.Log("장착한 악세서리 없음");
+            //Debug.Log("장착한 악세서리 없음");
         }
         else
         {
@@ -260,8 +264,6 @@ public class StatusCalculator : MonoBehaviour, IManager
             equipUsingIncreaseCache += (equip.equipPerLevelIncrease) * progress.equipmentInventory
                 .equipmentEntries[progress.equipment.equippedAccessoryKey].enhancementLevel; //레벨당 상승하는 장착효과
         }
-
-        Debug.Log("장비 장착효과 전부 계산완료");
     }
 
     public void CalculateSkill()
@@ -270,11 +272,9 @@ public class StatusCalculator : MonoBehaviour, IManager
         foreach (var skillKey in progress.skillProgress.skillProgressState.Keys)
         {
             SkillSO skill = dic.SkillTable.GetSO(skillKey);
-            Debug.Log(skill.skillName);
             if (skill is not PassiveSkillSO || skill == null) continue;
             skillIncreaseCache +=
                 ((PassiveSkillSO)skill).ResultAddStat(progress.skillProgress.skillProgressState[skillKey]);
-            Debug.Log("패시브 스킬 계산 완료");
         }
     }
 

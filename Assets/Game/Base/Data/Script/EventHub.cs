@@ -133,7 +133,7 @@ namespace Base.Data
         public event Action OnAutoHuntActivate; //자동사냥 활성화
         public void ActivateAutoHunt() => OnAutoHuntActivate?.Invoke();
         public event Action OnBasicItemEquip;
-        public void EquipBasicItem() => OnBasicItemEquip.Invoke();
+        public void EquipBasicItem() => OnBasicItemEquip?.Invoke();
         public event Action OnSkillEnhance;
         public void EnhanceSkill() => OnSkillEnhance?.Invoke();
         public event Action<List<RewardData>> OnQuestReward;

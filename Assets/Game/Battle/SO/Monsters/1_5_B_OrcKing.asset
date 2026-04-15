@@ -15,13 +15,34 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 194695ae07aa3fc42921264d271d81a4, type: 3}
   prefeb: {fileID: 6977599979976446918, guid: 24c18c01264d0ed4a8a9f85961301d51, type: 3}
   key: 9560
+  totalStat:
+    battle:
+      atk: 0
+      atkRate: 0
+      critChance: 0
+      critDamage: 0
+      maxHp: 0
+      maxHpRate: 0
+      def: 0
+      atkSpeed: 0
+      moveSpeed: 0
+      atkRange: 0
+    reward:
+      goldGain: 0
+      statStoneGain: 0
+      expGain: 0
+      itemDropRate: 0
+    extra:
+      damageDealtRate: 0.5
+      damageReduceRate: 0.3
   battleStatStat:
-    atk: 30
+    atk: 60
     atkRate: 0
     critChance: 0
     critDamage: 0
-    maxHp: 1200
-    def: 1
+    maxHp: 2000
+    maxHpRate: 0
+    def: 100
     atkSpeed: 1
     moveSpeed: 2
     atkRange: 0
