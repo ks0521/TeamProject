@@ -129,8 +129,7 @@ namespace QuestSystem
 
         void Awake()
         {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+            Init();
         }
 
         public void Init()
@@ -256,8 +255,8 @@ namespace QuestSystem
         //퀘스트 진척량이 누적될 때 호출(UpdateQuest 대신 사용)
         public void OnActivity(GoalType type, int targetID, int amount)
         {
-            //실제로 발생한 targetID 기록
-            string statKey = $"{type}_{targetID}";
+            //GoalType을 퀘스트의 식별자로 사용
+            string statKey = type.ToString();
             if (!globalStats.ContainsKey(statKey)) globalStats[statKey] = 0;
 
             if (type == GoalType.LevelUp)
@@ -275,19 +274,25 @@ namespace QuestSystem
                 else globalStats[allKey] += amount;
             }
 
-            UpdateActiveQuestsProgress(type, targetID);
+            UpdateActiveQuestsProgress(type);
         }
         //모든 활성 퀘스트의 수치를 globalStats 기준으로 새로고침하는 함수
-        void UpdateActiveQuestsProgress(GoalType type, int targetID)
+        void UpdateActiveQuestsProgress(GoalType type)
         {
             foreach (var quest in activeQuests)
             {
                 if (quest.Data.GoalTypeEnum != type) continue;
 
-                int requiredID = quest.RuntimeTargetID;
-                if (requiredID != 0 && requiredID != targetID) continue;
+                //int requiredID = quest.RuntimeTargetID;
+                //if (requiredID != 0 && requiredID != targetID) continue;
 
-                string statKey = $"{type}_{targetID}";
+                string statKey = type.ToString();
+                if (quest.Data.isInfinite || quest.Data.CategoryEnum == QuestCategory.Recurring)
+                {
+                    //반복or무한 퀘스트는 키에 회차 추가
+                    statKey += $"_{quest.currentStep}";
+                }
+
                 int totalProgress = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
                 int startPoint = questStartPoints.ContainsKey(quest.Data.questID) ? questStartPoints[quest.Data.questID] : 0;
                 //진척도 계산: 절대 누적치와 상대치 구분
