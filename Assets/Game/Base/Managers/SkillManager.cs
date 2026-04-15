@@ -3,15 +3,11 @@ using Base.Managers;
 using Base.Save;
 using Battle;
 using Growth.Skill;
-using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour, IManager
 {
-
     private SkillDictionarySO skillTable;
     private ProgressManager _progressManager;
     private RuntimeProgressData progress;
@@ -19,21 +15,7 @@ public class SkillManager : MonoBehaviour, IManager
     private Dictionary<int, int> skillCurLevelDic => progress.skillProgress.skillProgressState;
     public int PlayerLevel => progress.playerInfo.level;
     public int PlayerSkillPoint => progress.playerInfo.skillPoint;
-    public bool IsSkillResetPossible
-    { get; private set; }
-    // {
-    //     get
-    //     {
-    //         foreach (var skill in AllSkillSOList)
-    //         {
-    //             if (TryGetSkillLevel(skill, out int curLv))
-    //             {
-    //                 return true;
-    //             }
-    //         }
-    //         return false;
-    //     }
-    // }
+    public bool IsSkillResetPossible { get; private set; }
     public bool IsSkillPointUsePossible => 0 < PlayerSkillPoint;
     public bool TryGetSkillSO(int key, out SkillSO so)
     {
@@ -47,7 +29,6 @@ public class SkillManager : MonoBehaviour, IManager
             aSkill = null;
             return false;
         }
-        // if(saveEquipSkills == null) SaveEquippedSkills = new List<int>(6);
 
         return TryGetActiveSkill(SaveEquippedSkills[slotNum], out aSkill);
     }
@@ -83,7 +64,7 @@ public class SkillManager : MonoBehaviour, IManager
     }
     public bool IsSkillEquipPossible(int key)
     {
-        if (!TryGetSkillLevel(key, out int curLv))return false;
+        if (!TryGetSkillLevel(key, out int curLv)) return false;
         return true;
     }
     public bool IsSkillLvUpPossibe(SkillSO so)
@@ -95,22 +76,20 @@ public class SkillManager : MonoBehaviour, IManager
         string skillName = so.skillName;
         if (!IsSkillPointUsePossible)
         {
-            Debug.LogWarning($"IsSkillLvUpPossibe : 포인트 없음");
+            // Debug.LogWarning($"IsSkillLvUpPossibe : 포인트 없음");
             return false;
         }
         else if (!IsSkillUnlock(so))
         {
-            Debug.LogWarning($"IsSkillLvUpPossibe : {key}번 {skillName} 스킬 잠김");
+            // Debug.LogWarning($"IsSkillLvUpPossibe : {key}번 {skillName} 스킬 잠김");
             return false;
         }
         else if (CheckSkillCurLevelIsMax(so))
         {
-            Debug.LogWarning($"IsSkillLvUpPossibe : {key}번 {skillName} 현재 스킬 레벨이 최대");
+            // Debug.LogWarning($"IsSkillLvUpPossibe : {key}번 {skillName} 현재 스킬 레벨이 최대");
             return false;
         }
         return true;
-        // if (IsSkillPointUsePossible && IsSkillUnlock(so) && !CheckSkillCurLevelIsMax(so)) return true;
-        // return false;
     }
     private EventHub eventHub;
     private PlayerEquipSkillController playerEquipSkillController;
@@ -124,9 +103,6 @@ public class SkillManager : MonoBehaviour, IManager
     public IReadOnlyList<SkillSO> AllSkillSOList { get; private set; }
     public IReadOnlyList<EquipSkill> PlayerEquipSkillList { get; private set; }
 
-    // public int GetSkillLevel(int key) =>
-    //     skillCurLevelDic.TryGetValue(key, out int value) ? value : 0; //값을 찾을 수 있으면 value, 없으면 스킬찍은적 없음
-    // public bool CanEnhanceSkill() => 0 < progress.playerInfo.skillPoint;
     public bool TrySkillLvUpPossible(int key, out Skill skill, out SkillSO so)
     {
         skill = null;
@@ -137,7 +113,7 @@ public class SkillManager : MonoBehaviour, IManager
             if (IsSkillLvUpPossibe(so))
                 return true;
         }
-        Debug.LogWarning($"SkillLevelUp Check : {key}번 {skill.SkillData.skillName} 스킬 찾지 못함");
+        // Debug.LogWarning($"SkillLevelUp Check : {key}번 {skill.SkillData.skillName} 스킬 찾지 못함");
         return false;
     }
     void LevelUpFeat(int key, Skill skill, int lvUpCnt)
@@ -180,26 +156,8 @@ public class SkillManager : MonoBehaviour, IManager
         LevelUpFeat(key, skill, count);
         Debug.Log($"{key}번 스킬 {so.skillName} 최대 레벨업");
     }
-    // SkillEnhance -> SkillLvUp 으로 변경
-    // key를 통해 스킬 탐색
-    // public void EnhanceSkill(SkillSO skill, int count)
     public void SkillLvUp(int key, int count)
     {
-
-        // if (skill == null || progress.playerInfo.skillPoint < count)
-        // {
-        //     Debug.LogWarning($"{skill} == null 또는 스킬포인트가 부족해 스킬을 강화하지 못했습니다. (필요 {count} / 보유 {progress.playerInfo.skillPoint})");
-        //     return;
-        // }
-
-        // if (!skillLevelDic.TryAdd(skill.key, count))
-        // {
-        //     //이미 해당 키가 추가되어있다면(해당 스킬이 이미 찍혀있음) 수치추가만 한다
-        //     skillLevelDic[skill.key] += count;
-        // }
-        // progress.playerInfo.skillPoint -= count;
-        // Debug.Log($"{skill.skillName}스킬을 {count}만큼 업그레이드 했습니다. 남은 스킬 포인트 : {progress.playerInfo.skillPoint}");
-        // eventHub.SkillEnhanced(skill);
 
         if (TrySkillLvUpPossible(key, out Skill skill, out SkillSO so)) return;
         // 현재 레벨
@@ -227,7 +185,6 @@ public class SkillManager : MonoBehaviour, IManager
         IsSkillResetPossible = false;
         Debug.Log($"{key}번 스킬 {skill.SkillData.skillName} 레벨 초기화");
     }
-    // void SkillAutoEquip(ActiveSkill aSkill)
     void SkillAutoEquip(Skill skill)
     {
         if (!TryGetSkillLevel(skill.SkillData.key, out int curLv)) return;
@@ -244,7 +201,6 @@ public class SkillManager : MonoBehaviour, IManager
             }
         }
     }
-    // void SkillAutoUnequip(ActiveSkill aSkill)
     void SkillAutoUnequip(Skill skill)
     {
         if (TryGetSkillLevel(skill.SkillData.key, out int curLv)) return;
@@ -252,7 +208,7 @@ public class SkillManager : MonoBehaviour, IManager
         if (!(skill is ActiveSkill aSkill)) return;
         else if (playerEquipSkillController.IsThisSkillEquippedOtherSlot(aSkill, out int equippedIndex))
         {
-            Debug.Log($"{equippedIndex}번 슬롯의 {aSkill.SkillData.key}번 스킬 {aSkill.SkillData.skillName} 해제");
+            // Debug.Log($"{equippedIndex}번 슬롯의 {aSkill.SkillData.key}번 스킬 {aSkill.SkillData.skillName} 해제");
             playerEquipSkillController.SkillUnequip(equippedIndex);
         }
     }
@@ -283,12 +239,20 @@ public class SkillManager : MonoBehaviour, IManager
         AllSkillSOList = skillTable?.GetAll();
         EventAddListner();
         SkillInit();
-        playerEquipSkillController = GameManager.Instance.GetGameSystem<PlayerManager>().Player.ESController;
+        PlayerEquipSkillControllerInit();
+        InitResetPossibleCheck();
+    }
+    void PlayerEquipSkillControllerInit()
+    {
+        Player pl = GameManager.Instance.GetGameSystem<PlayerManager>().Player;
+        playerEquipSkillController = pl.ESController;
         playerSkillPool = playerEquipSkillController.Pool;
+
+        playerSkillPool.Init(this);
+        
+        playerEquipSkillController.Init(pl);
         playerEquipSkillController.SkillEquipInit();
         PlayerEquipSkillList = playerEquipSkillController.EquipSkillList;
-        Debug.Log($"{playerEquipSkillController.EquipSkillList.Count}, {PlayerEquipSkillList.Count}");
-        InitResetPossibleCheck();
     }
     void InitResetPossibleCheck()
     {
@@ -303,10 +267,9 @@ public class SkillManager : MonoBehaviour, IManager
         }
         IsSkillResetPossible = false;
     }
-    void SkillEquipSave(int slotIndex, int skillKey) => progress.skillProgress.skillSlots[slotIndex] = skillKey;
+    // void SkillEquipSave(int slotIndex, int skillKey) => progress.skillProgress.skillSlots[slotIndex] = skillKey;
     void SkillEquipSave(int slotIndex, ActiveSkill aSkill)
-    // => progress.skillProgress.skillSlots[slotIndex] = aSkill.SkillData.key;
-        => SkillEquipSave(slotIndex, aSkill.SkillData.key);
+        => progress.skillProgress.skillSlots[slotIndex] = aSkill.SkillData.key;
     void SkillUnequipSave(int slotIndex) => progress.skillProgress.skillSlots[slotIndex] = -1;
     void EventAddListner()
     {
