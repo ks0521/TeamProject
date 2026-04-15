@@ -111,7 +111,7 @@ public class QuestUIManager : MonoBehaviour, IManager
             if (boxScript != null)
             {
                 boxScript.Setup(quest, this);
-                boxScript.RefreshVisuals();
+                //boxScript.RefreshVisuals();
                 instantiatedBoxes.Add(boxScript);
             }
         }

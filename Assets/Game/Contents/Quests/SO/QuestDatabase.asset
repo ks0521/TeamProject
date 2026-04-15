@@ -28,7 +28,7 @@ MonoBehaviour:
   - questID: 2
     category: 0
     description: "\uB808\uBCA8 7 \uB2EC\uC131"
-    questStatus: 0
+    questStatus: 1
     goalType: 1
     targetValue: 7
     prevQuestID: 1
