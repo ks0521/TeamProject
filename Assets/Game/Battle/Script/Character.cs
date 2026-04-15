@@ -209,7 +209,7 @@ namespace Battle
 
         public void SkillAttack(Character hitTarget, float multiplier)
         {
-            if (hitTarget == null || target.isDead || !canAtk || isDead) return;
+            if (hitTarget == null || hitTarget.isDead || !canAtk || isDead) return;
             HitType type = HitType.Normal;
             //AtkCooltimeTask().Forget();
             //Debug.Log($"{name} 이 {target.name}에게 스킬공격!");

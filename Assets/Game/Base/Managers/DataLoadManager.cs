@@ -13,7 +13,7 @@ namespace Base.Manager
 {
     public class DataLoadManager : MonoBehaviour
     {
-        public DataLoadManager Instance;
+        public static DataLoadManager Instance;
         private GameDataDictionaries dic;
         private bool isLoaded = false;
 
