@@ -40,6 +40,7 @@ namespace Base.Data
         
         [Header("Defence")] 
         public float maxHp; //최대 체력
+        public float maxHpRate; //최대 체력 배율
         public float def; //방어력
 
         [Header("Utility")] 
@@ -74,7 +75,8 @@ namespace Base.Data
                 atkRate = stat.atkRate + modifier.atkRate,
                 critChance = stat.critChance + modifier.critChance,
                 critDamage = stat.critDamage + modifier.critDamage,
-                maxHp = (stat.maxHp + modifier.maxHp) * (1+modifier.maxHpRate),
+                maxHp = stat.maxHp + modifier.maxHp,
+                maxHpRate = stat.maxHpRate + modifier.maxHpRate,
                 def = stat.def + modifier.def,
                 atkSpeed = stat.atkSpeed + modifier.atkSpeed,
                 moveSpeed = stat.moveSpeed + modifier.moveSpeed,

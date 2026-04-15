@@ -56,6 +56,10 @@ public class StatusCalculator : MonoBehaviour, IManager
         runtimeStatus.finalStatus =
             statIncreaseCache + equipOwnIncreaseCache + equipUsingIncreaseCache + skillIncreaseCache;
         runtimeStatus.finalStatus.battle.atk *= (1f + runtimeStatus.finalStatus.battle.atkRate);
+        runtimeStatus.finalStatus.battle.critChance = Mathf.Clamp01(runtimeStatus.finalStatus.battle.critChance);
+        runtimeStatus.finalStatus.battle.moveSpeed = Mathf.Clamp(runtimeStatus.finalStatus.battle.moveSpeed,0.2f,8f);
+        runtimeStatus.finalStatus.extra.damageReduceRate = Mathf.Clamp(runtimeStatus.finalStatus.extra.damageReduceRate,-5f,0.98f);
+
     }
 
     /// <summary> 모든 성장수단 계산 후 런타임 스탯에 적용 </summary>

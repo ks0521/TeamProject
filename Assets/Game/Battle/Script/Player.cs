@@ -19,9 +19,9 @@ namespace Battle
             protected set
             {
                 hp = value;
-                if (CurrentBattleStatStat.maxHp <= hp)
+                if (CurrentBattleStat.maxHp <= hp)
                 {
-                    hp = CurrentBattleStatStat.maxHp;
+                    hp = CurrentBattleStat.maxHp;
                 }
                 eventHub.HpChanged(hp,MaxHp);
                 if (hp <= 0f)
@@ -31,7 +31,8 @@ namespace Battle
             }
         }
         public PlayerEquipSkillController ESController => equipSkillController;
-        public override BattleStat CurrentBattleStatStat => runtimeStatus.finalStatus.battle;
+        public override TotalStat CurrentTotalStat => runtimeStatus.finalStatus;
+        public override BattleStat CurrentBattleStat => runtimeStatus.finalStatus.battle;
         protected override float AttackRange => runtimeStatus.finalStatus.battle.atkRange;
         [SerializeField] private RuntimeProgressData runtimeProgress;
         [SerializeField] protected RuntimeStatus runtimeStatus;
@@ -72,12 +73,12 @@ namespace Battle
         }
         void JoystickMoveInput(Vector2 dir)
         {
-            cm.UpdateMoveInput(dir, CurrentBattleStatStat.moveSpeed);
+            cm.UpdateMoveInput(dir, CurrentBattleStat.moveSpeed);
         }
         void Rebirth()
         {
             isDead = false;
-            Hp = CurrentBattleStatStat.maxHp;
+            Hp = CurrentBattleStat.maxHp;
         }
         /// <summary> 플레이어에게 처치당했을 시 실행</summary>
         protected override void OnDead()
@@ -153,7 +154,7 @@ namespace Battle
 
         void UpdateMoveFeat()
         {
-            cm.UpdateMoveInput(CurrentBattleStatStat.moveSpeed);
+            cm.UpdateMoveInput(CurrentBattleStat.moveSpeed);
             // TestMoveTargetSet();
             //AtkFeat();
         }
@@ -211,7 +212,7 @@ namespace Battle
             if (!CheckTargetIsClose())
             {
                 state = CharacterState.Move;
-                cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStatStat.moveSpeed);
+                cm.ChaseMove(DirFromPosToTarget(), CurrentBattleStat.moveSpeed);
                 if (spumController != null)
                 {
                     spumController.PlayAnimation(PlayerState.MOVE, 0);

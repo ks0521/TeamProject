@@ -12,7 +12,7 @@ public class Boss : Monster
     //public MonsterSO monsterSO;
     //public const float MonsterAttackRange = 0.6f;
 
-    public override Base.Data.BattleStat CurrentBattleStatStat => monsterSO.battleStatStat;
+    public override Base.Data.BattleStat CurrentBattleStat => monsterSO.battleStatStat;
     protected override float AttackRange => MonsterAttackRange;
 
     // 공격 대상의 스크립트를 미리 캐싱해둘 변수
@@ -325,7 +325,7 @@ public class Boss : Monster
         {
             Debug.LogWarning("Player를 찾을 수 없습니다!");
         }
-        hp = CurrentBattleStatStat.maxHp;
+        hp = CurrentBattleStat.maxHp;
     }
 
     protected override void UpdateFeat()
@@ -337,8 +337,8 @@ public class Boss : Monster
         //체력 40% = 돌진(30% 이상)과 화염 장막(50% 이하) 조건 모두 만족
         if (Input.GetKeyDown(KeyCode.H))
         {
-            hp = CurrentBattleStatStat.maxHp * 0.4f;
-            Debug.Log($"보스 체력: {Hp} / {CurrentBattleStatStat.maxHp}");
+            hp = CurrentBattleStat.maxHp * 0.4f;
+            Debug.Log($"보스 체력: {Hp} / {CurrentBattleStat.maxHp}");
         }
 
         if (currentSkill1CoolTime > 0) currentSkill1CoolTime = Mathf.Max(0, currentSkill1CoolTime - Time.deltaTime);
@@ -349,8 +349,8 @@ public class Boss : Monster
 
         //돌진: 체력 30% 이상일 때만 발동 가능
         //화염 장막: 체력 50% 이하, 범위 내에 플레이어가 있을 때만 발동 가능
-        if (CanUseSkill(currentSkill1CoolTime) && hp >= CurrentBattleStatStat.maxHp * 0.3) UseMonsterSkill1Async().Forget();
-        else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStatStat.maxHp * 0.5)
+        if (CanUseSkill(currentSkill1CoolTime) && hp >= CurrentBattleStat.maxHp * 0.3) UseMonsterSkill1Async().Forget();
+        else if (CanUseSkill(currentSkill2CoolTime) && hp <= CurrentBattleStat.maxHp * 0.5)
         {
             float distance = Vector2.Distance(transform.position, target.transform.position);
             if (distance <= skill2Range) UseMonsterSkill2Async().Forget();
@@ -375,7 +375,7 @@ public class Boss : Monster
         else
         {
             state = CharacterState.Move;
-            cm.ChaseMove(target.transform, CurrentBattleStatStat.moveSpeed);
+            cm.ChaseMove(target.transform, CurrentBattleStat.moveSpeed);
             if (spumController != null)
             {
                 spumController.PlayAnimation(PlayerState.MOVE, 0);

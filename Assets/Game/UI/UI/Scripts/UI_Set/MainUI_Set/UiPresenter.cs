@@ -143,9 +143,9 @@ namespace UI.Scripts
             }
 
             currentBoss = monster;
-            Debug.Log($"보스 UI 세팅 / 현재HP : {currentBoss.Hp}, 최대HP : {currentBoss.CurrentBattleStatStat.maxHp}");
+            Debug.Log($"보스 UI 세팅 / 현재HP : {currentBoss.Hp}, 최대HP : {currentBoss.CurrentBattleStat.maxHp}");
             Debug.Log($"시간 UI 세팅 / 현재시간 : {data.currentTime}, 최대시간 : {data.maxTime}");
-            bossHp.SetBoss(currentBoss.Hp, currentBoss.CurrentBattleStatStat.maxHp , currentBoss.name);
+            bossHp.SetBoss(currentBoss.Hp, currentBoss.CurrentBattleStat.maxHp , currentBoss.name);
             timer.SetTime(data.currentTime , data.maxTime);
             StartTimerRoutine();
 
