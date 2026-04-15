@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Base.Save;
+using Growth.Skill;
 using Growth.StatUpgrade;
 using UnityEngine;
 
@@ -88,6 +89,7 @@ namespace Base.Managers
                 skillProgress = new PlayerSkillState()
                 {
                     skillSlots = new int[6],
+                    skillSlotPriority = new Priority[6],
                     skillProgressState = new()
                 },
                 lastSession = new LastSessionTime()
