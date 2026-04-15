@@ -53,9 +53,7 @@ public class QuestUIManager : MonoBehaviour, IManager
         presenter = GameManager.Instance.GetGameSystem<QuestUIPresenter>();
         questManager = GameManager.Instance.GetGameSystem<QuestManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
-        OnClickBookmark(0);
         if (eventHub != null) eventHub.OnCurrencyChange += HandleFameChange;
-        EventHub.OnQuestProgressUpdated += RealtimeRefreshVisuals;
         UpdateFameDisplay(GetCurrentFame());
         
         BindButtons();
@@ -66,6 +64,9 @@ public class QuestUIManager : MonoBehaviour, IManager
     {
         UnbindButtons();
         presenter?.DetachView(this);
+        
+        if (eventHub != null) eventHub.OnCurrencyChange -= HandleFameChange;
+
     }
 
     private void BindButtons()
@@ -476,8 +477,7 @@ private void ClearRewardIcons()
 
     void OnDestroy()
     {
-        EventHub.OnQuestProgressUpdated -= RealtimeRefreshVisuals;
-        eventHub.OnCurrencyChange -= HandleFameChange;
+        if (eventHub != null) eventHub.OnCurrencyChange -= HandleFameChange;
     }
     #endregion
 }
