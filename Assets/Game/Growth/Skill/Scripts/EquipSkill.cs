@@ -16,6 +16,7 @@ namespace Growth.Skill
         EventHub eventHub;
         // EquipSkill index
         int eSkillIndex;
+        public int curESkillIndex => eSkillIndex;
         // Equiped Skill
         [SerializeField] ActiveSkill skill;
         public ActiveSkill Skill => skill;

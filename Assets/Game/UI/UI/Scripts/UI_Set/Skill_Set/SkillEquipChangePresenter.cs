@@ -2,6 +2,7 @@ using Base.Data;
 using Base.Managers;
 using Battle;
 using Growth.Skill;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace UI.Skill_Set
                 skillEquipChangePopupView.SkillSlotBtnImgSet(i, data.skillIcon);
             }
         }
-        public void SkillPriorityChange(int slotNum, Priority pri)
+        public void EquipSkillPriorityChange(int slotNum, Priority pri)
         {
             Color changeCol = Color.white;
             string changeTxt = "";
@@ -74,9 +75,9 @@ namespace UI.Skill_Set
             hub.SkillEquip(slotIndex, targetSkillKey);
             gameObject.SetActive(false);
         }
-        public void BtnEventAddListner()
+        public void BtnEventAddListner(Action<int> equipSkillPriorityChangeFunc)
         {
-            skillEquipChangePopupView.BtnEventAddListner(SkillEquipChangeSelect);
+            skillEquipChangePopupView.BtnEventAddListner(SkillEquipChangeSelect, equipSkillPriorityChangeFunc);
         }
         void BtnEventRemoveListner() => skillEquipChangePopupView.BtnEventRemoveAllListner();
     }
