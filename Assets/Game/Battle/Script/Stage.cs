@@ -68,7 +68,7 @@ public class Stage
         await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
         float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
         float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
-
+        
         GameObject monsterObj = monsterPool.UsePool(stageSO.preset[0].monster.key);
         Monster monster = monsterObj.GetComponent<Monster>();
         monster.SetUp(stageSO.preset[0].monster);
@@ -88,25 +88,34 @@ public class Stage
             while (true)
             {
                 await UniTask.WaitWhile(() => !canSpawning, cancellationToken: token);
-                float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
-                float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
-                int randIdx = WeightCalc(stageSO.preset);
-                GameObject monsterObj = monsterPool.UsePool(stageSO.preset[randIdx].monster.key);
-                Monster monster = monsterObj.GetComponent<Monster>();
-                monster.SetUp(stageSO.preset[randIdx].monster);
-                monster.Init();
-                monsterObj.transform.position = new Vector3(randx, randy, 0);
-                monsterObj.SetActive(true);
-                Register(monster);
+                for (int i = 0; i < 2; i++)
+                {
+                    SpawnMonster();
+                }
                 //Debug.Log($"Spawn : {mon.transform.position}");
                 await UniTask.Delay(TimeSpan.FromSeconds(spawnDelay), cancellationToken: token);
-                await UniTask.WaitWhile(() => monstersList.Count >= 10, cancellationToken: token);
+                await UniTask.WaitWhile(() => monstersList.Count >= 25, cancellationToken: token);
             }
         }
         catch (OperationCanceledException)
         {
             Debug.Log("스테이지 전환에 따른 스포너 정상 종료");
         }
+    }
+
+    void SpawnMonster()
+    {
+        float randx = Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x);
+        float randy = Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y);
+        int randIdx = WeightCalc(stageSO.preset);
+        GameObject monsterObj = monsterPool.UsePool(stageSO.preset[randIdx].monster.key);
+        Monster monster = monsterObj.GetComponent<Monster>();
+        monster.SetUp(stageSO.preset[randIdx].monster);
+        monster.Init();
+        monsterObj.transform.position = new Vector3(randx, randy, 0);
+        monsterObj.SetActive(true);
+        Register(monster);
+
     }
     #endregion
     #region 몬스터 등록 / 해제
