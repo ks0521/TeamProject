@@ -15,6 +15,7 @@ MonoBehaviour:
   key: 1002
   skillName: Water Ball
   maxLv: 5
+  unlockPlayerLv: 6
   description: "\uC801\uC744 \uCD94\uC801\uD558\uC5EC (\uBB3C \uC18D\uC131) \uB2E8\uC77C
     \uACF5\uACA9"
   skillIcon: {fileID: 7215105689423546514, guid: 7f0334fbcb82d4dea9084d6f5a2ab8d3,
