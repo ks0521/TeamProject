@@ -15,156 +15,156 @@ MonoBehaviour:
   allQuests:
   - questID: 1
     category: 0
-    description: Achieve Lv 4
+    description: "\uB808\uBCA8 4 \uB2EC\uC131"
     questStatus: 1
     goalType: 1
-    targetID: 0
     targetValue: 4
     prevQuestID: 0
+    nextQuestID: 2
     rewardGroupID: 1
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 1
   - questID: 2
     category: 0
-    description: Achieve Lv 7
+    description: "\uB808\uBCA8 7 \uB2EC\uC131"
     questStatus: 0
     goalType: 1
-    targetID: 0
     targetValue: 7
     prevQuestID: 1
+    nextQuestID: 3
     rewardGroupID: 2
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 1
   - questID: 3
     category: 0
-    description: Achieve Lv 10
+    description: "\uB808\uBCA8 10 \uB2EC\uC131"
     questStatus: 0
     goalType: 1
-    targetID: 0
     targetValue: 10
     prevQuestID: 2
+    nextQuestID: 0
     rewardGroupID: 3
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 1
   - questID: 11
     category: 0
-    description: Clear Stage {0}-5
+    description: "\uC2A4\uD14C\uC774\uC9C0 {0}-5 \uD074\uB9AC\uC5B4"
     questStatus: 1
     goalType: 5
-    targetID: 0
     targetValue: 1
     prevQuestID: 0
+    nextQuestID: 0
     rewardGroupID: 11
     valueModifier: 1
     isInfinite: 1
-    isAbsoluteGoal: 0
+    isAbsoluteGoal: 1
   - questID: 101
     category: 1
-    description: LevelUP 1 time
+    description: "[\uC21C\uD658]1\uBC88 \uB808\uBCA8\uC5C5"
     questStatus: 1
     goalType: 1
-    targetID: 0
     targetValue: 1
     prevQuestID: 0
+    nextQuestID: 102
     rewardGroupID: 101
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 102
     category: 1
-    description: Use Skill 5 times
+    description: "[\uC21C\uD658]\uC2A4\uD0AC 5\uBC88 \uC0AC\uC6A9"
     questStatus: 1
     goalType: 4
-    targetID: 0
     targetValue: 5
     prevQuestID: 101
+    nextQuestID: 103
     rewardGroupID: 102
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 103
     category: 1
-    description: Use Skill 3 times
+    description: "[\uC21C\uD658]\uBAAC\uC2A4\uD130 100\uB9C8\uB9AC \uC0AC\uB0E5"
     questStatus: 1
-    goalType: 4
-    targetID: 0
-    targetValue: 3
-    prevQuestID: 0
+    goalType: 0
+    targetValue: 100
+    prevQuestID: 102
+    nextQuestID: 101
     rewardGroupID: 103
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 111
     category: 1
-    description: Hunt 200 Monsters ({0})
+    description: "[\uBC18\uBCF5]\uBAAC\uC2A4\uD130 200\uB9C8\uB9AC \uC0AC\uB0E5"
     questStatus: 1
     goalType: 0
-    targetID: 0
     targetValue: 200
     prevQuestID: 11
+    nextQuestID: 0
     rewardGroupID: 111
     valueModifier: 0
-    isInfinite: 1
+    isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 901
     category: 2
-    description: Hunt 300 Monsters
+    description: "[\uC77C\uC77C]\uBAAC\uC2A4\uD130 300\uB9C8\uB9AC \uC0AC\uB0E5"
     questStatus: 0
     goalType: 0
-    targetID: 0
     targetValue: 300
     prevQuestID: 0
+    nextQuestID: 0
     rewardGroupID: 901
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 902
     category: 2
-    description: Use Skill 10 times
+    description: "[\uC77C\uC77C]\uC2A4\uD0AC 10\uBC88 \uC0AC\uC6A9"
     questStatus: 0
     goalType: 4
-    targetID: 0
     targetValue: 10
     prevQuestID: 0
+    nextQuestID: 0
     rewardGroupID: 902
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 903
     category: 2
-    description: LevelUP 2 time
+    description: "[\uC77C\uC77C]2\uBC88 \uB808\uBCA8\uC5C5"
     questStatus: 0
     goalType: 1
-    targetID: 0
     targetValue: 2
     prevQuestID: 0
+    nextQuestID: 0
     rewardGroupID: 903
     valueModifier: 0
     isInfinite: 0
     isAbsoluteGoal: 0
   - questID: 1001
     category: 3
-    description: Achieve Lv {0}
+    description: "\uB808\uBCA8 {0} \uB2EC\uC131"
     questStatus: 1
     goalType: 1
-    targetID: 0
     targetValue: 20
     prevQuestID: 0
+    nextQuestID: 0
     rewardGroupID: 1001
     valueModifier: 20
     isInfinite: 1
     isAbsoluteGoal: 1
   - questID: 1002
     category: 3
-    description: Use Skill {0} Times
+    description: "\uC2A4\uD0AC {0}\uBC88 \uC0AC\uC6A9"
     questStatus: 1
     goalType: 4
-    targetID: 0
     targetValue: 11
     prevQuestID: 0
+    nextQuestID: 0
     rewardGroupID: 1002
     valueModifier: 11
     isInfinite: 1

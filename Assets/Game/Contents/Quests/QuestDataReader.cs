@@ -14,9 +14,9 @@ public class QuestDataReader
     public string description;
     public QuestStatus questStatus;
     public GoalType goalType;
-    public int targetID;
     public int targetValue;
     public int prevQuestID;
+    public int nextQuestID;
     public int rewardGroupID;
     public int valueModifier;
     public bool isInfinite;

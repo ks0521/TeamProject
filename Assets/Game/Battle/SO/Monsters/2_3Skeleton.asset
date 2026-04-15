@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefeb: {fileID: 2343375463384217552, guid: aef2334b7f574cd459323c8929992dd1, type: 3}
   key: 9563
-  battleStat:
-    maxHp: 270
+  battleStatStat:
     atk: 38
-    def: 3
-    atkSpeed: 1
-    moveSpeed: 1
+    atkRate: 0
     critChance: 0
     critDamage: 0
+    maxHp: 270
+    def: 3
+    atkSpeed: 1
+    moveSpeed: 2
+    atkRange: 0

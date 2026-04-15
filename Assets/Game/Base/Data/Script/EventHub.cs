@@ -56,8 +56,10 @@ namespace Base.Data
         #endregion
 
         #region 스킬 파트
-        public event Func<bool> OnSkillAutoToggle;
-        public bool SkillAutoToggle() => OnSkillAutoToggle?.Invoke() ?? false;
+        public event Action OnSkillAutoToggleInput;
+        public void SkillAutoToggleInput() => OnSkillAutoToggleInput?.Invoke();
+        public event Action<bool> OnSkillAutoToggle;
+        public void SkillAutoToggle(bool isOrder) => OnSkillAutoToggle?.Invoke(isOrder);
         public event Action<int> OnSkillSet;
         public void SkillSet(int order) => OnSkillSet?.Invoke(order);
         // 스킬 장착을 실행하기 위한 이벤트입니다. 위 OnSkillSet은 장착 여부만 판단할 때 사용합니다.
