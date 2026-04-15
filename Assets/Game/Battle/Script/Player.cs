@@ -48,12 +48,21 @@ namespace Battle
         public override void Init()
         {
             base.Init();
-            equipSkillController.Init(this);
+            // equipSkillController.Init(this);
             hub = GameManager.Instance.GetGameSystem<EventHub>();
             stageManager = GameManager.Instance.GetGameSystem<StageManager>();
             runtimeProgress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
+            
+            hub.OnDirectionChanged += JoystickMoveInput;
         }
-
+        void OnDestroy()
+        {
+            hub.OnDirectionChanged -= JoystickMoveInput;
+        }
+        void JoystickMoveInput(Vector2 dir)
+        {
+            cm.UpdateMoveInput(dir, CurrentBattleStatStat.moveSpeed);
+        }
         void Rebirth()
         {
             isDead = false;
