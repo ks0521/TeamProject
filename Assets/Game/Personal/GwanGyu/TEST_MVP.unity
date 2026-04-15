@@ -128,18 +128,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1397788183}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &245029718 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3830021596611957210, guid: b1968294c26f8574ab5183a5d4d9faca,
-    type: 3}
-  m_PrefabInstance: {fileID: 1457639370}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &324852325
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,11 +530,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5793219903571880821, guid: b1968294c26f8574ab5183a5d4d9faca,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6009156550342416491, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -621,16 +604,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6684303499905994709, guid: b1968294c26f8574ab5183a5d4d9faca,
-        type: 3}
-      propertyPath: questBtn
-      value: 
-      objectReference: {fileID: 245029718}
-    - target: {fileID: 6905262724634247882, guid: b1968294c26f8574ab5183a5d4d9faca,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7944571381944515057, guid: b1968294c26f8574ab5183a5d4d9faca,
         type: 3}
