@@ -129,7 +129,8 @@ namespace Base.Data
         public void EquipBasicItem() => OnBasicItemEquip.Invoke();
         public event Action OnSkillEnhance;
         public void EnhanceSkill() => OnSkillEnhance?.Invoke();
-
+        public event Action<List<RewardData>> OnQuestReward;
+        public void QuestReward(List<RewardData> questReward) => OnQuestReward?.Invoke(questReward);
         public event Action<QuestDataReader, bool> OnQuestCompleted;
         public void QuestCompleted(QuestDataReader data, bool isAllCleared) => OnQuestCompleted?.Invoke(data, isAllCleared);
         public static event Action<string> OnNewDayStarted; //자정이 됐음을 알림(일퀘용)
