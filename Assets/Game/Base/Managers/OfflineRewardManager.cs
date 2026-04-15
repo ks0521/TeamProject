@@ -11,7 +11,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
 {
     private RuntimeProgressData progress;
     private ItemDropManager dropManager;
-    private GameDataProvider dic;
+    private GameDataDictionaries dic;
     private StageManager stage;
     private EventHub eventHub;
     private DateTime time;
@@ -20,7 +20,7 @@ public class OfflineRewardManager : MonoBehaviour,IManager
     {
         progress = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
-        dic = GameManager.Instance.GetGameSystem<GameDataProvider>();
+        dic = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         stage = GameManager.Instance.GetGameSystem<StageManager>();
         time = DateTime.FromBinary(progress.lastSession.lastConnectTime);

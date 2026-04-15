@@ -31,10 +31,8 @@ namespace Base.Managers
     /// <summary> 스테이지 전환, 상태관리 , 초기화 담당</summary>
     public class StageManager : MonoBehaviour, IManager
     {
-        #if UNITY_EDITOR
-        public bool BlockSpawning; //테스트용으로 몬스터 스폰 없이 테스트만 하고싶을때 활성화
-        public bool BlockProceed; //테스트용으로 클리어해도 스테이지 넘어가지 않게 고정
-        #endif
+        public bool BlockSpawning; //특정 이벤트로 몬스터 스폰 막고싶은 때 사용
+        public bool BlockProceed; //특정 이벤트로 스테이지 변경 막고싶을 때 사용
         
         public StageSO CurrentStageSo => currentStageSO;
         public List<Monster> Monsters => stage.monstersList; //현재 스테이지에 있는 몬스터 리스트를 반환
@@ -47,7 +45,7 @@ namespace Base.Managers
         private RuntimeProgressData progress; //축약용 프로퍼티
         private ProgressManager progressManager;
         private MonsterPoolManager monsterPool; //몬스터 풀
-        private GameDataProvider datahub;
+        private GameDataDictionaries datahub;
         private EventHub eventHub; //이벤트 허브
         private Stage stage; //스테이지 객체
         private StageRule stageRule; // 현재 진행중인 스테이지 규약
@@ -59,7 +57,7 @@ namespace Base.Managers
         {
             eventHub = GameManager.Instance.GetGameSystem<EventHub>();
             monsterPool = GameManager.Instance.GetGameSystem<MonsterPoolManager>();
-            datahub = GameManager.Instance.GetGameSystem<GameDataProvider>();
+            datahub = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
             progressManager = GameManager.Instance.GetGameSystem<ProgressManager>();
             stageProgress = GetStageProgress();
             ChangeStage(stageProgress.selectedNormalChapter, stageProgress.selectedNormalStage);

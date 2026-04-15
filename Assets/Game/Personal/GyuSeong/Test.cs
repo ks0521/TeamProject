@@ -17,7 +17,7 @@ public class Test : MonoBehaviour, IManager
     
     private RuntimeProgressData runProgressData;
     private EquipmentManager equip;
-    private GameDataProvider dic;
+    private GameDataDictionaries dic;
     private ItemDropManager dropManager;
     private EventHub hub;
     
@@ -86,7 +86,7 @@ public class Test : MonoBehaviour, IManager
     {
         equip = GameManager.Instance.GetGameSystem<EquipmentManager>();
         runProgressData = GameManager.Instance.GetGameSystem<ProgressManager>().progress;
-        dic = GameManager.Instance.GetGameSystem<GameDataProvider>();
+        dic = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
         dropManager = GameManager.Instance.GetGameSystem<ItemDropManager>();
         hub = GameManager.Instance.GetGameSystem<EventHub>();
     }

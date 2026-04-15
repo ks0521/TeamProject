@@ -14,7 +14,7 @@ public struct GatchaLevels
 }
 public class testGatchaManager : MonoBehaviour,IManager
 {
-    private GameDataProvider dictionarys;
+    private GameDataDictionaries dictionarys;
     private RuntimeProgressData _runtimeData;
     private EventHub eventhub;
     private ItemDropManager dropmanager;
@@ -65,7 +65,7 @@ public class testGatchaManager : MonoBehaviour,IManager
     }
     public void Init()
     {
-        dictionarys = GameManager.Instance.GetGameSystem<GameDataProvider>();
+        dictionarys = GameManager.Instance.GetGameSystem<GameDataDictionaries>();
         _runtimeData = GameManager.Instance.GetGameSystem<ProgressManager>().Progress;
         eventhub = GameManager.Instance.GetGameSystem<EventHub>();
         dropmanager = GameManager.Instance.GetGameSystem<ItemDropManager>();
