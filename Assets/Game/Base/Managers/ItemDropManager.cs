@@ -158,7 +158,7 @@ public class ItemDropManager : MonoBehaviour, IManager
 
     void GetStatStone(int dropStatStone)
     {
-        int finalStatStone = (int)(dropStatStone * (1 + stat.FinalRewardStatStatus.goldGain));
+        int finalStatStone = (int)(dropStatStone * (1 + stat.FinalRewardStatStatus.statStoneGain));
         progress.currency.statStone += finalStatStone;
         /*Debug.Log(
             $"스탯강화석 {dropStatStone} 획득, 플레이어 스탯강화석 증가 {stat.finalRewardStatStatus.goldGain}적용되어 최종 {finalStatStone} 획득\n" +

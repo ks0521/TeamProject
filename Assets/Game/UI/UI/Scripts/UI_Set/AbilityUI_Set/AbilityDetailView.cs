@@ -21,7 +21,7 @@ namespace UI.Ability_Set
             sb.AppendLine($"방어력 : {status.FinalBattleStatStatus.def}");
             sb.AppendLine($"피해량 감소율 : {status.finalStatus.extra.damageReduceRate * 100}%");
             sb.AppendLine($"공격속도 : {status.FinalBattleStatStatus.atkSpeed}");
-            sb.AppendLine($"이동속도 : {status.FinalBattleStatStatus.moveSpeed * 100}%");
+            sb.AppendLine($"이동속도 : {status.FinalBattleStatStatus.moveSpeed}");
             sb.AppendLine($"크리티컬확률 : {status.FinalBattleStatStatus.critChance * 100}%");
             sb.AppendLine($"크리티컬데미지 : {status.FinalBattleStatStatus.critDamage * 100}%");
 
