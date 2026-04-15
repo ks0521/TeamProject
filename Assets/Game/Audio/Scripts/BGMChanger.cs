@@ -21,16 +21,18 @@ public class BGMChanger : MonoBehaviour
     }
     public void ChangeMap(StageSO stage)
     {
-        if (stage.chapter == curStage?.chapter) return;
+        if (curStage != null && stage.chapter == curStage.chapter) return;
         switch (stage.chapter)
         {
             case 1:
                 bgmSource.clip = bgmForest;
+                
                 break;
             case 2:
                 bgmSource.clip = bgmGrave;
                 break;
         }
+        curStage = stage;
         bgmSource.Play();
     }
 }
