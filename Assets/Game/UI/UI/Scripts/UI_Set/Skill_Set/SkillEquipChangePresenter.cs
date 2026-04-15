@@ -43,6 +43,27 @@ namespace UI.Skill_Set
                 skillEquipChangePopupView.SkillSlotBtnImgSet(i, data.skillIcon);
             }
         }
+        public void SkillPriorityChange(int slotNum, Priority pri)
+        {
+            Color changeCol = Color.white;
+            string changeTxt = "";
+            switch (pri)
+            {
+                case Priority.High:
+                    changeCol = Color.red;
+                    changeTxt = "High";
+                    break;
+                case Priority.Mid:
+                    changeCol = Color.blue;
+                    changeTxt = "Mid";
+                    break;
+                case Priority.Low:
+                    changeCol = Color.yellow;
+                    changeTxt = "Low";
+                    break;
+            }
+            skillEquipChangePopupView.SkillPriorityBtnSet(slotNum, changeCol, changeTxt);
+        }
         public void SkillEquipChangePopupShow(int key)
         {
             gameObject.SetActive(true);

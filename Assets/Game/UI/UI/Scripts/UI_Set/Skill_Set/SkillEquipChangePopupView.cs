@@ -1,5 +1,6 @@
 using Base.Utils;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ namespace UI.Skill_Set
         struct EquipSkillPopupBtnSet
         {
             public Button btn;
+            public TextMeshProUGUI priText;
             public Image img;
         }
         [SerializeField] private Image targetSkillImage;
@@ -33,6 +35,17 @@ namespace UI.Skill_Set
                 return;
             }
             equipSkillBtnSet[index].img.SkillImgSetting(sp);
+        }
+        public void SkillPriorityBtnSet(int index, Color col, string priValue)
+        {
+            if (index < 0 || 6 <= index)
+            {
+                Debug.LogWarning("ui : equip skill slot index는 0~6 사이만 가능");
+                return;
+            }
+            var curEquipSkillBtnSet = equipSkillBtnSet[index];
+            curEquipSkillBtnSet.btn.image.color = col;
+            curEquipSkillBtnSet.priText.text = priValue;
         }
         public void SkillSlotBtnImgUnset(int index) => equipSkillBtnSet[index].img.SkillImgUnsetting();
         public void EquipSlotSelectBtnEventSubscribe(int slotIndex, Action func)
