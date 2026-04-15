@@ -147,11 +147,13 @@ namespace UI.Skill_Set
         {
             equipBtn.interactable = isBtnClickPossible;
         }
-        public void SkillPriorityChange(Color col, string priValue)
+        public void SkillPriorityBtnSet(Color col, string priValue)
         {
+            priorityChangeBtn.gameObject.SetActive(true);
             priorityChangeBtn.image.color = col;
             priorityText.text = $"우선순위 : {priValue}";
         }
+        public void SkillPriorityBtnUnset() => priorityChangeBtn.gameObject.SetActive(false);
         public void SkillLockImgSet(bool isUnlock) => lockImg.gameObject.SetActive(!isUnlock);
         public void SkillImgChange(Sprite sp) => skillImg.sprite = sp;
         public void SkillNameChange(string skillName) => nameText.text = skillName;
