@@ -79,16 +79,19 @@ public class AudioManager : MonoBehaviour, IManager
             hub.OnQuestCompleted -= PlayQuestClearSound;
             hub.OnQuestCompleted += PlayQuestClearSound;
 
+            hub.OnStageChangeClear -= ChangeMap;
+            hub.OnStageChangeClear += ChangeMap;
             Debug.Log("AudioManager: 모든 효과음 이벤트 연결 완료");
         }
+        _bgmChanger.Init(GameManager.Instance.GetGameSystem<StageManager>().CurrentStageSo);
     }
 
     public int GetOrder() => 300;
 
     #region BGM
-    public void ChangeMap(BGMChanger.MapType mapType)
+    public void ChangeMap(StageSO stage)
     {
-        _bgmChanger?.ChangeMap(mapType);
+        _bgmChanger?.ChangeMap(stage);
     }
     #endregion
 
