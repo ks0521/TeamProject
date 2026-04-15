@@ -21,7 +21,7 @@ namespace UI.ChapterStage_Set
             for (int i = 0; i < stageMonster.Count; i++)
             {
                 var stageMon = stageMonster[i].monster;
-                SetSlot(ref currentSlot);
+                SetSlot(ref currentSlot, stageMon.icon);
             }
 
         }
