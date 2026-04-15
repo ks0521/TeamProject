@@ -232,7 +232,8 @@ namespace QuestSystem
 
             RefreshQuests();
             EventHub.QuestProgressUpdated();
-            FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+            //FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+            eventHub.QuestDataChanged();
             Debug.Log("<color=yellow>모든 퀘스트 진행도가 초기화되었습니다!</color>");
         }
 
@@ -364,7 +365,8 @@ namespace QuestSystem
 
             RefreshQuests();
             EventHub.QuestProgressUpdated();
-            FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+            //FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+            eventHub.QuestDataChanged();
             SaveProgress();
         }
 
@@ -471,7 +473,8 @@ namespace QuestSystem
             {
                 CheckCompleteCondition();
                 EventHub.QuestProgressUpdated();
-                FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+                //FindObjectOfType<QuestUIManager>()?.RefreshQuestBox();
+                eventHub.QuestDataChanged();
             }
         }
         int GetCalculatedValue(ActiveQuest quest, int currentGlobalStat)

@@ -42,6 +42,7 @@ public class QuestUIManager : MonoBehaviour, IManager
 
     [SerializeField]private QuestManager questManager;
     [SerializeField]private EventHub eventHub;
+    [SerializeField] private QuestUIPresenter presenter;
     private RuntimeProgressData runtimeProgress;
     private List<QuestBoxUI> instantiatedBoxes = new List<QuestBoxUI>();
     private List<QuestBoxUI> questBoxPool = new List<QuestBoxUI>(); //미사용 퀘스트 박스 프리팹 보관용
@@ -49,14 +50,43 @@ public class QuestUIManager : MonoBehaviour, IManager
 
     private void OnEnable()
     {
+        presenter = GameManager.Instance.GetGameSystem<QuestUIPresenter>();
         questManager = GameManager.Instance.GetGameSystem<QuestManager>();
         eventHub = GameManager.Instance.GetGameSystem<EventHub>();
         OnClickBookmark(0);
         if (eventHub != null) eventHub.OnCurrencyChange += HandleFameChange;
         EventHub.OnQuestProgressUpdated += RealtimeRefreshVisuals;
         UpdateFameDisplay(GetCurrentFame());
+        
+        BindButtons();
+        presenter?.AttachView(this);
     }
 
+    private void OnDisable()
+    {
+        UnbindButtons();
+        presenter?.DetachView(this);
+    }
+
+    private void BindButtons()
+    {
+        for (int i = 0; i < questBookmarks.Count; i++)
+        {
+            int index = i;
+            questBookmarks[i].onClick.RemoveAllListeners();
+            questBookmarks[i].onClick.AddListener(() => presenter?.OnClickTab(index));
+        }
+        receiveButton.onClick.RemoveAllListeners();
+        receiveButton.onClick.AddListener(() => presenter?.OnClickReceiveOne());
+        receiveAllButton.onClick.RemoveAllListeners();
+        receiveAllButton.onClick.AddListener(() => presenter?.OnClickReceiveAll());
+    }
+    private void UnbindButtons()
+    {
+        foreach (var b in questBookmarks) b.onClick.RemoveAllListeners();
+        receiveButton.onClick.RemoveAllListeners();
+        receiveAllButton.onClick.RemoveAllListeners();
+    }
     public void Init()
     {
         // questManager = GameManager.Instance.GetGameSystem<QuestManager>();
@@ -67,6 +97,85 @@ public class QuestUIManager : MonoBehaviour, IManager
         // UpdateFameDisplay(GetCurrentFame());
     }
     public int GetOrder() => 340;
+
+    public void RenderTab(int tabIndex, QuestManager questManager)
+{
+    for (int i = 0; i < questBookmarks.Count; i++)
+    {
+        RectTransform rt = questBookmarks[i].GetComponent<RectTransform>();
+        float targetX = (i == tabIndex) ? (tabBaseX + tabHighlightOffset) : tabBaseX;
+        rt.anchoredPosition = new Vector2(targetX, rt.anchoredPosition.y);
+        bool hasRedDot = questManager.GetActiveQuests()
+            .Any(q => (int)q.Data.CategoryEnum == i && q.isCompleted);
+        Transform dot = questBookmarks[i].transform.Find("Red Dot");
+        if (dot != null) dot.gameObject.SetActive(hasRedDot);
+    }
+}
+public void RenderQuestList(List<ActiveQuest> quests, int selectedQuestId)
+{
+    // 기존 풀링 재사용 로직 사용
+    foreach (var box in instantiatedBoxes)
+    {
+        if (box == null) continue;
+        box.gameObject.SetActive(false);
+        questBoxPool.Add(box);
+    }
+    instantiatedBoxes.Clear();
+    foreach (var quest in quests)
+    {
+        QuestBoxUI box = GetBoxFromPool();
+        if (box == null) continue;
+        box.Setup(quest, OnClickQuestBox);
+        box.RefreshVisuals();
+        box.SetHighlight(quest.Data.questID == selectedQuestId);
+        instantiatedBoxes.Add(box);
+    }
+}
+public void RenderQuestDetail(ActiveQuest quest, QuestManager questManager)
+{
+    if (quest == null)
+    {
+        questDescription.text = "진행 중인 퀘스트가 없습니다.";
+        questStatus.text = "";
+        questProgress.text = "- / -";
+        ClearRewardIcons();
+        return;
+    }
+    questDescription.text = quest.RuntimeDescription;
+    questStatus.text = $"({quest.GetStatusText()})";
+    questProgress.text = $"{quest.CurrentValue} / {quest.RuntimeTargetValue}";
+    RefreshRewardIcons(questManager, quest.Data.rewardGroupID);
+}
+public void RenderButtons(bool canReceiveOne, bool canReceiveAll)
+{
+    receiveButton.interactable = canReceiveOne;
+    receiveAllButton.interactable = canReceiveAll;
+}
+private void OnClickQuestBox(int questId)
+{
+    presenter?.OnClickSelectQuest(questId);
+}
+private void RefreshRewardIcons(QuestManager questManager, int groupID)
+{
+    ClearRewardIcons();
+    if (questManager == null) return;
+    var rewards = questManager.GetRewardsByGroupID(groupID);
+    foreach (var data in rewards)
+    {
+        GameObject go = Instantiate(rewardItemPrefab, rewardContainer);
+        RectTransform rt = go.GetComponent<RectTransform>();
+        rt.localPosition = Vector3.zero;
+        rt.localScale = Vector3.one;
+        RewardBoxUI boxUI = go.GetComponent<RewardBoxUI>();
+        if (boxUI != null) boxUI.Setup(data);
+    }
+}
+private void ClearRewardIcons()
+{
+    foreach (Transform child in rewardContainer)
+        Destroy(child.gameObject);
+}
+    #region Old
 
     //퀘스트 분류 클릭
     public void OnClickBookmark(int index)
@@ -121,7 +230,7 @@ public class QuestUIManager : MonoBehaviour, IManager
             QuestBoxUI boxScript = GetBoxFromPool();
             if (boxScript != null)
             {
-                boxScript.Setup(quest, this);
+                //boxScript.Setup(quest, this);
                 //boxScript.RefreshVisuals();
                 instantiatedBoxes.Add(boxScript);
             }
@@ -370,4 +479,5 @@ public class QuestUIManager : MonoBehaviour, IManager
         EventHub.OnQuestProgressUpdated -= RealtimeRefreshVisuals;
         eventHub.OnCurrencyChange -= HandleFameChange;
     }
+    #endregion
 }

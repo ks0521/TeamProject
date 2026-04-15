@@ -1,4 +1,5 @@
 using QuestSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,23 +26,36 @@ public class QuestBoxUI : MonoBehaviour
     private ActiveQuest _quest;
     private QuestUIManager _uiManager;
     public ActiveQuest GetQuest() => _quest;
+    private Action<int> _onClick;
+
     void Awake()
     {
         ColorUtility.TryParseHtmlString("#74A9CD", out highlightColor);
         ColorUtility.TryParseHtmlString("#668499", out normalColor);
     }
-    public void Setup(ActiveQuest quest, QuestUIManager uiManager)
+    
+    public void Setup(ActiveQuest quest, Action<int> onClick)
     {
         if (quest == null) return;
-
         _quest = quest;
-        _uiManager = uiManager;
-
-        GetComponent<Button>().onClick.RemoveAllListeners();
-        GetComponent<Button>().onClick.AddListener(() => _uiManager.SelectQuest(_quest));
-
+        _onClick = onClick;
+        Button btn = GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(() => _onClick?.Invoke(_quest.Data.questID));
         if (redDot != null) RefreshVisuals();
     }
+    // public void Setup(ActiveQuest quest, QuestUIManager uiManager)
+    // {
+    //     if (quest == null) return;
+    //
+    //     _quest = quest;
+    //     _uiManager = uiManager;
+    //
+    //     GetComponent<Button>().onClick.RemoveAllListeners();
+    //     GetComponent<Button>().onClick.AddListener(() => _uiManager.SelectQuest(_quest));
+    //
+    //     if (redDot != null) RefreshVisuals();
+    // }
     public void RefreshVisuals()
     {
         if (_quest == null) return;
