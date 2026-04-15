@@ -252,13 +252,26 @@ namespace QuestSystem
         //퀘스트 진척량이 누적될 때 호출(UpdateQuest 대신 사용)
         public void OnActivity(GoalType type, int targetID, int amount)
         {
-            string statKey = $"{type}_0"; //$"{type}_{targetID}";
-            if (!globalStats.ContainsKey(statKey)) globalStats[statKey] = 0;
-
-            if (type == GoalType.LevelUp)
-                globalStats[statKey] = amount; //레벨은 갱신
-            else
-                globalStats[statKey] += amount; //사냥, 스킬 등은 누적
+            string specificKey = MakeStatKey(type, targetID);
+            if (!globalStats.ContainsKey(specificKey)) globalStats[specificKey] = 0;
+            if (type == GoalType.LevelUp) globalStats[specificKey] = amount;
+            else globalStats[specificKey] += amount;
+            // 전체 집계 키(0)도 동시 갱신
+            if (targetID != 0)
+            {
+                string allKey = MakeStatKey(type, 0);
+                if (!globalStats.ContainsKey(allKey)) globalStats[allKey] = 0;
+                if (type == GoalType.LevelUp) globalStats[allKey] = amount;
+                else globalStats[allKey] += amount;
+            }
+            UpdateActiveQuestsProgress(type, targetID);
+            // string statKey = $"{type}_0"; //$"{type}_{targetID}";
+            // if (!globalStats.ContainsKey(statKey)) globalStats[statKey] = 0;
+            //
+            // if (type == GoalType.LevelUp)
+            //     globalStats[statKey] = amount; //레벨은 갱신
+            // else
+            //     globalStats[statKey] += amount; //사냥, 스킬 등은 누적
 
             /*
             //아무 스킬 시전에도 대응하려고 만든 부분
@@ -272,7 +285,7 @@ namespace QuestSystem
             }
             */
 
-            UpdateActiveQuestsProgress(type, targetID);
+            // UpdateActiveQuestsProgress(type, targetID);
         }
         
         //모든 활성 퀘스트의 수치를 globalStats 기준으로 새로고침하는 함수
@@ -286,7 +299,11 @@ namespace QuestSystem
                 if (requiredID != 0 && requiredID != targetID) continue;
 
                 //퀘스트가 특정 ID를 요구하면 해당 ID의 키를, 아니면 전체 합산 키(0)를 사용
-                string statKey = (quest.RuntimeTargetID != 0) ? $"{type}_{quest.RuntimeTargetID}" : $"{type}_0";
+                //string statKey = (quest.RuntimeTargetID != 0) ? $"{type}_{quest.RuntimeTargetID}" : $"{type}_0";
+                string statKey = (quest.RuntimeTargetID != 0)
+                    ? MakeStatKey(type, quest.RuntimeTargetID)
+                    : MakeStatKey(type, 0);
+
                 int totalProgress = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
                 int startPoint = questStartPoints.ContainsKey(quest.Data.questID) ? questStartPoints[quest.Data.questID] : 0;
 
@@ -499,15 +516,22 @@ namespace QuestSystem
         }
         ActiveQuest CreateQuestObject(QuestDataReader data, bool isLocked)
         {
-            string statKey = data.goalType.ToString();
+            int currentStep = questSeriesSteps.ContainsKey(data.questID) ? questSeriesSteps[data.questID] : 1;
+            
+            int lookupTargetId = data.isInfinite && data.GoalTypeEnum == GoalType.StageClear
+                ? currentStep // 혹은 displayStep 정책에 맞춰 선택
+                : 0;
+            string statKey = MakeStatKey(data.GoalTypeEnum, lookupTargetId);
             int currentGlobalStat = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
+
+            //string statKey = data.goalType.ToString();
+            //int currentGlobalStat = globalStats.ContainsKey(statKey) ? globalStats[statKey] : 0;
 
             if (!questStartPoints.ContainsKey(data.questID))
                 questStartPoints[data.questID] = data.isAbsoluteGoal ? 0 : currentGlobalStat;
 
             ActiveQuest newQuest = new ActiveQuest(data, questStartPoints[data.questID], isLocked);
             //유저가 깨야 할 단계, 프리팹에 표시할 단계
-            int currentStep = questSeriesSteps.ContainsKey(data.questID) ? questSeriesSteps[data.questID] : 1;
 
             int displayStep = isLocked ? currentStep + 1 : currentStep;
             newQuest.currentStep = currentStep; //회차 저장
@@ -610,7 +634,10 @@ namespace QuestSystem
                 Debug.Log($"[QuestManager] 오늘의 일일 퀘스트: {currentDailyID}");
             }
         }
-
+        private string MakeStatKey(GoalType type, int targetId)
+        {
+            return $"{type}_{targetId}";
+        }
 
 #if UNITY_EDITOR
         private int _debugLevel = 1;
