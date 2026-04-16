@@ -1,3 +1,4 @@
+using Growth.Skill;
 using System;
 using System.Collections.Generic;
 using Growth.StatUpgrade;
@@ -44,6 +45,7 @@ namespace Base.Save
     [Serializable]public class RuntimeSkillData
     {
         public int[] skillSlots; //스킬슬롯에 저장된 스킬리스트
+        public Priority[] skillSlotPriority; // 
         //key : 스킬 키, value : 스킬 레벨
         public Dictionary<int, int> skillProgressState; //찍힌 스킬
     }
