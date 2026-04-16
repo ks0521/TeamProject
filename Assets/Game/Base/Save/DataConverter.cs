@@ -235,6 +235,7 @@ namespace Base.Save
                 skillProgress =
                 {
                     skillSlots = runProgressData.skillProgress.skillSlots, //임시용, 나중에 스킬슬롯 정보들어오면 추가
+                    skillSlotPriority = runProgressData.skillProgress.skillSlotPriority, // 추가
                     skillProgressState = new List<SkillEntry>()
                 },
             };
@@ -304,6 +305,7 @@ namespace Base.Save
                 skillProgress =
                 {
                     skillSlots = saveProgressData.skillProgress.skillSlots, //임시용, 나중에 스킬슬롯 정보들어오면 추가
+                    skillSlotPriority = saveProgressData.skillProgress.skillSlotPriority,
                     skillProgressState = new Dictionary<int, int>()
                 },
             };

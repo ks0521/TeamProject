@@ -106,6 +106,7 @@ namespace UI.Skill_Set
         {
             showSkillKey = key;
             skillDetailPresenter.SkillDetailDataSetToSkillChange(key);
+            SkillLvUpBtnInteractable(key); 
         }
         void SkillLvUpBtnInteractable(int key)
         {
