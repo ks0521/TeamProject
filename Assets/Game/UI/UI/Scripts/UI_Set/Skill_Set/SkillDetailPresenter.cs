@@ -73,17 +73,18 @@ namespace UI.Skill_Set
             string value = null;
             SkillDetailViewNeedsNameAndImage niData = new(so, skillMgr.IsSkillUnlock(so));
             SkillDetailViewNeedsStatData data = new();
+            bool isSkillLvUpPossible = skillMgr.IsSkillPointUsePossible;
             if (so is ActiveSkillSO aSO)
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
 
-                data = new SkillDetailViewNeedsStatData(aSO, value, curLv, skillMgr.IsSkillEquippedByKey(aSO.key));
+                data = new SkillDetailViewNeedsStatData(aSO, value, curLv, skillMgr.IsSkillEquippedByKey(aSO.key), isSkillLvUpPossible);
             }
             else if (so is PassiveSkillSO pSO)
             {
                 PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
 
-                data = new SkillDetailViewNeedsStatData(pSO, value, curLv);
+                data = new SkillDetailViewNeedsStatData(pSO, value, curLv, isSkillLvUpPossible);
             }
             skillDetailView.SkillDetailViewSetToSkillChange(niData, data);
         }
@@ -97,16 +98,17 @@ namespace UI.Skill_Set
             string value = null;
             SkillDetailViewNeedsStatData statData = new();
             skillMgr.TryGetSkillLevel(so, out int curLv);
+            bool isSkillLvUpPossible = skillMgr.IsSkillPointUsePossible;
             if (so is ActiveSkillSO aSO)
             {
                 ActiveSkillValueTextSet(aSO.ResultDamage(curLv), out value);
-                statData = new SkillDetailViewNeedsStatData(aSO, value, curLv, skillMgr.IsSkillEquippedByKey(aSO.key));
+                statData = new SkillDetailViewNeedsStatData(aSO, value, curLv, skillMgr.IsSkillEquippedByKey(aSO.key), isSkillLvUpPossible);
 
             }
             else if (so is PassiveSkillSO pSO)
             {
                 PassiveSkillValueTextSet(pSO.ResultAddStat(curLv), out value);
-                statData = new SkillDetailViewNeedsStatData(pSO, value, curLv);
+                statData = new SkillDetailViewNeedsStatData(pSO, value, curLv, isSkillLvUpPossible);
             }
             skillDetailView.SkillDetailViewSetToLvChange(statData, skillMgr.IsSkillUnlock(so.key));
 

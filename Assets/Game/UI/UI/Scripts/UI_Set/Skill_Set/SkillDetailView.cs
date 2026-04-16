@@ -34,8 +34,9 @@ namespace UI.Skill_Set
         public string description;
         public bool isActiveSkill;
         public bool isEquipped;
+        public bool isSkillPointUsePossible;
         public SkillDetailViewNeedsStatData(int curLv, int maxLv,
-        string skillValueText, float cooltimeValue, string description, bool isActiveSkill, bool isEquipped)
+        string skillValueText, float cooltimeValue, string description, bool isActiveSkill, bool isEquipped, bool isSkillPointUsePossible)
         {
             this.curLv = curLv;
             this.maxLv = maxLv;
@@ -44,14 +45,16 @@ namespace UI.Skill_Set
             this.description = description;
             this.isActiveSkill = isActiveSkill;
             this.isEquipped = isEquipped;
+            this.isSkillPointUsePossible = isSkillPointUsePossible;
         }
-        public SkillDetailViewNeedsStatData(SkillSO so, string skillValueText, int curLv, bool isEquipped)
+        public SkillDetailViewNeedsStatData(SkillSO so, string skillValueText, int curLv, bool isEquipped, bool isSkillPointUsePossible)
         {
             maxLv = so.maxLv;
             description = so.description;
             this.curLv = curLv;
             this.skillValueText = skillValueText;
             this.isEquipped = isEquipped;
+            this.isSkillPointUsePossible = isSkillPointUsePossible;
             if (so is ActiveSkillSO aSO)
             {
                 cooltimeValue = aSO.coolDown;
@@ -63,7 +66,7 @@ namespace UI.Skill_Set
                 isActiveSkill = false;
             }
         }
-        public SkillDetailViewNeedsStatData(ActiveSkillSO so, string skillValueText, int curLv, bool isEquipped)
+        public SkillDetailViewNeedsStatData(ActiveSkillSO so, string skillValueText, int curLv, bool isEquipped, bool isSkillPointUsePossible)
         {
             maxLv = so.maxLv;
             description = so.description;
@@ -72,8 +75,9 @@ namespace UI.Skill_Set
             this.isEquipped = isEquipped;
             this.curLv = curLv;
             this.skillValueText = skillValueText;
+            this.isSkillPointUsePossible = isSkillPointUsePossible;
         }
-        public SkillDetailViewNeedsStatData(PassiveSkillSO so, string skillValueText, int curLv)
+        public SkillDetailViewNeedsStatData(PassiveSkillSO so, string skillValueText, int curLv, bool isSkillPointUsePossible)
         {
             maxLv = so.maxLv;
             description = so.description;
@@ -82,6 +86,7 @@ namespace UI.Skill_Set
             isEquipped = false;
             this.curLv = curLv;
             this.skillValueText = skillValueText;
+            this.isSkillPointUsePossible = isSkillPointUsePossible;
         }
     }
     public class SkillDetailView : MonoBehaviour
@@ -114,7 +119,7 @@ namespace UI.Skill_Set
         {
             int curLv = statData.curLv;
             int maxLv = statData.maxLv;
-            SkillLevelUpBtnInteractable(isUnlock && curLv < maxLv);
+            SkillLevelUpBtnInteractable(isUnlock && curLv < maxLv && statData.isSkillPointUsePossible);
             EquipBtnInteractable(0 < curLv);
             SkillLevelChange(curLv, maxLv);
             SkillDetailViewUIShowAndHide(statData.isActiveSkill, statData.isEquipped);
