@@ -54,9 +54,9 @@ public class ItemDropManager : MonoBehaviour, IManager
         RewardBatch batch = new();
         foreach (var reward in rewards)
         {
-            ApplyReward(reward,batch);
+            ApplyReward(reward,batch); //각 보상종류당 획득 1회 적용
         }
-        FlushBatch(batch);
+        FlushBatch(batch); //결과 이벤트 발행
     }
 
     void ApplyReward(in DropReward reward, RewardBatch batch)

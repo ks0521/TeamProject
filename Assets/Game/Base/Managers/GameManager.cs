@@ -24,7 +24,7 @@ namespace Base.Managers
     {
         public static GameManager Instance;
         private List<IGameSystem> gameSystems;
-        private Dictionary<Type, IGameSystem> dic = new();
+        private Dictionary<Type, IGameSystem> gameSystemDictionary = new();
         private void Awake()
         {
             //첫 시작시 실행
@@ -41,13 +41,13 @@ namespace Base.Managers
             {
                 Type type = gameSystem.GetType();
 
-                if (dic.ContainsKey(type))
+                if (gameSystemDictionary.ContainsKey(type))
                 {
                     Debug.LogError($"중복 IGameSystem 타입 감지: {type.Name} / 새 오브젝트: {((MonoBehaviour)gameSystem).name}");
                     continue;
                 }
 
-                dic.Add(type, gameSystem);
+                gameSystemDictionary.Add(type, gameSystem);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Base.Managers
         /// <returns>찾으려는 컴포넌트</returns>
         public T GetGameSystem<T>() where T : IGameSystem 
         {
-            if (dic.TryGetValue(typeof(T),out var system))
+            if (gameSystemDictionary.TryGetValue(typeof(T),out var system))
             {
                 return (T)system; //define
             }
@@ -98,7 +98,7 @@ namespace Base.Managers
         //변수대입 + 존재여부 확인용
         public bool TryGetGameSystem<T>(out T variable) where T : IGameSystem 
         {
-            if (dic.TryGetValue(typeof(T),out var system))
+            if (gameSystemDictionary.TryGetValue(typeof(T),out var system))
             {
                 variable = (T)system;
                 return true; //define

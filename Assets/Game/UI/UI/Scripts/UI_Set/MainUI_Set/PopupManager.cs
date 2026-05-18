@@ -44,7 +44,8 @@ namespace UI.Scripts
         [SerializeField] private Button settingBtn;
         [SerializeField] private Button shopBtn;
         [SerializeField] private Button questBtn;
-
+        
+        
         private EventHub hub;
         private Stack<GameObject> popupStack = new();
         public Stack<GameObject> PopupStack => popupStack;
@@ -115,8 +116,6 @@ namespace UI.Scripts
             settingBtn.onClick.AddListener(() => OpenPopup(PopupType.setting));
             questBtn.onClick.AddListener(() => OpenPopup(PopupType.quest));
         }//버튼에 함수 넣기
-
-
         private void InitPopupDic()
         {
             if (popupSO == null) return;
@@ -150,6 +149,7 @@ namespace UI.Scripts
                 stagePopupDic.Add(data.stagePopupType, data.popupPrefab);
             }
         }//작업중...
+        
         private void OpenPopup(PopupType type)
         {
             if (!popupDic.TryGetValue(type, out var prefab))
@@ -172,7 +172,6 @@ namespace UI.Scripts
             openPopupDic[type] = popup;
             ClosePopup(popup);
         }
-
         public void OpenEventPopup(EventPopupType type)
         {
             if (!eventPopupDic.TryGetValue(type, out var prefab))
@@ -198,7 +197,6 @@ namespace UI.Scripts
             
             StartCoroutine(FadeOutPopup(popup , 4f));
         }
-
         public void OpenStagePopup(StagePopupType type)
         {
             if (!stagePopupDic.TryGetValue(type, out var prefab))

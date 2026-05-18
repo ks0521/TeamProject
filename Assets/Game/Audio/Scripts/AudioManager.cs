@@ -44,9 +44,6 @@ public class AudioManager : MonoBehaviour, IManager
         var hub = GameManager.Instance.GetGameSystem<EventHub>();
         if (hub != null && _sfxPlayer != null)
         {
-            //필요한 이벤트들은 여기서 추가
-            //hub.OnSkillUsed += OnSkillUsed;
-
             hub.OnButtonClicked -= _sfxPlayer.PlayClickButtonSound;
             hub.OnButtonClicked += _sfxPlayer.PlayClickButtonSound;
             hub.OnPopupOpened -= _sfxPlayer.PlayPopupOpenSound;

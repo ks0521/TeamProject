@@ -16,13 +16,11 @@ namespace UI.Popup
         [Header("스테이지 팝업")]
         [SerializeField] public List<StagePopupData> stagePopupList = new();
 
-
         public enum PopupType
         {
-            None, ability, equipment, skill, stage, shop , dungeon,
-            quest, setting , end , info
+            None, ability, equipment, skill, stage, shop, dungeon,
+            quest, setting, end, info
         }
-
         public enum EventPopupType
         {
             clear , fail , dead , clearReward

@@ -40,7 +40,6 @@ namespace Base.Manager
                 LoadAllCurrency()
             );
 
-
             isLoaded = true;
         }
 
