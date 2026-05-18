@@ -1,55 +1,165 @@
-# TeamProject
-26.3.3 ~ 26.4.15
-# TeamProject
+# IDLE HEROS — Unity 2D 팀 프로젝트
 
-Unity 기반 2D 자동 전투 RPG 팀 프로젝트입니다.  
-프로젝트 기간: **2026.03.03 ~ 2026.04.15**
+<p align="center">
+  <img src="https://img.shields.io/badge/Unity-2022.3.62f3-black?logo=unity" />
+  <img src="https://img.shields.io/badge/C%23-.NET-blueviolet?logo=csharp" />
+  <img src="https://img.shields.io/badge/Rendering-URP-blue" />
+  <img src="https://img.shields.io/badge/Async-UniTask-green" />
+  <img src="https://img.shields.io/badge/Assets-Addressables-orange" />
+  <img src="https://img.shields.io/badge/UI-uGUI%20%2B%20TMP-lightgrey" />
+  <img src="https://img.shields.io/badge/기간-2026.03.03%20~%2004.15-informational" />
+</p>
+
+<p align="center">
+  <b>ScriptableObject 기반 데이터 설계 · Manager 초기화 체계 · EventHub 이벤트 연동</b><br/>
+  <i>확장 가능한 라이브 게임 구조를 4인 팀으로 구현한 자동 전투 RPG</i>
+</p>
+
+---
+
+## 플레이 영상
+
+▶ [YouTube 데모 보기](https://youtu.be/7LdXl2Ow0QU)
+
+---
 
 ## 프로젝트 개요
-- **핵심 컨셉**: 자동 전투 + 스테이지 돌파 + 성장(스탯/스킬/장비) + 퀘스트
-- **핵심 구조**: `SO 기반 데이터 설계 + Manager 초기화 체계 + EventHub 이벤트 연동`
-- **목표**: 확장 가능한 라이브 게임형 구조를 팀 단위로 구현
 
-## 주요 기능
-- **스테이지 전투**
-  - 일반/도전/보스 스테이지 분기
-  - 몬스터 스폰, 처치 판정, 클리어/실패 처리
-- **보상 시스템**
-  - 일반 스테이지 드랍 테이블(`DropTableSO`)
-  - 도전/보스 클리어 보상 테이블(`RewardTableSO`)
-  - 오프라인 보상 계산
-- **성장 시스템**
-  - 스탯 강화, 스킬 레벨업/장착, 장비 장착/강화/합성
-  - `RuntimeStatus + StatusCalculator` 기반 최종 스탯 계산
-- **퀘스트 시스템**
-  - 일일/반복/무한 퀘스트 구조
-  - 서버 시간 기반 일일 퀘스트 리셋
-- **UI/오디오**
-  - 팝업 관리, 메인 HUD 실시간 반영, 가챠 UI
-  - 이벤트 기반 효과음/BGM 연동
+| 항목 | 내용 |
+|------|------|
+| 장르 | 2D 자동 전투 RPG |
+| 엔진 | Unity 2022.3.62f3 (URP) |
+| 개발 기간 | 2026.03.03 ~ 2026.04.15 (약 6주) |
+| 팀 규모 | 4인 |
+| 핵심 컨셉 | 자동 전투 + 스테이지 돌파 + 성장(스탯 / 스킬 / 장비) + 퀘스트 |
+
+> **구조적 목표** : SO 기반 데이터 설계, Manager 초기화 체계, EventHub 이벤트 연동을 통해 기능 간 결합도를 낮추고 라이브 서비스 확장이 가능한 아키텍처를 지향했습니다.
+
+---
 
 ## 기술 스택
-- **Engine**: Unity `2022.3.62f3`
-- **Rendering**: URP
-- **Async**: UniTask
-- **Data Loading**: Addressables
-- **UI**: uGUI, TextMeshPro
-- **Persistence**: JSON(`SaveData.json`, `QuestSave.json`), PlayerPrefs
+
+| 분류 | 기술 |
+|------|------|
+| 엔진 | Unity 2022.3.62f3 |
+| 렌더링 | Universal Render Pipeline (URP) |
+| 비동기 | UniTask |
+| 에셋 로딩 | Addressables |
+| UI | UGUI, TextMeshPro |
+| 저장 | JSON (`SaveData.json`, `QuestSave.json`), PlayerPrefs |
+| 버전 관리 | Git / GitHub (feature 브랜치 전략) |
+
+---
+
+## 주요 기능
+
+### 스테이지 전투 시스템
+- 일반 / 도전 / 보스 스테이지 분기 처리
+- 몬스터 오브젝트 풀 기반 스폰 · 처치 · 클리어/실패 처리
+- 보스 고유 패턴 (돌진, 광역 스킬, 자동 스킬 시전)
+
+### 보상 시스템
+- 일반 스테이지 드랍 테이블 (`DropTableSO`)
+- 도전 / 보스 클리어 보상 테이블 (`RewardTableSO`)
+- 오프라인 접속 보상 자동 계산
+
+### 성장 시스템
+- **스탯 강화** : 사냥시 얻는 재화를 통한 기본스탯 강화 가능
+- **스킬** : 레벨업시 얻는 스킬포인트를 사용하여 스킬레벨 성장가능. 액티브 스킬은 스킬슬롯에 장착 시 사용가능
+- **장비** : 장착 · 강화 · 합성을 통한 성장, 무기 / 방어구 / 장신구 3종의 장비 존재
+
+### 퀘스트 시스템
+- 일일 / 반복 / 무한 퀘스트 구조
+- 서버 시간 기반 일일 퀘스트 자동 리셋
+
+### 오디오 시스템
+- 챕터별 BGM 자동 전환
+- 이벤트 기반 효과음(SFX) 연동
+- 인게임 볼륨 옵션 창
+
+### UI / UX
+- 팝업 매니저를 통한 계층적 팝업 관리
+- 메인 HUD 실시간 스탯 반영
+- 가챠(뽑기) UI
+- 모바일 조이스틱 지원
+
+---
 
 ## 프로젝트 구조 (핵심)
-- `Assets/Game/Base`: 공통 데이터, 매니저, 저장
-- `Assets/Game/Battle`: 전투/스테이지/캐릭터
-- `Assets/Game/Growth`: 스탯/스킬/장비/재화
-- `Assets/Game/Contents/Quests`: 퀘스트 및 일일 리셋
-- `Assets/Game/UI`: 메인 UI, 팝업, 상점/가챠
-- `Assets/Game/Audio`: BGM/SFX 관리
-- `Documentation`: 상세 설계/분석 문서
+
+```
+Assets/Game/
+├── Base/          # 공통 데이터(SO), 매니저 초기화, 세이브/로드
+├── Battle/        # 스테이지, 몬스터 스폰, 캐릭터 전투
+├── Growth/        # 스탯·스킬·장비·재화 성장 시스템
+├── Contents/
+│   └── Quests/    # 퀘스트 & 일일 리셋 로직
+├── UI/            # 메인 HUD, 팝업, 상점/가챠
+└── Audio/         # AudioManager, BGM/SFX 클립
+```
+
+---
 
 ## 실행 방법
-1. Unity Hub에서 이 프로젝트 폴더를 추가
-2. **Unity 2022.3.62f3**로 열기
-3. `Assets/Game/Scenes/MainScene.unity` 실행
 
-## 영상
-- 플레이 영상: https://youtu.be/7LdXl2Ow0QU
+1. Unity Hub에서 프로젝트 폴더를 추가합니다.
+2. **Unity 2022.3.62f3** 버전으로 엽니다.
+3. `Assets/Game/Scenes/MainScene.unity` 씬을 실행합니다.
 
+---
+
+## 팀원 소개 및 역할
+
+
+---
+
+### 문규성 - **프로젝트 리드 / 핵심 아키텍처**
+
+| 영역 | 주요 작업 |
+|------|-----------|
+| **프로젝트 초기화** | Unity 폴더 구조 설계, `.gitignore` 설정, 팀원 개별 씬 분리 |
+| **핵심 프레임워크** | `Manager` 초기화 체계 구축, SO 딕셔너리 설계, `EventHub` 이벤트 연동, `Addressables` 로딩 파이프라인 |
+| **스테이지 시스템** | `StageManager` 구현, 일반/도전/보스 스테이지 분기, 몬스터 오브젝트 풀, 보스 HP UI 연동, 아이템 드랍 로직 |
+| **세이브 / 로드** | JSON 기반 `SaveData` 구조 설계, 게임 시작 시 자동 로드, `PlayerPrefs` 연동 |
+| **스킬 시스템** | `SkillManager` 설계 및 개선, 오토스킬 버튼 연결, 스킬 슬롯 저장 형식, 스킬 우선순위 변경 기능 |
+| **장비 시스템** | 장비창 UI 최적화, `Dictionary` 기반 장비 빠른 조회 구현 |
+| **오프라인 보상** | 비접속 시간 계산 로직 구현 및 보상 팝업 처리 (`OfflineRewards` 브랜치) |
+| **통합 / 배포** | 파트 통합 씬 완성, 빌드파일 배포 |
+
+---
+
+### 김학윤 — **스킬 시스템 / 캐릭터**
+
+| 영역 | 주요 작업 |
+|------|-----------|
+| **캐릭터 기초** | 캐릭터 이동 & 공격 기능 구현 |
+| **스킬 구조 구현** | 장착 - 사용 - 캐스팅 구조 설계, 실제 스킬 설계 및 구현 |
+| **자동 스킬** | 우선순위 기반 자동 스킬 사용 구현 |
+| **스킬 ↔ UI 연결** | `SkillManager ↔ SkillUI` 데이터 연동 , 스킬 장착 팝업 구현|
+| **모바일 기능 추가** | 조이스틱 등 모바일용 기능 구현 |
+| **유틸리티 기능 구현** | `Node` 클래스 추가, 전역 유틸리티 스크립트 추가|
+
+---
+
+### 이종준  — **오디오 / 보스 패턴 / 퀘스트**
+
+| 영역 | 주요 작업 |
+|------|-----------|
+| **BGM 시스템** | BGM 제작 및 맵 전환에 따른 BGM 자동 변경|
+| **사운드 매니저 구현** | BGM / SFX 후보 선정 및 추가, 오디오 매니저 확장 |
+| **적 구현** | 몬스터 기본로직 구현, 보스 스킬 자동화 |
+| **캐릭터 애니메이션** | 보스 및 캐릭터 동작 구체화, 플레이어/보스 모션 작업 |
+| **퀘스트 시스템** | 퀘스트 UI 구현 ~ 폴리싱 전담|
+
+---
+
+### 박관규  — **UI 디자인 / 에셋**
+
+| 영역 | 주요 작업 |
+|------|-----------|
+| **메인 UI 구현** | 메인화면 및 팝업 UI 초기 제작 |
+| **능력치 강화창** | 스탯 강화 UI 제작 및 버그 수정 |
+| **스테이지 선택 창** | 스테이지 선택 화면 UI 구현 |
+| **장비창 UI** | 장비창 UI 작업 및 연결 (`UI 연결 및 장비창 작업`) |
+| **에셋 작업** | 장비 이미지, 캐릭터 이미지 추가 및 교체 |
+| **UI 리팩토링** | 전 개발 기간 동안 매일 UI 작업 및 리파인 |
